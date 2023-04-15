@@ -1,0 +1,17 @@
+$primary_color: rgb(109,23,2);
+$secondary__color: rgb(232,170,0);
+$default__color: rgb(241,240,236);
+$blue_color: rgb(34, 147, 184);
+
+.navigation{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $blue_color ;
+    flex-direction: row;
+    margin: 0% 5%;
+    padding-right: 5%;
+    .helpIcon{
+        font-size: 30px;
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "extends": [
+      "react-app",
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": 0,
+      "comma-style": ["error", "last"],
+      "semi": ["error", "never"]
+    }
+  }

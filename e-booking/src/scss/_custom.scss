@@ -1,0 +1,46 @@
+// Here you can add other styles
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+  $primary_color: rgb(109,23,2);
+  $secondary__color: rgb(232,170,0);
+  $default__color: rgb(241,240,236);
+  
+  .App {
+    position: relative;
+    background: url('../../public/assets//images/base-olympic.jpeg') no-repeat ;;
+    background-size:cover;
+    opacity: 0.8;
+    height: 100vh;
+    width: 100%;
+    max-width: 1440px;
+  
+    input.form__control, textarea.form__control, select.form__control{
+      width: 100%;
+      padding: 10px;
+    }
+  }
+  
+  .App-container{
+    background-color: rgba(0, 0, 0, 0.434);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  

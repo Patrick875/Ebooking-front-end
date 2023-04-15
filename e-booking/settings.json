@@ -1,0 +1,14 @@
+{
+    "editor.formatOnSave": true,
+    "[javascript]": {
+      "editor.formatOnSave": false
+    },
+    "eslint.validate": [
+      "javascript"
+    ],
+    "eslint.options": {
+      "configFile": ".eslintrc.json"
+    },
+    "prettier.eslintIntegration": true,
+    "prettier.configPath": ".prettierrc"
+  }

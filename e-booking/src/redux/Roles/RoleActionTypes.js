@@ -1,0 +1,4 @@
+export const ROLE_ACTIONS = {
+  GET_ROLES: 'GET_ROLES',
+  CREATE_ROLE: 'CREATE_ROLE',
+}

@@ -24,7 +24,7 @@ function AdminProductAdd(props) {
     setPackageItems,
   } = props
   const [step, setStep] = useState(1)
-  const formData = useSelector((state) => state.multiStepForm.formData)
+  let formData = useSelector((state) => state.multiStepForm.formData)
   let data = getValues()
   const [productPackages, setProductPackages] = useState([])
   let [packages, setPackages] = useState([])

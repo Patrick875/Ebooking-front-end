@@ -54,7 +54,6 @@ const Services = () => {
                     {' '}
                     Service Price{' '}
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Description </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -65,10 +64,6 @@ const Services = () => {
                         <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                         <CTableDataCell> {service.name} </CTableDataCell>
                         <CTableDataCell> {service.price} </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          Swimming pool access for a whole day once{' '}
-                        </CTableDataCell>
                         <CTableDataCell>
                           <Link to="" className="btn btn-sm btn-warning">
                             Edit

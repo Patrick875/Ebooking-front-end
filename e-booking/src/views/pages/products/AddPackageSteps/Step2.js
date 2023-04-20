@@ -34,7 +34,7 @@ const CreatePackageModal = (props) => {
   const onAdd = (data) => {
     data = {
       ...data,
-      stockItemId: item[0].id,
+      itemId: item[0].id,
       itemName: item[0].name,
     }
     setPackageItems([...packageItems, data])

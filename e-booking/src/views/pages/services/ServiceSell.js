@@ -14,14 +14,14 @@ import {
   CRow,
 } from '@coreui/react'
 
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 function ServiceSell() {
   const { register, handleSubmit } = useForm()
   const [singleSelections, setSingleSelections] = useState([])
   const [services, setServices] = useState([])
-  const onServiceSell = (data) => {
+  const onServiceSell = async (data) => {
     data.serviceId =
       singleSelections && singleSelections.length !== 0
         ? singleSelections[0].id
@@ -29,9 +29,15 @@ function ServiceSell() {
     if (data.serviceId === null) {
       delete data.serviceId
     }
-    console.log(data)
+    await instance
+      .post('/services/sell', data)
+      .then(() => {
+        toast.success('service sold')
+      })
+      .catch(() => {
+        toast.error('service sell failed')
+      })
   }
-  const inputState = { minLength: 2 }
   useEffect(() => {
     const getAllServices = async () => {
       await instance
@@ -73,7 +79,7 @@ function ServiceSell() {
                     name="title"
                     id="title"
                     size="md"
-                    {...register('client-name')}
+                    {...register('client_name')}
                   />
                 </CCol>
 
@@ -81,7 +87,6 @@ function ServiceSell() {
                   <CFormLabel htmlFor="title"> Service name </CFormLabel>
 
                   <Typeahead
-                    {...inputState}
                     id="basic-typeahead-single"
                     labelKey="name"
                     onChange={setSingleSelections}

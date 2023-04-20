@@ -44,13 +44,8 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Cash receipt ',
-        to: '/booking/cashier/receipt',
-      },
-      {
-        component: CNavItem,
-        name: 'Cash out ',
-        to: '/booking/cashier/out',
+        name: 'Cash transaction ',
+        to: '/booking/cashier/transaction',
       },
       {
         component: CNavItem,
@@ -149,22 +144,12 @@ const _nav = [
         name: 'Reservation reports',
         to: '/reports/reservations',
       },
-      {
-        component: CNavItem,
-        name: 'Daily sales report',
-        to: '/reports/receiption/create',
-      },
-      {
-        component: CNavItem,
-        name: 'All Daily sales reports',
-        to: '/reports/receiption/all',
-      },
     ],
   },
 
   {
     component: CNavGroup,
-    name: 'Bar',
+    name: 'Bar & Kitchen',
     to: '/bar',
     icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
     items: [
@@ -270,6 +255,16 @@ const _nav = [
     to: '/booking/services',
     icon: <CIcon icon={cilSatelite} customClassName="nav-icon" />,
     items: [
+      {
+        component: CNavItem,
+        name: 'Create service category',
+        to: '/booking/services/category/add',
+      },
+      {
+        component: CNavItem,
+        name: 'Service categories',
+        to: '/booking/services/category/all',
+      },
       {
         component: CNavItem,
         name: 'Sell service',
@@ -399,4 +394,15 @@ export default _nav
 //         component: CNavItem,
 //         name: 'All requests',
 //         to: '/booking/sauna/request/all',
+//       },
+
+// {
+//         component: CNavItem,
+//         name: 'Daily sales report',
+//         to: '/reports/receiption/create',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'All Daily sales reports',
+//         to: '/reports/receiption/all',
 //       },

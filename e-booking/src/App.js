@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
-import { getRoles } from './redux/Roles/RolesActions'
 import Cookies from 'js-cookie'
 import { logout } from './redux/Auth/authActions'
 import ConnectionCheck from './utils/ConnectionCheck'
@@ -28,19 +27,14 @@ const ResetPassword = React.lazy(() =>
 
 function App() {
   const isAuth = useSelector((state) => state.auth.isAuth)
-  const role = useSelector((state) => state.auth.role)
   const dispatch = useDispatch()
   const token = Cookies.get('token')
 
   useEffect(() => {
-    if (isAuth && role === 'admin') {
-      dispatch(getRoles())
-    }
     if (!token) {
       dispatch(logout())
     }
   }, [])
-
   console.log('App component', isAuth)
 
   return (

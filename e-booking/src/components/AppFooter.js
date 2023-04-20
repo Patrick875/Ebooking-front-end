@@ -1,21 +1,16 @@
 import React from 'react'
 import { CFooter } from '@coreui/react'
+import ChatButton from './Chat/ChatButton'
 
 const AppFooter = () => {
+  const year = new Date().getFullYear()
   return (
     <CFooter>
       <div>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          SANTech
-        </a>
-        <span className="ms-1">&copy; 2023 Olympic Hotel</span>
+        <span className="ms-1">&copy; {year} Olympic Hotel by SANTech</span>
       </div>
-      <div className="ms-auto">
-        <span className="me-1"> Created by </span>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          SANTech &amp;
-        </a>
-      </div>
+
+      <ChatButton />
     </CFooter>
   )
 }

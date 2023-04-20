@@ -20,7 +20,7 @@ function SellsPending() {
       ? sells.filter((sell) => sell.status === 'PENDING')
       : null
   useEffect(() => {
-    const getItems = async () => {
+    const getProductSells = async () => {
       await instance
         .get('/products/package/sells')
         .then((res) => {
@@ -30,14 +30,28 @@ function SellsPending() {
           toast.error(err.message)
         })
     }
-    getItems()
+    const getPendingServices = async () => {
+      await instance
+        .get('/services/sells')
+        .then((res) => {
+          //setSells([...sells, ...res.data.data])
+          console.log('these are pending services', res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getPendingServices()
+    getProductSells()
   }, [])
 
   const confirmSell = async (data) => {
     await instance
-      .put('', data)
+      .post('/products/package/sells/approve', data)
       .then(() => {
         toast.success('order confirmed')
+        const updatedData = sells.filter((item) => item.id !== data.id)
+        setSells(updatedData)
       })
       .catch(() => {
         toast.error('order confirm failed')
@@ -105,9 +119,7 @@ function SellsPending() {
                       <CTableDataCell>
                         <div
                           className="btn btn-primary btn-sm"
-                          onClick={() =>
-                            confirmSell({ id: item.id, status: 'confirmed' })
-                          }
+                          onClick={() => confirmSell({ id: item.id })}
                         >
                           Confirm order
                         </div>

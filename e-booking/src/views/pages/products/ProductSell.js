@@ -124,10 +124,6 @@ function ProductSell() {
     price = getPrice(products, singleSelections[0].name, pItem)
   }
 
-  // const options = useSelector((state) => state.products) || []
-  // const onServiceSell = (data) => {
-  //   console.log(data)
-  // }
   const onProductSell = async () => {
     await instance
       .post('/products/package/sell', { packages: orderItems })

@@ -181,7 +181,7 @@ const AddStock = React.forwardRef((props, ref) => {
   useEffect(() => {
     const getPurchaseOrders = async () => {
       await instance
-        .get('/purchase/order/all')
+        .get('/purchase/order/approved')
         .then((res) => {
           console.log('res,res,res', res)
           setPurchaseOrders(res.data.data)

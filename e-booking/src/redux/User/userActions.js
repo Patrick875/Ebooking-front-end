@@ -1,5 +1,5 @@
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { USER_ACTIONS } from './userActionTypes'
 
 export const selectUser = (payload) => ({ type: USER_ACTIONS.SELECT, payload })
@@ -55,6 +55,7 @@ export const getUsers = function () {
       .get(`/users/all`)
       .then((res) => {
         dispatch({ type: USER_ACTIONS.GET_USERS, payload: res.data.users })
+        console.log('rese', res.data)
       })
       .catch((err) => {
         toast.error(err.message)

@@ -10,6 +10,7 @@ import {
 } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { RiCheckLine } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
@@ -58,7 +59,7 @@ function AllRequestToCashier() {
                       <CTableDataCell>
                         {new Date(item.date).toLocaleDateString()}
                       </CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell className="d-flex">
                         <Link
                           className="btn btn-warning"
                           to="/booking/requests/cashier/view"
@@ -68,6 +69,12 @@ function AllRequestToCashier() {
                         >
                           View
                         </Link>
+                        {item.status === 'APPROVED' ? (
+                          <p className="ms-3">
+                            Approved
+                            <RiCheckLine className=" ms-3 text-success ri-lg" />
+                          </p>
+                        ) : null}
                       </CTableDataCell>
                     </CTableRow>
                   )

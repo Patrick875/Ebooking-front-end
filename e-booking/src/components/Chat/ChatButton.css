@@ -1,0 +1,136 @@
+.chat-button-wrapper {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+}
+
+.chat-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    outline: none;
+}
+
+.chat-button i {
+    transition: opacity 0.2s ease;
+    /* Add transition for opacity */
+}
+
+.chat-box {
+    position: absolute;
+    bottom: 70px;
+    /* Adjust distance from button */
+    right: 0;
+    /* Align with right edge of page */
+    width: 300px;
+    background: linear-gradient(45deg, '#cc2b5e', '#753a88') !important;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+
+    height: 50vh;
+    z-index: 999;
+    /* Set initial opacity to 0 for animation */
+
+}
+
+.chat-box-content {
+    /* Add styles for chat box content */
+}
+
+/* Add hover effect for chat button */
+.chat-button:hover {
+    background-color: #0056b3;
+}
+
+/* Add hover effect for close icon */
+.chat-button i:hover {
+    opacity: 0.8;
+}
+
+/* Add animation for chat box */
+.chat-box {
+    animation-name: slideIn;
+    animation-duration: 0.3s;
+    animation-timing-function: ease;
+}
+
+.chat-box {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 25vw;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.chat-box-content {
+    padding: 16px;
+}
+
+.chat-box-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.chat-box-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+}
+
+.chat-box-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat-box-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.chat-box-message {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #999;
+}
+
+.chat-box-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.chat-box-close:hover {
+    color: #666;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

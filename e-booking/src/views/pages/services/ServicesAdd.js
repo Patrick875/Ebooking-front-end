@@ -13,33 +13,19 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const ServiceAdd = () => {
   const { register, handleSubmit } = useForm()
-  const role = useSelector((state) => state.auth.user.role) || ''
-  const [categories, setCategories] = useState([
-    { name: 'Sauna', id: 5001209 },
-    { name: 'Gym', id: 69560 },
-  ])
+  const [categories, setCategories] = useState([])
 
   const onSubmit = async (data) => {
+    console.log('this is service add data', data)
     await instance
       .post('/services/add', data)
       .then(() => {
         toast.success('service added')
-      })
-      .catch((err) => {
-        toast.error(err.message)
-      })
-  }
-  const onManagerSubmit = async (data) => {
-    await instance
-      .post('/services/add', data)
-      .then((res) => {
-        console.log(res.data)
-        toast.success('service created, price to added by admin')
       })
       .catch((err) => {
         toast.error(err.message)

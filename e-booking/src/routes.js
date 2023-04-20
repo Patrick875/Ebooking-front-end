@@ -56,6 +56,9 @@ const CreateDailySalesReport = React.lazy(() =>
 const AllDailySalesReports = React.lazy(() =>
   import('./views/pages/reservation/Daily Sales/AllDailySalesReports'),
 )
+const DailySalesReportView = React.lazy(() =>
+  import('./views/pages/reservation/Daily Sales/DailySalesReportView'),
+)
 
 //users
 
@@ -131,6 +134,12 @@ const ProductPackageAdd = React.lazy(() =>
 
 // services
 
+const ServiceCategories = React.lazy(() =>
+  import('./views/pages/services/ServiceCategories'),
+)
+const ServiceCategoryAdd = React.lazy(() =>
+  import('./views/pages/services/ServiceCategoryAdd'),
+)
 const ServicesAdd = React.lazy(() =>
   import('./views/pages/services/ServicesAdd'),
 )
@@ -141,10 +150,10 @@ const ServiceSell = React.lazy(() =>
 const ServiceEdit = React.lazy(() =>
   import('./views/pages/services/ServiceEdit.js'),
 )
-const CashReceipt = React.lazy(() =>
-  import('./views/pages/Cashier/CashReceipt'),
+
+const CashTransaction = React.lazy(() =>
+  import('./views/pages/Cashier/CashTransaction'),
 )
-const CashOut = React.lazy(() => import('./views/pages/Cashier/CashOut'))
 const CashReport = React.lazy(() => import('./views/pages/Cashier/CashReport'))
 const SellsPending = React.lazy(() =>
   import('./views/pages/Cashier/Sells/SellsPending'),
@@ -211,6 +220,7 @@ const CreateReport = React.lazy(() =>
 const DaySalesReport = React.lazy(() =>
   import('./views/pages/Reports/DaySalesReport'),
 )
+
 const PetitStockReports = React.lazy(() =>
   import('./views/pages/Reports/PetitStockReports.js'),
 )
@@ -333,6 +343,12 @@ const routes = [
     exact: true,
     name: 'All Daily Sales reports',
     element: AllDailySalesReports,
+  },
+  {
+    path: '/reports/receiption/view',
+    exact: true,
+    name: 'Daily sales report view',
+    element: DailySalesReportView,
   },
   {
     path: '/booking/rooms/available',
@@ -490,6 +506,18 @@ const routes = [
     element: ProductPackageAdd,
   },
   {
+    path: '/booking/services/category/add',
+    exact: true,
+    name: 'Create Service Category',
+    element: ServiceCategoryAdd,
+  },
+  {
+    path: '/booking/services/category/all',
+    exact: true,
+    name: 'All Service Categories',
+    element: ServiceCategories,
+  },
+  {
     path: '/booking/services/sell',
     exact: true,
     name: 'Service',
@@ -516,20 +544,20 @@ const routes = [
   {
     path: '/booking/cashier/sells/pending',
     exact: true,
-    name: 'Cash in',
+    name: 'Sells pending',
     element: SellsPending,
   },
   {
-    path: '//booking/cashier/sells',
+    path: '/booking/cashier/sells',
     exact: true,
     name: 'Cash in',
     element: Sells,
   },
   {
-    path: '/booking/cashier/out',
+    path: '/booking/cashier/transaction',
     exact: true,
     name: 'Cash out',
-    element: CashOut,
+    element: CashTransaction,
   },
   {
     path: '/booking/cashier/report',

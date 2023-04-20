@@ -17,18 +17,19 @@ function Sells() {
   const [sells, setSells] = useState([])
   let confirmedSells =
     sells && sells.length !== 0
-      ? sells.filter((sell) => sell.status === 'confirmed')
+      ? sells.filter((sell) => sell.status.toLowerCase() === 'comfirmed')
       : null
 
   const total =
     confirmedSells && confirmedSells.length !== 0
-      ? confirmedSells.reduce((acc, curr) => acc + curr, 0)
+      ? confirmedSells.reduce((acc, curr) => acc + curr.amount, 0)
       : 0
   useEffect(() => {
     const getItems = async () => {
       await instance
         .get('/products/package/sells')
         .then((res) => {
+          console.log(res)
           setSells(res.data.data)
         })
         .catch((err) => {
@@ -42,7 +43,7 @@ function Sells() {
     <div>
       <CCardHeader>
         <h2>
-          <strong> Sells pending </strong>
+          <strong> All sells </strong>
         </h2>
       </CCardHeader>
       <CCardBody>
@@ -53,7 +54,6 @@ function Sells() {
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
               <CTableHeaderCell scope="col">Product</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -87,13 +87,6 @@ function Sells() {
                           ))}
                         </div>
                       </CTableDataCell>
-                      <CTableDataCell>
-                        <div>
-                          {item.petitStockSaleDetails.map((el, i) => (
-                            <p key={el + i}>{el.quantity}</p>
-                          ))}
-                        </div>
-                      </CTableDataCell>
                       <CTableDataCell>{`${item.amount}`}</CTableDataCell>
                     </CTableRow>
                   )
@@ -102,8 +95,8 @@ function Sells() {
 
             <CTableRow>
               <CTableDataCell />
-              <CTableDataCell colSpan={4}>Total</CTableDataCell>
-              <CTableDataCell>{total.toLocaleString()}</CTableDataCell>
+              <CTableDataCell colSpan={3}>Total</CTableDataCell>
+              <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
             </CTableRow>
           </CTableBody>
         </CTable>

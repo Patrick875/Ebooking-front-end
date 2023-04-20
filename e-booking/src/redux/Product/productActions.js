@@ -87,6 +87,7 @@ export const createProduct = (payload, products) => {
       })
       .catch((err) => {
         toast.error(err.message)
+        console.log(err)
       })
   }
 }

@@ -203,6 +203,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
                         aria-label="bar "
                         {...register('bar', { required: true })}
                       >
+                        <option value="kitchen"> Kitchen </option>
                         <option value="main-bar"> Main bar </option>
                         <option value="swimming-pool-bar">
                           {' '}

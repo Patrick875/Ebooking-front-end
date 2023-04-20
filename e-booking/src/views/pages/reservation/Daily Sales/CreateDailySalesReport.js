@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -23,14 +23,15 @@ import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
+import { Typeahead } from 'react-bootstrap-typeahead'
 
 const AddElementToReport = (props) => {
   const [show, setShow] = useState(false)
-  const { reportItems, setReportItems } = props
+  const { reportItems, setReportItems, user } = props
   let total =
     reportItems && reportItems.length !== 0
       ? reportItems.reduce((acc, next) => acc + next.amount, 0)
-      : 0
+      : null
 
   return (
     <div>
@@ -40,6 +41,7 @@ const AddElementToReport = (props) => {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col"> Element </CTableHeaderCell>
+              <CTableHeaderCell scope="col"> From (name) </CTableHeaderCell>
               <CTableHeaderCell scope="col"> Payment method </CTableHeaderCell>
               <CTableHeaderCell scope="col"> Currency </CTableHeaderCell>
               <CTableHeaderCell scope="col"> Amount </CTableHeaderCell>
@@ -63,7 +65,13 @@ const AddElementToReport = (props) => {
                         {' '}
                         {index + 1}{' '}
                       </CTableHeaderCell>
-                      <CTableDataCell> {added.designation} </CTableDataCell>
+                      <CTableDataCell> {added.title} </CTableDataCell>
+                      <CTableDataCell>
+                        {' '}
+                        {user && user.length !== 0
+                          ? user[0].firstName + ' ' + user[0].lastName
+                          : null}{' '}
+                      </CTableDataCell>
                       <CTableDataCell>{added.paymentMethod} </CTableDataCell>
                       <CTableDataCell> {added.currency} </CTableDataCell>
                       <CTableDataCell>
@@ -92,7 +100,9 @@ const AddElementToReport = (props) => {
                   <CTableHeaderCell> Total </CTableHeaderCell>
                   <CTableDataCell />
                   <CTableDataCell />
-                  <CTableDataCell>{total.toLocaleString()}</CTableDataCell>
+                  <CTableDataCell>
+                    {Number(total).toLocaleString()} RWF
+                  </CTableDataCell>
                 </CTableRow>
               </React.Fragment>
             ) : (
@@ -110,11 +120,36 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let [reportItems, setReportItems] = useState([])
   const [visible, setVisible] = useState(false)
+  let [users, setUsers] = useState([])
+  const [user, setUser] = useState([])
   const onAdd = (data) => {
     console.log('daily sales report items')
+    data = { ...data, carriedBy: user[0].id }
     setReportItems([...reportItems, data])
     reset()
   }
+
+  const submitDailyReport = async () => {
+    await instance
+      .post('/daily-sales/add', { data: reportItems })
+      .then(() => {
+        toast.success('report successfuly submited')
+        setReportItems([])
+      })
+      .catch((err) => {
+        toast.error(err.response.message)
+        setReportItems([])
+      })
+  }
+
+  useEffect(() => {
+    const getAllUsers = async () => {
+      await instance.get('/users/all').then((res) => {
+        setUsers(res.data.users)
+      })
+    }
+    getAllUsers()
+  }, [])
 
   return (
     <div>
@@ -160,7 +195,22 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         placeholder="item name  "
                         size="md"
                         required
-                        {...register('designation')}
+                        {...register('title')}
+                      />
+                    </CCol>
+                    <CCol md={6}>
+                      <div className="d-flex justify-content-between">
+                        <CFormLabel htmlFor="user">From </CFormLabel>
+                      </div>
+
+                      <Typeahead
+                        id="basic-typeahead-single"
+                        filterBy={['firstName']}
+                        labelKey="firstName"
+                        onChange={setUser}
+                        options={users}
+                        placeholder="user name ..."
+                        selected={user}
                       />
                     </CCol>
                     <CCol md={6}>
@@ -194,7 +244,7 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         <option value="Cheque">Cheque</option>
                       </CFormSelect>
                     </CCol>
-                    <CCol>
+                    <CCol md={6}>
                       <CFormLabel htmlFor="paymentCurrency">
                         Currency
                       </CFormLabel>
@@ -215,9 +265,15 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                     </CCol>
                   </CRow>
                   <CCol xs={12}>
+                    {user && user.length === 0 ? (
+                      <p className="text-danger fs-6 fw-bold">
+                        Please indicate the user{' '}
+                      </p>
+                    ) : null}
                     <CButton
                       component="input"
                       value="Add element"
+                      disabled={user && user.length === 0 ? true : false}
                       onClick={() => {
                         const data = getValues()
                         return onAdd(data)
@@ -243,13 +299,18 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                     </h3>
                   </CCardHeader>
                   <AddElementToReport
+                    user={user}
                     reportItems={reportItems}
                     setReportItems={setReportItems}
                   />
 
                   {reportItems && reportItems.length !== 0 ? (
                     <CCol xs={12}>
-                      <CButton component="input" value="Submit voucher" />
+                      <CButton
+                        component="input"
+                        value="Submit Report"
+                        onClick={submitDailyReport}
+                      />
                     </CCol>
                   ) : null}
                 </CCard>

@@ -15,6 +15,8 @@ import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const Request = (props, ref) => {
   const { request, orderTotal, StockPurchaseOrderDetails } = props
@@ -72,10 +74,19 @@ const Request = (props, ref) => {
 
 const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { title } = props
-  let { receivedItems, purchaseOrderItems } = props
   const request = useSelector((state) => state.selection.selected)
-  const role = useSelector((state) => state.auth.role)
+
+  const approvePurchaseOrder = async () => {
+    await instance
+      .post('/purchase/order/approve', { orderId: request.id })
+      .then(() => {
+        toast.success('purchase order approved !!')
+      })
+      .catch(() => {
+        toast.error('purchase order approval failed !!!')
+      })
+  }
+
   let StockPurchaseOrderDetails
   if (request && request.StockPurchaseOrderDetails) {
     StockPurchaseOrderDetails = request.StockPurchaseOrderDetails
@@ -98,10 +109,14 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
             content={() => ref || componentRef.current}
           />
         ) : null}
-        <button className="btn btn-ghost-success text-black">Approve</button>
-        <button className="btn btn-ghost-warning text-black">
-          Request revision
+        <button
+          className="btn btn-ghost-success text-black"
+          onClick={approvePurchaseOrder}
+          disabled={request.status === 'APPROVED'}
+        >
+          Approve
         </button>
+
         <button className="btn btn-ghost-danger text-black">Cancel</button>
       </CCardHeader>
       <div style={{ display: 'none' }}>
@@ -123,35 +138,3 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
 })
 
 export default ViewRequestToCashier
-
-//table 1
-
-//  <CTableBody>
-//                 {request.StockPurchaseOrder.StockPurchaseOrderDetails !== 0
-//                   ? request.StockPurchaseOrder['StockPurchaseOrderDetails'].map(
-//                       (order, i) => (
-//                         <CTableRow key={i}>
-//                           <CTableDataCell>
-//                             {order.StockItem.name}
-//                           </CTableDataCell>
-//                           <CTableDataCell></CTableDataCell>
-//                           <CTableDataCell>
-//                             {order.requestQuantity}
-//                           </CTableDataCell>
-//                           <CTableDataCell>{order.unitPrice}</CTableDataCell>
-//                           <CTableDataCell>
-//                             {Number(order.requestQuantity) *
-//                               Number(order.unitPrice)}
-//                           </CTableDataCell>
-//                         </CTableRow>
-//                       ),
-//                     )
-//                   : null}
-
-//                 <CTableRow>
-//                   <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-//                   <CTableDataCell>{purchaseTotal}</CTableDataCell>
-//                 </CTableRow>
-//               </CTableBody>
-
-//table 2

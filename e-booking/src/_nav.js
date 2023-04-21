@@ -192,29 +192,7 @@ const _nav = [
       },
     ],
   },
-  {
-    component: CNavGroup,
-    name: 'Sauna',
-    to: '/sauna',
-    icon: <TbMassage className="me-3" size={36} />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Add item',
-        to: '/booking/sauna/add',
-      },
-      {
-        component: CNavItem,
-        name: 'Request item',
-        to: '/booking/sauna/request',
-      },
-      {
-        component: CNavItem,
-        name: 'All items',
-        to: '/booking/sauna/all',
-      },
-    ],
-  },
+
   {
     component: CNavGroup,
     name: 'Products',
@@ -407,3 +385,27 @@ export default _nav
 //         name: 'All requests',
 //         to: '/booking/sauna/request/all',
 //       },
+
+//  {
+//     component: CNavGroup,
+//     name: 'Sauna',
+//     to: '/sauna',
+//     icon: <TbMassage className="me-3" size={36} />,
+//     items: [
+//       {
+//         component: CNavItem,
+//         name: 'Add item',
+//         to: '/booking/sauna/add',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Request item',
+//         to: '/booking/sauna/request',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'All items',
+//         to: '/booking/sauna/all',
+//       },
+//     ],
+//   },

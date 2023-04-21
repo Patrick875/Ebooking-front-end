@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Typeahead } from 'react-bootstrap-typeahead'
 
@@ -20,6 +20,8 @@ import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import OrdersTable from '../Bar/OrdersTable'
 import { currencies } from 'src/utils/constants'
+import PrintHeader from '../Printing/PrintHeader'
+import ReactToPrint from 'react-to-print'
 
 function getPrice(elements, PItem, PackId) {
   elements = elements.filter((e) => (e.Packages.length !== 0 ? e : ''))
@@ -109,7 +111,8 @@ function getPrice(elements, PItem, PackId) {
 //   )
 // }
 
-function ProductSell() {
+const ProductSell = React.forwardRef((props, ref) => {
+  const componentRef = useRef()
   const [products, setProducts] = useState([])
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset, getValues } = useForm()
@@ -171,18 +174,32 @@ function ProductSell() {
   return (
     <React.Fragment>
       <CRow>
+        <CCardHeader>
+          {orderItems && orderItems.length !== 0 ? (
+            <div className="d-flex gap-2">
+              <ReactToPrint
+                trigger={() => (
+                  <button className="btn btn-ghost-primary">Print</button>
+                )}
+                content={() => ref || componentRef.current}
+              />
+              <button
+                className="btn btn-ghost-danger"
+                onClick={() => {
+                  return setOrderItems([])
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          ) : null}
+        </CCardHeader>
         <CForm
           className="row"
           name="roomClassAddFrm"
           encType="multipart/form"
           onSubmit={handleSubmit(onProductSell)}
         >
-          <CCardHeader>
-            <button className="btn btn-ghost-primary">Order</button>
-            <button className="btn btn-ghost-success text-dark">
-              Checkout
-            </button>
-          </CCardHeader>
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
@@ -340,6 +357,25 @@ function ProductSell() {
                 </h2>
               </CCardHeader>
               <CCardBody>
+                <div style={{ display: 'none' }}>
+                  <div
+                    className="m-3 p-0 client-receipt"
+                    ref={ref || componentRef}
+                  >
+                    <div style={{ width: '100%', height: '100%' }}>
+                      <PrintHeader />
+                      <p className="fs-4 fw-bolder text-center my-1">
+                        {' '}
+                        Receipt{' '}
+                      </p>
+                      <OrdersTable
+                        orderItems={orderItems}
+                        setOrderItems={setOrderItems}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <OrdersTable
                   orderItems={orderItems}
                   setOrderItems={setOrderItems}
@@ -354,6 +390,6 @@ function ProductSell() {
       </CRow>
     </React.Fragment>
   )
-}
+})
 
 export default ProductSell

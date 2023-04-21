@@ -5,8 +5,8 @@ import React from 'react'
 const PrintHeader = () => {
   return (
     <React.Fragment>
-      <div className="d-flex flex-col my-3">
-        <p className="col">
+      <div className="d-flex my-3 printing-header ">
+        <p className="col doneOn">
           Done on{' '}
           {new Date().toLocaleDateString() +
             ' at  ' +
@@ -22,8 +22,8 @@ const PrintHeader = () => {
         <div className="col">
           <h3 className="fw-bolder text-capitalize">OLYMPIC HOTEL</h3>
           <p>TEL: +250 789 677 479/ +250 783 103 500</p>
-          <p>E-mail:info@olympichotel.rw</p>
-          <p>Website: www.olympichotel.rw</p>
+          <p className="email">E-mail:info@olympichotel.rw</p>
+          <p className="website">Web:www.olympichotel.rw</p>
           <p>TIN/VAT: 102556009</p>
         </div>
       </CRow>

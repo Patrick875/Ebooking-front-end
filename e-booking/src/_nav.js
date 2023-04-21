@@ -1,8 +1,10 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
+import { TbMassage } from 'react-icons/tb'
+import { GiTakeMyMoney } from 'react-icons/gi'
+import { MdOutlineInsertDriveFile } from 'react-icons/md'
 import {
   cilBook,
-  cilCart,
   cilHouse,
   cilPeople,
   cilSatelite,
@@ -11,11 +13,9 @@ import {
   cilStorage,
   cilUser,
   cilFastfood,
-  cilShareBoxed,
   cilBasket,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
-import massageIcon from 'src/assets/icons/massage-icon.svg'
 const _nav = [
   {
     component: CNavItem,
@@ -30,7 +30,9 @@ const _nav = [
     component: CNavGroup,
     name: 'Cashier',
     to: '/booking/cashier',
-    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+    icon: (
+      <GiTakeMyMoney customClassName="nav-icon" className="me-3" size={36} />
+    ),
     items: [
       {
         component: CNavItem,
@@ -144,6 +146,16 @@ const _nav = [
         name: 'Reservation reports',
         to: '/reports/reservations',
       },
+      {
+        component: CNavItem,
+        name: 'Daily sales report',
+        to: '/reports/receiption/create',
+      },
+      {
+        component: CNavItem,
+        name: 'All Daily sales reports',
+        to: '/reports/receiption/all',
+      },
     ],
   },
 
@@ -184,7 +196,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Sauna',
     to: '/sauna',
-    icon: <CIcon icon={massageIcon} customClassName="nav-icon" />,
+    icon: <TbMassage className="me-3" size={36} />,
     items: [
       {
         component: CNavItem,
@@ -315,7 +327,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Stock Items',
     to: '/stock/items',
-    icon: <CIcon icon={cilStorage} customClassName="nav-icon" />,
+    icon: <MdOutlineInsertDriveFile className="me-3" size={34} />,
     items: [
       {
         component: CNavItem,
@@ -394,15 +406,4 @@ export default _nav
 //         component: CNavItem,
 //         name: 'All requests',
 //         to: '/booking/sauna/request/all',
-//       },
-
-// {
-//         component: CNavItem,
-//         name: 'Daily sales report',
-//         to: '/reports/receiption/create',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'All Daily sales reports',
-//         to: '/reports/receiption/all',
 //       },

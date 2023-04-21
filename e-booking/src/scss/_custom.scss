@@ -1,4 +1,28 @@
 // Here you can add other styles
+
+.printing-header{
+   flex-direction: column !important;
+}
+@media print{
+  .client-receipt{
+  max-width: 216px !important;
+   display:flex;
+   justify-content: center;
+   h3,p,th,td{
+     font-size: small;
+   }
+  .printing-header{
+
+    flex-direction: row !important;
+  }
+   .website,.email,.doneOn{
+    font-size:smaller
+   }
+  
+   
+
+  }
+}
 *{
     padding: 0px;
     margin: 0px;

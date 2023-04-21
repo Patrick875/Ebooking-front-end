@@ -11,12 +11,6 @@ import {
   CFormSelect,
   CFormLabel,
   CRow,
-  CTable,
-  CTableHead,
-  CTableRow,
-  CTableHeaderCell,
-  CTableBody,
-  CTableDataCell,
   CCollapse,
 } from '@coreui/react'
 import { toast } from 'react-hot-toast'
@@ -24,96 +18,10 @@ import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import { Typeahead } from 'react-bootstrap-typeahead'
-
-const AddElementToReport = (props) => {
-  const [show, setShow] = useState(false)
-  const { reportItems, setReportItems, user } = props
-  let total =
-    reportItems && reportItems.length !== 0
-      ? reportItems.reduce((acc, next) => acc + next.amount, 0)
-      : null
-
-  return (
-    <div>
-      <CCardBody>
-        <CTable bordered>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col"> Element </CTableHeaderCell>
-              <CTableHeaderCell scope="col"> From (name) </CTableHeaderCell>
-              <CTableHeaderCell scope="col"> Payment method </CTableHeaderCell>
-              <CTableHeaderCell scope="col"> Currency </CTableHeaderCell>
-              <CTableHeaderCell scope="col"> Amount </CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {reportItems && reportItems.length !== 0 ? (
-              <React.Fragment>
-                {reportItems.map((added, index) => {
-                  return (
-                    <CTableRow
-                      key={index + 1}
-                      onMouseEnter={() => {
-                        setShow(true)
-                      }}
-                      onMouseLeave={() => {
-                        setShow(false)
-                      }}
-                    >
-                      <CTableHeaderCell scope="row">
-                        {' '}
-                        {index + 1}{' '}
-                      </CTableHeaderCell>
-                      <CTableDataCell> {added.title} </CTableDataCell>
-                      <CTableDataCell>
-                        {' '}
-                        {user && user.length !== 0
-                          ? user[0].firstName + ' ' + user[0].lastName
-                          : null}{' '}
-                      </CTableDataCell>
-                      <CTableDataCell>{added.paymentMethod} </CTableDataCell>
-                      <CTableDataCell> {added.currency} </CTableDataCell>
-                      <CTableDataCell>
-                        {added.amount}
-
-                        {show ? (
-                          <div
-                            className="btn btn-danger btn-sm ms-2"
-                            onClick={() => {
-                              setReportItems(
-                                reportItems.filter((item) =>
-                                  item !== added ? item : null,
-                                ),
-                              )
-                            }}
-                          >
-                            Delete item
-                          </div>
-                        ) : null}
-                      </CTableDataCell>
-                    </CTableRow>
-                  )
-                })}
-                <CTableRow key={reportItems.length}>
-                  <CTableHeaderCell scope="row"></CTableHeaderCell>
-                  <CTableHeaderCell> Total </CTableHeaderCell>
-                  <CTableDataCell />
-                  <CTableDataCell />
-                  <CTableDataCell>
-                    {Number(total).toLocaleString()} RWF
-                  </CTableDataCell>
-                </CTableRow>
-              </React.Fragment>
-            ) : (
-              <div className="text-center"> No items added</div>
-            )}
-          </CTableBody>
-        </CTable>
-      </CCardBody>
-    </div>
-  )
-}
+import { sumAmountsByCurrency } from 'src/utils/functions'
+import PrintHeader from '../../Printing/PrintHeader'
+import PrintDailyReport from '../../Printing/PrintDailyReport'
+import AddElementToReport from './AddElementToReport'
 
 const CreateDailySalesReport = React.forwardRef((props, ref) => {
   const { register, getValues, reset } = useForm()
@@ -129,16 +37,16 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
     reset()
   }
 
+  let totals = sumAmountsByCurrency(reportItems)
   const submitDailyReport = async () => {
     await instance
-      .post('/daily-sales/add', { data: reportItems })
+      .post('/daily-sales/add', { data: reportItems, totals })
       .then(() => {
         toast.success('report successfuly submited')
-        setReportItems([])
       })
       .catch((err) => {
+        console.log(err)
         toast.error(err.response.message)
-        setReportItems([])
       })
   }
 
@@ -170,12 +78,22 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                 />
 
                 {reportItems && reportItems.length !== 0 ? (
-                  <ReactToPrint
-                    trigger={() => (
-                      <button className="btn btn-ghost-primary">Print</button>
-                    )}
-                    content={() => ref || componentRef.current}
-                  />
+                  <div className="d-flex gap-2">
+                    <ReactToPrint
+                      trigger={() => (
+                        <button className="btn btn-ghost-primary">Print</button>
+                      )}
+                      content={() => ref || componentRef.current}
+                    />
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => {
+                        return setReportItems([])
+                      }}
+                    >
+                      Clear list
+                    </button>
+                  </div>
                 ) : null}
               </div>
             </CCardHeader>
@@ -287,10 +205,21 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
               <CCol xs={12}>
                 <CCard className="mb-4">
                   <div style={{ display: 'none' }}>
-                    <AddElementToReport
-                      reportItems={reportItems}
-                      setReportItems={setReportItems}
-                    />
+                    <div className="m-3 p-0" ref={ref || componentRef}>
+                      <PrintHeader />
+                      <p className="fs-4 fw-bolder text-center my-1">
+                        {' '}
+                        Daily sales report{' '}
+                      </p>
+
+                      <AddElementToReport
+                        user={user}
+                        reportItems={reportItems}
+                        setReportItems={setReportItems}
+                        totals={totals}
+                      />
+                      <PrintDailyReport />
+                    </div>
                   </div>
 
                   <CCardHeader>
@@ -302,6 +231,7 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                     user={user}
                     reportItems={reportItems}
                     setReportItems={setReportItems}
+                    totals={totals}
                   />
 
                   {reportItems && reportItems.length !== 0 ? (

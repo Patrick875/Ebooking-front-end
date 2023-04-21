@@ -5,24 +5,27 @@ import Navigation from '../navigation/Navigation'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from 'src/redux/Auth/authActions'
+import { useForm } from 'react-hook-form'
 
 function Login() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const [formState, setformState] = useState({})
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
 
-  const handleChange = (event) => {
-    setformState({
-      ...formState,
-      [event.target.name]: event.target.value,
-    })
+  const validateEmail = (value) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+    return emailRegex.test(value) || 'Invalid email address'
   }
 
-  const handleSubmit = async (e) => {
+  const submitLogin = async (data) => {
     setLoading(true)
-    e.preventDefault()
-    dispatch(login(formState))
+    dispatch(login(data))
     setLoading(false)
     navigate('/')
   }
@@ -36,7 +39,7 @@ function Login() {
             <h1 className="heading my-0"> Olympic Hotel </h1>
           </div>
           <div className="Login__form">
-            <form method="POST" onSubmit={(e) => handleSubmit(e)}>
+            <form m onSubmit={handleSubmit(submitLogin)}>
               <h1 className="form__heading"> Login </h1>
               <div className="Form__row block">
                 <input
@@ -46,21 +49,35 @@ function Login() {
                   id="email"
                   className="form__control"
                   placeholder="joe@olympichotel.rw"
-                  onChange={handleChange}
+                  {...register('email', {
+                    required: 'Email is required',
+                    validate: validateEmail,
+                  })}
                 />
               </div>
+              {errors.email && (
+                <p className="fs-6 text-danger fw-bolder">
+                  {errors.email.message}
+                </p>
+              )}
               <div className="Form__row block">
                 <input
                   type="password"
-                  value={formState.password}
                   name="password"
                   required
                   id="password"
                   className="form__control"
                   placeholder="*********"
-                  onChange={handleChange}
+                  {...register('password', {
+                    required: 'password is required',
+                  })}
                 />
               </div>
+              {errors.password && (
+                <p className="fs-6 text-danger fw-bolder">
+                  {errors.password.message}
+                </p>
+              )}
               <div className="Form__row block">
                 <Link
                   className="login__reset__option"
@@ -82,7 +99,11 @@ function Login() {
               )}
 
               {formState?.email && formState?.password && (
-                <CButton type="submit" disable={loading}>
+                <CButton
+                  type="submit"
+                  className="btn custom-btn btn-7 px-4 py-1"
+                  disable={loading}
+                >
                   Login
                 </CButton>
               )}

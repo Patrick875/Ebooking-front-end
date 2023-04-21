@@ -62,6 +62,20 @@ export const getAllRemoveDates = function (service) {
   }
   return []
 }
+
+export function sumAmountsByCurrency(transactions) {
+  const sumByCurrency = {}
+  for (const transaction of transactions) {
+    const currency = transaction.currency
+    const amount = transaction.amount
+    if (sumByCurrency.hasOwnProperty(currency)) {
+      sumByCurrency[currency] += Number(amount)
+    } else {
+      sumByCurrency[currency] = Number(amount)
+    }
+  }
+  return sumByCurrency
+}
 // export const getDuplicates = function (array1, array2) {
 //   const duplicates = []
 //   const seen = new Set()

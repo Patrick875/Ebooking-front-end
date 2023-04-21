@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 // http://192.168.122.1:8080/api/v1
 
 const instance = axios.create({
-  baseURL: 'http://192.168.122.1:8080/api/v1',
+  baseURL: 'http://206.81.29.111:8080/api/v1',
 })
 
 let tokenPromise
@@ -59,7 +59,7 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response.status === 403) {
+    if (error && error.response && error.response.status === 403) {
       // Clear the token and state fields from local storage
       localStorage.removeItem('token')
       localStorage.removeItem('state')

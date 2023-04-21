@@ -2,7 +2,7 @@ import React from 'react'
 import UserRolesAdd from './views/pages/users/UserRolesAdd'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const Cards = React.lazy(() => import('./views/base/cards/Cards'))
+
 // custom pages
 
 //roomClass
@@ -66,9 +66,7 @@ const Users = React.lazy(() => import('./views/pages/users/Users'))
 const UserAdd = React.lazy(() => import('./views/pages/users/UserAdd'))
 const UserEdit = React.lazy(() => import('./views/pages/users/UserEdit'))
 const UserRoles = React.lazy(() => import('./views/pages/users/UserRoles'))
-const UserEditRolesAdd = React.lazy(() =>
-  import('./views/pages/users/UserRolesAdd'),
-)
+
 const UserRolesEdit = React.lazy(() =>
   import('./views/pages/users/UserRolesEdit'),
 )
@@ -239,7 +237,6 @@ const StockReports = React.lazy(() =>
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/base', name: 'Base', element: Cards, exact: true },
   {
     path: 'booking/rooms/class/add',
     exact: true,

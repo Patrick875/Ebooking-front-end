@@ -26,7 +26,6 @@ function AllDailySalesReports() {
       await instance
         .get('/daily-sales/all')
         .then((res) => {
-          console.log(res)
           setReports(res.data.data)
         })
         .catch((err) => {
@@ -60,7 +59,7 @@ function AllDailySalesReports() {
                     <CTableRow key={i}>
                       <CTableDataCell>{report.id}</CTableDataCell>
                       <CTableDataCell>
-                        {new Date(reports.date).toLocaleDateString()}
+                        {new Date(report.date).toLocaleDateString()}
                       </CTableDataCell>
                       <CTableDataCell>
                         <Link

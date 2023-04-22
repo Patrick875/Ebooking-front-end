@@ -44,8 +44,7 @@ const Reservation = () => {
       await instance
         .get('/reservation/all')
         .then((res) => {
-          console.log(res.data.data)
-          setReservations(res.data.data.items)
+          setReservations(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)

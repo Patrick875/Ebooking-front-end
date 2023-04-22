@@ -9,7 +9,6 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormInput,
   CFormLabel,
   CRow,
 } from '@coreui/react'
@@ -18,17 +17,36 @@ import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 function ServiceSell() {
-  const { register, handleSubmit } = useForm()
+  const { handleSubmit } = useForm()
   const [singleSelections, setSingleSelections] = useState([])
   const [services, setServices] = useState([])
+  const [users, setUsers] = useState([])
+  const [customer, setCustomer] = useState([])
   const onServiceSell = async (data) => {
     data.serviceId =
       singleSelections && singleSelections.length !== 0
         ? singleSelections[0].id
         : null
-    if (data.serviceId === null) {
-      delete data.serviceId
-    }
+    data.name =
+      customer && customer.length !== 0
+        ? users.includes(customer[0])
+          ? customer[0].names
+          : customer[0]
+        : null
+    data.customer =
+      customer && customer.length !== 0
+        ? users.includes(customer[0])
+          ? customer[0].id
+          : null
+        : null
+
+    data = Object.keys(data).reduce((acc, key) => {
+      if (data[key] !== null) {
+        acc[key] = data[key]
+      }
+      return acc
+    }, {})
+
     await instance
       .post('/services/sell', data)
       .then(() => {
@@ -51,6 +69,12 @@ function ServiceSell() {
           toast.error(err.message)
         })
     }
+    const getAllUsers = async () => {
+      await instance.get('/users/all').then((res) => {
+        setUsers(res.data.data)
+      })
+    }
+    getAllUsers()
     getAllServices()
   }, [])
 
@@ -73,13 +97,14 @@ function ServiceSell() {
               >
                 <CCol md={6}>
                   <CFormLabel htmlFor="title"> Client name </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="title"
-                    id="title"
-                    size="md"
-                    {...register('client_name')}
+                  <Typeahead
+                    id="basic-typeahead-single"
+                    labelKey="name"
+                    onChange={setCustomer}
+                    allowNew={true}
+                    options={users}
+                    placeholder="search client"
+                    selected={customer}
                   />
                 </CCol>
 

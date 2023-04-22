@@ -92,6 +92,13 @@ const ReservationAdd = () => {
   const removeDates =
     service && service.length !== 0 ? getAllRemoveDates(service[0]) : []
 
+  const handleSearch = (query) => {
+    const filteredOptions = customers.filter((option) =>
+      option.name.toLowerCase().includes(query.toLowerCase()),
+    )
+    setCustomers(filteredOptions)
+  }
+
   const onSubmit = (data) => {
     if (type === 'room' && days && !roomK) {
       data.roomId = service[0].id
@@ -236,6 +243,7 @@ const ReservationAdd = () => {
                         onChange={setCustomer}
                         options={customers}
                         placeholder="customer name ..."
+                        onInputChange={handleSearch}
                         selected={customer}
                       />
                     </CCol>

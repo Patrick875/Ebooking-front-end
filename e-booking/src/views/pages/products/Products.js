@@ -21,6 +21,11 @@ import { toast } from 'react-hot-toast'
 const Products = () => {
   const dispatch = useDispatch()
   const [products, setProducts] = useState([])
+  const deleteProduct = async (id) => {
+    await instance.delete(`/products/delete/${id}`).then(() => {
+      toast.success('product deleted!!!!')
+    })
+  }
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   useEffect(() => {
     const getAllProducts = async () => {
@@ -87,7 +92,7 @@ const Products = () => {
                               ))
                             : 'not set'}{' '}
                         </CTableDataCell>
-                        <CTableDataCell>
+                        <CTableDataCell className="d-flex gap-3">
                           <Link
                             to="/booking/products/edit"
                             className={`${
@@ -98,6 +103,16 @@ const Products = () => {
                             }}
                           >
                             Edit
+                          </Link>
+                          <Link
+                            className={`${
+                              loggedInUser === 'controller' ? 'disabled' : ''
+                            } btn btn-sm btn-danger`}
+                            onClick={() => {
+                              return deleteProduct(product.id)
+                            }}
+                          >
+                            Delete
                           </Link>
                         </CTableDataCell>
                       </CTableRow>

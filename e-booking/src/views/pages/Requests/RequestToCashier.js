@@ -21,6 +21,7 @@ import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrder from '../stock/PurchaseOrder'
 import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -189,6 +190,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                   requestItems={requestItems}
                   setRequestItems={setRequestItems}
                 />
+                <PurchaseOrderFooter />
               </PrintTemplate1>
             </div>
             <PurchaseOrder

@@ -11,10 +11,16 @@ import {
 
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { Link } from 'react-router-dom'
 import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 function StockItems() {
   const [items, setItems] = useState([])
+  const deleteStockItem = async (id) => {
+    await instance.delete(`/stock/item/delete/${id}`).then(() => {
+      toast.success('item deleted!!!!')
+    })
+  }
   useEffect(() => {
     const getItems = async () => {
       await instance
@@ -42,6 +48,7 @@ function StockItems() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -51,6 +58,16 @@ function StockItems() {
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                       <CTableDataCell>{`${item.name}`}</CTableDataCell>
+                      <CTableDataCell className="d-flex ">
+                        <Link
+                          className={` btn btn-sm btn-danger`}
+                          onClick={() => {
+                            return deleteStockItem(item.id)
+                          }}
+                        >
+                          Delete
+                        </Link>
+                      </CTableDataCell>
                     </CTableRow>
                   )
                 })

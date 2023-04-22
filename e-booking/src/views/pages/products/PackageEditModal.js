@@ -17,15 +17,17 @@ import PackageItems from './ProductAdd/PackageItems'
 
 const PackageEditModal = (props) => {
   const { register, getValues, reset } = useForm()
-  const {
+  let {
     packages,
     visible,
     setVisible,
     productPackage,
     setProductPackages,
     productPackages,
+    selectedProductPackages,
     stockItems,
   } = props
+
   const [packageItems, setPackageItems] = useState(
     productPackage.ProductPackage.items,
   )
@@ -41,6 +43,12 @@ const PackageEditModal = (props) => {
   const addPackage = (data) => {
     data.id = data.packageId
     data.items = packageItems
+    console.log('sawa', data)
+    selectedProductPackages = selectedProductPackages.filter((pac) =>
+      pac.id == data.id ? { ...pac, ...data } : pac,
+    )
+
+    setProductPackages(selectedProductPackages)
     //   delete data.unit
     //   setProductPackages([...productPackages, data])
     //   setPackageItems([])
@@ -72,15 +80,19 @@ const PackageEditModal = (props) => {
                 {...register('packageId', { required: true })}
               >
                 {packages && packages.length !== 0
-                  ? packages.map((pack, i) => (
-                      <option
-                        key={i}
-                        value={pack.id}
-                        selected={pack.id === productPackage.id}
-                      >
-                        {pack.name}
-                      </option>
-                    ))
+                  ? packages.map((pack, i) => {
+                      return (
+                        <option
+                          key={i}
+                          value={productPackage.id}
+                          selected={
+                            productPackage.id === pack.id ? true : false
+                          }
+                        >
+                          {pack.name}
+                        </option>
+                      )
+                    })
                   : null}
               </CFormSelect>
             </CCol>
@@ -158,7 +170,7 @@ const PackageEditModal = (props) => {
                 style={{ backgroundColor: 'black' }}
                 onClick={() => {
                   const data = getValues()
-                  console.log('this is on add data', data)
+
                   return onAdd(data)
                 }}
               />

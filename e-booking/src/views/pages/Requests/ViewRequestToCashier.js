@@ -17,6 +17,7 @@ import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
+import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 
 const Request = (props, ref) => {
   const { request, orderTotal, StockPurchaseOrderDetails } = props
@@ -126,6 +127,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
             orderTotal={orderTotal}
             StockPurchaseOrderDetails={StockPurchaseOrderDetails}
           />
+          <PurchaseOrderFooter />
         </PrintTemplate1>
       </div>
       <Request

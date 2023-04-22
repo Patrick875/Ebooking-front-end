@@ -409,3 +409,9 @@ export default _nav
 //       },
 //     ],
 //   },
+
+// {
+//         component: CNavItem,
+//         name: 'Sales',
+//         to: '/booking/bar/sells/',
+//       },

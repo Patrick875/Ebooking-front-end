@@ -32,6 +32,11 @@ function ProductEdit() {
   const [productPackages, setProductPackages] = useState(
     selectedProduct.Packages,
   )
+
+  // if(productPackages.length!==0){
+  //   selectedProduct.Packages = [...selectedProduct.Packages, ...productPackages]
+  // }
+
   const [stockItems, setStockItems] = useState([])
   const onSubmit = (data) => {
     console.log(data)
@@ -102,7 +107,7 @@ function ProductEdit() {
                       type="text"
                       name="title"
                       id="title"
-                      value={selectedProduct.name}
+                      defaultValue={selectedProduct.name}
                       size="md"
                       required
                       {...register('name')}
@@ -122,16 +127,27 @@ function ProductEdit() {
                       value={
                         allDataCategories.filter(
                           (cat) =>
-                            cat.id ===
-                            selectedProduct.Packages[0].ProductCategory.id,
+                            cat.id === productPackages[0].ProductCategory.id,
                         )[0]
                       }
                       {...register('category')}
                     >
-                      <option>-- Select -- </option>
                       {allDataCategories && allDataCategories.length !== 0
                         ? allDataCategories.map((category) => (
-                            <option value={category.id} key={category.id}>
+                            <option
+                              value={category.id}
+                              key={category.id}
+                              selected={
+                                productPackages
+                                  ? productPackages !== 0
+                                    ? productPackages[0].ProductCategory
+                                        .name === category.name
+                                      ? true
+                                      : false
+                                    : false
+                                  : false
+                              }
+                            >
                               {category.name}
                             </option>
                           ))
@@ -144,9 +160,9 @@ function ProductEdit() {
                     Product packages
                   </p>
                   {selectedProduct &&
-                  selectedProduct.Packages &&
-                  selectedProduct.Packages.length !== 0
-                    ? selectedProduct.Packages.map((el, i) => (
+                  productPackages &&
+                  productPackages.length !== 0
+                    ? productPackages.map((el, i) => (
                         <CCol
                           key={i}
                           onMouseEnter={(e) => {
@@ -189,8 +205,9 @@ function ProductEdit() {
                             setVisible={setVisible}
                             productPackage={el}
                             packages={packages}
-                            productPackages={productPackages}
+                            productPackages={selectedProduct.Packages}
                             setProductPackages={setProductPackages}
+                            selectedProductPackages={selectedProduct.Packages}
                             stockItems={stockItems}
                           />
                         </CCol>

@@ -81,6 +81,7 @@ const AddBarItem = React.lazy(() => import('./views/pages/Bar/AddBarItem'))
 const AllBarRequest = React.lazy(() =>
   import('./views/pages/Bar/AllBarRequest'),
 )
+const BarSells = React.lazy(() => import('./views/pages/Bar/BarSells'))
 
 //sauna
 const AllSaunaItems = React.lazy(() =>
@@ -422,6 +423,12 @@ const routes = [
     exact: true,
     name: 'All Bar Requests',
     element: AllBarRequest,
+  },
+  {
+    path: '/booking/bar/sells',
+    exact: true,
+    name: 'Bar sells',
+    element: BarSells,
   },
   {
     path: '/booking/sauna/add',

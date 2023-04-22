@@ -12,7 +12,7 @@ import {
   CNavItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilExitToApp, cilMenu } from '@coreui/icons'
+import { cilExitToApp, cilMenu, cilLockLocked } from '@coreui/icons'
 import { AppBreadcrumb } from './index'
 import { logout } from 'src/redux/Auth/authActions'
 // import { logo } from 'src/assets/brand/logo'
@@ -52,18 +52,14 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
-        {/* <CHeaderNav>
+        <CHeaderNav>
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
+            <CNavLink href="/password">
+              <CIcon icon={cilLockLocked} size="lg" />
+              Change password
             </CNavLink>
           </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav> */}
+        </CHeaderNav>
         <CHeaderNav className="ms-3">
           <div href="#">
             <Link

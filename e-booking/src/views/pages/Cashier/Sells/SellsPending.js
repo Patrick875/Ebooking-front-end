@@ -57,6 +57,18 @@ function SellsPending() {
         toast.error('order confirm failed')
       })
   }
+  const cancelSell = async (data) => {
+    await instance
+      .post('/products/package/sells/cancel', data)
+      .then(() => {
+        toast.success('order concel success')
+        const updatedData = sells.filter((item) => !item)
+        setSells(updatedData)
+      })
+      .catch(() => {
+        toast.error('order cancel failed')
+      })
+  }
 
   return (
     <div>
@@ -116,13 +128,14 @@ function SellsPending() {
                         </div>
                       </CTableDataCell>
                       <CTableDataCell>{`${item.amount}`}</CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell className="d-flex gap-3">
                         <div
                           className="btn btn-primary btn-sm"
                           onClick={() => confirmSell({ id: item.id })}
                         >
-                          Confirm order
+                          Confirm
                         </div>
+                        <div className="btn btn-danger btn-sm">Cancel</div>
                       </CTableDataCell>
                     </CTableRow>
                   )

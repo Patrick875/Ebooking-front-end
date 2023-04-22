@@ -1,3 +1,6 @@
+import dayjs from 'dayjs'
+const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
+dayjs.extend(isSameOrBefore)
 export const datesInRange = function (startDate, endDate, steps = 1) {
   const dateArray = []
   let currentDate = new Date(startDate)
@@ -13,14 +16,17 @@ export const datesInRange = function (startDate, endDate, steps = 1) {
 export const datesInRangeWithUnix = function (startDate, endDate, steps = 1) {
   const dateArray = []
   let currentDate = new Date(startDate)
+  endDate = new Date(endDate)
 
-  while (currentDate <= new Date(endDate)) {
-    let date = new Date(currentDate)
-    date.setUTCHours(0, 0, 0, 0)
-    const utcDateWithoutTime = date.toISOString().slice(0, 10)
-    dateArray.push(utcDateWithoutTime)
-    // Use UTC date to prevent problems with time zones and DST
-    currentDate.setUTCDate(currentDate.getUTCDate() + steps)
+  while (dayjs(currentDate).isSameOrBefore(dayjs(endDate), 'date')) {
+    // let date = new Date(currentDate)
+    // date.setUTCHours(0, 0, 0, 0)
+    // const utcDateWithoutTime = date.toISOString().slice(0, 10)
+    // dateArray.push(utcDateWithoutTime)
+    // // Use UTC date to prevent problems with time zones and DST
+    // currentDate.setUTCDate(currentDate.getUTCDate() + steps)
+    dateArray.push(dayjs(currentDate).format('YYYY-MM-DD'))
+    currentDate = dayjs(currentDate).add(1, 'day')
   }
 
   return dateArray
@@ -28,7 +34,7 @@ export const datesInRangeWithUnix = function (startDate, endDate, steps = 1) {
 
 export const getUTCDateWithoutHours = function (date) {
   let newDate = new Date(date)
-  newDate.setUTCHours(0, 0, 0, 0)
+  // newDate.setUTCHours(0, 0, 0, 0)
   const utcDateWithoutTime = newDate.toISOString().slice(0, 10)
   return utcDateWithoutTime
 }

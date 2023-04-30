@@ -1,166 +1,209 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useForm } from 'react-hook-form'
-import { Typeahead } from 'react-bootstrap-typeahead'
-
 import {
   CButton,
-  CCard,
-  CCardBody,
   CCardHeader,
   CCol,
-  CCollapse,
-  CForm,
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
   CFormInput,
-  CFormLabel,
-  CFormSelect,
   CRow,
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import './Product.scss'
+import { AiOutlineCloseCircle, AiOutlineEnter } from 'react-icons/ai'
+import { IoReturnUpBack } from 'react-icons/io5'
+import { numpadItems, tables } from 'src/utils/constants'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
-import OrdersTable from '../Bar/OrdersTable'
-import { currencies } from 'src/utils/constants'
 import PrintHeader from '../Printing/PrintHeader'
+import OrdersTable from '../PetitStock/OrdersTable'
 import ReactToPrint from 'react-to-print'
+import cardmachineimage from './../../../assets/icons/card-machine.png'
+import { RiCheckLine } from 'react-icons/ri'
+import AllPetitStock from '../PetitStock/AllPetitStock'
 
-function getPrice(elements, PItem, PackId) {
-  elements = elements.filter((e) => (e.Packages.length !== 0 ? e : ''))
-
-  let element = elements.filter((element) =>
-    element.name === PItem ? element : '',
+const PaymentDropDown = (props) => {
+  return (
+    <CDropdown className="p-0 m-0 btn btn-light rounded-1 shadow-sm">
+      <CDropdownToggle className="bg-light text-dark outline-none border-0 w-100 h-100">
+        💲 Payment
+      </CDropdownToggle>
+      <CDropdownMenu>
+        <CDropdownItem>💸 Cash</CDropdownItem>
+        <CDropdownItem>📱 MoMo</CDropdownItem>
+        <CDropdownItem>
+          <img
+            src={cardmachineimage}
+            width={48}
+            height={48}
+            alt="card-machine-icon"
+          />
+          Card
+        </CDropdownItem>
+      </CDropdownMenu>
+    </CDropdown>
   )
-  let Packages = element[0].Packages
-
-  let pack = Packages.filter((pack) => (pack.id == PackId ? pack : null))
-
-  let packagePrice = pack && pack.length !== 0 ? pack[0].ProductPackage : null
-  let price = packagePrice ? packagePrice.price : 0
-  return price
 }
 
-// function PaymentModal(props) {
-//   const { visible, setVisible, register, orderItems } = props
-//   console.log(orderItems)
-
-//   return (
-//     <CModal
-//       size="lg"
-//       alignment="center"
-//       visible={visible}
-//       onClose={() => setVisible(false)}
-//       className="d-flex justify-content-center"
-//     >
-//       <div className=" m-3 ">
-//         <p className="lead fs-2 fw-bold">Client payment</p>
-//         <CCol>
-//           <CFormLabel htmlFor="paymentMethod">Payment</CFormLabel>
-//           <CFormInput
-//             name="payment"
-//             id="payment"
-//             type="text"
-//             size="md"
-//             className="mb-3"
-//             {...register('payment')}
-//           />
-//         </CCol>
-//         <CCol className="d-flex gap-2">
-//           <div className="col">
-//             <CFormLabel htmlFor="paymentMethod">Payment method</CFormLabel>
-//             <CFormSelect
-//               name="paymentMethod"
-//               id="paymentMethod"
-//               size="md"
-//               className="mb-3"
-//               {...register('paymentMethod')}
-//             >
-//               <option value="Cash">Cash</option>
-//               <option value="Mobile Money">Mobile Money</option>
-//               <option value="Credit card">Credit card</option>
-//               <option value="Credit">Credit</option>
-//               <option value="Cheque">Cheque</option>
-//             </CFormSelect>
-//           </div>
-//           <div className="col">
-//             <CFormLabel htmlFor="paymentCurrency">Currency</CFormLabel>
-//             <CFormSelect
-//               name="paymentMethod"
-//               id="currency"
-//               size="md"
-//               className="mb-3"
-//               defaultValue={'RWF'}
-//               {...register('currency')}
-//             >
-//               {Object.keys(currencies).map((curr, i) => (
-//                 <option value={curr} key={i + 1}>
-//                   {curr} :{currencies[curr]}{' '}
-//                 </option>
-//               ))}
-//             </CFormSelect>
-//           </div>
-//         </CCol>
-//         <CCol xs={12} className="mt-2 d-flex justify-content-center ">
-//           <CButton
-//             component="input"
-//             type="submit"
-//             value="Pay"
-//             className="px-4"
-//           />
-//         </CCol>
-//       </div>
-//     </CModal>
-//   )
-// }
-
 const ProductSell = React.forwardRef((props, ref) => {
+  const { register, handleSubmit, setValue, watch, getValues } = useForm()
   const componentRef = useRef()
+  const [selectedInput, setSelectedInput] = useState(1)
+  let [results, setResults] = useState(Array(10).fill(''))
   const [products, setProducts] = useState([])
-  let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-  const { register, handleSubmit, watch, reset, getValues } = useForm()
-  const [visible, setVisible] = useState(false)
-  // const [paymentModal, setPaymentModal] = useState(false)
-  const [singleSelections, setSingleSelections] = useState([])
-  const [orderItems, setOrderItems] = useState([])
-  const quantity = watch('quantity') || 1
-  const pItem = watch('pItem')
-  let price = 0
-  if (singleSelections.length !== 0 && pItem !== '---' && pItem) {
-    price = getPrice(products, singleSelections[0].name, pItem)
+  const [productCategories, setProductCategories] = useState([])
+  let [orderItems, setOrderItems] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState()
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [disabled, setDisabled] = useState(true)
+
+  const handleInput = (e) => {
+    const currentResult = results[selectedInput - 1]
+    const newValue = currentResult + e.target.name
+    setResults(
+      results.map((result, index) =>
+        index === selectedInput - 1 ? newValue : result,
+      ),
+    )
+    setValue(`result${selectedInput}`, newValue)
   }
 
-  const onProductSell = async () => {
+  const clearItems = () => {
+    if (results.length !== 0) {
+      for (let y = 1; y <= results.length; y++) {
+        setValue(`result${y}`, '', false)
+        setResults(Array(10).fill(''))
+        setOrderItems([])
+      }
+    }
+  }
+
+  const backspace = () => {
+    const currentResult = results[selectedInput - 1]
+    const newValue = currentResult.slice(0, -1)
+    setResults(
+      results.map((result, index) =>
+        index === selectedInput - 1 ? newValue : result,
+      ),
+    )
+    setValue(`result${selectedInput}`, newValue)
+  }
+  const handleEnter = () => {}
+
+  const total = () => {
+    let total = 0
+    if (
+      orderItems &&
+      orderItems.length !== 0 &&
+      results &&
+      results.length !== 0
+    ) {
+      for (let i = 0; i < orderItems.length; i++) {
+        if (results[i]) {
+          total =
+            total + Number(orderItems[i].ProductPackage.price * results[i])
+        } else {
+          total = total + Number(orderItems[i].ProductPackage.price * 0)
+        }
+      }
+    }
+    return total
+  }
+  const orderTotal = total()
+
+  const [table, setTable] = useState()
+  const [petitStock, setPetitStock] = useState(false)
+  const onSubmit = (data) => {
+    console.log(data)
+  }
+  const handleProductClick = (product) => {
+    if (product.Packages && product.Packages.length > 0) {
+      setSelectedProduct(product)
+    } else {
+      let theProduct =
+        products && products.length !== 0
+          ? products.filter((el) =>
+              el.id == product.ProductPackage.ProductId ? el : '',
+            )[0]
+          : ''
+
+      setOrderItems([
+        ...orderItems,
+        {
+          ...product,
+          productName: theProduct.name,
+          productId: theProduct.id,
+          packageId: product.id,
+        },
+      ])
+    }
+  }
+  const handleBackClick = () => {
+    setSelectedProduct(null)
+  }
+  const handleKeyboardInput = (event) => {
+    const allowedKeys = [
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '0',
+      '.',
+      'Backspace',
+    ]
+    if (allowedKeys.includes(event.key)) {
+      if (event.key === 'Backspace') {
+        backspace()
+      } else {
+        const input = event.key === '.' ? '.' : parseInt(event.key)
+        handleInput({ target: { name: input } })
+      }
+    }
+  }
+  const createOrder = async () => {
+    results = results.filter((el) => el !== '')
+    orderItems =
+      results.length !== 0
+        ? orderItems.map((item, i) => {
+            return { ...item, quantity: results[i] }
+          })
+        : orderItems
+
+    let data = orderItems.map((order) => {
+      let { productId, packageId, quantity } = order
+      return { productId, packageId, quantity, petitStock }
+    })
+
     await instance
-      .post('/products/package/sell', { packages: orderItems })
+      .post('/products/package/sell', { packages: data })
       .then(() => {
         toast.success('Order created')
+        setOrderItems([])
+        setTable([])
       })
       .catch(() => {
         toast.error('order creation failed')
       })
   }
-
-  const onAddToOrder = (data) => {
-    if (singleSelections && singleSelections.length !== 0) {
-      data.productName = singleSelections[0].name
-      data.productId = singleSelections[0].id
-      data.unitPrice = price
-      data.total = Number(price) * Number(quantity)
-
-      let packName = singleSelections[0].Packages.filter(
-        (item) => item.id === Number(data.pItem),
-      )[0].name
-
-      data['packageId'] = Number(pItem)
-      data['packName'] = packName
-
-      setOrderItems([...orderItems, data])
-    }
-  }
-
   useEffect(() => {
     const getAllProducts = async () => {
       await instance
         .get('/products/all')
         .then((res) => {
+          console.log('okay', res.data.data)
           if (res.status === 200) {
             setProducts(res.data.data)
           }
@@ -169,226 +212,305 @@ const ProductSell = React.forwardRef((props, ref) => {
           toast.error(err.message)
         })
     }
+    const getAllProductCategories = async () => {
+      await instance.get('/products/category/all').then((res) => {
+        setProductCategories(res.data.data)
+      })
+    }
     getAllProducts()
+    getAllProductCategories()
   }, [])
+
+  console.log('selling to ', petitStock)
   return (
-    <React.Fragment>
-      <CRow>
-        <CCardHeader>
-          {orderItems && orderItems.length !== 0 ? (
-            <div className="d-flex gap-2">
-              <ReactToPrint
-                trigger={() => (
-                  <button className="btn btn-ghost-primary">Print</button>
-                )}
-                content={() => ref || componentRef.current}
-              />
+    <div className="m-0 p-0">
+      {!petitStock ? (
+        <AllPetitStock selling={true} setStock={setPetitStock} />
+      ) : (
+        <CRow>
+          {petitStock ? (
+            <div>
               <button
-                className="btn btn-ghost-danger"
+                className="btn btn-dark"
                 onClick={() => {
-                  return setOrderItems([])
+                  setPetitStock(false)
                 }}
               >
-                Clear
+                <IoReturnUpBack />
               </button>
+              <p className="fs-4 fst-normal text-uppercase">{petitStock}</p>
             </div>
           ) : null}
-        </CCardHeader>
-        <CForm
-          className="row"
-          name="roomClassAddFrm"
-          encType="multipart/form"
-          onSubmit={handleSubmit(onProductSell)}
-        >
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <div className="d-flex justify-content-between">
-                  <h2>Client Order</h2>
+          <CCardHeader className="d-flex justify-content-between">
+            {orderItems && orderItems.length !== 0 ? (
+              <div className="d-flex gap-2">
+                <ReactToPrint
+                  trigger={() => (
+                    <button className="btn btn-ghost-primary">Print</button>
+                  )}
+                  content={() => ref || componentRef.current}
+                />
+                <button
+                  className="btn btn-ghost-danger"
+                  onClick={() => {
+                    return setOrderItems([])
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+            ) : null}
+            {table ? (
+              <p className="text-center fst-italic m-0">
+                {' '}
+                Order for table {table}
+              </p>
+            ) : null}
+          </CCardHeader>
 
+          <CRow className="d-flex">
+            <CCol
+              md={5}
+              className={`${
+                selectedProduct ? 'product-sell-packages' : 'product-sell'
+              } bg-white  `}
+            >
+              {selectedProduct ? (
+                <React.Fragment>
                   <CButton
-                    component="input"
-                    value="Add items to list "
-                    onClick={() => {
-                      return setVisible(!visible)
-                    }}
-                  />
-                </div>
-              </CCardHeader>
-
-              <CCollapse visible={visible}>
-                <CCardBody className="row">
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="title"> Table </CFormLabel>
-                    <CFormInput
-                      className="mb-1"
-                      type="Number"
-                      name="title"
-                      id="title"
-                      size="md"
-                      required
-                      {...register('table')}
-                    />
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="title"> Client name </CFormLabel>
-                    <CFormInput
-                      className="mb-1"
-                      type="text"
-                      name="title"
-                      id="title"
-                      size="md"
-                      {...register('client-name')}
-                    />
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="bar"> Bar </CFormLabel>
-                    <CFormSelect
-                      name="bar"
-                      id="unit"
-                      size="md"
-                      className="mb-3"
-                      aria-label="bar "
-                      required
-                      {...register('petitStock')}
-                    >
-                      <option value="kitchen"> Kitchen </option>
-                      <option value="main-bar"> Main bar </option>
-                      <option value="swimming-pool-bar">
-                        {' '}
-                        Swimming pool bar{' '}
-                      </option>
-                    </CFormSelect>
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="title"> Product name </CFormLabel>
-                    <Typeahead
-                      id="basic-typeahead-single"
-                      labelKey="name"
-                      onChange={setSingleSelections}
-                      options={products}
-                      placeholder="search product..."
-                      selected={singleSelections}
-                    />
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="category">
-                      {' '}
-                      Product package{' '}
-                    </CFormLabel>
-                    <CFormSelect
-                      name="pack"
-                      id="pack"
-                      size="md"
-                      className="mb-3"
-                      aria-label="product package"
-                      required
-                      {...register('pack')}
-                    >
-                      <option>---select---</option>
-                      {products.length !== 0 && singleSelections.length !== 0
-                        ? singleSelections.map((pack) =>
-                            pack.Packages && pack.Packages.length !== 0
-                              ? pack.Packages.map((p) => (
-                                  <option
-                                    value={p.id}
-                                    key={p.id}
-                                    {...register('pItem')}
-                                  >
-                                    {p.name}
-                                  </option>
-                                ))
-                              : null,
-                          )
-                        : null}
-                    </CFormSelect>
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="title"> quantity </CFormLabel>
-                    <CFormInput
-                      className="mb-1"
-                      type="Number"
-                      name="quantity"
-                      id="title"
-                      size="md"
-                      required
-                      {...register('quantity')}
-                    />
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel className="d-flex align-content-end flex-col">
-                      Total :{' '}
-                      <strong className="px-2">
-                        {Number(quantity) * Number(price)}
-                      </strong>
-                    </CFormLabel>
-                  </CCol>
-
-                  <CCol
-                    xs={12}
-                    className={`${
-                      loggedInUser === 'controller' ? 'disabled' : ''
-                    } text-center my-3`}
+                    className="btn btn-primary rounded-0 shadow d-block"
+                    onClick={handleBackClick}
                   >
-                    <CButton
-                      component="input"
-                      disabled={
-                        singleSelections && singleSelections.length !== 0
-                          ? false
-                          : true
-                      }
-                      onClick={() => {
-                        const data = getValues()
-                        return onAddToOrder(data)
-                      }}
-                      value="Add item to order"
-                    />
-                  </CCol>
-                </CCardBody>
-              </CCollapse>
-            </CCard>
-          </CCol>
-
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <h2 className="text-center">
-                  <strong> Checkout</strong>
-                </h2>
-              </CCardHeader>
-              <CCardBody>
-                <div style={{ display: 'none' }}>
-                  <div
-                    className="m-3 p-0 client-receipt"
-                    ref={ref || componentRef}
-                  >
-                    <div style={{ width: '100%', height: '100%' }}>
-                      <PrintHeader />
-                      <p className="fs-4 fw-bolder text-center my-1">
-                        {' '}
-                        Receipt{' '}
+                    <IoReturnUpBack />
+                  </CButton>
+                  <React.Fragment>
+                    {
+                      <p
+                        className={`col fs-6 fw-bold text-capitalize text-center  `}
+                      >
+                        {selectedProduct.name}
                       </p>
-                      <OrdersTable
-                        orderItems={orderItems}
-                        setOrderItems={setOrderItems}
-                      />
+                    }
+                    <CCol className="d-flex">
+                      {selectedProduct.Packages.map((pack) => (
+                        <CButton
+                          key={pack.id}
+                          disabled={table ? false : true}
+                          className="btn btn-light rounded-0 shadow"
+                          onClick={() => handleProductClick(pack)}
+                        >
+                          {pack.name}
+                        </CButton>
+                      ))}
+                    </CCol>
+                  </React.Fragment>
+                </React.Fragment>
+              ) : products && products.length !== 0 ? (
+                products.map((product) => {
+                  return (
+                    <CButton
+                      disabled={table ? false : true}
+                      className="btn btn-light rounded-0 shadow"
+                      onClick={() => handleProductClick(product)}
+                    >
+                      {product.name}
+                    </CButton>
+                  )
+                })
+              ) : (
+                <div>No products in database</div>
+              )}
+            </CCol>
+            <CCol md={2} className="bg-white text-dark">
+              <div className="col d-flex mx-0 px-0 py-2 ">
+                <CButton
+                  className=" mx-0 col btn-light text-dark"
+                  onClick={() => {
+                    setSelectedCategory('all')
+                  }}
+                >
+                  All
+                </CButton>
+              </div>
+              {productCategories && productCategories.length !== 0
+                ? productCategories.map((cat, i) => (
+                    <div key={i} className="col d-flex mx-0 px-0 py-2 ">
+                      <CButton
+                        className=" mx-0 col btn-light text-dark"
+                        onClick={() => {
+                          setSelectedCategory(cat.id)
+                        }}
+                      >
+                        {cat.name}
+                      </CButton>
                     </div>
+                  ))
+                : null}
+            </CCol>
+            <CCol md={5} className="row mx-0 bg-white ">
+              <div className="col d-flex  px-0">
+                <div className="numpad ">
+                  {numpadItems.map((digit) => (
+                    <button
+                      key={digit}
+                      name={digit}
+                      onClick={handleInput}
+                      className="btn btn-light rounded-1 shadow-sm"
+                    >
+                      {digit}
+                    </button>
+                  ))}
+                  <button
+                    className="btn btn-light rounded-1 shadow-sm"
+                    onClick={() => {
+                      setDisabled(false)
+                    }}
+                  >
+                    🖊️ +
+                  </button>
+                  <PaymentDropDown />
+                  <button
+                    className="btn btn-light rounded-1 shadow-sm"
+                    onClick={() => {
+                      createOrder()
+                    }}
+                  >
+                    <RiCheckLine className=" text-success ri-lg" />
+                  </button>
+                </div>
+                <div className="col-2 numpad-action">
+                  <button
+                    className="btn btn-light rounded-1"
+                    onClick={clearItems}
+                    id="clear"
+                  >
+                    <AiOutlineCloseCircle className="text-danger" size="sm" />
+                  </button>
+                  <button
+                    className="btn btn-light rounded-1"
+                    onClick={backspace}
+                    id="backspace"
+                  >
+                    C
+                  </button>
+                  <button
+                    className="btn btn-light rounded-1"
+                    disabled={orderItems.length === 0 ? true : false}
+                    id="enter"
+                    onClick={handleEnter}
+                  >
+                    <AiOutlineEnter className="text-success" />
+                  </button>
+                </div>
+              </div>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md={7} className="p-0 m-0">
+              <div className="col d-flex justify-content-between">
+                <p className="fs-5">Total</p>
+                <p className="fs-4">{orderTotal.toLocaleString()}</p>
+              </div>
+              <div style={{ display: 'none' }}>
+                <div
+                  className="m-3 p-0 client-receipt"
+                  ref={ref || componentRef}
+                >
+                  <div style={{ width: '100%', height: '100%' }}>
+                    <PrintHeader />
+                    <p className="fs-4 fw-bolder text-center my-1"> Receipt </p>
+                    <OrdersTable
+                      orderItems={orderItems}
+                      setOrderItems={setOrderItems}
+                    />
                   </div>
                 </div>
-
-                <OrdersTable
-                  orderItems={orderItems}
-                  setOrderItems={setOrderItems}
-                />
-              </CCardBody>
-            </CCard>
-          </CCol>
-          <CCol xs={12} className="mt-2">
-            <CButton component="input" type="submit" value="Payment" />
-          </CCol>
-        </CForm>
-      </CRow>
-    </React.Fragment>
+              </div>
+              <CTable bordered>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Item </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> P.U </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Qty </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Amount </CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                {orderItems && orderItems.length !== 0 ? (
+                  orderItems.map((item, index) => (
+                    <CTableRow>
+                      <CTableHeaderCell scope="row">
+                        {index + 1}
+                      </CTableHeaderCell>
+                      <CTableDataCell>
+                        <CFormInput
+                          size="sm"
+                          {...register(`item${index + 1}`)}
+                          defaultValue={
+                            item ? item.name + ' of ' + item.productName : ''
+                          }
+                          className="border-none outline-none"
+                        />
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {Number(item.ProductPackage.price).toLocaleString()}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <CFormInput
+                          key={`result${index + 1}`}
+                          type="number"
+                          {...register(`item${index + 1}_quantity`)}
+                          value={results[index]}
+                          onClick={() => {
+                            setSelectedInput(index + 1)
+                          }}
+                          onKeyDown={handleKeyboardInput}
+                        />
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {Number(
+                          item.ProductPackage.price * results[index],
+                        ).toLocaleString()}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                ) : (
+                  <CTableRow>0 items on order</CTableRow>
+                )}
+              </CTable>
+            </CCol>
+            <CCol md={5} className="bg-white product-sell-tables">
+              <CTable bordered={true} striped={true} small hover={!disabled}>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Number </CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {tables && tables.length !== 0 ? (
+                    tables.map((item, index) => (
+                      <CTableRow
+                        onClick={() => {
+                          setTable(item)
+                        }}
+                      >
+                        <CTableHeaderCell scope="row">
+                          {index + 1}
+                        </CTableHeaderCell>
+                        <CTableDataCell>{item}</CTableDataCell>
+                      </CTableRow>
+                    ))
+                  ) : (
+                    <CTableRow>No tables in db</CTableRow>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCol>
+          </CRow>
+        </CRow>
+      )}
+    </div>
   )
 })
 

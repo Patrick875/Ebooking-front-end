@@ -11,7 +11,7 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintHeader from '../Printing/PrintHeader'
@@ -25,10 +25,7 @@ const Request = (props, ref) => {
   return (
     <div className="m-3 p-3">
       <h2 className="text-center my-3">
-        Stock order of{' '}
-        {request && request.date
-          ? new Date(request.date).toLocaleDateString()
-          : null}
+        Stock order N &#176; {request ? request.id : null}
       </h2>
 
       <CCardBody className="d-flex justify-content-around">
@@ -50,15 +47,13 @@ const Request = (props, ref) => {
                       <CTableDataCell>
                         {order.StockItemValue.StockItem.name}
                       </CTableDataCell>
-                      <CTableDataCell>
-                        {order.StockItemValue.quantity}
-                      </CTableDataCell>
+                      <CTableDataCell>{order.quantity}</CTableDataCell>
                       <CTableDataCell>
                         {order.StockItemValue.price}
                       </CTableDataCell>
                       <CTableDataCell>
                         {Number(
-                          Number(order.StockItemValue.quantity) *
+                          Number(order.quantity) *
                             Number(order.StockItemValue.price),
                         ).toLocaleString()}
                       </CTableDataCell>
@@ -82,7 +77,7 @@ const Request = (props, ref) => {
 const StockRequestView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const request = useSelector((state) => state.selection.selected)
-
+  const [approved, setApproved] = useState(false)
   let stockOrderDetails
   if (request && request.PetitStockRequesitionDetails) {
     stockOrderDetails = request.PetitStockRequesitionDetails
@@ -93,6 +88,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
       .post('petitstock/order/approve', { request: request.id })
       .then(() => {
         toast.success('stock order approved')
+        setApproved(!approved)
       })
       .catch(() => {
         toast.error('error approving order')
@@ -111,12 +107,20 @@ const StockRequestView = React.forwardRef((props, ref) => {
           />
         ) : null}
         <button
-          className="btn btn-ghost-success text-black"
+          className={`btn btn-ghost-success text-black ${
+            request.status === 'APPROVED' || approved ? 'disabled' : null
+          }`}
           onClick={() => approveStockOrder()}
         >
           Approve
         </button>
-        <button className="btn btn-ghost-danger text-black">Cancel</button>
+        <button
+          className={`btn btn-ghost-danger text-black ${
+            request.status === 'APPROVED' || approved ? 'disabled' : null
+          }`}
+        >
+          Cancel
+        </button>
       </CCardHeader>
 
       <div style={{ display: 'none' }}>

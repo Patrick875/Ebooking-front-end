@@ -161,7 +161,7 @@ const _nav = [
 
   {
     component: CNavGroup,
-    name: 'Bar & Kitchen',
+    name: 'Petit stock',
     to: '/bar',
     icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
     items: [
@@ -172,23 +172,23 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Request item',
-        to: '/booking/bar/request',
+        name: 'All Petit stock',
+        to: '/booking/petitstock/all',
       },
       {
         component: CNavItem,
-        name: 'Add item',
-        to: '/booking/bar/add',
+        name: 'Create Petit stock',
+        to: '/booking/petitstock/create',
       },
       {
         component: CNavItem,
-        name: 'All items',
-        to: '/booking/bar/all',
+        name: 'Create Table',
+        to: '/booking/tables/create',
       },
       {
         component: CNavItem,
-        name: 'All requests',
-        to: '/booking/bar/request/all',
+        name: 'Tables',
+        to: '/booking/tables/all',
       },
     ],
   },
@@ -365,13 +365,13 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'All Customers',
-        to: '/customers',
+        name: 'Add Customer',
+        to: '/customers/add',
       },
       {
         component: CNavItem,
-        name: 'Add Customer',
-        to: '/customers/add',
+        name: 'All Customers',
+        to: '/customers',
       },
     ],
   },
@@ -414,4 +414,30 @@ export default _nav
 //         component: CNavItem,
 //         name: 'Sales',
 //         to: '/booking/bar/sells/',
+//       },
+
+// {
+//         component: CNavItem,
+//         name: 'Sell',
+//         to: '/booking/products/sell',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Request item',
+//         to: '/booking/bar/request',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Add item',
+//         to: '/booking/bar/add',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'All items',
+//         to: '/booking/bar/all',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'All requests',
+//         to: '/booking/bar/request/all',
 //       },

@@ -1,5 +1,4 @@
 import { React } from 'react'
-import { useLocation } from 'react-router-dom'
 
 import {
   AppContent,
@@ -7,22 +6,31 @@ import {
   AppFooter,
   AppHeader,
 } from '../components/index'
+import { useSelector } from 'react-redux'
 
 const DefaultLayout = () => {
-  const location = useLocation()
-  console.log(location)
-  return (
-    <div>
-      <AppSidebar />
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <AppHeader />
-        <div className="body flex-grow-1 px-3">
-          <AppContent />
-        </div>
-        <AppFooter />
+  const role = useSelector((state) => state.auth.role)
+
+  if (role === 'waiter') {
+    return (
+      <div className="body flex-grow-1 px-3">
+        <AppContent />
       </div>
-    </div>
-  )
+    )
+  } else {
+    return (
+      <div>
+        <AppSidebar />
+        <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+          <AppHeader />
+          <div className="body flex-grow-1 px-3">
+            <AppContent />
+          </div>
+          <AppFooter />
+        </div>
+      </div>
+    )
+  }
 }
 
 export default DefaultLayout

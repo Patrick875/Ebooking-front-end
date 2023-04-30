@@ -236,14 +236,12 @@ const ReservationAdd = () => {
                         ) : null}
                       </div>
                       <Typeahead
-                        {...inputState}
                         id="basic-typeahead-single"
                         filterBy={['names']}
                         labelKey="names"
                         onChange={setCustomer}
                         options={customers}
                         placeholder="customer name ..."
-                        onInputChange={handleSearch}
                         selected={customer}
                       />
                     </CCol>

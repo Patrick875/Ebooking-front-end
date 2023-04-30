@@ -1,6 +1,6 @@
 import { IS_AUTH } from './AuthActionTypes'
 import { toast } from 'react-hot-toast'
-import { instance, setToken, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance, setToken } from 'src/API/AxiosInstance'
 //import axios from 'axios'
 import Cookies from 'js-cookie'
 
@@ -51,24 +51,22 @@ export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
   console.log(payload)
   return async function (dispatch) {
-    await getTokenPromise().then(async () => {
-      await instance
-        .post(`users/add`, payload)
-        .then((res) => {
-          if (res.data.user) {
-            dispatch({
-              type: IS_AUTH.REGISTER,
-              payload: {
-                isAuth: true,
-              },
-            })
-            toast.success('User created')
-          }
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
-    })
+    await instance
+      .post(`users/add`, payload)
+      .then((res) => {
+        if (res.data.user) {
+          dispatch({
+            type: IS_AUTH.REGISTER,
+            payload: {
+              isAuth: true,
+            },
+          })
+          toast.success('User created')
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message)
+      })
   }
 }
 

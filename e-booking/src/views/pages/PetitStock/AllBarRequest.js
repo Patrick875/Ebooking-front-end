@@ -12,13 +12,18 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { RiCheckLine } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { useNavigate } from 'react-router-dom'
+import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
 function AllBarRequest() {
   const [items, setItems] = useState([])
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handleOnRowClick = async (item) => {
+    dispatch(selectItem(item))
+    navigate('/booking/stock/request/out/view')
+  }
   useEffect(() => {
     const getPetitStockOrders = async () => {
       await instance
@@ -47,29 +52,26 @@ function AllBarRequest() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Approval</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
               ? items.map((item, i) => {
                   return (
-                    <CTableRow key={item.id}>
+                    <CTableRow
+                      key={item.id}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        return handleOnRowClick(item)
+                      }}
+                    >
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                       <CTableDataCell>
                         {new Date(item.date).toLocaleDateString()}
                       </CTableDataCell>
                       <CTableDataCell className="d-flex">
-                        <Link
-                          className="btn btn-warning"
-                          to="/booking/requests/cashier/view"
-                          onClick={() => {
-                            dispatch(selectItem(item))
-                          }}
-                        >
-                          View
-                        </Link>
-
                         {item && item.status === 'APPROVED' ? (
                           <p className="ms-2">
                             Approved
@@ -77,6 +79,9 @@ function AllBarRequest() {
                           </p>
                         ) : null}
                       </CTableDataCell>
+                      <CTableHeaderCell>
+                        {item.total.toLocaleString()}
+                      </CTableHeaderCell>
                     </CTableRow>
                   )
                 })

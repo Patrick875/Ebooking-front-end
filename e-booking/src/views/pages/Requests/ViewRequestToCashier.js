@@ -11,7 +11,7 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
@@ -24,10 +24,7 @@ const Request = (props, ref) => {
   return (
     <div className="m-3 p-3">
       <h2 className="text-center my-3">
-        Purchase order of{' '}
-        {request && request.date
-          ? new Date(request.date).toLocaleDateString()
-          : null}
+        Purchase order &#8470; {request ? request.id : null}
       </h2>
 
       <CCardBody className="d-flex justify-content-around">
@@ -75,6 +72,7 @@ const Request = (props, ref) => {
 
 const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+  const [approved, setApproved] = useState(false)
   const request = useSelector((state) => state.selection.selected)
 
   const approvePurchaseOrder = async () => {
@@ -82,6 +80,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       .post('/purchase/order/approve', { orderId: request.id })
       .then(() => {
         toast.success('purchase order approved !!')
+        setApproved(!approved)
       })
       .catch(() => {
         toast.error('purchase order approval failed !!!')
@@ -113,12 +112,17 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
         <button
           className="btn btn-ghost-success text-black"
           onClick={approvePurchaseOrder}
-          disabled={request.status === 'APPROVED'}
+          disabled={request.status === 'APPROVED' || approved}
         >
           Approve
         </button>
 
-        <button className="btn btn-ghost-danger text-black">Cancel</button>
+        <button
+          className="btn btn-ghost-danger text-black"
+          disabled={request.status === 'APPROVED' || approved}
+        >
+          Cancel
+        </button>
       </CCardHeader>
       <div style={{ display: 'none' }}>
         <PrintTemplate1 ref={ref || componentRef}>

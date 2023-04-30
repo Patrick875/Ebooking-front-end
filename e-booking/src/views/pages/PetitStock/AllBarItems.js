@@ -1,9 +1,6 @@
 import {
+  CButton,
   CCardBody,
-  CCardHeader,
-  CCol,
-  CFormLabel,
-  CFormSelect,
   CRow,
   CTable,
   CTableBody,
@@ -12,13 +9,14 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-
+import { BiCartAdd, BiCartDownload } from 'react-icons/bi'
+import { BsFiles } from 'react-icons/bs'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
+import { Link } from 'react-router-dom'
 function AllBarItems() {
-  const { register } = useForm()
   const [items, setItems] = useState([])
   useEffect(() => {
     const getItems = async () => {
@@ -33,35 +31,27 @@ function AllBarItems() {
     }
     getItems()
   }, [])
-  console.log('this is items', items)
 
   return (
     <div>
-      <CCardHeader>
-        <h2>
-          <strong> Stock items </strong>
-        </h2>
-      </CCardHeader>
       <CCardBody>
+        <p className="text-center fs-3">Kitchen stock</p>
         <CRow>
-          <CCol md={4}>
-            <CFormLabel htmlFor="unit" className="fw-bolder">
-              {' '}
-              Bar{' '}
-            </CFormLabel>
-            <CFormSelect
-              name="unit"
-              id="unit"
-              size="md"
-              className="mb-3"
-              aria-label="item quantity unit"
-              {...register('bar', { required: true })}
+          <div className="d-flex justify-content-between my-3">
+            <Link md={4} className="btn btn-primary" to="/booking/bar/request">
+              <BiCartDownload className="fs-5" /> Request item from stock
+            </Link>
+            <Link
+              md={4}
+              className="btn btn-primary"
+              to="/booking/bar/request/all"
             >
-              <option value="main-bar"> Kitchen</option>
-              <option value="main-bar"> Main Bar</option>
-              <option value="swimming-pool-bar"> Swimming Pool Bar </option>
-            </CFormSelect>
-          </CCol>
+              <BsFiles className="fs-5" /> All requests
+            </Link>
+          </div>
+          <p className="text-center fs-4">
+            <strong> Current stock </strong>
+          </p>
           <CTable bordered>
             <CTableHead>
               <CTableRow>

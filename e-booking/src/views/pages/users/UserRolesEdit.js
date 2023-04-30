@@ -20,6 +20,7 @@ import _nav from 'src/_nav'
 function UserRolesEdit() {
   const { register, handleSubmit, watch, reset } = useForm()
   const userRoleObject = useSelector((state) => state.selection.selected.access)
+  const userRoleName = useSelector((state) => state.selection.selected.name)
   const userAccessFields = Object.keys(userRoleObject)
   let items = _nav
   const [loading, setLoading] = useState(false)
@@ -35,6 +36,8 @@ function UserRolesEdit() {
       itemsWithSubs.includes(item.name.toLowerCase()) ? item : null,
     ) || []
   itemsForAccess = itemsForAccess.filter(Boolean)
+
+  console.log('this is item for access array', itemsForAccess)
 
   const onSubmit = async (data) => {
     console.log('data12', data)
@@ -101,6 +104,7 @@ function UserRolesEdit() {
                 name="role"
                 id="role"
                 size="md"
+                defaultValue={userRoleName}
                 required
                 {...register('name')}
               />
@@ -114,12 +118,11 @@ function UserRolesEdit() {
                     ? accessArray.map((role, i) => (
                         <div>
                           <CFormCheck
+                            key={i + 100}
                             id={`Access${i + 1}`}
                             value={role}
                             label={role}
-                            defaultChecked={role
-                              .toLowerCase()
-                              .includes(userAccessFields)}
+                            defaultChecked={userAccessFields.includes(role)}
                             className="text-capitalize"
                             {...register(`access`)}
                           />
@@ -137,13 +140,14 @@ function UserRolesEdit() {
                                     )[0]
                                     .items.map((item, i) => (
                                       <CFormCheck
+                                        key={i * 100}
                                         id={`"permission${i + 1}`}
                                         value={item.name}
                                         label={item.name}
                                         defaultChecked={
-                                          role
-                                            .toLowerCase()
-                                            .includes(userAccessFields) &&
+                                          userAccessFields.includes(
+                                            role.toLocaleLowerCase(),
+                                          ) &&
                                           userRoleObject[role].includes(
                                             item.name,
                                           )
@@ -167,7 +171,7 @@ function UserRolesEdit() {
                 <CButton
                   component="input"
                   type="submit"
-                  value="Create role"
+                  value="Update role"
                   disabled={loading}
                 />
               </CCol>

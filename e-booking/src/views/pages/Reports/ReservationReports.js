@@ -175,7 +175,6 @@ const ReservationReport = React.forwardRef((props, ref) => {
             myDates={myDates}
             query={query}
           />
-          <Pagination postsPerPage={10} totalPosts={20} paginate={paginate} />
         </CCard>
       </CCol>
     </CRow>
@@ -183,3 +182,4 @@ const ReservationReport = React.forwardRef((props, ref) => {
 })
 
 export default ReservationReport
+//   <Pagination postsPerPage={10} totalPosts={20} paginate={paginate} />

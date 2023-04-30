@@ -17,10 +17,14 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import Pagination from 'src/utils/Pagination'
 
 function AllDailySalesReports() {
   const dispatch = useDispatch()
   const [reports, setReports] = useState([])
+  const perpage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
   useEffect(() => {
     const getReports = async () => {
       await instance
@@ -55,23 +59,34 @@ function AllDailySalesReports() {
               </CTableHead>
               <CTableBody>
                 {reports && reports.length !== 0 ? (
-                  reports.map((report, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>{report.id}</CTableDataCell>
-                      <CTableDataCell>
-                        {new Date(report.date).toLocaleDateString()}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <Link
-                          to="/reports/receiption/view"
-                          className="btn btn-warning "
-                          onClick={() => dispatch(selectItem(report))}
-                        >
-                          view
-                        </Link>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
+                  reports
+                    .filter((el, i) => {
+                      if (currentPage === 1) {
+                        return i >= 0 && i < perpage ? el : null
+                      } else {
+                        return i >= (currentPage - 1) * perpage &&
+                          i <= perpage * currentPage - 1
+                          ? el
+                          : null
+                      }
+                    })
+                    .map((report, i) => (
+                      <CTableRow key={i}>
+                        <CTableDataCell>{report.id}</CTableDataCell>
+                        <CTableDataCell>
+                          {new Date(report.date).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <Link
+                            to="/reports/receiption/view"
+                            className="btn btn-warning "
+                            onClick={() => dispatch(selectItem(report))}
+                          >
+                            view
+                          </Link>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
                 ) : (
                   <CTableRow>
                     <CTableDataCell
@@ -85,6 +100,13 @@ function AllDailySalesReports() {
                 )}
               </CTableBody>
             </CTable>
+            {reports.length !== 0 ? (
+              <Pagination
+                postsPerPage={perpage}
+                totalPosts={reports.length}
+                paginate={paginate}
+              />
+            ) : null}
           </CCardBody>
         </CCard>
       </CCol>

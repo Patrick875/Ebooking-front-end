@@ -15,7 +15,7 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
@@ -53,7 +53,7 @@ const RoomClasses = (prop) => {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Available rooms </strong>
+              <strong> All room classes </strong>
             </h2>
           </CCardHeader>
           <CCardBody>

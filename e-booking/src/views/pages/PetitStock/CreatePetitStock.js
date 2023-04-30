@@ -1,6 +1,4 @@
-import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { addStockItem } from '../../../redux/StockItem/StockItemActions'
 import {
   CButton,
   CCard,
@@ -13,11 +11,20 @@ import {
   CRow,
 } from '@coreui/react'
 
-const StockItemAdd = () => {
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
+
+const CreatePetitStock = () => {
   const { register, handleSubmit, reset } = useForm()
-  const dispatch = useDispatch()
-  const onSubmit = (data) => {
-    dispatch(addStockItem(data))
+  const onSubmit = async (data) => {
+    await instance
+      .post('/petit-stock/add', data)
+      .then(() => {
+        toast.success('petit stock created')
+      })
+      .catch(() => {
+        toast.error('petit stock creation failed')
+      })
     reset()
   }
   return (
@@ -27,32 +34,28 @@ const StockItemAdd = () => {
           <CCard className="mb-4">
             <CCardHeader>
               <h2>
-                <strong> Stock Items </strong>
+                <strong> Create petit stock</strong>
               </h2>
             </CCardHeader>
             <CCardBody>
               <CForm
-                name="roomClassAddFrm"
+                name="createpetitstockf"
                 onSubmit={handleSubmit(onSubmit)}
                 encType="multipart/form"
               >
                 <CCol md={6} className="mb-3">
-                  <CFormLabel htmlFor="name"> Item name </CFormLabel>
+                  <CFormLabel htmlFor="name"> Name </CFormLabel>
                   <CFormInput
                     type="text"
                     name="name"
                     id="name"
-                    placeholder="....meat "
+                    placeholder="...kitchen"
                     size="md"
                     {...register('name', { required: true })}
                   />
                 </CCol>
                 <CCol xs={12}>
-                  <CButton
-                    component="input"
-                    type="submit"
-                    value="Create item"
-                  />
+                  <CButton component="input" type="submit" value="Create" />
                 </CCol>
               </CForm>
             </CCardBody>
@@ -63,4 +66,4 @@ const StockItemAdd = () => {
   )
 }
 
-export default StockItemAdd
+export default CreatePetitStock

@@ -26,6 +26,7 @@ const Reservation = () => {
   const [clicked, setClicked] = useState({})
   const [reservations, setReservations] = useState([])
   const [open, setOpen] = useState(false)
+  const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const changeReservationStatus = async (data, action) => {
@@ -78,101 +79,114 @@ const Reservation = () => {
               </CTableHead>
               <CTableBody>
                 {reservations && reservations.length !== 0
-                  ? reservations.map((reserv, i) => (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.Customer.names}{' '}
-                          {Number(reserv.amount['RWF']) >
-                          Number(reserv.payment['RWF']) ? (
-                            <CBadge
-                              type="button"
-                              color="danger"
-                              onClick={() => {
-                                console.log(open)
-                                setClicked({ id: reserv.id })
-                                return setOpen(true)
-                              }}
+                  ? reservations
+                      .filter((el, i) => {
+                        if (currentPage === 1) {
+                          return i >= 0 && i < perpage ? el : null
+                        } else {
+                          return i >= (currentPage - 1) * perpage &&
+                            i <= perpage * currentPage - 1
+                            ? el
+                            : null
+                        }
+                      })
+                      .map((reserv, i) => (
+                        <CTableRow key={reserv.id}>
+                          <CTableHeaderCell scope="row">
+                            {(currentPage - 1) * perpage + 1 + i}
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            {' '}
+                            {reserv.Customer.names}{' '}
+                            {Number(reserv.amount['RWF']) >
+                            Number(reserv.payment['RWF']) ? (
+                              <CBadge
+                                type="button"
+                                color="danger"
+                                onClick={() => {
+                                  console.log(open)
+                                  setClicked({ id: reserv.id })
+                                  return setOpen(true)
+                                }}
+                              >
+                                {' '}
+                                Debt
+                              </CBadge>
+                            ) : null}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {' '}
+                            {reserv.Customer.phone}{' '}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {reserv.details
+                              ? Object.keys(reserv.details).map((e) => (
+                                  <p>
+                                    {' '}
+                                    {e} rooms: {reserv.details[e].people}{' '}
+                                  </p>
+                                ))
+                              : reserv.Room
+                              ? reserv.Room.name
+                              : reserv.Hall.name}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {' '}
+                            {reserv.User.firstName + ' ' + reserv.User.lastName}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {' '}
+                            {new Date(reserv.checkIn).toLocaleString()}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {' '}
+                            {new Date(reserv.checkOut).toLocaleString()}{' '}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {reserv.status ? reserv.status : 'in progress'}{' '}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <Link
+                              to="/booking/reservations/info"
+                              className="badge badge-primary text-primary text-decoration-none"
+                              onClick={() => dispatch(selectItem(reserv))}
                             >
                               {' '}
-                              Debt
-                            </CBadge>
-                          ) : null}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.Customer.phone}{' '}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.details
-                            ? Object.keys(reserv.details).map((e) => (
-                                <p>
-                                  {' '}
-                                  {e} rooms: {reserv.details[e].people}{' '}
-                                </p>
-                              ))
-                            : reserv.Room
-                            ? reserv.Room.name
-                            : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.User.firstName + ' ' + reserv.User.lastName}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {new Date(reserv.checkIn).toLocaleString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {new Date(reserv.checkOut).toLocaleString()}{' '}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.status ? reserv.status : 'in progress'}{' '}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <Link
-                            to="/booking/reservations/info"
-                            className="badge badge-primary text-primary text-decoration-none"
-                            onClick={() => dispatch(selectItem(reserv))}
-                          >
-                            {' '}
-                            View{' '}
-                          </Link>
-                          <Link
-                            className="badge badge-warning text-primary text-decoration-none"
-                            onClick={() =>
-                              changeReservationStatus(
-                                {
-                                  id: reserv.id,
-                                  status: 'confirmed',
-                                },
-                                'confirm',
-                              )
-                            }
-                          >
-                            {' '}
-                            Confirm{' '}
-                          </Link>
-                          <Link
-                            className="badge badge-danger text-primary text-decoration-none"
-                            onClick={() =>
-                              changeReservationStatus(
-                                {
-                                  id: reserv.id,
-                                  status: 'canceled',
-                                },
-                                'cancel',
-                              )
-                            }
-                          >
-                            {' '}
-                            Cancel{' '}
-                          </Link>
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))
+                              View{' '}
+                            </Link>
+                            <Link
+                              className="badge badge-warning text-primary text-decoration-none"
+                              onClick={() =>
+                                changeReservationStatus(
+                                  {
+                                    id: reserv.id,
+                                    status: 'confirmed',
+                                  },
+                                  'confirm',
+                                )
+                              }
+                            >
+                              {' '}
+                              Confirm{' '}
+                            </Link>
+                            <Link
+                              className="badge badge-danger text-primary text-decoration-none"
+                              onClick={() =>
+                                changeReservationStatus(
+                                  {
+                                    id: reserv.id,
+                                    status: 'canceled',
+                                  },
+                                  'cancel',
+                                )
+                              }
+                            >
+                              {' '}
+                              Cancel{' '}
+                            </Link>
+                          </CTableDataCell>
+                        </CTableRow>
+                      ))
                   : null}
                 <AddPaymentModal
                   open={open}
@@ -182,7 +196,13 @@ const Reservation = () => {
               </CTableBody>
             </CTable>
           </CCardBody>
-          <Pagination postsPerPage={10} totalPosts={20} paginate={paginate} />
+          {reservations ? (
+            <Pagination
+              postsPerPage={perpage}
+              totalPosts={reservations.length}
+              paginate={paginate}
+            />
+          ) : null}
         </CCard>
       </CCol>
     </CRow>

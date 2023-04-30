@@ -13,12 +13,12 @@ import {
   CRow,
 } from '@coreui/react'
 
-const StockItemAdd = () => {
+const CreateTable = () => {
   const { register, handleSubmit, reset } = useForm()
   const dispatch = useDispatch()
   const onSubmit = (data) => {
-    dispatch(addStockItem(data))
-    reset()
+    //  dispatch(addStockItem(data))
+    //reset()
   }
   return (
     <div>
@@ -27,31 +27,31 @@ const StockItemAdd = () => {
           <CCard className="mb-4">
             <CCardHeader>
               <h2>
-                <strong> Stock Items </strong>
+                <strong> Create Table </strong>
               </h2>
             </CCardHeader>
             <CCardBody>
               <CForm
-                name="roomClassAddFrm"
+                name="tableAddFrm"
                 onSubmit={handleSubmit(onSubmit)}
                 encType="multipart/form"
               >
                 <CCol md={6} className="mb-3">
-                  <CFormLabel htmlFor="name"> Item name </CFormLabel>
+                  <CFormLabel htmlFor="number"> Table number </CFormLabel>
                   <CFormInput
-                    type="text"
-                    name="name"
-                    id="name"
-                    placeholder="....meat "
+                    type="number"
+                    name="number"
+                    id="number"
+                    placeholder="....table number"
                     size="md"
-                    {...register('name', { required: true })}
+                    {...register('number', { required: true })}
                   />
                 </CCol>
                 <CCol xs={12}>
                   <CButton
                     component="input"
                     type="submit"
-                    value="Create item"
+                    value="Create table"
                   />
                 </CCol>
               </CForm>
@@ -63,4 +63,4 @@ const StockItemAdd = () => {
   )
 }
 
-export default StockItemAdd
+export default CreateTable

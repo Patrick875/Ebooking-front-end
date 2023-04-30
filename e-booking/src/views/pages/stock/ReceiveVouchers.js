@@ -17,10 +17,14 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import Pagination from 'src/utils/Pagination'
 
 function ReceiveVouchers() {
   const dispatch = useDispatch()
   const [receiveVauchers, setReceiveVauchers] = useState([])
+  const perpage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
   useEffect(() => {
     const getVauchers = async () => {
       await instance
@@ -56,23 +60,34 @@ function ReceiveVouchers() {
               </CTableHead>
               <CTableBody>
                 {receiveVauchers && receiveVauchers.length !== 0 ? (
-                  receiveVauchers.map((vaucher, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>{vaucher.id}</CTableDataCell>
-                      <CTableDataCell>
-                        {new Date(vaucher.date).toLocaleDateString()}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <Link
-                          to="/booking/stock/received/view"
-                          className="btn btn-warning "
-                          onClick={() => dispatch(selectItem(vaucher))}
-                        >
-                          view
-                        </Link>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
+                  receiveVauchers
+                    .filter((el, i) => {
+                      if (currentPage === 1) {
+                        return i >= 0 && i < perpage ? el : null
+                      } else {
+                        return i >= (currentPage - 1) * perpage &&
+                          i <= perpage * currentPage - 1
+                          ? el
+                          : null
+                      }
+                    })
+                    .map((vaucher, i) => (
+                      <CTableRow key={i}>
+                        <CTableDataCell>{vaucher.id}</CTableDataCell>
+                        <CTableDataCell>
+                          {new Date(vaucher.date).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <Link
+                            to="/booking/stock/received/view"
+                            className="btn btn-warning "
+                            onClick={() => dispatch(selectItem(vaucher))}
+                          >
+                            view
+                          </Link>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
                 ) : (
                   <CTableRow>
                     <CTableDataCell
@@ -86,6 +101,13 @@ function ReceiveVouchers() {
                 )}
               </CTableBody>
             </CTable>
+            {receiveVauchers.length !== 0 ? (
+              <Pagination
+                postsPerPage={perpage}
+                totalPosts={receiveVauchers.length}
+                paginate={paginate}
+              />
+            ) : null}
           </CCardBody>
         </CCard>
       </CCol>

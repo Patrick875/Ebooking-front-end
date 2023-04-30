@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import CalendarContainer from 'src/utils/CalendarContainer'
+import Pagination from 'src/utils/Pagination'
 import {
   datesInRangeWithUnix,
   getUTCDateWithoutHours,
@@ -24,6 +25,9 @@ function Sells() {
   const { register, watch } = useForm()
   const [sells, setSells] = useState([])
   const time = watch('time')
+  const perpage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const onChange = (dates) => {
@@ -46,6 +50,20 @@ function Sells() {
     confirmedSells = confirmedSells.filter((sell) =>
       myDates.includes(getUTCDateWithoutHours(sell.date)) ? sell : '',
     )
+  } else {
+    confirmedSells =
+      confirmedSells && confirmedSells.length !== 0
+        ? confirmedSells.filter((el, i) => {
+            if (currentPage === 1) {
+              return i >= 0 && i < perpage ? el : null
+            } else {
+              return i >= (currentPage - 1) * perpage &&
+                i <= perpage * currentPage - 1
+                ? el
+                : null
+            }
+          })
+        : []
   }
 
   const total =
@@ -110,6 +128,7 @@ function Sells() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
+              <CTableHeaderCell scope="col">By</CTableHeaderCell>
               <CTableHeaderCell scope="col">Product</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
@@ -120,8 +139,11 @@ function Sells() {
               ? confirmedSells.map((item, i) => {
                   return (
                     <CTableRow key={item.id}>
-                      <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">
+                        {(currentPage - 1) * perpage + 1 + i}
+                      </CTableHeaderCell>
                       <CTableDataCell>{`${item.petitStock.name}`}</CTableDataCell>
+                      <CTableDataCell>{`${item.user.firstName}  ${item.user.lastName}`}</CTableDataCell>
                       <CTableDataCell>
                         <div>
                           {item.petitStockSaleDetails.map((el, i) => (
@@ -153,11 +175,18 @@ function Sells() {
 
             <CTableRow>
               <CTableDataCell />
-              <CTableDataCell colSpan={3}>Total</CTableDataCell>
+              <CTableDataCell colSpan={4}>Total</CTableDataCell>
               <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
             </CTableRow>
           </CTableBody>
         </CTable>
+        {confirmedSells ? (
+          <Pagination
+            postsPerPage={perpage}
+            totalPosts={confirmedSells.length}
+            paginate={paginate}
+          />
+        ) : null}
       </CCardBody>
     </div>
   )

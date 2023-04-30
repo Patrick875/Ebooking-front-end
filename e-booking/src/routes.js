@@ -71,17 +71,32 @@ const UserRolesEdit = React.lazy(() =>
   import('./views/pages/users/UserRolesEdit'),
 )
 
+const ChangePassword = React.lazy(() =>
+  import('./views/pages/users/ChangePassword.js'),
+)
 //Bar
 
-const AllBarItems = React.lazy(() => import('./views/pages/Bar/AllBarItems'))
+const CreatePetitStock = React.lazy(() =>
+  import('./views/pages/PetitStock/CreatePetitStock'),
+)
+const AllPetitStock = React.lazy(() =>
+  import('./views/pages/PetitStock/AllPetitStock'),
+)
+const CreateTable = React.lazy(() => import('./views/pages/Tables/CreateTable'))
+const AllTables = React.lazy(() => import('./views/pages/Tables/AllTables'))
+const AllBarItems = React.lazy(() =>
+  import('./views/pages/PetitStock/AllBarItems'),
+)
 const RequestBarItem = React.lazy(() =>
-  import('./views/pages/Bar/RequestBarItem'),
+  import('./views/pages/PetitStock/RequestBarItem'),
 )
-const AddBarItem = React.lazy(() => import('./views/pages/Bar/AddBarItem'))
+const AddBarItem = React.lazy(() =>
+  import('./views/pages/PetitStock/AddBarItem'),
+)
 const AllBarRequest = React.lazy(() =>
-  import('./views/pages/Bar/AllBarRequest'),
+  import('./views/pages/PetitStock/AllBarRequest'),
 )
-const BarSells = React.lazy(() => import('./views/pages/Bar/BarSells'))
+const BarSells = React.lazy(() => import('./views/pages/PetitStock/BarSells'))
 
 //sauna
 const AllSaunaItems = React.lazy(() =>
@@ -399,13 +414,38 @@ const routes = [
     name: 'Edit user Role',
     element: UserRolesEdit,
   },
+  {
+    path: '/password',
+    exact: true,
+    name: 'Change Password',
+    element: ChangePassword,
+  },
   { path: '/booking/users', exact: true, name: 'User', element: Users },
   {
-    path: '/booking/bar/add',
+    path: '/booking/petitstock/all',
     exact: true,
-    name: 'Add Bar Item',
-    element: AddBarItem,
+    name: 'All petit stocks',
+    element: AllPetitStock,
   },
+  {
+    path: '/booking/petitstock/create',
+    exact: true,
+    name: 'Create petit stock',
+    element: CreatePetitStock,
+  },
+  {
+    path: '/booking/tables/all',
+    exact: true,
+    name: 'All tables',
+    element: AllTables,
+  },
+  {
+    path: '/booking/tables/create',
+    exact: true,
+    name: 'Create table',
+    element: CreateTable,
+  },
+
   {
     path: '/booking/bar/all',
     exact: true,

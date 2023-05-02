@@ -7,14 +7,18 @@ import {
   AppHeader,
 } from '../components/index'
 import { useSelector } from 'react-redux'
+import AppHeaderWaiter from 'src/components/AppHeaderWaiter'
 
 const DefaultLayout = () => {
   const role = useSelector((state) => state.auth.role)
 
   if (role === 'waiter') {
     return (
-      <div className="body flex-grow-1 px-3">
-        <AppContent />
+      <div className="wrapper min-vh-100 bg-light">
+        <div className="body flex-grow-1 px-3">
+          <AppHeaderWaiter />
+          <AppContent />
+        </div>
       </div>
     )
   } else {

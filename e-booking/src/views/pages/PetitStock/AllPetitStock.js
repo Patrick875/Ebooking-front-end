@@ -4,9 +4,14 @@ import React, { useEffect, useState } from 'react'
 import { FcIcons8Cup } from 'react-icons/fc'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import { selectPetitStock } from 'src/redux/Select/selectPetitStockActions'
+import { useDispatch } from 'react-redux'
+
 function AllPetitStock(props) {
   const { selling, setStock } = props
   const [petitStock, setPetitStock] = useState([])
+  const dispatch = useDispatch()
+
   useEffect(() => {
     const getAllPetitStock = async () => {
       await instance.get('/petit-stock/all').then((res) => {
@@ -17,8 +22,10 @@ function AllPetitStock(props) {
   }, [])
   return (
     <div className="d-flex gap-2 flex-wrap ">
-      {petitStock && petitStock.length !== 0
-        ? petitStock.map((item, i) => (
+      {petitStock && petitStock.length !== 0 ? (
+        petitStock
+          .filter((el) => el.PetitStockItems.length !== 0)
+          .map((item, i) => (
             <CCard
               key={i}
               className="col-2 text-center p-2 flex-grow-2 petit-card"
@@ -40,12 +47,20 @@ function AllPetitStock(props) {
                 </div>
               ) : (
                 <div className="overlay">
-                  <Link className="btn btn-sm btn-outline-primary ">View</Link>
+                  <Link
+                    to="/booking/petitstock/items/all"
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => dispatch(selectPetitStock(item))}
+                  >
+                    View
+                  </Link>
                 </div>
               )}
             </CCard>
           ))
-        : null}
+      ) : (
+        <div>No Petit Stock registered</div>
+      )}
     </div>
   )
 }

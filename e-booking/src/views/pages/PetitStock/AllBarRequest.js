@@ -11,13 +11,19 @@ import {
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { RiCheckLine } from 'react-icons/ri'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import BackButton from 'src/components/Navigating/BackButton'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
 function AllBarRequest() {
-  const [items, setItems] = useState([])
+  let [items, setItems] = useState([])
+  const petitStock = useSelector((state) => state.selection.selectedPetitStock)
+  items =
+    items && items.length !== 0 && petitStock
+      ? items.filter((item) => item.petitStockId === petitStock.id)
+      : []
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleOnRowClick = async (item) => {
@@ -39,12 +45,20 @@ function AllBarRequest() {
     getPetitStockOrders()
   }, [])
 
+  console.log('requests', items)
+
   return (
     <div>
       <CCardHeader>
-        <h2>
-          <strong> All Petit-stock requests </strong>
-        </h2>
+        <div className="d-flex ">
+          <BackButton />
+          <h2 className="col-md-8 text-center">
+            <strong>
+              {' '}
+              All requests from {petitStock ? petitStock.name : ''} to stock
+            </strong>
+          </h2>
+        </div>
       </CCardHeader>
       <CCardBody>
         <CTable bordered>

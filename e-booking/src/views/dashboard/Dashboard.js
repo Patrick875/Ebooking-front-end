@@ -9,11 +9,12 @@ import {
   getServiceCategories,
 } from 'src/redux/Categories/categoriesActions'
 import ProductSell from '../pages/products/ProductSell'
+import AdminCharts from './AdminCharts'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
   const userRole = useSelector((state) => state.auth.role)
-
+  console.log(userRole)
   const getInitialData = () => {
     dispatch(getProductCategories())
     dispatch(getServiceCategories())
@@ -25,10 +26,10 @@ const Dashboard = () => {
 
   return (
     <React.Fragment>
-      {userRole && userRole !== 'Waiter' ? <WidgetsDropdown /> : null}
+      {userRole && userRole !== 'waiter' ? <WidgetsDropdown /> : null}
       <CCard className="mb-4">
         <CCardBody>
-          {userRole && userRole === 'Waiter' ? <ProductSell /> : null}
+          {userRole && userRole === 'waiter' ? <ProductSell /> : null}
         </CCardBody>
       </CCard>
     </React.Fragment>
@@ -36,3 +37,7 @@ const Dashboard = () => {
 }
 
 export default Dashboard
+
+//  {
+//    userRole && userRole === 'admin' ? <AdminCharts /> : null
+//  }

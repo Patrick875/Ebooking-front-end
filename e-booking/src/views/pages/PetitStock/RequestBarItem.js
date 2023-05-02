@@ -18,8 +18,10 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import StockOrder from './StockOrder'
+import BackButton from 'src/components/Navigating/BackButton'
+import { useSelector } from 'react-redux'
 
 const RequestBarItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -35,7 +37,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
 
   let [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
-
+  const petitStock = useSelector((state) => state.selection.selectedPetitStock)
   const [item, setItem] = useState(null)
   const [requestItems, setRequestItems] = useState([])
   const clearPurchaseOrder = () => {
@@ -96,61 +98,62 @@ const RequestBarItem = React.forwardRef((props, ref) => {
           <CCard className="mb-4">
             <CCardHeader>
               <div className="d-flex justify-content-between">
-                <h3>
-                  <strong>Request to stock </strong>
-                </h3>
-                <CButton
-                  component="input"
-                  value="Add items to list "
-                  onClick={() => {
-                    return setVisible(!visible)
-                  }}
-                />
-
-                {requestItems && requestItems.length !== 0 ? (
+                <BackButton />
+                <div className="col">
+                  <h3 className="text-center">
+                    <strong>Request to stock </strong>
+                  </h3>
+                </div>
+                <div className="col-3 d-flex justify-content-end">
                   <CButton
-                    className="btn-danger"
                     component="input"
-                    value="Clear table"
+                    value="Add items to list "
                     onClick={() => {
-                      return clearPurchaseOrder()
+                      return setVisible(!visible)
                     }}
                   />
-                ) : null}
-                {requestItems && requestItems.length !== 0 ? (
-                  <ReactToPrint
-                    trigger={() => (
-                      <button className="btn btn-ghost-primary">Print</button>
-                    )}
-                    content={() => ref || componentRef.current}
-                  />
-                ) : null}
+
+                  {requestItems && requestItems.length !== 0 ? (
+                    <CButton
+                      className="btn-danger"
+                      component="input"
+                      value="Clear table"
+                      onClick={() => {
+                        return clearPurchaseOrder()
+                      }}
+                    />
+                  ) : null}
+                  {requestItems && requestItems.length !== 0 ? (
+                    <ReactToPrint
+                      trigger={() => (
+                        <button className="btn btn-ghost-primary">Print</button>
+                      )}
+                      content={() => ref || componentRef.current}
+                    />
+                  ) : null}
+                </div>
               </div>
             </CCardHeader>
             <CCollapse visible={visible}>
               <CCardBody>
                 <CForm
-                  name="roomClassAddFrm"
+                  name="requestToStockFrm"
                   encType="multipart/form"
                   onSubmit={handleSubmit(onAdd)}
                 >
                   <CRow>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="unit"> Bar </CFormLabel>
-                      <CFormSelect
+                      <CFormLabel htmlFor="unit"> PetitStock </CFormLabel>
+                      <CFormInput
                         name="petit-stock"
                         id="petit-stock"
                         size="md"
+                        readOnly={petitStock ? true : false}
+                        value={petitStock ? petitStock.name : ''}
                         className="mb-3"
                         aria-label="petit-stock"
                         {...register('petitStock', { required: true })}
-                      >
-                        <option value="kitchen"> Kitchen</option>
-                        <option value="main-bar"> Main Bar</option>
-                        <option value="swimming-pool-bar">
-                          Swimming Pool Bar{' '}
-                        </option>
-                      </CFormSelect>
+                      ></CFormInput>
                     </CCol>
 
                     <CCol md={6}>

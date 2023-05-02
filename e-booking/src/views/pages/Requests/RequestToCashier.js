@@ -25,6 +25,7 @@ import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+  const typeaheadRef = useRef()
   const { register, getValues, reset } = useForm()
   const [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
@@ -54,6 +55,9 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   const submitRequest = () => {
     const data = { order: requestItems }
     createPurchaseOrder(data)
+  }
+  const clearTypeahead = () => {
+    typeaheadRef.current.clear()
   }
   useEffect(() => {
     const getStockItems = async () => {
@@ -121,6 +125,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         ) : null}
                       </div>
                       <Typeahead
+                        ref={typeaheadRef}
                         id="basic-typeahead-single"
                         filterBy={['name']}
                         labelKey="name"
@@ -177,6 +182,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       value="Add item"
                       onClick={() => {
                         const data = getValues()
+                        clearTypeahead()
                         return onAdd(data)
                       }}
                     />

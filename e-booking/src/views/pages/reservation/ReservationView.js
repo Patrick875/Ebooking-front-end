@@ -14,25 +14,15 @@ import { useSelector } from 'react-redux'
 
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const ReservationReceipt = (props) => {
-  const { register, handleSubmit, watch, reset } = useForm()
-
-  const onSubmit = (data) => {
-    console.log(data)
-    reset()
-  }
   const reservation = props.reservation
-  console.log(reservation)
+
   return (
     <CCard>
       <CCardBody>
-        <CForm
-          className="row"
-          name="roomClassAddFrm"
-          onSubmit={handleSubmit(onSubmit)}
-          encType="multipart/form"
-        >
+        <CForm className="row" name="roomClassAddFrm" encType="multipart/form">
           <div className="mb-4">
             <CCardBody className="row">
               <CCol md={6}>
@@ -77,11 +67,13 @@ const ReservationReceipt = (props) => {
                 <div>
                   {reservation.Customer.customerType === 'company' ? (
                     <div>
-                      {Object.keys(reservation.details).map((e) => (
-                        <p>
-                          {e} rooms : {reservation.details[e].people}
-                        </p>
-                      ))}
+                      {reservation.details
+                        ? Object.keys(reservation.details)?.map((e) => (
+                            <p>
+                              {e} rooms : {reservation.details[e].people}
+                            </p>
+                          ))
+                        : null}
                     </div>
                   ) : (
                     <p className="font-weight-bold">
@@ -147,17 +139,18 @@ const ReservationView = React.forwardRef((props, ref) => {
   return (
     <CRow>
       <CCol xs={12}>
+        <BackButton />
         <CCard className="mb-4">
           <CCardHeader>
             <div className="d-flex justify-content-between">
               <h5>
                 <strong>
                   {' '}
-                  Reservation by {' ' + reservation.Customer.names + ' '}
+                  Reservation by {' ' + reservation.Customer.names + ' for '}
                   {reservation.Customer.customerType !== 'company'
                     ? reservation.Room
-                      ? reservation.Room.name
-                      : reservation.Hall.name
+                      ? `R${reservation.Room.name}`
+                      : reservation.Hall.name + 'Hall'
                     : null}
                 </strong>
               </h5>

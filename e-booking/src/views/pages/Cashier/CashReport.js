@@ -28,16 +28,8 @@ import CalendarContainer from 'src/utils/CalendarContainer'
 const CashRecords = (props) => {
   let { transactions, balance, time, myDates } = props
   let debitTotal, creditTotal
-  console.log('okay cool fine', myDates, time)
+
   if (time && time === 'all-time') {
-    // totalAmount = transactions.reduce(
-    //   (acc, b) => acc + b.amount,
-    //   0,
-    // )
-    // totalPayments = transactions.reduce(
-    //   (acc, b) => acc + b.amount,
-    //   0,
-    // )
   } else if (myDates && myDates.length !== 0) {
     transactions = transactions.filter((trans) => {
       return myDates.includes(getUTCDateWithoutHours(trans.date)) ? trans : null
@@ -50,15 +42,8 @@ const CashRecords = (props) => {
       .filter((trans) => trans['accountType'] === 'CREDIT')
       .reduce((a, b) => a + b.amount, 0)
     balance = debitTotal - creditTotal
-    // totalAmount = transactions.reduce(
-    //   (acc, b) => acc + b.amount,
-    //   0,
-    // )
-    // totalPayments = transactions.reduce(
-    //   (acc, b) => acc + b.amount,
-    //   0,
-    // )
   }
+
   return (
     <div className="m-3 p-3">
       <h2 className="text-center my-3">Cash flow</h2>
@@ -146,8 +131,6 @@ const CashReport = React.forwardRef((props, ref) => {
           .filter((e) => e.accountType === 'CREDIT')
           .reduce((acc, b) => acc + b.amount, 0)
       : 0
-
-  console.log(creditTotal)
   let balance = debitTotal - creditTotal
   balance = balance.toLocaleString()
 
@@ -162,7 +145,7 @@ const CashReport = React.forwardRef((props, ref) => {
   return (
     <CCard>
       <CCardHeader className="d-flex justify-content-between align-items-center">
-        <div className="col">
+        <div className="col-2">
           <ReactToPrint
             trigger={() => (
               <button className="btn btn-ghost-primary">Print</button>

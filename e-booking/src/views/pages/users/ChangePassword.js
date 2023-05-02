@@ -11,13 +11,23 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const ChangePassword = () => {
   const { register, handleSubmit, reset, watch } = useForm()
   const dispatch = useDispatch()
   const newPassword = watch('newPassword')
-  const newPasswordConfirm = watch('newPasswordConfirm')
-  const onSubmit = (data) => {
+  const newPasswordConfirm = watch('confirmPassword')
+  const onSubmit = async (data) => {
+    await instance
+      .post('/users/change-password', data)
+      .then(() => {
+        toast.success('password changed!')
+      })
+      .error(() => {
+        toast.error('password update failed')
+      })
     reset()
   }
   return (
@@ -48,7 +58,7 @@ const ChangePassword = () => {
                       id="oldPassword"
                       placeholder="*********"
                       size="md"
-                      {...register('oldPassword', { required: true })}
+                      {...register('password', { required: true })}
                     />
                   </CCol>
                   <CCol md={6} className="mb-3">
@@ -76,7 +86,7 @@ const ChangePassword = () => {
                       id="newPasswordConfirm"
                       placeholder="**********"
                       size="md"
-                      {...register('newPasswordConfirm', { required: true })}
+                      {...register('confirmPassword', { required: true })}
                     />
                   </CCol>
                 </CRow>

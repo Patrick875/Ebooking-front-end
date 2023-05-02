@@ -2,11 +2,8 @@ import {
   CButton,
   CCardHeader,
   CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CFormInput,
+  CFormSelect,
   CRow,
   CTable,
   CTableBody,
@@ -26,35 +23,12 @@ import { toast } from 'react-hot-toast'
 import PrintHeader from '../Printing/PrintHeader'
 import OrdersTable from '../PetitStock/OrdersTable'
 import ReactToPrint from 'react-to-print'
-import cardmachineimage from './../../../assets/icons/card-machine.png'
+
 import { RiCheckLine } from 'react-icons/ri'
 import AllPetitStock from '../PetitStock/AllPetitStock'
 
-const PaymentDropDown = (props) => {
-  return (
-    <CDropdown className="p-0 m-0 btn btn-light rounded-1 shadow-sm">
-      <CDropdownToggle className="bg-light text-dark outline-none border-0 w-100 h-100">
-        💲 Payment
-      </CDropdownToggle>
-      <CDropdownMenu>
-        <CDropdownItem>💸 Cash</CDropdownItem>
-        <CDropdownItem>📱 MoMo</CDropdownItem>
-        <CDropdownItem>
-          <img
-            src={cardmachineimage}
-            width={48}
-            height={48}
-            alt="card-machine-icon"
-          />
-          Card
-        </CDropdownItem>
-      </CDropdownMenu>
-    </CDropdown>
-  )
-}
-
 const ProductSell = React.forwardRef((props, ref) => {
-  const { register, handleSubmit, setValue, watch, getValues } = useForm()
+  const { register, setValue, getValues } = useForm()
   const componentRef = useRef()
   const [selectedInput, setSelectedInput] = useState(1)
   let [results, setResults] = useState(Array(10).fill(''))
@@ -175,6 +149,16 @@ const ProductSell = React.forwardRef((props, ref) => {
   }
   const createOrder = async () => {
     results = results.filter((el) => el !== '')
+    console.log('as', results)
+    if (
+      results.includes(null) ||
+      results.length === 0 ||
+      results.length < orderItems.length
+    ) {
+      return toast.error(
+        'Order aborted !! Please provide quantities for all items!!!',
+      )
+    }
     orderItems =
       results.length !== 0
         ? orderItems.map((item, i) => {
@@ -182,9 +166,17 @@ const ProductSell = React.forwardRef((props, ref) => {
           })
         : orderItems
 
+    const cool = getValues()
+
     let data = orderItems.map((order) => {
       let { productId, packageId, quantity } = order
-      return { productId, packageId, quantity, petitStock }
+      return {
+        productId,
+        packageId,
+        quantity,
+        petitStock,
+        paymentMethod: cool.paymentMethod,
+      }
     })
 
     await instance
@@ -221,7 +213,6 @@ const ProductSell = React.forwardRef((props, ref) => {
     getAllProductCategories()
   }, [])
 
-  console.log('selling to ', petitStock)
   return (
     <div className="m-0 p-0">
       {!petitStock ? (
@@ -267,7 +258,6 @@ const ProductSell = React.forwardRef((props, ref) => {
               </p>
             ) : null}
           </CCardHeader>
-
           <CRow className="d-flex">
             <CCol
               md={5}
@@ -318,7 +308,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                   )
                 })
               ) : (
-                <div>No products in database</div>
+                <React.Fragment>No products in database</React.Fragment>
               )}
             </CCol>
             <CCol md={2} className="bg-white text-dark">
@@ -368,7 +358,17 @@ const ProductSell = React.forwardRef((props, ref) => {
                   >
                     🖊️ +
                   </button>
-                  <PaymentDropDown />
+                  <div>
+                    <CFormSelect
+                      {...register('paymentMethod')}
+                      className="dropdown"
+                    >
+                      <option value={'cash'}>Cash</option>
+                      <option value={'MoMo'}>MoMo</option>
+                      <option value={'POS'}>Card</option>
+                    </CFormSelect>
+                  </div>
+
                   <button
                     className="btn btn-light rounded-1 shadow-sm"
                     onClick={() => {

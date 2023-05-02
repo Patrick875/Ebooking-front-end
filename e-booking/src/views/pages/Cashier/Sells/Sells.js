@@ -45,7 +45,8 @@ function Sells() {
     confirmedSells &&
     confirmedSells.length !== 0 &&
     myDates &&
-    myDates.length !== 0
+    myDates.length !== 0 &&
+    time !== 'all-time'
   ) {
     confirmedSells = confirmedSells.filter((sell) =>
       myDates.includes(getUTCDateWithoutHours(sell.date)) ? sell : '',

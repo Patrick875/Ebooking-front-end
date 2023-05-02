@@ -5,6 +5,8 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CFormInput,
+  CFormLabel,
   CModal,
   CModalBody,
   CModalFooter,
@@ -18,9 +20,12 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { deleteUser, getUsers } from 'src/redux/User/userActions'
+import { deleteUser } from 'src/redux/User/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { useForm } from 'react-hook-form'
+import { instance } from 'src/API/AxiosInstance'
+import { USER_ACTIONS } from 'src/redux/User/userActionTypes'
 
 const ConfirmDeleteUserModel = (props) => {
   const { visible, setVisible, user, users } = props
@@ -49,27 +54,62 @@ const ConfirmDeleteUserModel = (props) => {
 }
 
 const Users = () => {
-  let users = useSelector((state) => state.systemUsers.users) || []
+  const { register, watch } = useForm()
+  const query = watch('query') || ''
+  let [users, setUsers] = useState([])
+
   let role = useSelector((state) => state.auth.user.Role.name)
   const [visible, setVisible] = useState(false)
   users = users ? users : []
+  const searchUsers = (users, query) => {
+    if (query && query !== '') {
+      return users.filter((user) =>
+        user.firstName.toLowerCase().includes(query) ||
+        user.lastName.toLowerCase().includes(query)
+          ? user
+          : null,
+      )
+    } else {
+      return users
+    }
+  }
+
+  users = searchUsers(users, query)
   const dispatch = useDispatch()
   useEffect(() => {
-    console.log(users.length)
-    if (users.length === 0) {
-      dispatch(getUsers())
+    const getUsers = async () => {
+      await instance.get(`/users/all`).then((res) => {
+        setUsers(res.data.users)
+      })
     }
-    //dispatch(getRoles());
+    getUsers()
   }, [])
 
+  console.log('users', users, query)
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <h2>
-              <strong> All Users </strong>
-            </h2>
+            <div className="d-flex justify-content-between">
+              <h2>
+                <strong> All Users </strong>
+              </h2>
+              <div className="col-md-4">
+                <form>
+                  <CFormLabel className="text-center">Search</CFormLabel>
+                  <CFormInput
+                    className="mb-1"
+                    type="text"
+                    name="userName"
+                    id="userName"
+                    size="md"
+                    placeholder="by name ..."
+                    {...register('query')}
+                  />
+                </form>
+              </div>
+            </div>
           </CCardHeader>
           <CCardBody>
             <CTable bordered>
@@ -86,7 +126,12 @@ const Users = () => {
               <CTableBody>
                 {users && users.length !== 0 ? (
                   users.map((user, i) => (
-                    <CTableRow key={user._id}>
+                    <CTableRow
+                      key={user._id}
+                      className={`${
+                        user.status === 'disactive' ? 'bg-dark' : ''
+                      }`}
+                    >
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                       <CTableDataCell>
                         {' '}

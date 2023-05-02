@@ -3,7 +3,6 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -15,10 +14,9 @@ import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
-import { selectItem } from 'src/redux/Select/selectionActions'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
 import {
@@ -26,10 +24,9 @@ import {
   getUTCDateWithoutHours,
 } from 'src/utils/functions'
 
-function AllDailySalesReports() {
-  const dispatch = useDispatch()
+function WaiterSells() {
   const { register, watch } = useForm()
-  const time = watch('time') || 'all-time'
+  const time = watch('time')
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const onChange = (dates) => {
@@ -39,7 +36,7 @@ function AllDailySalesReports() {
   }
   let myDates = datesInRangeWithUnix(startDate, endDate)
 
-  const getReportsByDate = (reports, dates) => {
+  const getSalesByDate = (reports, dates) => {
     if (!time || time === 'all-time') {
       return reports
     } else {
@@ -49,33 +46,35 @@ function AllDailySalesReports() {
     }
   }
 
-  let [reports, setReports] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  let [waiterSells, setWaiterSells] = useState([])
+  const roleId = useSelector((state) => state.auth.user.Role.id)
+
+  waiterSells = getSalesByDate(waiterSells, myDates)
+
   useEffect(() => {
-    const getReports = async () => {
+    const getWaiterSells = async () => {
       await instance
-        .get('/daily-sales/all')
+        .get(`/products/package/waiter/sells/${roleId}`)
         .then((res) => {
-          setReports(res.data.data)
+          console.log('res', res)
+          setWaiterSells(res.data.data)
         })
-        .catch((err) => {
-          toast.error(err.message)
+        .catch(() => {
+          toast.error('failed getting waiter sells')
         })
     }
-    getReports()
+    getWaiterSells()
   }, [])
-
-  reports = getReportsByDate(reports, myDates)
-
   return (
-    <CRow>
+    <div>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> All Daily sales reports </strong>
+              <strong> My sales </strong>
             </h2>
             <div className="col-6 d-flex gap-2 flex-wrap">
               <div className="col">
@@ -114,12 +113,14 @@ function AllDailySalesReports() {
                 <CTableRow>
                   <CTableHeaderCell scope="col"> # </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Date </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Account </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Product </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {reports && reports.length !== 0 ? (
-                  reports
+                {waiterSells && waiterSells.length !== 0 ? (
+                  waiterSells
                     .filter((el, i) => {
                       if (currentPage === 1) {
                         return i >= 0 && i < perpage ? el : null
@@ -130,24 +131,22 @@ function AllDailySalesReports() {
                           : null
                       }
                     })
-                    .map((report, i) => (
+                    .map((sale, i) => (
                       <CTableRow key={i}>
+                        <CTableDataCell>{sale.id}</CTableDataCell>
                         <CTableDataCell>
-                          {' '}
-                          {(currentPage - 1) * perpage + 1 + i}
+                          {new Date(sale.date).toLocaleDateString()}
                         </CTableDataCell>
+                        <CTableDataCell>{sale.petitStock.name}</CTableDataCell>
                         <CTableDataCell>
-                          {new Date(report.date).toLocaleDateString()}
+                          {sale.petitStockSaleDetails.map((item, i) => (
+                            <p key={i * 100}>
+                              {item.quantity} {item.Package.name} of{' '}
+                              {item.Package.Products.name}
+                            </p>
+                          ))}
                         </CTableDataCell>
-                        <CTableDataCell>
-                          <Link
-                            to="/reports/receiption/view"
-                            className="btn btn-warning "
-                            onClick={() => dispatch(selectItem(report))}
-                          >
-                            view
-                          </Link>
-                        </CTableDataCell>
+                        <CTableDataCell>{sale.amount}</CTableDataCell>
                       </CTableRow>
                     ))
                 ) : (
@@ -157,24 +156,24 @@ function AllDailySalesReports() {
                       className=" text-capitalize fw-bolder text-center"
                     >
                       {' '}
-                      no daily sales database
+                      No registered sells in db
                     </CTableDataCell>
                   </CTableRow>
                 )}
               </CTableBody>
             </CTable>
-            {reports.length !== 0 ? (
+            {waiterSells.length !== 0 ? (
               <Pagination
                 postsPerPage={perpage}
-                totalPosts={reports.length}
+                totalPosts={waiterSells.length}
                 paginate={paginate}
               />
             ) : null}
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </div>
   )
 }
 
-export default AllDailySalesReports
+export default WaiterSells

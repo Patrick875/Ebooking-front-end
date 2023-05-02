@@ -1,5 +1,4 @@
 import {
-  CButton,
   CCardBody,
   CRow,
   CTable,
@@ -9,42 +8,33 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { BiCartAdd, BiCartDownload } from 'react-icons/bi'
+import { BiCartDownload } from 'react-icons/bi'
 import { BsFiles } from 'react-icons/bs'
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
-import { instance } from 'src/API/AxiosInstance'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import BackButton from 'src/components/Navigating/BackButton'
 function AllBarItems() {
-  const [items, setItems] = useState([])
-  useEffect(() => {
-    const getItems = async () => {
-      await instance
-        .get('/petitstock/balance')
-        .then((res) => {
-          setItems(res.data.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
-    }
-    getItems()
-  }, [])
+  const petitStock =
+    useSelector((state) => state.selection.selectedPetitStock) || {}
 
   return (
     <div>
+      <BackButton />
       <CCardBody>
-        <p className="text-center fs-3">Kitchen stock</p>
+        <p className="text-center fs-3">{petitStock.name} stock</p>
         <CRow>
           <div className="d-flex justify-content-between my-3">
-            <Link md={4} className="btn btn-primary" to="/booking/bar/request">
+            <Link
+              md={4}
+              className="btn btn-primary"
+              to="/booking/petitstock/request"
+            >
               <BiCartDownload className="fs-5" /> Request item from stock
             </Link>
             <Link
               md={4}
               className="btn btn-primary"
-              to="/booking/bar/request/all"
+              to="/booking/petit/request/all"
             >
               <BsFiles className="fs-5" /> All requests
             </Link>
@@ -61,12 +51,14 @@ function AllBarItems() {
               </CTableRow>
             </CTableHead>
             <CTableBody>
-              {items && items.length !== 0
-                ? items.map((item, i) => {
+              {petitStock &&
+              petitStock.PetitStockItems &&
+              petitStock.PetitStockItems.length !== 0
+                ? petitStock.PetitStockItems.map((item, i) => {
                     return (
                       <CTableRow key={item.id}>
                         <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                        <CTableDataCell>{`${item.StockItem.name}`}</CTableDataCell>
+                        <CTableDataCell>{`${item.id}`}</CTableDataCell>
                         <CTableDataCell>{`${item.quantinty}`}</CTableDataCell>
                       </CTableRow>
                     )

@@ -1,6 +1,4 @@
-import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { addStockItem } from '../../../redux/StockItem/StockItemActions'
 import {
   CButton,
   CCard,
@@ -12,14 +10,24 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const CreateTable = () => {
   const { register, handleSubmit, reset } = useForm()
-  const dispatch = useDispatch()
-  const onSubmit = (data) => {
-    //  dispatch(addStockItem(data))
-    //reset()
+
+  const onSubmit = async (data) => {
+    await instance
+      .post('/tables/add', data)
+      .then(() => {
+        toast.success('table created')
+      })
+      .catch(() => {
+        toast.error('table creation failed')
+      })
+    reset()
   }
+
   return (
     <div>
       <CRow>
@@ -39,10 +47,10 @@ const CreateTable = () => {
                 <CCol md={6} className="mb-3">
                   <CFormLabel htmlFor="number"> Table number </CFormLabel>
                   <CFormInput
-                    type="number"
+                    type="text"
                     name="number"
                     id="number"
-                    placeholder="....table number"
+                    placeholder="....table"
                     size="md"
                     {...register('number', { required: true })}
                   />

@@ -2,7 +2,7 @@ import React from 'react'
 import UserRolesAdd from './views/pages/users/UserRolesAdd'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-
+const WaiterSells = React.lazy(() => import('./views/pages/Waiter/WaiterSells'))
 // custom pages
 
 //roomClass
@@ -90,9 +90,6 @@ const AllBarItems = React.lazy(() =>
 const RequestBarItem = React.lazy(() =>
   import('./views/pages/PetitStock/RequestBarItem'),
 )
-const AddBarItem = React.lazy(() =>
-  import('./views/pages/PetitStock/AddBarItem'),
-)
 const AllBarRequest = React.lazy(() =>
   import('./views/pages/PetitStock/AllBarRequest'),
 )
@@ -165,6 +162,29 @@ const ServiceEdit = React.lazy(() =>
   import('./views/pages/services/ServiceEdit.js'),
 )
 
+const Invoice = React.lazy(() => import('./views/pages/Accounting/Invoice'))
+const CreateInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/CreateInvoice'),
+)
+const ProformaInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/ProformaInvoice'),
+)
+const CreateProformaInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/CreateProformaInvoice'),
+)
+const DeliveryNote = React.lazy(() =>
+  import('./views/pages/Accounting/DeliveryNote'),
+)
+const CreateDeliveryNote = React.lazy(() =>
+  import('./views/pages/Accounting/CreateDeliveryNote'),
+)
+const BaudDeCommande = React.lazy(() =>
+  import('./views/pages/Accounting/BaudDeCommande.js'),
+)
+const CreateBaudDeCommande = React.lazy(() =>
+  import('./views/pages/Accounting/CreateBaudDeCommande.js'),
+)
+
 const CashTransaction = React.lazy(() =>
   import('./views/pages/Cashier/CashTransaction'),
 )
@@ -178,9 +198,7 @@ const Sells = React.lazy(() => import('./views/pages/Cashier/Sells/Sells'))
 const RequestToCashier = React.lazy(() =>
   import('./views/pages/Requests/RequestToCashier'),
 )
-const RequestToStock = React.lazy(() =>
-  import('./views/pages/Requests/RequestToStock'),
-)
+
 const AllRequestToCashier = React.lazy(() =>
   import('./views/pages/Requests/AllRequestToCashier'),
 )
@@ -253,6 +271,7 @@ const StockReports = React.lazy(() =>
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
+  { path: '/mysells', name: 'Waiter sells', element: WaiterSells },
   {
     path: 'booking/rooms/class/add',
     exact: true,
@@ -447,21 +466,21 @@ const routes = [
   },
 
   {
-    path: '/booking/bar/all',
+    path: '/booking/petitstock/items/all',
     exact: true,
-    name: 'All Bar items',
+    name: 'All Petit stock items',
     element: AllBarItems,
   },
   {
-    path: '/booking/bar/request',
+    path: '/booking/petitstock/request',
     exact: true,
-    name: 'Request Bar Item',
+    name: 'Request petit stock Item',
     element: RequestBarItem,
   },
   {
-    path: '/booking/bar/request/all',
+    path: '/booking/petit/request/all',
     exact: true,
-    name: 'All Bar Requests',
+    name: 'All petit Requests',
     element: AllBarRequest,
   },
   {
@@ -586,6 +605,54 @@ const routes = [
     element: Services,
   },
   {
+    path: '/booking/accounting/proformainvoice',
+    exact: true,
+    name: 'Pro forma invoice',
+    element: ProformaInvoice,
+  },
+  {
+    path: '/booking/accounting/proformainvoice/create',
+    exact: true,
+    name: 'Create Pro forma invoice',
+    element: CreateProformaInvoice,
+  },
+  {
+    path: '/booking/accounting/invoice',
+    exact: true,
+    name: 'Invoice',
+    element: Invoice,
+  },
+  {
+    path: '/booking/accounting/invoice/create',
+    exact: true,
+    name: 'Create invoice',
+    element: CreateInvoice,
+  },
+  {
+    path: '/booking/accounting/delivery',
+    exact: true,
+    name: 'Invoice',
+    element: DeliveryNote,
+  },
+  {
+    path: '/booking/accounting/delivery/create',
+    exact: true,
+    name: 'Create invoice',
+    element: CreateDeliveryNote,
+  },
+  {
+    path: '/booking/accounting/baud-de-commande',
+    exact: true,
+    name: 'Baud de commande',
+    element: BaudDeCommande,
+  },
+  {
+    path: '/booking/accounting/baud-de-commande/create',
+    exact: true,
+    name: 'Create baud de commancde',
+    element: CreateBaudDeCommande,
+  },
+  {
     path: '/booking/cashier/sells/pending',
     exact: true,
     name: 'Sells pending',
@@ -676,12 +743,7 @@ const routes = [
     name: 'View Request To Cashier',
     element: ViewRequestToCashier,
   },
-  {
-    path: '/booking/requests/stock',
-    exact: true,
-    name: 'Stock request',
-    element: RequestToStock,
-  },
+
   {
     path: '/customers',
     exact: true,

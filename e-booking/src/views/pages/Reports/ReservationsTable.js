@@ -5,7 +5,6 @@ const {
   CTableRow,
   CTableHeaderCell,
   CTableBody,
-  CTableDataCell,
 } = require('@coreui/react')
 const { getUTCDateWithoutHours } = require('src/utils/functions')
 const { default: Reservation } = require('./Reservation')

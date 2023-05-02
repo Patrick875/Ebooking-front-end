@@ -15,7 +15,6 @@ import formReducer from './MultiStepForm/formReducer'
 export default combineReducers({
   sidebarShow: UIReducer,
   auth: authReducer,
-
   roles: rolesReducer,
   systemUsers: userReducer,
   products: productReducer,

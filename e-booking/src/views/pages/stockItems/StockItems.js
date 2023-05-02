@@ -1,6 +1,8 @@
 import {
   CCardBody,
   CCardHeader,
+  CFormInput,
+  CFormLabel,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -10,13 +12,24 @@ import {
 } from '@coreui/react'
 
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import Pagination from 'src/utils/Pagination'
 
 function StockItems() {
-  const [items, setItems] = useState([])
+  const { register, watch } = useForm()
+  const query = watch('query') || ''
+  let [items, setItems] = useState([])
+
+  const searchItems = (items, query) => {
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter((item) => item.name.toLowerCase().includes(query))
+    }
+  }
 
   const deleteStockItem = async (id) => {
     await instance.delete(`/stock/item/delete/${id}`).then(() => {
@@ -40,6 +53,7 @@ function StockItems() {
     getItems()
   }, [])
 
+  items = searchItems(items, query)
   return (
     <div>
       <CCardHeader>
@@ -48,6 +62,20 @@ function StockItems() {
         </h2>
       </CCardHeader>
       <CCardBody>
+        <div className="col-md-4">
+          <form>
+            <CFormLabel className="text-center">Search</CFormLabel>
+            <CFormInput
+              className="mb-1"
+              type="text"
+              name="itemName"
+              id="itemName"
+              size="md"
+              placeholder="by name ..."
+              {...register('query')}
+            />
+          </form>
+        </div>
         <CTable bordered>
           <CTableHead>
             <CTableRow>

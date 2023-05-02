@@ -58,7 +58,6 @@ const ReservationAdd = () => {
 
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   let user = useSelector((state) => state.auth.user)
-  const inputState = { minLength: 2 }
   let priceHall = 0
   let priceRoom = 0
 

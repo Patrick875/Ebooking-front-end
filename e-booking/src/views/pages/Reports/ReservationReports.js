@@ -16,7 +16,6 @@ import PrintTemplate1 from '../Printing/PrintTemplate1'
 import ReservationsTable from './ReservationsTable'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
-import Pagination from 'src/utils/Pagination'
 
 const ReservationReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -27,9 +26,6 @@ const ReservationReport = React.forwardRef((props, ref) => {
   const query = watch('query') || ''
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const onChange = (dates) => {
     const [start, end] = dates
@@ -47,7 +43,6 @@ const ReservationReport = React.forwardRef((props, ref) => {
           setReservations(res.data.data)
         })
         .catch((err) => {
-          console.log('error getting reservations', err.message)
           toast.error(err.message)
         })
     }

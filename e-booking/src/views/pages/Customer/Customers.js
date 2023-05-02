@@ -47,17 +47,6 @@ function Customers() {
     customers = customers.filter((customer) =>
       customer.names.toLowerCase().includes(query.toLowerCase()),
     )
-  } else {
-    customers = customers.filter((el, i) => {
-      if (currentPage === 1) {
-        return i >= 0 && i < perpage ? el : null
-      } else {
-        return i >= (currentPage - 1) * perpage &&
-          i <= perpage * currentPage - 1
-          ? el
-          : null
-      }
-    })
   }
 
   return (
@@ -96,7 +85,20 @@ function Customers() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CustomersTable customers={customers} />
+                <CustomersTable
+                  customers={customers.filter((el, i) => {
+                    if (currentPage === 1) {
+                      return i >= 0 && i < perpage ? el : null
+                    } else {
+                      return i >= (currentPage - 1) * perpage &&
+                        i <= perpage * currentPage - 1
+                        ? el
+                        : null
+                    }
+                  })}
+                  currentPage={currentPage}
+                  perpage={perpage}
+                />
               </CTableBody>
             </CTable>
             {customers.length !== 0 && (!query || query === '') ? (

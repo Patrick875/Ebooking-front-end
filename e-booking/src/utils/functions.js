@@ -82,35 +82,3 @@ export function sumAmountsByCurrency(transactions) {
   }
   return sumByCurrency
 }
-// export const getDuplicates = function (array1, array2) {
-//   const duplicates = []
-//   const seen = new Set()
-//   for (const { name: element } of array1) {
-//     if (seen.has(element)) continue
-//     seen.add(element)
-//     const elementDuplicates = array2.filter(
-//       ({ itemName }) => itemName === element,
-//     )
-//     if (elementDuplicates.length > 0) {
-//       duplicates.push(...elementDuplicates)
-//     }
-//   }
-//   console.log(duplicates)
-//   return duplicates
-// }
-
-export const getDuplicates = function (array1, array2) {
-  const results = []
-  const seen = new Set()
-  for (const { name: element } of array1) {
-    if (seen.has(element)) continue
-    seen.add(element)
-    const elementDuplicates = array2.filter(
-      ({ itemName }) => itemName === element,
-    )
-    if (elementDuplicates.length > 0) {
-      results.push({ name: element, duplicates: elementDuplicates })
-    }
-  }
-  return results
-}

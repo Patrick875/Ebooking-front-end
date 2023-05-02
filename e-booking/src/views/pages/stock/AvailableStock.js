@@ -1,6 +1,8 @@
 import {
   CCardBody,
   CCardHeader,
+  CFormInput,
+  CFormLabel,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -8,17 +10,31 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import Pagination from 'src/utils/Pagination'
 
 function AvailableStock() {
-  const [items, setItems] = useState([])
+  const { register, watch } = useForm()
+  const query = watch('query') || ''
+  const searchItems = (items, query) => {
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter((item) =>
+        item.StockItem.name.toLowerCase().includes(query),
+      )
+    }
+  }
+  let [items, setItems] = useState([])
+
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+
+  items = searchItems(items, query)
   useEffect(() => {
     const getItems = async () => {
       await instance
@@ -41,6 +57,19 @@ function AvailableStock() {
         </h2>
       </CCardHeader>
       <CCardBody>
+        <div className="col-md-4">
+          <CFormLabel className="text-center">Search</CFormLabel>
+          <CFormInput
+            className="mb-1"
+            type="text"
+            name="stockItemName"
+            id="stockItemName"
+            size="md"
+            placeholder="by  item name ..."
+            {...register('query')}
+          />
+        </div>
+
         <CTable bordered>
           <CTableHead>
             <CTableRow>

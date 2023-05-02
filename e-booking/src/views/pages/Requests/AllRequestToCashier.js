@@ -56,6 +56,7 @@ function AllRequestToCashier() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Done by</CTableHeaderCell>
               <CTableHeaderCell scope="col">Payment</CTableHeaderCell>
               <CTableHeaderCell scope="col">Approval</CTableHeaderCell>
               <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
@@ -88,6 +89,9 @@ function AllRequestToCashier() {
                         </CTableHeaderCell>
                         <CTableDataCell>
                           {new Date(item.date).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.User.firstName + ' ' + item.User.lastName}
                         </CTableDataCell>
                         <CTableDataCell>Paid </CTableDataCell>
                         <CTableDataCell className="d-flex">

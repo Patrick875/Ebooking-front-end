@@ -164,6 +164,8 @@ const Reservation = () => {
     }
     getReservations()
   }, [])
+
+  console.log('dates', { myDates, reservations })
   return (
     <CRow>
       <CCol xs={12}>
@@ -175,7 +177,7 @@ const Reservation = () => {
             <div className="col row py-2 ">
               <div className="form-control d-flex flex-row py-2 my-2 align align-content-center">
                 <form className="col d-flex flex-wrap gap-2">
-                  <div className="col-3">
+                  <div className="col-2">
                     <CFormLabel className="text-center">Search</CFormLabel>
                     <CFormInput
                       className="mb-1"

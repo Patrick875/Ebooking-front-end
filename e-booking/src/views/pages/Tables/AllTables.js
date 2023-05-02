@@ -17,21 +17,22 @@ import { instance } from 'src/API/AxiosInstance'
 function AllTables() {
   const [items, setItems] = useState([])
   const disactivateTable = async (id) => {
-    await instance.get(`/api/v1/tables/disactivate/${id}`).then(() => {
+    await instance.get(`/tables/disactivate/${id}`).then(() => {
       toast.success('item deleted!!!!')
     })
   }
   const activateTable = async (id) => {
-    await instance.get(`/api/v1/tables/activate/${id}`).then(() => {
+    await instance.get(`/tables/activate/${id}`).then(() => {
       toast.success('item deleted!!!!')
     })
   }
   useEffect(() => {
     const getItems = async () => {
       await instance
-        .get('/api/v1/tables/all')
+        .get('/tables/all')
         .then((res) => {
           setItems(res.data.data)
+          console.log('res', res)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -65,8 +66,9 @@ function AllTables() {
                       <CTableDataCell>{`${item.name}`}</CTableDataCell>
                       <CTableDataCell className="d-flex ">
                         <Link
-                          disabled={item.status === 'active' ? true : false}
-                          className={` btn btn-sm btn-success`}
+                          className={` btn btn-sm btn-success ${
+                            item.status === 'ACTIVE' ? 'd-none' : ''
+                          }`}
                           onClick={() => {
                             return activateTable(item.id)
                           }}
@@ -74,8 +76,10 @@ function AllTables() {
                           Activate
                         </Link>
                         <Link
-                          disabled={item.status === 'disactive' ? true : false}
-                          className={` btn btn-sm btn-danger`}
+                          disabled={item.status === 'DISACTIVE' ? true : false}
+                          className={` btn btn-sm btn-danger ${
+                            item.status === 'DISACTIVE' ? 'd-none' : ''
+                          }`}
                           onClick={() => {
                             return disactivateTable(item.id)
                           }}

@@ -230,10 +230,16 @@ const RequestBarItem = React.forwardRef((props, ref) => {
             </CCollapse>
             <div style={{ display: 'none' }}>
               <PrintTemplate1 ref={ref || componentRef}>
-                <StockOrder requestItems={requestItems} />
+                <StockOrder
+                  requestItems={requestItems}
+                  setRequestItems={setRequestItems}
+                />
               </PrintTemplate1>
             </div>
-            <StockOrder requestItems={requestItems} />
+            <StockOrder
+              requestItems={requestItems}
+              setRequestItems={setRequestItems}
+            />
             {requestItems && requestItems.length !== 0 ? (
               <CCol xs={12}>
                 <CButton

@@ -42,7 +42,7 @@ const StockItemAdd = () => {
                     type="text"
                     name="name"
                     id="name"
-                    placeholder="meet "
+                    placeholder="....meat "
                     size="md"
                     {...register('name', { required: true })}
                   />

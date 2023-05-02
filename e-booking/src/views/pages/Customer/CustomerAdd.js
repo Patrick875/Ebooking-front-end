@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -35,7 +35,9 @@ function CustomerAdd() {
         toast.error('customer creation failed')
       })
     reset()
+    window.reload()
   }
+
   return (
     <CRow>
       <CCol xs={12}>

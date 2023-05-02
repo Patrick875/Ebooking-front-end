@@ -15,7 +15,7 @@ import {
 } from '@coreui/react'
 
 import { useSelector } from 'react-redux'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import CustomersTable from './CustomersTable'
@@ -25,14 +25,15 @@ function Customers() {
   const query = watch('query') || ''
   const role = useSelector((state) => state.auth.role)
   let [customers, setCustomers] = useState([])
+  const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
-
   useEffect(() => {
     const getCustomers = async () => {
       await instance
         .get('/customers/all')
         .then((res) => {
+          console.log('les customers', res.data.data)
           setCustomers(res.data.data)
         })
         .catch((err) => {
@@ -84,11 +85,30 @@ function Customers() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CustomersTable customers={customers} />
+                <CustomersTable
+                  customers={customers.filter((el, i) => {
+                    if (currentPage === 1) {
+                      return i >= 0 && i < perpage ? el : null
+                    } else {
+                      return i >= (currentPage - 1) * perpage &&
+                        i <= perpage * currentPage - 1
+                        ? el
+                        : null
+                    }
+                  })}
+                  currentPage={currentPage}
+                  perpage={perpage}
+                />
               </CTableBody>
             </CTable>
+            {customers.length !== 0 && (!query || query === '') ? (
+              <Pagination
+                postsPerPage={perpage}
+                totalPosts={customers.length}
+                paginate={paginate}
+              />
+            ) : null}
           </CCardBody>
-          <Pagination postsPerPage={10} totalPosts={20} paginate={paginate} />
         </CCard>
       </CCol>
     </CRow>
@@ -96,3 +116,5 @@ function Customers() {
 }
 
 export default Customers
+
+// <Pagination postsPerPage={10} totalPosts={20} paginate={paginate} />

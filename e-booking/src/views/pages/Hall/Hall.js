@@ -43,7 +43,7 @@ function Hall() {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Available halls </strong>
+              <strong> All halls </strong>
             </h2>
           </CCardHeader>
           <CCardBody>

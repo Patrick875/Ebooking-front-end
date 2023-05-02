@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import PrintHeader from '../../Printing/PrintHeader'
 import PrintDailyReport from '../../Printing/PrintDailyReport'
 import ReactToPrint from 'react-to-print'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const DailySalesReportView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -20,6 +21,7 @@ const DailySalesReportView = React.forwardRef((props, ref) => {
     <div>
       {reportItems && reportItems.length !== 0 ? (
         <div className="d-flex gap-2">
+          <BackButton />
           <ReactToPrint
             trigger={() => (
               <button className="btn btn-ghost-primary">Print</button>

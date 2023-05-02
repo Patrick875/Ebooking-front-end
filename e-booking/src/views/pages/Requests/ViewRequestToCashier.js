@@ -11,23 +11,21 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const Request = (props, ref) => {
   const { request, orderTotal, StockPurchaseOrderDetails } = props
   return (
     <div className="m-3 p-3">
       <h2 className="text-center my-3">
-        Purchase order of{' '}
-        {request && request.date
-          ? new Date(request.date).toLocaleDateString()
-          : null}
+        Purchase order &#8470; {request.purchaseOrderId}
       </h2>
 
       <CCardBody className="d-flex justify-content-around">
@@ -75,6 +73,7 @@ const Request = (props, ref) => {
 
 const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+  const [approved, setApproved] = useState(false)
   const request = useSelector((state) => state.selection.selected)
 
   const approvePurchaseOrder = async () => {
@@ -82,6 +81,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       .post('/purchase/order/approve', { orderId: request.id })
       .then(() => {
         toast.success('purchase order approved !!')
+        setApproved(!approved)
       })
       .catch(() => {
         toast.error('purchase order approval failed !!!')
@@ -101,24 +101,32 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       : 0
   return (
     <CCard>
-      <CCardHeader className="d-flex justify-content-end">
-        {StockPurchaseOrderDetails && StockPurchaseOrderDetails !== 0 ? (
-          <ReactToPrint
-            trigger={() => (
-              <button className="btn btn-ghost-primary">Print</button>
-            )}
-            content={() => ref || componentRef.current}
-          />
-        ) : null}
-        <button
-          className="btn btn-ghost-success text-black"
-          onClick={approvePurchaseOrder}
-          disabled={request.status === 'APPROVED'}
-        >
-          Approve
-        </button>
+      <CCardHeader className="d-flex justify-content-between">
+        <BackButton />
+        <div className="col-md-8 d-flex justify-content-end">
+          {StockPurchaseOrderDetails && StockPurchaseOrderDetails !== 0 ? (
+            <ReactToPrint
+              trigger={() => (
+                <button className="btn btn-ghost-primary">Print</button>
+              )}
+              content={() => ref || componentRef.current}
+            />
+          ) : null}
+          <button
+            className="btn btn-ghost-success text-black"
+            onClick={approvePurchaseOrder}
+            disabled={request.status === 'APPROVED' || approved}
+          >
+            Approve
+          </button>
 
-        <button className="btn btn-ghost-danger text-black">Cancel</button>
+          <button
+            className="btn btn-ghost-danger text-black"
+            disabled={request.status === 'APPROVED' || approved}
+          >
+            Cancel
+          </button>
+        </div>
       </CCardHeader>
       <div style={{ display: 'none' }}>
         <PrintTemplate1 ref={ref || componentRef}>

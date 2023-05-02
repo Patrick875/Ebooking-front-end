@@ -113,14 +113,25 @@ const AddStockToTable = (props) => {
 }
 
 const AddStock = React.forwardRef((props, ref) => {
-  const { register, getValues, reset } = useForm()
+  let [item2, setItem2] = useState([])
+  const { register, getValues, reset, watch } = useForm()
   const componentRef = useRef()
   let [purchaseOrders, setPurchaseOrders] = useState([])
   const [visible, setVisible] = useState(false)
 
-  let [item2, setItem2] = useState([])
   const [order, setOrder] = useState([])
 
+  // const selectedItem = watch('item') || ''
+  const price = watch('price') || ''
+  const quantity = watch('quantity') || ''
+
+  // if (price === '' && quantity === '' && item2 && item2.length !== 0) {
+  //   let values = {
+  //     price: item2[0].unitPrice,
+  //     quantity: item2[0].requestQuantity,
+  //   }
+  //   setDefaultValues(values)
+  // }
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
@@ -128,16 +139,10 @@ const AddStock = React.forwardRef((props, ref) => {
         })
       : order
   const [receivedItems, setReceivedItems] = useState([])
-
-  purchaseOrders =
-    purchaseOrders.length !== 0
-      ? purchaseOrders.map((e) => {
-          let id = e.id.toString()
-          return { ...e, uuid: id }
-        })
-      : purchaseOrders
   const onAdd = (data) => {
-    console.log('item2', item2)
+    if (item2 && quantity === '' && price === '') {
+      data = { price: item2[0].unitPrice, quantity: item2[0].requestQuantity }
+    }
     item2 = item2
       ? {
           itemName: item2[0].name,
@@ -147,6 +152,7 @@ const AddStock = React.forwardRef((props, ref) => {
       : item2
     data = { ...data, ...item2 }
     setReceivedItems([...receivedItems, data])
+    setItem2([])
     reset()
   }
 
@@ -155,8 +161,6 @@ const AddStock = React.forwardRef((props, ref) => {
     isDisabled = !isDisabled
   }
   const onAddItemToStock = async (data) => {
-    console.log('data to add to stock', { data: data })
-
     await instance
       .post('/receive/voucher/add', { data: data })
       .then(toast.success('items added to stock'))
@@ -169,12 +173,7 @@ const AddStock = React.forwardRef((props, ref) => {
   props = { ...props }
   props.renderMenuItemChildren = (option, { text }) => (
     <div>
-      <Highlighter search={text}>{option.uuid}</Highlighter>,
-      <div>
-        <small>
-          Purchase order of : {new Date(option.date).toLocaleDateString()}
-        </small>
-      </div>
+      <Highlighter search={text}>{option.purchaseOrderId}</Highlighter>,
     </div>
   )
 
@@ -183,7 +182,6 @@ const AddStock = React.forwardRef((props, ref) => {
       await instance
         .get('/purchase/order/approved')
         .then((res) => {
-          console.log('res,res,res', res)
           setPurchaseOrders(res.data.data)
         })
         .catch((err) => {
@@ -228,11 +226,12 @@ const AddStock = React.forwardRef((props, ref) => {
                       <div className="d-flex justify-content-between">
                         <CFormLabel htmlFor="name"> Stock order id </CFormLabel>
                       </div>
+
                       <Typeahead
                         disabled={isDisabled}
                         id="basic-typeahead-single"
-                        filterBy={['uuid']}
-                        labelKey="uuid"
+                        filterBy={['purchaseOrderId']}
+                        labelKey="purchaseOrderId"
                         {...props}
                         onChange={setOrder}
                         options={purchaseOrders}
@@ -260,8 +259,11 @@ const AddStock = React.forwardRef((props, ref) => {
                         type="number"
                         name="quantity"
                         id="quantity"
-                        placeholder="50  "
+                        placeholder="quantity  "
                         size="md"
+                        defaultValue={
+                          item2 && item2[0] ? item2[0].requestQuantity : ''
+                        }
                         required
                         {...register('quantity')}
                       />
@@ -287,7 +289,10 @@ const AddStock = React.forwardRef((props, ref) => {
                         type="number"
                         name="price"
                         id="price"
-                        placeholder="1000"
+                        placeholder="....price"
+                        defaultValue={
+                          item2 && item2[0] ? item2[0].unitPrice : ''
+                        }
                         size="md"
                         required
                         {...register('price')}
@@ -360,3 +365,9 @@ const AddStock = React.forwardRef((props, ref) => {
 })
 
 export default AddStock
+// {
+//     defaultValues: {
+//       quantity: item2 && item2.length !== 0 ? item2[0].requestQuantity : 0,
+//       price: item2 && item2.length !== 0 ? item2[0].unitPrice : 0,
+//     },
+//   }

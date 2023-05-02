@@ -1,6 +1,8 @@
 import {
   CCardBody,
   CCardHeader,
+  CFormInput,
+  CFormLabel,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -8,13 +10,31 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
+import Pagination from 'src/utils/Pagination'
 
 function AvailableStock() {
-  const [items, setItems] = useState([])
+  const { register, watch } = useForm()
+  const query = watch('query') || ''
+  const searchItems = (items, query) => {
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter((item) =>
+        item.StockItem.name.toLowerCase().includes(query),
+      )
+    }
+  }
+  let [items, setItems] = useState([])
+
+  const perpage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+
+  items = searchItems(items, query)
   useEffect(() => {
     const getItems = async () => {
       await instance
@@ -37,6 +57,19 @@ function AvailableStock() {
         </h2>
       </CCardHeader>
       <CCardBody>
+        <div className="col-md-4">
+          <CFormLabel className="text-center">Search</CFormLabel>
+          <CFormInput
+            className="mb-1"
+            type="text"
+            name="stockItemName"
+            id="stockItemName"
+            size="md"
+            placeholder="by  item name ..."
+            {...register('query')}
+          />
+        </div>
+
         <CTable bordered>
           <CTableHead>
             <CTableRow>
@@ -48,19 +81,39 @@ function AvailableStock() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? items.map((item, i) => {
-                  return (
-                    <CTableRow key={item.id}>
-                      <CTableDataCell scope="row">{i + 1}</CTableDataCell>
-                      <CTableDataCell>{item.StockItem.name}</CTableDataCell>
-                      <CTableDataCell>{item.quantity}</CTableDataCell>
-                      <CTableDataCell>{item.price}</CTableDataCell>
-                    </CTableRow>
-                  )
-                })
+              ? items
+                  .filter((el, i) => {
+                    if (currentPage === 1) {
+                      return i >= 0 && i < perpage ? el : null
+                    } else {
+                      return i >= (currentPage - 1) * perpage &&
+                        i <= perpage * currentPage - 1
+                        ? el
+                        : null
+                    }
+                  })
+                  .map((item, i) => {
+                    return (
+                      <CTableRow key={item.id}>
+                        <CTableDataCell scope="row">
+                          {(currentPage - 1) * perpage + 1 + i}
+                        </CTableDataCell>
+                        <CTableDataCell>{item.StockItem.name}</CTableDataCell>
+                        <CTableDataCell>{item.quantity}</CTableDataCell>
+                        <CTableDataCell>{item.price}</CTableDataCell>
+                      </CTableRow>
+                    )
+                  })
               : null}
           </CTableBody>
         </CTable>
+        {items.length !== 0 ? (
+          <Pagination
+            postsPerPage={perpage}
+            totalPosts={items.length}
+            paginate={paginate}
+          />
+        ) : null}
       </CCardBody>
     </div>
   )

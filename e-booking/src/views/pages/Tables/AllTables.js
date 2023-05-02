@@ -8,37 +8,43 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
+
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { RiCheckLine } from 'react-icons/ri'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
-import { selectItem } from 'src/redux/Select/selectionActions'
+import { instance } from 'src/API/AxiosInstance'
 
-function AllBarRequest() {
+function AllTables() {
   const [items, setItems] = useState([])
-  const dispatch = useDispatch()
+  const disactivateTable = async (id) => {
+    await instance.get(`/api/v1/tables/disactivate/${id}`).then(() => {
+      toast.success('item deleted!!!!')
+    })
+  }
+  const activateTable = async (id) => {
+    await instance.get(`/api/v1/tables/activate/${id}`).then(() => {
+      toast.success('item deleted!!!!')
+    })
+  }
   useEffect(() => {
-    const getPetitStockOrders = async () => {
+    const getItems = async () => {
       await instance
-        .get('/petitstock/order/all')
+        .get('/api/v1/tables/all')
         .then((res) => {
-          console.log(res.data)
           setItems(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
-    getPetitStockOrders()
+    getItems()
   }, [])
 
   return (
     <div>
       <CCardHeader>
         <h2>
-          <strong> All Petit-stock requests </strong>
+          <strong> Tables </strong>
         </h2>
       </CCardHeader>
       <CCardBody>
@@ -46,7 +52,7 @@ function AllBarRequest() {
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Number</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -56,26 +62,26 @@ function AllBarRequest() {
                   return (
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                      <CTableDataCell>
-                        {new Date(item.date).toLocaleDateString()}
-                      </CTableDataCell>
-                      <CTableDataCell className="d-flex">
+                      <CTableDataCell>{`${item.name}`}</CTableDataCell>
+                      <CTableDataCell className="d-flex ">
                         <Link
-                          className="btn btn-warning"
-                          to="/booking/requests/cashier/view"
+                          disabled={item.status === 'active' ? true : false}
+                          className={` btn btn-sm btn-success`}
                           onClick={() => {
-                            dispatch(selectItem(item))
+                            return activateTable(item.id)
                           }}
                         >
-                          View
+                          Activate
                         </Link>
-
-                        {item && item.status === 'APPROVED' ? (
-                          <p className="ms-2">
-                            Approved
-                            <RiCheckLine className="ms-3 text-success" />
-                          </p>
-                        ) : null}
+                        <Link
+                          disabled={item.status === 'disactive' ? true : false}
+                          className={` btn btn-sm btn-danger`}
+                          onClick={() => {
+                            return disactivateTable(item.id)
+                          }}
+                        >
+                          Disactivate
+                        </Link>
                       </CTableDataCell>
                     </CTableRow>
                   )
@@ -88,4 +94,4 @@ function AllBarRequest() {
   )
 }
 
-export default AllBarRequest
+export default AllTables

@@ -7,7 +7,7 @@ import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
 function CustomersTable(props) {
-  const { customers } = props
+  const { customers, currentPage, perpage } = props
   const role = useSelector((state) => state.auth.role)
   const dispatch = useDispatch()
   const deleteCustomer = async (id) => {
@@ -24,7 +24,10 @@ function CustomersTable(props) {
   return customers && customers.length !== 0 ? (
     customers.map((customer, i) => (
       <CTableRow key={customer.id}>
-        <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+        <CTableHeaderCell scope="row">
+          {' '}
+          {(currentPage - 1) * perpage + 1 + i}
+        </CTableHeaderCell>
         <CTableDataCell>{`${customer.names}`}</CTableDataCell>
         <CTableDataCell>{`${customer.identification}`}</CTableDataCell>
 

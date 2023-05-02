@@ -17,35 +17,32 @@ export const updateUser = (payloadApi, payloadLocal) =>
             },
           })
         }
-
         toast.success('user updated')
       })
       .catch((err) => {
-        toast.error(err.message)
+        toast.error('user updated failed')
       })
   }
 export const deleteUser = (payloadApi, payloadLocal) => {
   if (payloadLocal.length !== 0) {
-    console.log(payloadLocal)
-    payloadLocal = payloadLocal.filter((user) =>
-      user._id === payloadApi.id ? '' : user,
+    payloadLocal = payloadLocal.map((user) =>
+      user._id === payloadApi.id ? { ...user, status: 'disactive' } : user,
     )
   }
   return async function (dispatch) {
     await instance
-      .delete(`/users/delete/${payloadApi.id}`)
+      .get(`/users/disactive/${payloadApi.id}`)
       .then(() => {
-        toast.success('user deleted')
+        toast.success('user disactivated')
         dispatch({
           type: USER_ACTIONS.DELETE,
           payload: {
             payloadApi,
-            payloadLocal,
           },
         })
       })
       .catch((err) => {
-        toast.error(err.message)
+        toast.error('user disactivate failed')
       })
   }
 }
@@ -55,10 +52,8 @@ export const getUsers = function () {
       .get(`/users/all`)
       .then((res) => {
         dispatch({ type: USER_ACTIONS.GET_USERS, payload: res.data.users })
-        console.log('rese', res.data)
       })
-      .catch((err) => {
-        toast.error(err.message)
+      .catch(() => {
         dispatch({ type: USER_ACTIONS.GET_USERS, payload: [] })
       })
   }

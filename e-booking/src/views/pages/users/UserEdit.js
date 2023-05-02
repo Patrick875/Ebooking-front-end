@@ -16,7 +16,7 @@ import {
 import { getRoles } from 'src/redux/Roles/RolesActions'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 
 const UserEdit = () => {
   const { register, handleSubmit, watch } = useForm()
@@ -34,7 +34,7 @@ const UserEdit = () => {
     users = users.map((user) =>
       user._id === selectedUser._id ? (user = { ...user, ...data }) : user,
     )
-    data.role = selectedUser.Role.name
+    data.role = selectedUser.Role.name || role
 
     await instance
       .put('/users/update', data)
@@ -132,13 +132,16 @@ const UserEdit = () => {
                     size="md"
                     className="mb-3"
                     aria-label="update user role"
-                    defaultValue={role}
                     {...register('role')}
                   >
                     <option>-- Select -- </option>
                     {roles && roles.length !== 0
                       ? roles.map((role) => (
-                          <option value={role.id} key={role._id}>
+                          <option
+                            value={role.id}
+                            key={role._id}
+                            selected={role.id === selectedUser.Role.id}
+                          >
                             {role.name}
                           </option>
                         ))

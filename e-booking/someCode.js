@@ -1,170 +1,118 @@
-// if (role === 'admin') {
-//   return (
-//     <>
-//       <CRow>
-//         <CCol xs={12}>
-//           <CCard className="mb-4">
-//             <CCardHeader>
-//               <h2 className="text-center">
-//                 <strong> Add Product </strong>
-//               </h2>
-//             </CCardHeader>
-//             <CCardBody>
-//               <CForm
-//                 className="row"
-//                 name="roomClassAddFrm"
-//                 encType="multipart/form"
-//                 onSubmit={handleSubmit(onSubmit)}
-//               >
-//                 <CCol md={6}>
-//                   <CFormLabel htmlFor="title"> Product title </CFormLabel>
-//                   <CFormInput
-//                     className="mb-1"
-//                     type="text"
-//                     name="title"
-//                     id="title"
-//                     size="md"
-//                     required
-//                     {...register('name')}
-//                   />
-//                 </CCol>
-//                 <CCol md={6}>
-//                   <CFormLabel htmlFor="category"> Product category </CFormLabel>
-//                   <CFormSelect
-//                     name="category"
-//                     id="category"
-//                     size="md"
-//                     className="mb-3"
-//                     aria-label="Room class"
-//                     {...register('category', { required: true })}
-//                   >
-//                     <option>-- Select -- </option>
-//                     {allDataCategories && allDataCategories.length !== 0
-//                       ? allDataCategories.map((category) => (
-//                           <option value={category.id} key={category.id}>
-//                             {category.name}
-//                           </option>
-//                         ))
-//                       : null}
-//                   </CFormSelect>
-//                 </CCol>
-//                 <CCol xs={12} className="text-center my-3">
-//                   <CButton
-//                     component="input"
-//                     type="submit"
-//                     value=" Save product details"
-//                   />
-//                 </CCol>
-//                 <CCol>
-//                   <div>
-//                     <CCol md={6}>
-//                       <CFormLabel htmlFor="price1" className="col-form-label">
-//                         Set price for
-//                         <span className="strong"> </span> package
-//                       </CFormLabel>
-//                     </CCol>
-//                     <CCol md="6">
-//                       <CFormInput
-//                         type="Number"
-//                         min="1"
-//                         id="price1"
-//                         {...register(`package`, {
-//                           required: true,
-//                         })}
-//                       />
-//                     </CCol>
-//                   </div>
+import React, { useState } from 'react'
 
-//                   <CCol md={6} key="{itemPackage.id}">
-//                     <CFormLabel htmlFor="package">Product packages </CFormLabel>
+const Pagination = ({ data, RenderComponent, pageLimit, dataLimit }) => {
+  const [pages] = useState(Math.ceil(data.length / dataLimit))
+  const [currentPage, setCurrentPage] = useState(1)
 
-//                     <CFormCheck
-//                       name="{itemPackage.name}"
-//                       id="check"
-//                       size="md"
-//                       label="{itemPackage.name}"
-//                       value="{itemPackage.name}"
-//                       className="mb-3"
-//                       aria-label="{itemPackage.name}"
-//                     />
-//                   </CCol>
-//                   <CCol xs={12} className="text-center my-3">
-//                     <CButton
-//                       component="input"
-//                       type="submit"
-//                       value=" Save product"
-//                     />
-//                   </CCol>
-//                 </CCol>
-//               </CForm>
-//             </CCardBody>
-//           </CCard>
-//         </CCol>
-//       </CRow>
-//     </>
-//   )
-// } else {
-//   return (
-//     <>
-//       <CRow>
-//         <CCol xs={12}>
-//           <CCard className="mb-4">
-//             <CCardHeader>
-//               <h2 className="text-center">
-//                 <strong> Add Product </strong>
-//               </h2>
-//             </CCardHeader>
-//             <CCardBody>
-//               <CForm
-//                 className="row"
-//                 name="roomClassAddFrm"
-//                 encType="multipart/form"
-//                 onSubmit={handleSubmit(onManagerSubmit)}
-//               >
-//                 <CCol md={6}>
-//                   <CFormLabel htmlFor="title"> Product title </CFormLabel>
-//                   <CFormInput
-//                     className="mb-1"
-//                     type="text"
-//                     name="title"
-//                     id="title"
-//                     size="md"
-//                     required
-//                     {...register('name')}
-//                   />
-//                 </CCol>
-//                 <CCol md={6}>
-//                   <CFormLabel htmlFor="category"> Product category </CFormLabel>
-//                   <CFormSelect
-//                     name="category"
-//                     id="category"
-//                     size="md"
-//                     className="mb-3"
-//                     aria-label="Room class"
-//                     {...register('category', { required: true })}
-//                   >
-//                     <option>-- Select -- </option>
-//                     {allDataCategories && allDataCategories.length !== 0
-//                       ? allDataCategories.map((category) => (
-//                           <option value={category.id} key={category.id}>
-//                             {category.name}
-//                           </option>
-//                         ))
-//                       : null}
-//                   </CFormSelect>
-//                 </CCol>
-//                 <CCol xs={12} className="text-center my-3">
-//                   <CButton
-//                     component="input"
-//                     type="submit"
-//                     value=" Save product details"
-//                   />
-//                 </CCol>
-//               </CForm>
-//             </CCardBody>
-//           </CCard>
-//         </CCol>
-//       </CRow>
-//     </>
-//   )
-// }
+  const goToNextPage = () => {
+    setCurrentPage((page) => page + 1)
+  }
+
+  const goToPreviousPage = () => {
+    setCurrentPage((page) => page - 1)
+  }
+
+  const changePage = (event) => {
+    const pageNumber = Number(event.target.textContent)
+    setCurrentPage(pageNumber)
+  }
+
+  const getPaginatedData = () => {
+    const startIndex = currentPage * dataLimit - dataLimit
+    const endIndex = startIndex + dataLimit
+    return data.slice(startIndex, endIndex)
+  }
+
+  const getPaginationGroup = () => {
+    const start = Math.floor((currentPage - 1) / pageLimit) * pageLimit
+    return new Array(pageLimit).fill().map((_, idx) => start + idx + 1)
+  }
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const handleLogin = () => {
+    setIsLoggedIn(true)
+  }
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+  }
+
+  const isLoggedInRender = () => {
+    if (isLoggedIn) {
+      return (
+        <>
+          <button onClick={handleLogout}>Logout</button>
+          <RenderComponent data={getPaginatedData()} />
+        </>
+      )
+    } else {
+      return (
+        <>
+          <button onClick={handleLogin}>Login</button>
+        </>
+      )
+    }
+  }
+
+  return (
+    <>
+      {isLoggedInRender()}
+      <div className="pagination">
+        <button
+          onClick={goToPreviousPage}
+          className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
+        >
+          prev
+        </button>
+
+        {getPaginationGroup().map((item, index) => (
+          <button
+            key={index}
+            onClick={changePage}
+            className={`paginationItem ${
+              currentPage === item ? 'active' : null
+            }`}
+          >
+            <span>{item}</span>
+          </button>
+        ))}
+
+        <button
+          onClick={goToNextPage}
+          className={`next ${currentPage === pages ? 'disabled' : ''}`}
+        >
+          next
+        </button>
+      </div>
+    </>
+  )
+}
+
+export default Pagination
+
+
+
+
+import React from 'react';
+import Pagination from './Pagination';
+
+const ExampleComponent = () => {
+  const data = [...]; // your data goes here
+  const RenderComponent = ({ data }) => {
+    return (
+      <div>
+        {data.map((item) => (
+          <p key={item.id}>{item.text}</p>
+        ))}
+      </div>
+    );
+  };
+  return (
+    <div>
+      <Pagination data={data} RenderComponent={RenderComponent} pageLimit={5} dataLimit={10} />
+    </div>
+  );
+};
+
+export default

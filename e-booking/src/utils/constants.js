@@ -421,3 +421,28 @@ export const countries = [
   'Zambia',
   'Zimbabwe',
 ]
+
+export const numpadItems = [
+  '7',
+  '8',
+  '9',
+  '4',
+  '5',
+  '6',
+  '1',
+  '2',
+  '3',
+  '.',
+  '0',
+  '00',
+]
+
+export const tables = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '10', '11']
+export const units = [
+  { name: 'gram', symbol: 'g' },
+  { name: 'kilogram', symbol: 'kg' },
+  { name: 'litter', symbol: 'l' },
+  { name: 'militter', symbol: 'ml' },
+  { name: 'piece', symbol: 'piece' },
+  { name: 'bottle', symbol: 'bottle' },
+]

@@ -99,9 +99,8 @@ function ServiceSell() {
                   <CFormLabel htmlFor="title"> Client name </CFormLabel>
                   <Typeahead
                     id="basic-typeahead-single"
-                    labelKey="name"
+                    labelKey="nameS"
                     onChange={setCustomer}
-                    allowNew={true}
                     options={users}
                     placeholder="search client"
                     selected={customer}

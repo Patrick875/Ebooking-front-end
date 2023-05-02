@@ -22,9 +22,11 @@ import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrder from '../stock/PurchaseOrder'
 import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
+import { units } from 'src/utils/constants'
 
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+  const typeaheadRef = useRef()
   const { register, getValues, reset } = useForm()
   const [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
@@ -54,6 +56,9 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   const submitRequest = () => {
     const data = { order: requestItems }
     createPurchaseOrder(data)
+  }
+  const clearTypeahead = () => {
+    typeaheadRef.current.clear()
   }
   useEffect(() => {
     const getStockItems = async () => {
@@ -121,6 +126,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         ) : null}
                       </div>
                       <Typeahead
+                        ref={typeaheadRef}
                         id="basic-typeahead-single"
                         filterBy={['name']}
                         labelKey="name"
@@ -153,9 +159,9 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
                       >
-                        <option value="Kg"> Kg </option>
-                        <option value="l"> ltr </option>
-                        <option value="piece"> piece </option>
+                        {units.map((unit) => (
+                          <option value={unit.symbol}>{unit.symbol}</option>
+                        ))}
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
@@ -177,6 +183,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       value="Add item"
                       onClick={() => {
                         const data = getValues()
+                        clearTypeahead()
                         return onAdd(data)
                       }}
                     />

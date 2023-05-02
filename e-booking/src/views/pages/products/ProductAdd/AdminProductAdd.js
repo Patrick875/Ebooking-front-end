@@ -36,6 +36,7 @@ function AdminProductAdd(props) {
 
   const handleNext = () => {
     if (step === 3) {
+      console.log('all Data', formData)
       dispatch(createProduct(formData))
     } else {
       setStep((prev) => prev + 1)

@@ -58,7 +58,6 @@ const ReservationAdd = () => {
 
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   let user = useSelector((state) => state.auth.user)
-  const inputState = { minLength: 2 }
   let priceHall = 0
   let priceRoom = 0
 
@@ -236,14 +235,12 @@ const ReservationAdd = () => {
                         ) : null}
                       </div>
                       <Typeahead
-                        {...inputState}
                         id="basic-typeahead-single"
                         filterBy={['names']}
                         labelKey="names"
                         onChange={setCustomer}
                         options={customers}
                         placeholder="customer name ..."
-                        onInputChange={handleSearch}
                         selected={customer}
                       />
                     </CCol>

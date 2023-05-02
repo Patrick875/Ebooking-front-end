@@ -58,7 +58,7 @@ const CashTransaction = () => {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Cash out form safe </strong>
+              <strong> Cash transaction </strong>
             </h2>
           </CCardHeader>
           <CCardBody>
@@ -112,17 +112,40 @@ const CashTransaction = () => {
                 </div>
               </div>
 
-              <div className="mb-3">
-                <CFormLabel htmlFor="description">
-                  {' '}
-                  Description/Reason{' '}
-                </CFormLabel>
-                <CFormTextarea
-                  name="description"
-                  id="description"
-                  {...register('description')}
-                ></CFormTextarea>
+              <div className="row">
+                <CCol md={6} className="d-flex gap-2">
+                  <div className="col">
+                    <CFormLabel htmlFor="paymentMethod">
+                      Payment method
+                    </CFormLabel>
+                    <CFormSelect
+                      name="paymentMethod"
+                      id="paymentMethod"
+                      size="md"
+                      className="mb-3"
+                      {...register('paymentMethod')}
+                    >
+                      <option value="Cash">Cash</option>
+                      <option value="Mobile Money">Mobile Money</option>
+                      <option value="Credit card">Credit card</option>
+                      <option value="Credit">Credit</option>
+                      <option value="Cheque">Cheque</option>
+                    </CFormSelect>
+                  </div>
+                </CCol>
+                <CCol md={6} className="mb-3">
+                  <CFormLabel htmlFor="description">
+                    {' '}
+                    Description/Reason{' '}
+                  </CFormLabel>
+                  <CFormTextarea
+                    name="description"
+                    id="description"
+                    {...register('description')}
+                  ></CFormTextarea>
+                </CCol>
               </div>
+
               <CCol xs={12}>
                 <CButton
                   component="input"

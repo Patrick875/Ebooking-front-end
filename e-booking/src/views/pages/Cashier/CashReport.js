@@ -73,7 +73,9 @@ const CashRecords = (props) => {
                         {new Date(order['date']).toLocaleDateString()}
                       </CTableDataCell>
                       <CTableDataCell>{order['accountType']}</CTableDataCell>
-                      <CTableDataCell>{order['doneTo']}</CTableDataCell>
+                      <CTableDataCell>
+                        {order['User'].firstName + ' ' + order['User'].lastName}
+                      </CTableDataCell>
                       <CTableDataCell>{order['account']}</CTableDataCell>
                       <CTableDataCell>{order['amount']}</CTableDataCell>
                     </CTableRow>
@@ -138,6 +140,7 @@ const CashReport = React.forwardRef((props, ref) => {
     const getCashTransactions = async () => {
       await instance.get('/cashflow/all').then((res) => {
         setTransactions(res.data.data)
+        console.log('cash flow', res.data.data)
       })
     }
     getCashTransactions()

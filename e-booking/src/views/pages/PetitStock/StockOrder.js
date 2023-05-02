@@ -16,7 +16,7 @@ import React, { useState } from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilXCircle } from '@coreui/icons'
 function StockOrder(props, ref) {
-  const { requestItems, removeItem } = props
+  const { requestItems, setRequestItems } = props
   console.log('requests', requestItems)
   const [style, setStyle] = useState({ display: 'none' })
 
@@ -62,10 +62,10 @@ function StockOrder(props, ref) {
                           {Number(item.price).toLocaleString()}{' '}
                         </CTableDataCell>
                         <CTableDataCell
-                          onMouseEnter={(e) => {
+                          onMouseEnter={() => {
                             setStyle({ display: 'block' })
                           }}
-                          onMouseLeave={(e) => {
+                          onMouseLeave={() => {
                             setStyle({ display: 'none' })
                           }}
                         >
@@ -73,7 +73,19 @@ function StockOrder(props, ref) {
                           {Number(
                             Number(item.price) * Number(item.quantity),
                           ).toLocaleString()}{' '}
-                          <CIcon icon={cilXCircle} size="sm" style={style} />
+                          <button
+                            className="btn btn-danger"
+                            style={style}
+                            onClick={() => {
+                              setRequestItems(
+                                requestItems.filter((el) =>
+                                  item !== el ? el : null,
+                                ),
+                              )
+                            }}
+                          >
+                            Delete
+                          </button>
                         </CTableDataCell>
                       </CTableRow>
                     )

@@ -52,7 +52,7 @@ const CreateTable = () => {
                     id="number"
                     placeholder="....table"
                     size="md"
-                    {...register('number', { required: true })}
+                    {...register('name', { required: true })}
                   />
                 </CCol>
                 <CCol xs={12}>

@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form'
 import './Product.scss'
 import { AiOutlineCloseCircle, AiOutlineEnter } from 'react-icons/ai'
 import { IoReturnUpBack } from 'react-icons/io5'
-import { numpadItems, tables } from 'src/utils/constants'
+import { numpadItems } from 'src/utils/constants'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import PrintHeader from '../Printing/PrintHeader'
@@ -93,6 +93,7 @@ const ProductSell = React.forwardRef((props, ref) => {
   }
   const orderTotal = total()
 
+  const [tables, setTables] = useState()
   const [table, setTable] = useState()
   const [petitStock, setPetitStock] = useState(false)
   const onSubmit = (data) => {
@@ -191,6 +192,19 @@ const ProductSell = React.forwardRef((props, ref) => {
       })
   }
   useEffect(() => {
+    const getTables = async () => {
+      await instance
+        .get('/tables/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setTables(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+
     const getAllProducts = async () => {
       await instance
         .get('/products/all')
@@ -209,6 +223,7 @@ const ProductSell = React.forwardRef((props, ref) => {
         setProductCategories(res.data.data)
       })
     }
+    getTables()
     getAllProducts()
     getAllProductCategories()
   }, [])
@@ -489,18 +504,20 @@ const ProductSell = React.forwardRef((props, ref) => {
                 </CTableHead>
                 <CTableBody>
                   {tables && tables.length !== 0 ? (
-                    tables.map((item, index) => (
-                      <CTableRow
-                        onClick={() => {
-                          setTable(item)
-                        }}
-                      >
-                        <CTableHeaderCell scope="row">
-                          {index + 1}
-                        </CTableHeaderCell>
-                        <CTableDataCell>{item}</CTableDataCell>
-                      </CTableRow>
-                    ))
+                    tables
+                      .filter((table) => table.status === 'ACTIVE')
+                      .map((item, index) => (
+                        <CTableRow
+                          onClick={() => {
+                            setTable(item.name)
+                          }}
+                        >
+                          <CTableHeaderCell scope="row">
+                            {index + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>{item.name}</CTableDataCell>
+                        </CTableRow>
+                      ))
                   ) : (
                     <CTableRow>No tables in db</CTableRow>
                   )}

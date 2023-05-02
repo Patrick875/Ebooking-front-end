@@ -24,14 +24,30 @@ import PrintDailyReport from '../../Printing/PrintDailyReport'
 import AddElementToReport from './AddElementToReport'
 
 const CreateDailySalesReport = React.forwardRef((props, ref) => {
-  const { register, getValues, reset } = useForm()
+  const { register, getValues, reset, watch } = useForm()
+  const title = watch('title')
+  const amount = watch('amount')
+  const currency = watch('currency')
+  const paymentMethod = watch('paymentMethod')
   const componentRef = useRef()
   let [reportItems, setReportItems] = useState([])
   const [visible, setVisible] = useState(false)
   let [users, setUsers] = useState([])
   const [user, setUser] = useState([])
+  const dontAdd =
+    !title ||
+    title === '' ||
+    !amount ||
+    amount === '' ||
+    !currency ||
+    currency === '' ||
+    !paymentMethod ||
+    paymentMethod === '' ||
+    !user ||
+    user.length === 0
+      ? true
+      : false
   const onAdd = (data) => {
-    console.log('daily sales report items')
     data = { ...data, carriedBy: user[0].id }
     setReportItems([...reportItems, data])
     reset()
@@ -191,7 +207,7 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                     <CButton
                       component="input"
                       value="Add element"
-                      disabled={user && user.length === 0 ? true : false}
+                      disabled={dontAdd}
                       onClick={() => {
                         const data = getValues()
                         return onAdd(data)

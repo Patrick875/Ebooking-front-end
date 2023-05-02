@@ -347,11 +347,7 @@ const _nav = [
         name: 'All Receive Vouchers',
         to: '/booking/stock/received',
       },
-      {
-        component: CNavItem,
-        name: 'Stock reports',
-        to: '/reports/stock',
-      },
+
       {
         component: CNavItem,
         name: 'Outgoing Request',
@@ -478,3 +474,9 @@ export default _nav
 //       },
 //     ],
 //   },
+
+// {
+//         component: CNavItem,
+//         name: 'Stock reports',
+//         to: '/reports/stock',
+//       },

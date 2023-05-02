@@ -25,6 +25,7 @@ import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import ReceiveVaucherPrint from '../Printing/ReceiveVaucherPrint'
 import { instance } from 'src/API/AxiosInstance'
+import { units } from 'src/utils/constants'
 
 const AddStockToTable = (props) => {
   const { receivedItems } = props
@@ -87,6 +88,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
   const { register, getValues, reset } = useForm()
   const componentRef = useRef()
   let [purchaseOrders, setPurchaseOrders] = useState([])
+  let [petitStock, setPetitStock] = useState([])
   const [visible, setVisible] = useState(false)
   let items = []
   let [item2, setItem2] = useState([])
@@ -159,6 +161,12 @@ const AddBarItem = React.forwardRef((props, ref) => {
           toast.error(err.message)
         })
     }
+    const getAllPetitStock = async () => {
+      await instance.get('/petit-stock/all').then((res) => {
+        setPetitStock(res.data.data)
+      })
+    }
+    getAllPetitStock()
     getPurchaseOrders()
   }, [])
   return (
@@ -203,12 +211,11 @@ const AddBarItem = React.forwardRef((props, ref) => {
                         aria-label="bar "
                         {...register('bar', { required: true })}
                       >
-                        <option value="kitchen"> Kitchen </option>
-                        <option value="main-bar"> Main bar </option>
-                        <option value="swimming-pool-bar">
-                          {' '}
-                          Swimming pool bar{' '}
-                        </option>
+                        {petitStock && petitStock.length !== 0
+                          ? petitStock.map((ps) => (
+                              <option value={ps.name}>{ps.name}</option>
+                            ))
+                          : null}
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
@@ -274,9 +281,9 @@ const AddBarItem = React.forwardRef((props, ref) => {
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
                       >
-                        <option value="Kg"> Kg </option>
-                        <option value="l"> ltr </option>
-                        <option value="piece"> piece </option>
+                        {units.map((unit) => (
+                          <option value={unit.symbol}>{unit.symbol}</option>
+                        ))}
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>

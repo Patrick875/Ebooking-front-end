@@ -22,6 +22,7 @@ import { instance } from 'src/API/AxiosInstance'
 import StockOrder from './StockOrder'
 import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
+import { units } from 'src/utils/constants'
 
 const RequestBarItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -207,9 +208,9 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
                       >
-                        <option value="Kg"> Kg </option>
-                        <option value="l"> ltr </option>
-                        <option value="piece"> piece </option>
+                        {units.map((unit) => (
+                          <option value={unit.symbol}>{unit.symbol}</option>
+                        ))}
                       </CFormSelect>
                     </CCol>
                   </CRow>

@@ -14,6 +14,7 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import PackageItems from '../ProductAdd/PackageItems'
+import { units } from 'src/utils/constants'
 
 const CreatePackageModal = (props) => {
   const { register, getValues, reset } = useForm()
@@ -141,9 +142,9 @@ const CreatePackageModal = (props) => {
                 aria-label="item quantity unit"
                 {...register('unit', { required: true })}
               >
-                <option value="Kg"> Kg </option>
-                <option value="l"> ltr </option>
-                <option value="piece"> piece </option>
+                {units.map((unit) => (
+                  <option value={unit.symbol}>{unit.symbol}</option>
+                ))}
               </CFormSelect>
             </CCol>
             <CCol xs={12} className="d-flex justify-content-center my-3">

@@ -22,6 +22,7 @@ import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrder from '../stock/PurchaseOrder'
 import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
+import { units } from 'src/utils/constants'
 
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -158,9 +159,9 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
                       >
-                        <option value="Kg"> Kg </option>
-                        <option value="l"> ltr </option>
-                        <option value="piece"> piece </option>
+                        {units.map((unit) => (
+                          <option value={unit.symbol}>{unit.symbol}</option>
+                        ))}
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>

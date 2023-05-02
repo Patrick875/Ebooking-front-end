@@ -27,7 +27,10 @@ import { units } from 'src/utils/constants'
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const typeaheadRef = useRef()
-  const { register, getValues, reset } = useForm()
+  const { register, getValues, watch, reset } = useForm()
+  const quantity = watch('quantity')
+  const price = watch('price')
+
   const [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
   let items = stockItems
@@ -48,6 +51,15 @@ const RequestToCashier = React.forwardRef((props, ref) => {
       })
   }
 
+  const dontAdd =
+    !quantity ||
+    quantity === '' ||
+    !item ||
+    item.length === 0 ||
+    !price ||
+    price === ''
+      ? true
+      : false
   const onAdd = (data) => {
     data = { ...data, name: item[0].name, id: item[0].id }
     setRequestItems([...requestItems, data])
@@ -181,6 +193,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                     <CButton
                       component="input"
                       value="Add item"
+                      disabled={dontAdd}
                       onClick={() => {
                         const data = getValues()
                         clearTypeahead()

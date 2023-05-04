@@ -12,31 +12,38 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
-import { selectItem } from 'src/redux/Select/selectionActions'
-import Pagination from 'src/utils/Pagination'
+import { getRoomStatus } from 'src/utils/functions'
 
 const Room = () => {
-  const dispatch = useDispatch()
   const [rooms, setRooms] = useState([])
-  const perpage = 10
-  const [currentPage, setCurrentPage] = useState(1)
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const [roomClasses, setRoomClasses] = useState([])
+
   useEffect(() => {
     const getRooms = async () => {
       await instance
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
+          console.log('rooms', res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    const getRoomClasses = async () => {
+      await instance
+        .get('/roomclass/all')
+        .then((res) => {
+          setRoomClasses(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
     getRooms()
+    getRoomClasses()
   }, [])
 
   return (
@@ -44,60 +51,82 @@ const Room = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <h2>
-              <strong> All rooms </strong>
-            </h2>
+            <h4>
+              <strong className="text-uppercase">
+                {' '}
+                Room status report on {new Date().toLocaleDateString()}{' '}
+              </strong>
+            </h4>
           </CCardHeader>
           <CCardBody>
             <CTable bordered>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    {' '}
-                    Name | N <sup>o</sup>{' '}
-                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">ROOM #</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Guest Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Date in</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Date out</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Room rate</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Company</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {rooms && rooms.length !== 0
-                  ? rooms
-                      .filter((el, i) => {
-                        if (currentPage === 1) {
-                          return i >= 0 && i < perpage ? el : null
-                        } else {
-                          return i >= (currentPage - 1) * perpage &&
-                            i <= perpage * currentPage - 1
-                            ? el
-                            : null
-                        }
-                      })
-                      .map((room, i) => {
+                {rooms &&
+                rooms.length !== 0 &&
+                roomClasses &&
+                roomClasses.length !== 0
+                  ? roomClasses
+                      .sort((a, b) => a.price - b.price)
+                      .map((roomClass, i, arr) => {
                         return (
-                          <CTableRow key={room.id}>
-                            <CTableHeaderCell scope="row">
-                              {(currentPage - 1) * perpage + 1 + i}
-                            </CTableHeaderCell>
-                            <CTableDataCell>
-                              {' '}
-                              {room.RoomClass.name}{' '}
-                            </CTableDataCell>
-                            <CTableDataCell>{`#${room.name}`}</CTableDataCell>
-                          </CTableRow>
+                          <React.Fragment>
+                            <CTableRow>
+                              <CTableDataCell
+                                colSpan={8}
+                                className="text-uppercase fw-bold"
+                              >
+                                {roomClass.name}
+                              </CTableDataCell>
+                            </CTableRow>
+                            {rooms
+                              .filter(
+                                (room) => room.RoomClass.id === roomClass.id,
+                              )
+                              .map((room) => {
+                                const cool = getRoomStatus(room)
+                                return (
+                                  <CTableRow key={room.id}>
+                                    <CTableHeaderCell>{`#${room.name}`}</CTableHeaderCell>
+                                    <CTableDataCell></CTableDataCell>
+                                    <CTableDataCell>
+                                      {cool.status === 'OCCUPIED'
+                                        ? new Date(
+                                            cool.checkIn,
+                                          ).toLocaleDateString()
+                                        : ''}
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                      {cool.status === 'OCCUPIED'
+                                        ? new Date(
+                                            cool.checkOut,
+                                          ).toLocaleDateString()
+                                        : ''}
+                                    </CTableDataCell>
+                                    <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>
+                                    <CTableDataCell></CTableDataCell>
+                                    <CTableDataCell>
+                                      {cool.status}
+                                    </CTableDataCell>
+                                  </CTableRow>
+                                )
+                              })}
+                          </React.Fragment>
                         )
                       })
                   : null}
               </CTableBody>
             </CTable>
-
-            {rooms.length !== 0 ? (
-              <Pagination
-                postsPerPage={perpage}
-                totalPosts={rooms.length}
-                paginate={paginate}
-              />
-            ) : null}
           </CCardBody>
         </CCard>
       </CCol>

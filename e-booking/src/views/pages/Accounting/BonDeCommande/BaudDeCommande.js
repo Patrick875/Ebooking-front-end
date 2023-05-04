@@ -20,14 +20,14 @@ function BaudDeCommande() {
             <Link
               md={4}
               className="btn btn-primary"
-              to="/booking/accounting/baud-de-commande/create"
+              to="/booking/accounting/bon-de-commande/create"
             >
               <IoCreateOutline className="fs-5" />
               Create
             </Link>
           </div>
           <p className="text-center fs-4">
-            <strong> All Baud de Commande </strong>
+            <strong> All Bon de Commande </strong>
           </p>
           <CTable bordered>
             <CTableHead>

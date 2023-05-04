@@ -297,8 +297,7 @@ const Reservation = () => {
                                 type="button"
                                 color="danger"
                                 onClick={() => {
-                                  console.log(open)
-                                  setClicked({ id: reserv.id })
+                                  setClicked(reserv)
                                   return setOpen(true)
                                 }}
                               >

@@ -162,27 +162,29 @@ const ServiceEdit = React.lazy(() =>
   import('./views/pages/services/ServiceEdit.js'),
 )
 
-const Invoice = React.lazy(() => import('./views/pages/Accounting/Invoice'))
+const Invoice = React.lazy(() =>
+  import('./views/pages/Accounting/Invoice/Invoice'),
+)
 const CreateInvoice = React.lazy(() =>
-  import('./views/pages/Accounting/CreateInvoice'),
+  import('./views/pages/Accounting/Invoice/CreateInvoice'),
 )
 const ProformaInvoice = React.lazy(() =>
-  import('./views/pages/Accounting/ProformaInvoice'),
+  import('./views/pages/Accounting/ProFormaInvoice/ProformaInvoice'),
 )
 const CreateProformaInvoice = React.lazy(() =>
-  import('./views/pages/Accounting/CreateProformaInvoice'),
+  import('./views/pages/Accounting/ProFormaInvoice/CreateProformaInvoice'),
 )
 const DeliveryNote = React.lazy(() =>
-  import('./views/pages/Accounting/DeliveryNote'),
+  import('./views/pages/Accounting/DeliveryNote/DeliveryNote'),
 )
 const CreateDeliveryNote = React.lazy(() =>
-  import('./views/pages/Accounting/CreateDeliveryNote'),
+  import('./views/pages/Accounting/DeliveryNote/CreateDeliveryNote'),
 )
 const BaudDeCommande = React.lazy(() =>
-  import('./views/pages/Accounting/BaudDeCommande.js'),
+  import('./views/pages/Accounting/BonDeCommande/BaudDeCommande.js'),
 )
 const CreateBaudDeCommande = React.lazy(() =>
-  import('./views/pages/Accounting/CreateBaudDeCommande.js'),
+  import('./views/pages/Accounting/BonDeCommande/CreateBaudDeCommande.js'),
 )
 
 const CashTransaction = React.lazy(() =>
@@ -641,13 +643,13 @@ const routes = [
     element: CreateDeliveryNote,
   },
   {
-    path: '/booking/accounting/baud-de-commande',
+    path: '/booking/accounting/bon-de-commande',
     exact: true,
-    name: 'Baud de commande',
+    name: 'Bon de commande',
     element: BaudDeCommande,
   },
   {
-    path: '/booking/accounting/baud-de-commande/create',
+    path: '/booking/accounting/bon-de-commande/create',
     exact: true,
     name: 'Create baud de commancde',
     element: CreateBaudDeCommande,

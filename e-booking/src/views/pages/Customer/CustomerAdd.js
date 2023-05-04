@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -17,7 +17,7 @@ import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { countries } from 'src/utils/constants'
 
-function CustomerAdd() {
+function CustomerAdd({ reload }) {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset } = useForm()
   const customerType = watch('customerType') || 'individual'
@@ -35,8 +35,8 @@ function CustomerAdd() {
         toast.error('customer creation failed')
       })
     reset()
-    window.reload()
   }
+  useEffect(() => {}, reload)
 
   return (
     <CRow>

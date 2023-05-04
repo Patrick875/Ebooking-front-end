@@ -82,3 +82,67 @@ export function sumAmountsByCurrency(transactions) {
   }
   return sumByCurrency
 }
+
+export function getRoomStatus(room) {
+  let allReservationDates = []
+  let checkIn, checkOut
+  let confirmedReservations =
+    room.Reservations && room.Reservations.length !== 0
+      ? room.Reservations.filter(
+          (reserv) => reserv.status === 'confirmed' && reserv.roomId,
+        )
+      : []
+  if (confirmedReservations.length === 0) {
+    return { status: 'VACANT' }
+  } else {
+    let reservationDates = confirmedReservations.map((reserv) => {
+      allReservationDates.push([
+        getUTCDateWithoutHours(reserv.checkIn),
+        getUTCDateWithoutHours(reserv.checkOut),
+      ])
+      return reserv
+    })
+
+    let datesWithinEachReservation =
+      allReservationDates && allReservationDates.length !== 0
+        ? allReservationDates.map((datArr) => {
+            let dates = datesInRangeWithUnix(datArr[0], datArr[1])
+            return {
+              dateIn: datArr[0],
+              dateOut: datArr[1],
+              datArr: [...dates],
+            }
+          })
+        : []
+
+    let allDates = []
+
+    datesWithinEachReservation =
+      datesWithinEachReservation && datesWithinEachReservation.length !== 0
+        ? datesWithinEachReservation.map(({ datArr, dateIn, dateOut }) => {
+            if (
+              datesInRangeWithUnix(dateIn, dateOut).includes(
+                getUTCDateWithoutHours(new Date()),
+              )
+            ) {
+              checkIn = dateIn
+              checkOut = dateOut
+            }
+            for (let i = 0; i < datArr.length; i++) {
+              allDates.push(datArr[i])
+            }
+            return datArr
+          })
+        : datesWithinEachReservation
+
+    if (
+      allDates &&
+      allDates.length !== 0 &&
+      allDates.includes(getUTCDateWithoutHours(new Date()))
+    ) {
+      return { status: 'OCCUPIED', checkIn, checkOut }
+    } else {
+      return { status: 'VACANT' }
+    }
+  }
+}

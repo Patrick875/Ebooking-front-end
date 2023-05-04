@@ -20,7 +20,7 @@ function ServiceSell() {
   const { handleSubmit } = useForm()
   const [singleSelections, setSingleSelections] = useState([])
   const [services, setServices] = useState([])
-  const [users, setUsers] = useState([])
+  const [customers, setCustomers] = useState([])
   const [customer, setCustomer] = useState([])
   const onServiceSell = async (data) => {
     data.serviceId =
@@ -29,13 +29,13 @@ function ServiceSell() {
         : null
     data.name =
       customer && customer.length !== 0
-        ? users.includes(customer[0])
+        ? customers.includes(customer[0])
           ? customer[0].names
           : customer[0]
         : null
     data.customer =
       customer && customer.length !== 0
-        ? users.includes(customer[0])
+        ? customers.includes(customer[0])
           ? customer[0].id
           : null
         : null
@@ -69,12 +69,12 @@ function ServiceSell() {
           toast.error(err.message)
         })
     }
-    const getAllUsers = async () => {
-      await instance.get('/users/all').then((res) => {
-        setUsers(res.data.data)
+    const getAllCustomers = async () => {
+      await instance.get('/customers/all').then((res) => {
+        setCustomers(res.data.data)
       })
     }
-    getAllUsers()
+    getAllCustomers()
     getAllServices()
   }, [])
 
@@ -99,9 +99,9 @@ function ServiceSell() {
                   <CFormLabel htmlFor="title"> Client name </CFormLabel>
                   <Typeahead
                     id="basic-typeahead-single"
-                    labelKey="nameS"
+                    labelKey="names"
                     onChange={setCustomer}
-                    options={users}
+                    options={customers}
                     placeholder="search client"
                     selected={customer}
                   />
@@ -109,7 +109,6 @@ function ServiceSell() {
 
                 <CCol md={6}>
                   <CFormLabel htmlFor="title"> Service name </CFormLabel>
-
                   <Typeahead
                     id="basic-typeahead-single"
                     labelKey="name"

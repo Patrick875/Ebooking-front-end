@@ -13,15 +13,15 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 
 function AddPaymentModal(props) {
   let { reservation, open, setOpen } = props
   const { register, handleSubmit } = useForm()
+  console.log('this is clicked', reservation)
   const onSubmit = async (data) => {
     data.reservationId = reservation.id
-
     await instance
       .post('/reservation/pay', data)
       .then(() => {
@@ -40,6 +40,27 @@ function AddPaymentModal(props) {
           <CModalHeader>
             <CModalTitle className="text-center">Add payment</CModalTitle>
           </CModalHeader>
+          <div className="ms-3">
+            <p>
+              Revervation by{' '}
+              <span className="fw-bold">
+                {reservation && Object.keys(reservation).length !== 0
+                  ? reservation.Customer.names
+                  : null}
+              </span>
+            </p>
+            {reservation && Object.keys(reservation).length !== 0 ? (
+              <p className="text-uppercase">
+                Debt :{' '}
+                <span className="fw-bold ">
+                  {Number(
+                    reservation.amount['RWF'] - reservation.payment['RWF'],
+                  ).toLocaleString()}{' '}
+                  Rwf
+                </span>{' '}
+              </p>
+            ) : null}
+          </div>
           <CModalBody>
             <CCol>
               <CFormLabel htmlFor="paymentMethod">Payment</CFormLabel>

@@ -323,36 +323,41 @@ const Reservation = () => {
                             {reserv.status ? reserv.status : 'in progress'}{' '}
                           </CTableDataCell>
                           <CTableDataCell>
-                            <Link
-                              className="badge badge-warning text-primary text-decoration-none"
-                              onClick={() =>
-                                changeReservationStatus(
-                                  {
-                                    id: reserv.id,
-                                    status: 'confirmed',
-                                  },
-                                  'confirm',
-                                )
-                              }
-                            >
-                              {' '}
-                              Confirm{' '}
-                            </Link>
-                            <Link
-                              className="badge badge-danger text-primary text-decoration-none"
-                              onClick={() =>
-                                changeReservationStatus(
-                                  {
-                                    id: reserv.id,
-                                    status: 'canceled',
-                                  },
-                                  'cancel',
-                                )
-                              }
-                            >
-                              {' '}
-                              Cancel{' '}
-                            </Link>
+                            {reserv.status && reserv.status !== 'confirmed' ? (
+                              <Link
+                                className="badge badge-warning text-secondary text-decoration-none"
+                                onClick={() =>
+                                  changeReservationStatus(
+                                    {
+                                      id: reserv.id,
+                                      status: 'confirmed',
+                                    },
+                                    'confirm',
+                                  )
+                                }
+                              >
+                                {' '}
+                                Confirm{' '}
+                              </Link>
+                            ) : null}
+
+                            {reserv.status && reserv.status !== 'canceled' ? (
+                              <Link
+                                className="badge badge-danger text-danger text-decoration-none"
+                                onClick={() =>
+                                  changeReservationStatus(
+                                    {
+                                      id: reserv.id,
+                                      status: 'canceled',
+                                    },
+                                    'cancel',
+                                  )
+                                }
+                              >
+                                {' '}
+                                Cancel{' '}
+                              </Link>
+                            ) : null}
                           </CTableDataCell>
                         </CTableRow>
                       ))

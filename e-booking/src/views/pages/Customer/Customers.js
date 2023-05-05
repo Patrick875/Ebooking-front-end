@@ -79,9 +79,7 @@ function Customers() {
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> ID</CTableHeaderCell>
-                  {role && role === 'admin' ? (
-                    <CTableHeaderCell scope="col"> action</CTableHeaderCell>
-                  ) : null}
+                  <CTableHeaderCell scope="col"> action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>

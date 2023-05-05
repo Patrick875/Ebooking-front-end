@@ -43,8 +43,9 @@ function Invoice() {
   }
   useEffect(() => {
     const getAllInvoice = async () => {
-      await instance.get('').then((res) => {
+      await instance.get('/invoices/all').then((res) => {
         setInvoices(res.data.data)
+        console.log(res.data.data)
       })
     }
     getAllInvoice()
@@ -91,8 +92,9 @@ function Invoice() {
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">id</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col">To</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Prepared by</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Client </CTableHeaderCell>
+                <CTableHeaderCell scope="col">Function</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Total</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -119,12 +121,12 @@ function Invoice() {
                           {' '}
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
-                        <CTableDataCell>{el.BonCommandeId}</CTableDataCell>
+                        <CTableDataCell>{el.InvoiceId}</CTableDataCell>
                         <CTableDataCell>
-                          {new Date(el.date_from).toLocaleDateString()}
+                          {new Date(el.createdAt).toLocaleDateString()}
                         </CTableDataCell>
+                        <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>
-                        <CTableDataCell>{el.company}</CTableDataCell>
                         <CTableDataCell>
                           {Number(el.total).toLocaleString()}
                         </CTableDataCell>

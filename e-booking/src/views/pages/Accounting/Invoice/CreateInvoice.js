@@ -65,6 +65,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
     const outsideData =
       requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
     requestItems = requestItems.map((requestItem) => {
+      requestItem.unitPrice = requestItem.price
       delete requestItem.outside
       return { ...requestItem }
     })

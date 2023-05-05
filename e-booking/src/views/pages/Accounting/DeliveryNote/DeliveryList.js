@@ -17,7 +17,7 @@ function DeliveryList(props, ref) {
   const { requestItems, setRequestItems, documentTitle } = props
   const total =
     requestItems && requestItems.length !== 0
-      ? requestItems.reduce((a, b) => a + Number(b.price * b.quantity), 0)
+      ? requestItems.reduce((a, b) => a + Number(b.unitPrice * b.quantity), 0)
       : 0
   const [style, setStyle] = useState({ display: 'none' })
   return (
@@ -50,13 +50,13 @@ function DeliveryList(props, ref) {
                         <CTableDataCell> {index + 1} </CTableDataCell>
                         <CTableDataCell>
                           {' '}
-                          {added.itemName || added.name}{' '}
+                          {added.description || added.name}{' '}
                         </CTableDataCell>
                         <CTableDataCell>
                           {' '}
                           {added.quantity} {added.unit}{' '}
                         </CTableDataCell>
-                        <CTableDataCell> {added.price} </CTableDataCell>
+                        <CTableDataCell> {added.unitPrice} </CTableDataCell>
                         <CTableDataCell
                           onMouseEnter={(e) => {
                             setStyle({ display: 'block' })
@@ -67,7 +67,8 @@ function DeliveryList(props, ref) {
                           className="d-flex  gap-2"
                         >
                           {' '}
-                          {Number(added.price) * Number(added.quantity)}{' '}
+                          {Number(added.unitPrice) *
+                            Number(added.quantity)}{' '}
                           <div
                             className="btn btn-danger btn-sm"
                             style={style}

@@ -37,11 +37,10 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   }
 
   const createInvoice = async (data) => {
-    console.log('pro-forma', data)
     await instance
-      .post('', data)
+      .post('/proforma/add', data)
       .then(() => {
-        toast.success('Invoice created')
+        toast.success('Pro forma Invoice created')
       })
       .catch((err) => {
         toast.error(err.message)
@@ -67,6 +66,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
     const outsideData =
       requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
     requestItems = requestItems.map((requestItem) => {
+      requestItem.unitPrice = requestItem.price
       delete requestItem.outside
       return { ...requestItem }
     })

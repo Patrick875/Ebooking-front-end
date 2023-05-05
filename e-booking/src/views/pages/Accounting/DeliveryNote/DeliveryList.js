@@ -12,7 +12,7 @@ import {
   CTableRow,
 } from '@coreui/react'
 import React, { useState } from 'react'
-import converter from 'number-to-words'
+
 function DeliveryList(props, ref) {
   const { requestItems, setRequestItems, documentTitle } = props
   const total =
@@ -101,10 +101,6 @@ function DeliveryList(props, ref) {
                 </CTableRow>
               </CTableBody>
             </CTable>
-            <p>
-              <span className="fw-bold">Total in words with VAT: </span>
-              {converter.toWords(total)} Rwandan Francs only
-            </p>
           </CCardBody>
         </CCard>
       </CCol>

@@ -12,7 +12,7 @@ import {
   CTableRow,
 } from '@coreui/react'
 import React, { useState } from 'react'
-import converter from 'number-to-words'
+
 import { useSelector } from 'react-redux'
 function InvoiceList(props, ref) {
   const { requestItems, setRequestItems, documentTitle } = props
@@ -132,10 +132,6 @@ function InvoiceList(props, ref) {
                 </CTableRow>
               </CTableBody>
             </CTable>
-            <p>
-              <span className="fw-bold">Total in words with VAT: </span>
-              {converter.toWords(total) || 0} Rwandan Francs only
-            </p>
           </CCardBody>
         </CCard>
       </CCol>

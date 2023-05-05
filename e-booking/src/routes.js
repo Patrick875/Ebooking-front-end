@@ -168,11 +168,17 @@ const Invoice = React.lazy(() =>
 const CreateInvoice = React.lazy(() =>
   import('./views/pages/Accounting/Invoice/CreateInvoice'),
 )
+const ViewInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/Invoice/ViewInvoice'),
+)
 const ProformaInvoice = React.lazy(() =>
   import('./views/pages/Accounting/ProFormaInvoice/ProformaInvoice'),
 )
 const CreateProformaInvoice = React.lazy(() =>
   import('./views/pages/Accounting/ProFormaInvoice/CreateProformaInvoice'),
+)
+const ViewProFormaInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/ProFormaInvoice/ViewProFormaInvoice'),
 )
 const DeliveryNote = React.lazy(() =>
   import('./views/pages/Accounting/DeliveryNote/DeliveryNote'),
@@ -180,11 +186,17 @@ const DeliveryNote = React.lazy(() =>
 const CreateDeliveryNote = React.lazy(() =>
   import('./views/pages/Accounting/DeliveryNote/CreateDeliveryNote'),
 )
+const ViewDeliveryNote = React.lazy(() =>
+  import('./views/pages/Accounting/DeliveryNote/ViewDeliveryNote'),
+)
 const BaudDeCommande = React.lazy(() =>
   import('./views/pages/Accounting/BonDeCommande/BaudDeCommande.js'),
 )
 const CreateBaudDeCommande = React.lazy(() =>
   import('./views/pages/Accounting/BonDeCommande/CreateBaudDeCommande.js'),
+)
+const ViewBonDeCommande = React.lazy(() =>
+  import('./views/pages/Accounting/BonDeCommande/ViewBonDeCommande.js'),
 )
 
 const CashTransaction = React.lazy(() =>
@@ -619,6 +631,12 @@ const routes = [
     element: CreateProformaInvoice,
   },
   {
+    path: '/booking/accounting/proformainvoice/view',
+    exact: true,
+    name: 'Create Pro forma invoice',
+    element: ViewProFormaInvoice,
+  },
+  {
     path: '/booking/accounting/invoice',
     exact: true,
     name: 'Invoice',
@@ -629,6 +647,12 @@ const routes = [
     exact: true,
     name: 'Create invoice',
     element: CreateInvoice,
+  },
+  {
+    path: '/booking/accounting/invoice/view',
+    exact: true,
+    name: 'Create invoice',
+    element: ViewInvoice,
   },
   {
     path: '/booking/accounting/delivery',
@@ -643,6 +667,12 @@ const routes = [
     element: CreateDeliveryNote,
   },
   {
+    path: '/booking/accounting/delivery/view',
+    exact: true,
+    name: 'Create invoice',
+    element: ViewDeliveryNote,
+  },
+  {
     path: '/booking/accounting/bon-de-commande',
     exact: true,
     name: 'Bon de commande',
@@ -653,6 +683,12 @@ const routes = [
     exact: true,
     name: 'Create baud de commancde',
     element: CreateBaudDeCommande,
+  },
+  {
+    path: '/booking/accounting/bon-de-commande/view',
+    exact: true,
+    name: 'Create baud de commancde',
+    element: ViewBonDeCommande,
   },
   {
     path: '/booking/cashier/sells/pending',

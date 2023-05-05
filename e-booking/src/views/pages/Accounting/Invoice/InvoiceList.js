@@ -13,8 +13,13 @@ import {
 } from '@coreui/react'
 import React, { useState } from 'react'
 import converter from 'number-to-words'
+import { useSelector } from 'react-redux'
 function InvoiceList(props, ref) {
   const { requestItems, setRequestItems, documentTitle } = props
+  const VATconstant = useSelector((state) =>
+    state.constants.constants.filter((constant) => constant.name === 'VAT'),
+  )[0]
+
   const value =
     requestItems && requestItems.length !== 0
       ? requestItems.reduce(
@@ -22,11 +27,16 @@ function InvoiceList(props, ref) {
           0,
         )
       : 0
+
   const VAT =
     requestItems && requestItems.length !== 0
-      ? (value * requestItems[0].VAT) / 100
-      : 0
-  const total = value + VAT
+      ? requestItems[0].VAT
+      : 'exclusive'
+
+  const amountVAT = Number((value * VATconstant.value) / 100)
+
+  const total =
+    VAT === 'inclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
   const [style, setStyle] = useState({ display: 'none' })
   return (
     <CRow>
@@ -104,21 +114,27 @@ function InvoiceList(props, ref) {
                 )}
                 <CTableRow>
                   <CTableHeaderCell colSpan={5}>VALUE</CTableHeaderCell>
-                  <CTableHeaderCell>{value.toLocaleString()}</CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {value.toLocaleString() || 0}
+                  </CTableHeaderCell>
                 </CTableRow>
                 <CTableRow colSpan={5}>
                   <CTableHeaderCell colSpan={5}>VAT</CTableHeaderCell>
-                  <CTableHeaderCell>{VAT}</CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {amountVAT.toLocaleString() || 0}
+                  </CTableHeaderCell>
                 </CTableRow>
                 <CTableRow>
                   <CTableHeaderCell colSpan={5}>TOTAL</CTableHeaderCell>
-                  <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {total.toLocaleString() || 0}
+                  </CTableHeaderCell>
                 </CTableRow>
               </CTableBody>
             </CTable>
             <p>
               <span className="fw-bold">Total in words with VAT: </span>
-              {converter.toWords(total)} Rwandan Francs only
+              {converter.toWords(total) || 0} Rwandan Francs only
             </p>
           </CCardBody>
         </CCard>

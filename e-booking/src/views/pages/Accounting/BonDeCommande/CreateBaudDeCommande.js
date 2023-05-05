@@ -75,7 +75,7 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
     })
 
     data = { ...outsideData, ...data, details: requestItems }
-    console.log('now now ', data)
+
     createBaudDeCommande(data)
     reset()
     setStartDate(new Date())

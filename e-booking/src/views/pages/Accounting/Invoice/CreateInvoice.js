@@ -30,7 +30,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const price = watch('price')
   const name = watch('name')
   const [visible, setVisible] = useState(false)
-  const [requestItems, setRequestItems] = useState([])
+  let [requestItems, setRequestItems] = useState([])
   const documentTitle = 'Invoice'
   const clearPurchaseOrder = () => {
     setRequestItems([])
@@ -38,7 +38,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
 
   const createInvoice = async (data) => {
     await instance
-      .post('', data)
+      .post('/invoices/add', data)
       .then(() => {
         toast.success('Invoice created')
       })
@@ -61,7 +61,14 @@ const CreateInvoice = React.forwardRef((props, ref) => {
     reset({ name: '', quantity: '', price: '' })
   }
   const submitRequest = () => {
-    const data = { order: requestItems }
+    let data
+    const outsideData =
+      requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
+    requestItems = requestItems.map((requestItem) => {
+      delete requestItem.outside
+      return { ...requestItem }
+    })
+    data = { ...outsideData, details: requestItems }
     createInvoice(data)
     reset()
   }
@@ -122,7 +129,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           placeholder="...client name"
                           size="md"
                           required
-                          {...register('clientName')}
+                          {...register('outside.clientName')}
                         />
                       </div>
                     </CCol>
@@ -134,7 +141,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         size="md"
                         className="mb-3"
                         aria-label="client type"
-                        {...register('clientType', { required: true })}
+                        {...register('outside.clientType', { required: true })}
                       >
                         <option value="COMPANY">COMPANY</option>
                         <option value="INDIVIDUAL">INDIVIDUAL</option>
@@ -150,7 +157,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           placeholder="...function"
                           size="md"
                           required
-                          {...register('function')}
+                          {...register('outside.function')}
                         />
                       </div>
                     </CCol>
@@ -162,9 +169,10 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           name="pax"
                           id="pax"
                           placeholder="...pax"
+                          defaultvalue={1}
                           size="md"
                           required
-                          {...register('pax')}
+                          {...register('times')}
                         />
                       </div>
                     </CCol>

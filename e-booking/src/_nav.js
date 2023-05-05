@@ -62,7 +62,40 @@ const _nav = [
       },
     ],
   },
-
+  {
+    component: CNavGroup,
+    name: 'Accounting',
+    to: '/booking/Accounting',
+    icon: (
+      <AiFillDollarCircle
+        customClassName="nav-icon"
+        className="me-3"
+        size={36}
+      />
+    ),
+    items: [
+      {
+        component: CNavItem,
+        name: 'Invoices ',
+        to: '/booking/accounting/invoice',
+      },
+      {
+        component: CNavItem,
+        name: 'Pro forma invoice ',
+        to: '/booking/accounting/proformainvoice',
+      },
+      {
+        component: CNavItem,
+        name: 'Delivery note ',
+        to: '/booking/accounting/delivery',
+      },
+      {
+        component: CNavItem,
+        name: 'Bon de commande ',
+        to: '/booking/accounting/bon-de-commande',
+      },
+    ],
+  },
   {
     component: CNavGroup,
     name: 'Room class',
@@ -439,41 +472,6 @@ export default _nav
 //         name: 'All requests',
 //         to: '/booking/bar/request/all',
 //       },
-
-// {
-//     component: CNavGroup,
-//     name: 'Accounting',
-//     to: '/booking/Accounting',
-//     icon: (
-//       <AiFillDollarCircle
-//         customClassName="nav-icon"
-//         className="me-3"
-//         size={36}
-//       />
-//     ),
-//     items: [
-//       {
-//         component: CNavItem,
-//         name: 'Invoices ',
-//         to: '/booking/accounting/invoice',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'Pro forma invoice ',
-//         to: '/booking/accounting/proformainvoice',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'Delivery note ',
-//         to: '/booking/accounting/delivery',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'Baud de commande ',
-//         to: '/booking/accounting/baud-de-commande',
-//       },
-//     ],
-//   },
 
 // {
 //         component: CNavItem,

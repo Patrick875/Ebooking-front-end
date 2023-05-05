@@ -10,13 +10,9 @@ import {
   CTableRow,
 } from '@coreui/react'
 import React, { useRef, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
-import PrintHeader from '../Printing/PrintHeader'
-import PrintFooterSignatures from '../Printing/PrintFooterSignatures'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import { instance } from 'src/API/AxiosInstance'
-import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import {
   datesInRangeWithUnix,
@@ -24,12 +20,19 @@ import {
 } from 'src/utils/functions'
 import ReactDatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
-
+import InvoiceHeader from '../Printing/InvoiceHeader'
 const CashRecords = (props) => {
-  let { transactions, balance, time, myDates } = props
-  let debitTotal, creditTotal
+  let { transactions, time, myDates, startDate, endDate } = props
+  let debitTotal, creditTotal, balance
 
   if (time && time === 'all-time') {
+    debitTotal = transactions
+      .filter((trans) => trans['accountType'] === 'DEBIT')
+      .reduce((a, b) => a + b.amount, 0)
+    creditTotal = transactions
+      .filter((trans) => trans['accountType'] === 'CREDIT')
+      .reduce((a, b) => a + b.amount, 0)
+    balance = debitTotal - creditTotal
   } else if (myDates && myDates.length !== 0) {
     transactions = transactions.filter((trans) => {
       return myDates.includes(getUTCDateWithoutHours(trans.date)) ? trans : null
@@ -46,50 +49,100 @@ const CashRecords = (props) => {
 
   return (
     <div className="m-3 p-3">
-      <h2 className="text-center my-3">Cash flow</h2>
-
+      <h2 className="text-center my-3 text-uppercase fs-5 border border-2">
+        Cash BOX REPORT{' '}
+        {`${
+          myDates.length === 1 && time !== 'all-time'
+            ? ' on ' + new Date(myDates[0]).toLocaleDateString()
+            : ' for ' +
+              new Date(startDate).toLocaleDateString() +
+              ' - ' +
+              new Date(endDate).toLocaleDateString()
+        }`}
+      </h2>
       <CCardBody className="d-flex justify-content-around">
         <div className="col">
-          <div className="d-flex">
-            <p className="fw-bolder">Debit</p>
-          </div>
           <CTable bordered>
             <CTableHead>
               <CTableRow>
-                <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Type</CTableHeaderCell>
-                <CTableHeaderCell scope="col">From/To</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Account</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
+                <CTableHeaderCell className="fs-6" scope="col">
+                  Date
+                </CTableHeaderCell>
+                <CTableDataCell className="fs-6" scope="col">
+                  #
+                </CTableDataCell>
+                <CTableDataCell className="fs-6" scope="col">
+                  Account
+                </CTableDataCell>
+                <CTableDataCell className="fs-6" scope="col">
+                  Purpose
+                </CTableDataCell>
+                <CTableDataCell className="fs-6" scope="col">
+                  CASH IN
+                </CTableDataCell>
+                <CTableDataCell
+                  className="fs-6"
+                  style={{ fontSize: 10 }}
+                  scope="col"
+                >
+                  CASH OUT
+                </CTableDataCell>
+                <CTableDataCell className="fs-6" scope="col">
+                  BALANCE
+                </CTableDataCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
-              {transactions && transactions.length !== 0
-                ? transactions.map((order, i) => (
+              {transactions && transactions.length !== 0 ? (
+                <React.Fragment>
+                  <CTableRow>
+                    <CTableDataCell colSpan={3}></CTableDataCell>
+                    <CTableDataCell colSpan={3}>Initial Balance</CTableDataCell>
+                    <CTableDataCell>
+                      {transactions[0].prevBalance}
+                    </CTableDataCell>
+                  </CTableRow>
+                  {transactions.map((order, i) => (
                     <CTableRow key={i}>
-                      <CTableDataCell>{i + 1}</CTableDataCell>
                       <CTableDataCell>
                         {new Date(order['date']).toLocaleDateString()}
                       </CTableDataCell>
-                      <CTableDataCell>{order['accountType']}</CTableDataCell>
-                      <CTableDataCell>
-                        {order['User'].firstName + ' ' + order['User'].lastName}
-                      </CTableDataCell>
+                      <CTableDataCell>{i + 1}</CTableDataCell>
                       <CTableDataCell>{order['account']}</CTableDataCell>
-                      <CTableDataCell>{order['amount']}</CTableDataCell>
+                      <CTableDataCell>{order['description']}</CTableDataCell>
+                      <CTableDataCell>
+                        {order['accountType'] === 'DEBIT'
+                          ? order['amount'].toLocaleString()
+                          : 0}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {order['accountType'] === 'CREDIT'
+                          ? order['amount'].toLocaleString()
+                          : 0}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {order['newBalance'].toLocaleString()}
+                      </CTableDataCell>
                     </CTableRow>
-                  ))
-                : null}
+                  ))}
+                </React.Fragment>
+              ) : null}
 
               <CTableRow>
                 <CTableHeaderCell />
-                <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
+                <CTableHeaderCell />
+                <CTableHeaderCell />
+                <CTableHeaderCell>Closing Balance</CTableHeaderCell>
+                <CTableHeaderCell>
+                  {Number(debitTotal).toLocaleString()}
+                </CTableHeaderCell>
+                <CTableHeaderCell>
+                  {Number(creditTotal).toLocaleString()}
+                </CTableHeaderCell>
                 <CTableDataCell>
                   {Number(balance).toLocaleString() === 'NaN'
                     ? balance
                     : Number(balance).toLocaleString()}{' '}
-                  RWF
                 </CTableDataCell>
               </CTableRow>
             </CTableBody>
@@ -104,22 +157,15 @@ const CashReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, watch } = useForm()
   const time = watch('time') || 'all-time'
-  const query = watch('query') || ''
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
-
   const onChange = (dates) => {
     const [start, end] = dates
     setStartDate(start)
     setEndDate(end)
   }
   let myDates = datesInRangeWithUnix(startDate, endDate)
-
   const [transactions, setTransactions] = useState([])
-
   const debitTotal =
     transactions && transactions.length !== 0
       ? transactions
@@ -157,12 +203,11 @@ const CashReport = React.forwardRef((props, ref) => {
           />
         </div>
 
-        <div className=" col d-flex justify-content-between gap-2">
+        <div className=" col-md-4 d-flex justify-content-between gap-2">
           <div className="col">
             <label className="text-center py-1">Time</label>
             <select
               className="form-select form-select-sm col"
-              aria-label="Default select example"
               defaultValue={'all-time'}
               {...register('time')}
             >
@@ -190,13 +235,13 @@ const CashReport = React.forwardRef((props, ref) => {
       </CCardHeader>
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
-          <PrintHeader />
+          <InvoiceHeader />
           <CashRecords
             time={time}
             myDates={myDates}
             transactions={transactions}
-            debitTotal={debitTotal}
-            creditTotal={creditTotal}
+            startDate={startDate}
+            endDate={endDate}
           />
           <PrintFooterNoSignatures />
         </div>
@@ -206,20 +251,11 @@ const CashReport = React.forwardRef((props, ref) => {
         myDates={myDates}
         transactions={transactions}
         balance={balance}
+        startDate={startDate}
+        endDate={endDate}
       />
     </CCard>
   )
 })
 
 export default CashReport
-
-//  <div ref={ref || componentRef}>
-//           <PrintHeader />
-//           <ReceiveVaucher
-//             vaucher={vaucher}
-//             receiveTotal={receiveTotal}
-//             purchaseTotal={purchaseTotal}
-//           />
-//           <PrintFooterSignatures />
-//           <PrintFooterNoSignatures />
-//         </div>

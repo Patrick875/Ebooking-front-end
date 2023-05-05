@@ -1,17 +1,26 @@
-import { React } from 'react'
-
+import { React, useEffect } from 'react'
 import {
   AppContent,
   AppSidebar,
   AppFooter,
   AppHeader,
 } from '../components/index'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AppHeaderWaiter from 'src/components/AppHeaderWaiter'
+import { instance } from 'src/API/AxiosInstance'
+import { storeConstants } from 'src/redux/Constants/constantsActions'
 
 const DefaultLayout = () => {
   const role = useSelector((state) => state.auth.role)
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    const getConstants = async () => {
+      await instance.get('/constants/all').then((res) => {
+        dispatch(storeConstants(res.data.data))
+      })
+    }
+    getConstants()
+  }, [])
   if (role === 'waiter') {
     return (
       <div className="wrapper min-vh-100 bg-light">

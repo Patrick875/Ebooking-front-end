@@ -11,6 +11,7 @@ import categoryReducer from './Categories/categroiesReducer'
 import notificationReducer from './Notifications/notificationReducer'
 import selectionReducer from './Select/selectionReducer'
 import formReducer from './MultiStepForm/formReducer'
+import constantsReducer from './Constants/constantsReducer'
 
 export default combineReducers({
   sidebarShow: UIReducer,
@@ -22,5 +23,6 @@ export default combineReducers({
   categories: categoryReducer,
   notification: notificationReducer,
   selection: selectionReducer,
+  constants: constantsReducer,
   multiStepForm: formReducer,
 })

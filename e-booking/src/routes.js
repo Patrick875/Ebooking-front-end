@@ -162,27 +162,41 @@ const ServiceEdit = React.lazy(() =>
   import('./views/pages/services/ServiceEdit.js'),
 )
 
-const Invoice = React.lazy(() => import('./views/pages/Accounting/Invoice'))
+const Invoice = React.lazy(() =>
+  import('./views/pages/Accounting/Invoice/Invoice'),
+)
 const CreateInvoice = React.lazy(() =>
-  import('./views/pages/Accounting/CreateInvoice'),
+  import('./views/pages/Accounting/Invoice/CreateInvoice'),
+)
+const ViewInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/Invoice/ViewInvoice'),
 )
 const ProformaInvoice = React.lazy(() =>
-  import('./views/pages/Accounting/ProformaInvoice'),
+  import('./views/pages/Accounting/ProFormaInvoice/ProformaInvoice'),
 )
 const CreateProformaInvoice = React.lazy(() =>
-  import('./views/pages/Accounting/CreateProformaInvoice'),
+  import('./views/pages/Accounting/ProFormaInvoice/CreateProformaInvoice'),
+)
+const ViewProFormaInvoice = React.lazy(() =>
+  import('./views/pages/Accounting/ProFormaInvoice/ViewProFormaInvoice'),
 )
 const DeliveryNote = React.lazy(() =>
-  import('./views/pages/Accounting/DeliveryNote'),
+  import('./views/pages/Accounting/DeliveryNote/DeliveryNote'),
 )
 const CreateDeliveryNote = React.lazy(() =>
-  import('./views/pages/Accounting/CreateDeliveryNote'),
+  import('./views/pages/Accounting/DeliveryNote/CreateDeliveryNote'),
+)
+const ViewDeliveryNote = React.lazy(() =>
+  import('./views/pages/Accounting/DeliveryNote/ViewDeliveryNote'),
 )
 const BaudDeCommande = React.lazy(() =>
-  import('./views/pages/Accounting/BaudDeCommande.js'),
+  import('./views/pages/Accounting/BonDeCommande/BaudDeCommande.js'),
 )
 const CreateBaudDeCommande = React.lazy(() =>
-  import('./views/pages/Accounting/CreateBaudDeCommande.js'),
+  import('./views/pages/Accounting/BonDeCommande/CreateBaudDeCommande.js'),
+)
+const ViewBonDeCommande = React.lazy(() =>
+  import('./views/pages/Accounting/BonDeCommande/ViewBonDeCommande.js'),
 )
 
 const CashTransaction = React.lazy(() =>
@@ -617,6 +631,12 @@ const routes = [
     element: CreateProformaInvoice,
   },
   {
+    path: '/booking/accounting/proformainvoice/view',
+    exact: true,
+    name: 'Create Pro forma invoice',
+    element: ViewProFormaInvoice,
+  },
+  {
     path: '/booking/accounting/invoice',
     exact: true,
     name: 'Invoice',
@@ -627,6 +647,12 @@ const routes = [
     exact: true,
     name: 'Create invoice',
     element: CreateInvoice,
+  },
+  {
+    path: '/booking/accounting/invoice/view',
+    exact: true,
+    name: 'Create invoice',
+    element: ViewInvoice,
   },
   {
     path: '/booking/accounting/delivery',
@@ -641,16 +667,28 @@ const routes = [
     element: CreateDeliveryNote,
   },
   {
-    path: '/booking/accounting/baud-de-commande',
+    path: '/booking/accounting/delivery/view',
     exact: true,
-    name: 'Baud de commande',
+    name: 'Create invoice',
+    element: ViewDeliveryNote,
+  },
+  {
+    path: '/booking/accounting/bon-de-commande',
+    exact: true,
+    name: 'Bon de commande',
     element: BaudDeCommande,
   },
   {
-    path: '/booking/accounting/baud-de-commande/create',
+    path: '/booking/accounting/bon-de-commande/create',
     exact: true,
     name: 'Create baud de commancde',
     element: CreateBaudDeCommande,
+  },
+  {
+    path: '/booking/accounting/bon-de-commande/view',
+    exact: true,
+    name: 'Create baud de commancde',
+    element: ViewBonDeCommande,
   },
   {
     path: '/booking/cashier/sells/pending',

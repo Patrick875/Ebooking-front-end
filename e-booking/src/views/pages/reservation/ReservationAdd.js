@@ -21,15 +21,12 @@ import DatePicker from 'react-datepicker'
 import { getAllRemoveDates } from 'src/utils/functions'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import CustomerAdd from '../Customer/CustomerAdd'
-// import rw from 'date-fns/esm/locale/'
-
-//import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 
 const CreateCustomerModal = (props) => {
-  const { visible, setVisible } = props
+  const { visible, setVisible, reload } = props
   return (
     <CModal
       alignment="center"
@@ -37,14 +34,13 @@ const CreateCustomerModal = (props) => {
       onClose={() => setVisible(false)}
       size="lg"
     >
-      <CustomerAdd />
+      <CustomerAdd reload={reload} />
     </CModal>
   )
 }
 
 const ReservationAdd = () => {
   const { register, handleSubmit, watch, reset } = useForm()
-  const [roomClass, setroomClass] = useState([])
   const [customer, setCustomer] = useState([])
   const [service, setService] = useState([])
   const [rooms, setRooms] = useState([])
@@ -90,7 +86,7 @@ const ReservationAdd = () => {
   let totalPrice = []
   const removeDates =
     service && service.length !== 0 ? getAllRemoveDates(service[0]) : []
-
+  const [reload, setReload] = useState()
   const handleSearch = (query) => {
     const filteredOptions = customers.filter((option) =>
       option.name.toLowerCase().includes(query.toLowerCase()),
@@ -126,15 +122,18 @@ const ReservationAdd = () => {
     }
     data = { ...data, status: 'in progress' }
     const createReservation = async () => {
-      console.log('before create reservation', data)
       await instance
         .post('/reservation/add', data)
-        .then(() => {
+        .then((res) => {
           toast.success('Reservation added')
+          setReload(res)
         })
         .catch(() => {
           toast.error('Rerservation add failed')
         })
+
+      setCustomer([])
+      setService([])
     }
     createReservation()
     reset()
@@ -197,11 +196,15 @@ const ReservationAdd = () => {
     getHalls()
     getHallServices()
     getCustomers()
-  }, [roomClass])
+  }, [reload])
 
   return (
     <React.Fragment>
-      <CreateCustomerModal visible={visible} setVisible={setVisible} />
+      <CreateCustomerModal
+        visible={visible}
+        setVisible={setVisible}
+        reload={reload}
+      />
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">

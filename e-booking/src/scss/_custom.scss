@@ -27,6 +27,9 @@
 font-family: "NumbersFont";
 src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("woff"),
 }
+.ctable-header-cell-hash {
+  width: 50px; /* adjust the width as necessary */
+}
 *{
     padding: 0px;
     margin: 0px;

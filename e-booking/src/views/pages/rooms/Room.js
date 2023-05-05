@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import React, { useEffect, useRef, useState } from 'react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
-import { selectItem } from 'src/redux/Select/selectionActions'
-import Pagination from 'src/utils/Pagination'
+import InvoiceHeader from '../Printing/InvoiceHeader'
+import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
+import RoomReportTable from './RoomReportTable'
+import ReactToPrint from 'react-to-print'
 
-const Room = () => {
-  const dispatch = useDispatch()
+const Room = React.forwardRef((props, ref) => {
+  const componentRef = useRef()
   const [rooms, setRooms] = useState([])
-  const perpage = 10
-  const [currentPage, setCurrentPage] = useState(1)
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const [roomClasses, setRoomClasses] = useState([])
   useEffect(() => {
     const getRooms = async () => {
       await instance
@@ -36,73 +22,61 @@ const Room = () => {
           toast.error(err.message)
         })
     }
+    const getRoomClasses = async () => {
+      await instance
+        .get('/roomclass/all')
+        .then((res) => {
+          setRoomClasses(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
     getRooms()
+    getRoomClasses()
   }, [])
 
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <h2>
-              <strong> All rooms </strong>
-            </h2>
+          <CCardHeader className="d-flex justify-content-between">
+            <h4>
+              <strong className="text-uppercase">
+                {' '}
+                Room status report on {new Date().toLocaleDateString()}{' '}
+              </strong>
+            </h4>
+            <div className="col-2">
+              <ReactToPrint
+                trigger={() => (
+                  <button className="btn btn-ghost-primary">Print</button>
+                )}
+                content={() => ref || componentRef.current}
+              />
+            </div>
           </CCardHeader>
           <CCardBody>
-            <CTable bordered>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
+            <div style={{ display: 'none' }}>
+              <div ref={ref || componentRef}>
+                <InvoiceHeader />
+                <div className="col mx-4">
+                  <p className="text-uppercase  text-center fw-bold border border-2">
                     {' '}
-                    Name | N <sup>o</sup>{' '}
-                  </CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {rooms && rooms.length !== 0
-                  ? rooms
-                      .filter((el, i) => {
-                        if (currentPage === 1) {
-                          return i >= 0 && i < perpage ? el : null
-                        } else {
-                          return i >= (currentPage - 1) * perpage &&
-                            i <= perpage * currentPage - 1
-                            ? el
-                            : null
-                        }
-                      })
-                      .map((room, i) => {
-                        return (
-                          <CTableRow key={room.id}>
-                            <CTableHeaderCell scope="row">
-                              {(currentPage - 1) * perpage + 1 + i}
-                            </CTableHeaderCell>
-                            <CTableDataCell>
-                              {' '}
-                              {room.RoomClass.name}{' '}
-                            </CTableDataCell>
-                            <CTableDataCell>{`#${room.name}`}</CTableDataCell>
-                          </CTableRow>
-                        )
-                      })
-                  : null}
-              </CTableBody>
-            </CTable>
+                    Room status report on {new Date().toLocaleDateString()}{' '}
+                  </p>
+                </div>
 
-            {rooms.length !== 0 ? (
-              <Pagination
-                postsPerPage={perpage}
-                totalPosts={rooms.length}
-                paginate={paginate}
-              />
-            ) : null}
+                <RoomReportTable rooms={rooms} roomClasses={roomClasses} />
+                <PrintFooterNoSignatures />
+              </div>
+            </div>
+            <RoomReportTable rooms={rooms} roomClasses={roomClasses} />
           </CCardBody>
         </CCard>
       </CCol>
     </CRow>
   )
-}
+})
 
 export default Room

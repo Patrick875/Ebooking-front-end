@@ -57,7 +57,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'All Cashier request',
+        name: 'All Purchase orders',
         to: '/booking/requests/cashier/all',
       },
     ],
@@ -372,7 +372,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Cashier request',
+        name: 'Purchase order',
         to: '/booking/requests/cashier',
       },
       {

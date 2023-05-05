@@ -68,22 +68,20 @@ function Hall() {
                           </CTableHeaderCell>
                           <CTableDataCell>{`${hall.name}`}</CTableDataCell>
                           <CTableDataCell>{`${hall.price} RWF`}</CTableDataCell>
-                          {role && role === 'admin' ? (
-                            <CTableDataCell>
-                              {' '}
-                              <Link
-                                to="/booking/halls/info"
-                                className="text-decoration-none btn btn-primary "
-                                disabled={
-                                  role && role !== 'admin' ? true : false
-                                }
-                                onClick={() => {
-                                  console.log('hall view')
-                                  return dispatch(selectItem(hall))
-                                }}
-                              >
-                                view
-                              </Link>{' '}
+
+                          <CTableDataCell>
+                            {' '}
+                            <Link
+                              to="/booking/halls/info"
+                              className="text-decoration-none btn btn-primary "
+                              disabled={role && role !== 'admin' ? true : false}
+                              onClick={() => {
+                                return dispatch(selectItem(hall))
+                              }}
+                            >
+                              view
+                            </Link>{' '}
+                            {role && role === 'admin' ? (
                               <Link
                                 to="/booking/halls/edit"
                                 disabled={
@@ -91,15 +89,13 @@ function Hall() {
                                 }
                                 className="text-decoration-none btn btn-warning"
                                 onClick={() => {
-                                  console.log('hall edit')
-
                                   return dispatch(selectItem(hall))
                                 }}
                               >
                                 edit
-                              </Link>{' '}
-                            </CTableDataCell>
-                          ) : null}
+                              </Link>
+                            ) : null}
+                          </CTableDataCell>
                         </CTableRow>
                       )
                     })

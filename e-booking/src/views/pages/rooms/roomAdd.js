@@ -29,7 +29,6 @@ const FormControl = () => {
         toast.success('Room created')
       })
       .catch((err) => {
-        toast.error(err.message)
         toast.error('Room  create failed')
       })
     reset()

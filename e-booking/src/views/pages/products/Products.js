@@ -23,7 +23,7 @@ import { useForm } from 'react-hook-form'
 const Products = () => {
   const { register } = useForm()
   const [editFields, setEditFields] = useState([])
-  // const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.role)
   let [products, setProducts] = useState([])
   products =
     products && products.length !== 0
@@ -55,7 +55,6 @@ const Products = () => {
       }),
     )
   }
-  console.log('edit fields', editFields)
 
   useEffect(() => {
     const getAllProducts = async () => {
@@ -89,7 +88,9 @@ const Products = () => {
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Name </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Price</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
+                  {role && role === 'admin' ? (
+                    <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
+                  ) : null}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -121,32 +122,35 @@ const Products = () => {
                                 )}
                               />
                             </CTableDataCell>
-                            <CTableDataCell className="d-flex gap-3">
-                              <Link
-                                className={`${
-                                  loggedInUser === 'controller'
-                                    ? 'disabled'
-                                    : ''
-                                } btn btn-sm btn-warning`}
-                                onClick={() => {
-                                  return setEditField(rowIndex)
-                                }}
-                              >
-                                Edit
-                              </Link>
-                              <Link
-                                className={`${
-                                  loggedInUser === 'controller'
-                                    ? 'disabled'
-                                    : ''
-                                } btn btn-sm btn-danger`}
-                                onClick={() => {
-                                  return deleteProduct(product.id)
-                                }}
-                              >
-                                Delete
-                              </Link>
-                            </CTableDataCell>
+
+                            {role && role === 'admin' ? (
+                              <CTableDataCell className="d-flex gap-3">
+                                <Link
+                                  className={`${
+                                    loggedInUser === 'controller'
+                                      ? 'disabled'
+                                      : ''
+                                  } btn btn-sm btn-warning`}
+                                  onClick={() => {
+                                    return setEditField(rowIndex)
+                                  }}
+                                >
+                                  Edit
+                                </Link>
+                                <Link
+                                  className={`${
+                                    loggedInUser === 'controller'
+                                      ? 'disabled'
+                                      : ''
+                                  } btn btn-sm btn-danger`}
+                                  onClick={() => {
+                                    return deleteProduct(product.id)
+                                  }}
+                                >
+                                  Delete
+                                </Link>
+                              </CTableDataCell>
+                            ) : null}
                           </CTableRow>
                         )
                       })

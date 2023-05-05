@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-
 import {
   CButton,
   CCard,
@@ -18,8 +17,6 @@ import {
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
-import InvoiceList from '../Invoice/InvoiceList'
-import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import DeliveryList from './DeliveryList'
@@ -30,18 +27,18 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   const { register, getValues, watch, reset } = useForm()
   const documentTitle = 'Delivery note'
   const quantity = watch('quantity')
-  const name = watch('name')
+  const description = watch('description')
   const [visible, setVisible] = useState(false)
-  const [requestItems, setRequestItems] = useState([])
+  let [requestItems, setRequestItems] = useState([])
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
 
   const createDeliveryNote = async (data) => {
     await instance
-      .post('', data)
+      .post('/deliveryNote/add', data)
       .then(() => {
-        toast.success('Bon de commande created')
+        toast.success('Delivery note created')
       })
       .catch((err) => {
         toast.error(err.message)
@@ -49,15 +46,25 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   }
 
   const dontAdd =
-    !quantity || quantity === '' || !name || name === '' ? true : false
+    !quantity || quantity === '' || !description || description === ''
+      ? true
+      : false
   const onAdd = (data) => {
-    data.price = 0
+    data.unitPrice = 0
     setRequestItems([...requestItems, data])
     reset({ name: '', quantity: '' })
   }
   const submitRequest = () => {
-    const data = { order: requestItems }
-    createDeliveryNote(data)
+    let data
+    const outsideData =
+      requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
+    requestItems = requestItems.map((requestItem) => {
+      delete requestItem.outside
+      return { ...requestItem }
+    })
+
+    data = { ...outsideData, details: requestItems }
+    createDeliveryNote({ data })
     reset()
   }
 
@@ -117,7 +124,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           placeholder="...client name"
                           size="md"
                           required
-                          {...register('clientName')}
+                          {...register('outside.clientName')}
                         />
                       </div>
                     </CCol>
@@ -129,7 +136,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                         size="md"
                         className="mb-3"
                         aria-label="client type"
-                        {...register('clientType', { required: true })}
+                        {...register('outside.clientType', { required: true })}
                       >
                         <option value="COMPANY">COMPANY</option>
                         <option value="INDIVIDUAL">INDIVIDUAL</option>
@@ -145,21 +152,21 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           placeholder="...function"
                           size="md"
                           required
-                          {...register('function')}
+                          {...register('outside.function')}
                         />
                       </div>
                     </CCol>
                     <CCol md={6}>
                       <div>
-                        <CFormLabel htmlFor="fax"> Number of FAX </CFormLabel>
+                        <CFormLabel htmlFor="pax"> Number of PAX </CFormLabel>
                         <CFormInput
                           type="text"
-                          name="fax"
-                          id="fax"
-                          placeholder="...fax"
+                          name="pax"
+                          id="pax"
+                          placeholder="...pax"
                           size="md"
                           required
-                          {...register('fax')}
+                          {...register('pax')}
                         />
                       </div>
                     </CCol>
@@ -173,7 +180,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           placeholder="...item "
                           size="md"
                           required
-                          {...register('name')}
+                          {...register('description')}
                         />
                       </div>
                     </CCol>

@@ -31,35 +31,37 @@ function CustomersTable(props) {
         <CTableDataCell>{`${customer.names}`}</CTableDataCell>
         <CTableDataCell>{`${customer.identification}`}</CTableDataCell>
 
-        {role && role === 'admin' ? (
-          <CTableDataCell className="d-flex gap-2">
-            {' '}
-            <Link
-              to="/customers/info"
-              className="btn btn-primary text-decoration-none"
-              onClick={() => {
-                return dispatch(selectItem(customer))
-              }}
-            >
-              View
-            </Link>{' '}
-            <Link
-              to="/customers/edit"
-              className="btn btn-warning text-decoration-none"
-              onClick={() => {
-                return dispatch(selectItem(customer))
-              }}
-            >
-              Edit details
-            </Link>{' '}
-            <Link
-              className="btn btn-danger text-decoration-none"
-              onClick={() => deleteCustomer(customer.id)}
-            >
-              Delete
-            </Link>{' '}
-          </CTableDataCell>
-        ) : null}
+        <CTableDataCell className="d-flex gap-2">
+          {' '}
+          <Link
+            to="/customers/info"
+            className="btn btn-primary text-decoration-none"
+            onClick={() => {
+              return dispatch(selectItem(customer))
+            }}
+          >
+            View
+          </Link>{' '}
+          {role && role === 'admin' ? (
+            <React.Fragment>
+              <Link
+                to="/customers/edit"
+                className="btn btn-warning text-decoration-none"
+                onClick={() => {
+                  return dispatch(selectItem(customer))
+                }}
+              >
+                Edit details
+              </Link>{' '}
+              <Link
+                className="btn btn-danger text-decoration-none"
+                onClick={() => deleteCustomer(customer.id)}
+              >
+                Delete
+              </Link>{' '}
+            </React.Fragment>
+          ) : null}
+        </CTableDataCell>
       </CTableRow>
     ))
   ) : (

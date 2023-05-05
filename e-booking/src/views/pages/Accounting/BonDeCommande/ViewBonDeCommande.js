@@ -13,7 +13,6 @@ import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import BackButton from 'src/components/Navigating/BackButton'
-import PrintHeader from '../../Printing/PrintHeader'
 import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'

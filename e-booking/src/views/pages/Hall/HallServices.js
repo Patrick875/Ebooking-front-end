@@ -13,14 +13,15 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 function HallServices() {
   const dispatch = useDispatch()
   const [hallServices, setHallServices] = useState([])
+  const role = useSelector((state) => state.auth.role)
   useEffect(() => {
     const getHallServices = async () => {
       await instance
@@ -50,7 +51,9 @@ function HallServices() {
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
+                  {role && role === 'admin' ? (
+                    <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
+                  ) : null}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -62,25 +65,26 @@ function HallServices() {
                             {i + 1}
                           </CTableHeaderCell>
                           <CTableDataCell>{`${hallService.name}`}</CTableDataCell>
-                          <CTableDataCell>
-                            <Link
-                              to="/booking/halls/services/edit"
-                              onClick={() => {
-                                return dispatch(selectItem(hallService))
-                              }}
-                            >
-                              edit
-                            </Link>{' '}
-                            <Link
-                              to="/booking/halls/services/"
-                              onClick={() => {
-                                console.log('hall edit')
-                                // return dispatch(selectRoom(hall))
-                              }}
-                            >
-                              remove
-                            </Link>{' '}
-                          </CTableDataCell>
+                          {role && role === 'admin' ? (
+                            <CTableDataCell>
+                              <Link
+                                to="/booking/halls/services/edit"
+                                onClick={() => {
+                                  return dispatch(selectItem(hallService))
+                                }}
+                              >
+                                edit
+                              </Link>{' '}
+                              <Link
+                                to="/booking/halls/services/"
+                                onClick={() => {
+                                  console.log('hall edit')
+                                }}
+                              >
+                                remove
+                              </Link>{' '}
+                            </CTableDataCell>
+                          ) : null}
                         </CTableRow>
                       )
                     })

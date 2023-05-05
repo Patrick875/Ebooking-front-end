@@ -14,6 +14,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import Pagination from 'src/utils/Pagination'
@@ -39,6 +40,7 @@ function StockItems() {
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const role = useSelector((state) => state.auth.role)
   useEffect(() => {
     const getItems = async () => {
       await instance
@@ -105,14 +107,16 @@ function StockItems() {
                         </CTableHeaderCell>
                         <CTableDataCell>{`${item.name}`}</CTableDataCell>
                         <CTableDataCell className="d-flex ">
-                          <Link
-                            className={` btn btn-sm btn-danger`}
-                            onClick={() => {
-                              return deleteStockItem(item.id)
-                            }}
-                          >
-                            Delete
-                          </Link>
+                          {role && role === 'admin' ? (
+                            <Link
+                              className={` btn btn-sm btn-danger`}
+                              onClick={() => {
+                                return deleteStockItem(item.id)
+                              }}
+                            >
+                              Delete
+                            </Link>
+                          ) : null}
                         </CTableDataCell>
                       </CTableRow>
                     )

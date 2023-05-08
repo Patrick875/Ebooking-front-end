@@ -50,6 +50,7 @@ function AllPetitStock(props) {
                 <Link
                   to="/booking/petitstock/items/all"
                   className="btn btn-sm btn-outline-primary"
+                  disabled={`${item.status === 'DISACTIVE'}`}
                   onClick={() => dispatch(selectPetitStock(item))}
                 >
                   View

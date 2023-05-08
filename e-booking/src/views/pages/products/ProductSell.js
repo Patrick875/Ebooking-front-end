@@ -415,10 +415,68 @@ const ProductSell = React.forwardRef((props, ref) => {
                   <div style={{ width: '100%', height: '100%' }}>
                     <PrintHeader />
                     <p className="fs-4 fw-bolder text-center my-1"> Receipt </p>
-                    <OrdersTable
-                      orderItems={orderItems}
-                      setOrderItems={setOrderItems}
-                    />
+                    <CTable bordered>
+                      <CTableHead>
+                        <CTableRow>
+                          <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">
+                            {' '}
+                            Item{' '}
+                          </CTableHeaderCell>
+                          <CTableHeaderCell scope="col"> P.U </CTableHeaderCell>
+                          <CTableHeaderCell scope="col"> Qty </CTableHeaderCell>
+                          <CTableHeaderCell scope="col">
+                            {' '}
+                            Amount{' '}
+                          </CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      {orderItems && orderItems.length !== 0 ? (
+                        orderItems.map((item, index) => (
+                          <CTableRow>
+                            <CTableHeaderCell scope="row">
+                              {index + 1}
+                            </CTableHeaderCell>
+                            <CTableDataCell>
+                              <CFormInput
+                                size="sm"
+                                {...register(`item${index + 1}`)}
+                                defaultValue={
+                                  item
+                                    ? item.name + ' of ' + item.productName
+                                    : ''
+                                }
+                                className="border-none outline-none"
+                              />
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              {Number(
+                                item.ProductPackage.price,
+                              ).toLocaleString()}
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <CFormInput
+                                key={`result${index + 1}`}
+                                type="number"
+                                {...register(`item${index + 1}_quantity`)}
+                                value={results[index]}
+                                onClick={() => {
+                                  setSelectedInput(index + 1)
+                                }}
+                                onKeyDown={handleKeyboardInput}
+                              />
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              {Number(
+                                item.ProductPackage.price * results[index],
+                              ).toLocaleString()}
+                            </CTableDataCell>
+                          </CTableRow>
+                        ))
+                      ) : (
+                        <CTableRow>0 items on order</CTableRow>
+                      )}
+                    </CTable>
                   </div>
                 </div>
               </div>

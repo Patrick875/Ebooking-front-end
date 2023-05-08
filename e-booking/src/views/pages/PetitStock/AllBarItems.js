@@ -20,6 +20,7 @@ function AllBarItems() {
   const petitStock =
     useSelector((state) => state.selection.selectedPetitStock) || {}
 
+  const role = useSelector((state) => state.auth.role)
   const disactivePetitStock = async (id) => {
     await instance
       .get(`/petit-stock/disactivate/${id}`)
@@ -51,25 +52,27 @@ function AllBarItems() {
             {petitStock.status === 'DISACTIVE' ? 'Disactivated' : 'Activated'}
           </p>
         </div>
-        {petitStock.status === 'DISACTIVE' ? (
-          <button
-            className="btn btn-success"
-            onClick={() => {
-              return activatePetitStock(petitStock.id)
-            }}
-          >
-            Activate
-          </button>
-        ) : (
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              return disactivePetitStock(petitStock.id)
-            }}
-          >
-            Disactivate
-          </button>
-        )}
+        {role === 'admin' ? (
+          petitStock.status === 'DISACTIVE' ? (
+            <button
+              className="btn btn-success"
+              onClick={() => {
+                return activatePetitStock(petitStock.id)
+              }}
+            >
+              Activate
+            </button>
+          ) : (
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                return disactivePetitStock(petitStock.id)
+              }}
+            >
+              Disactivate
+            </button>
+          )
+        ) : null}
       </div>
       <CCardBody>
         <p className="text-center fs-3">{petitStock.name} stock</p>

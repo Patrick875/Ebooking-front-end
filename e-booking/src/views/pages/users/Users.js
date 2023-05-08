@@ -120,7 +120,9 @@ const Users = () => {
                   <CTableHeaderCell scope="col"> Phone </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Email </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Roles </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
+                  {role === 'admin' ? (
+                    <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
+                  ) : null}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -140,37 +142,39 @@ const Users = () => {
                       <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
                       <CTableDataCell> {user.Role.name}</CTableDataCell>
-                      <CTableDataCell>
-                        <Link
-                          to="/booking/user/edit"
-                          className={`${
-                            role === 'controller' ? 'disabled' : ''
-                          } btn btn-sm btn-warning`}
-                          onClick={() => {
-                            console.log('this is user', user)
-                            return dispatch(selectItem(user))
-                          }}
-                        >
-                          {' '}
-                          Edit{' '}
-                        </Link>
-                        <button
-                          className={`${
-                            role === 'controller' ? 'disabled' : ''
-                          } btn btn-sm btn-danger`}
-                          onClick={() => {
-                            return setVisible(!visible)
-                          }}
-                        >
-                          Delete
-                        </button>
-                        <ConfirmDeleteUserModel
-                          visible={visible}
-                          setVisible={setVisible}
-                          user={user}
-                          users={users}
-                        />
-                      </CTableDataCell>
+                      {role !== 'admin' ? (
+                        <CTableDataCell>
+                          <Link
+                            to="/booking/user/edit"
+                            className={`${
+                              role === 'controller' ? 'disabled' : ''
+                            } btn btn-sm btn-warning`}
+                            onClick={() => {
+                              console.log('this is user', user)
+                              return dispatch(selectItem(user))
+                            }}
+                          >
+                            {' '}
+                            Edit{' '}
+                          </Link>
+                          <button
+                            className={`${
+                              role === 'controller' ? 'disabled' : ''
+                            } btn btn-sm btn-danger`}
+                            onClick={() => {
+                              return setVisible(!visible)
+                            }}
+                          >
+                            Delete
+                          </button>
+                          <ConfirmDeleteUserModel
+                            visible={visible}
+                            setVisible={setVisible}
+                            user={user}
+                            users={users}
+                          />
+                        </CTableDataCell>
+                      ) : null}
                     </CTableRow>
                   ))
                 ) : (

@@ -163,7 +163,7 @@ const Products = () => {
         <CCard className="mb-4">
           <CCardHeader>
             <p className="fs-4 fw-bold">All Products</p>
-            <div className="col-8 d-flex ZZZZZZZZZZZZZZjustify-content-end">
+            <div className="col-8 d-flex justify-content-end">
               <form className="col d-flex flex-wrap gap-2">
                 <div className="col-3">
                   <CFormLabel className="text-center">Search</CFormLabel>
@@ -184,7 +184,6 @@ const Products = () => {
             <CTable bordered>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Name </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Price</CTableHeaderCell>
                   {role && role === 'admin' ? (
@@ -199,9 +198,6 @@ const Products = () => {
                         const rowIndex = el + i
                         return (
                           <CTableRow key={product.name + 1}>
-                            <CTableHeaderCell scope="row">
-                              {rowIndex + 1}
-                            </CTableHeaderCell>
                             <CTableDataCell className="text-capitalize">
                               1 {pack.name} of {product.name}
                             </CTableDataCell>

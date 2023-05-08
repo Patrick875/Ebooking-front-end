@@ -42,6 +42,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       })
       .catch((err) => {
         toast.error(err.message)
+        console.log(err)
       })
   }
 
@@ -64,7 +65,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
     })
 
     data = { ...outsideData, details: requestItems }
-    createDeliveryNote({ data })
+    createDeliveryNote({ ...data })
     reset()
   }
 
@@ -166,7 +167,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           placeholder="...pax"
                           size="md"
                           required
-                          {...register('pax')}
+                          {...register('times')}
                         />
                       </div>
                     </CCol>

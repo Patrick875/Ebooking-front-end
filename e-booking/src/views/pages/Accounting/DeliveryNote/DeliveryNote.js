@@ -42,8 +42,9 @@ function DeliveryNote() {
   }
   useEffect(() => {
     const getAllInvoice = async () => {
-      await instance.get('').then((res) => {
+      await instance.get('/deliveryNote/all').then((res) => {
         setInvoices(res.data.data)
+        console.log(res.data.data)
       })
     }
     getAllInvoice()
@@ -90,8 +91,6 @@ function DeliveryNote() {
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">id</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col">To</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Prepared by</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -118,14 +117,9 @@ function DeliveryNote() {
                           {' '}
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
-                        <CTableDataCell>{el.BonCommandeId}</CTableDataCell>
+                        <CTableDataCell>{el.deliveryNoteId}</CTableDataCell>
                         <CTableDataCell>
-                          {new Date(el.date_from).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>{el.function}</CTableDataCell>
-                        <CTableDataCell>{el.company}</CTableDataCell>
-                        <CTableDataCell>
-                          {Number(el.total).toLocaleString()}
+                          {new Date(el.createdAt).toLocaleDateString()}
                         </CTableDataCell>
                       </CTableRow>
                     ))

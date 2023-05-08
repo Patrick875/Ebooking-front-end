@@ -189,6 +189,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         type="number"
                         name="quantity"
                         id="quantity"
+                        min={0}
                         placeholder="50  "
                         size="md"
                         {...register('quantity', {

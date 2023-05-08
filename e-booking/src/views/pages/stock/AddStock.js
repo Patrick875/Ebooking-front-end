@@ -141,6 +141,7 @@ const AddStock = React.forwardRef((props, ref) => {
   const [receivedItems, setReceivedItems] = useState([])
   const onAdd = (data) => {
     if (item2 && quantity === '' && price === '') {
+      console.log('data1', item2[0])
       data = { price: item2[0].unitPrice, quantity: item2[0].requestQuantity }
     }
     item2 = item2
@@ -151,16 +152,20 @@ const AddStock = React.forwardRef((props, ref) => {
         }
       : item2
     data = { ...data, ...item2 }
+    console.log('data2', data)
     setReceivedItems([...receivedItems, data])
     setItem2([])
     reset()
   }
-
+  const clearPurchaseOrderSelect = () => {
+    setOrder([])
+  }
   let isDisabled = false
   if (order && order.length !== 0) {
     isDisabled = !isDisabled
   }
   const onAddItemToStock = async (data) => {
+    console.log('data3', data)
     await instance
       .post('/receive/voucher/add', { data: data })
       .then(toast.success('items added to stock'))
@@ -225,6 +230,15 @@ const AddStock = React.forwardRef((props, ref) => {
                     <CCol md={6}>
                       <div className="d-flex justify-content-between">
                         <CFormLabel htmlFor="name"> Stock order id </CFormLabel>
+                        {item2 && item2.length !== 0 ? (
+                          <p
+                            className="text text-danger"
+                            onClick={() => clearPurchaseOrderSelect()}
+                          >
+                            {' '}
+                            Clear{' '}
+                          </p>
+                        ) : null}
                       </div>
 
                       <Typeahead
@@ -258,6 +272,7 @@ const AddStock = React.forwardRef((props, ref) => {
                       <CFormInput
                         type="number"
                         name="quantity"
+                        min={0}
                         id="quantity"
                         placeholder="quantity  "
                         size="md"
@@ -290,6 +305,7 @@ const AddStock = React.forwardRef((props, ref) => {
                         name="price"
                         id="price"
                         placeholder="....price"
+                        min={0}
                         defaultValue={
                           item2 && item2[0] ? item2[0].unitPrice : ''
                         }

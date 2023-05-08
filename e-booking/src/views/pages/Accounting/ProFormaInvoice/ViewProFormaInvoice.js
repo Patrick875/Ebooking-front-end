@@ -22,7 +22,9 @@ const Item = (props, ref) => {
   const orderTotal = request && request.total ? request.total : 0
   return (
     <div className="m-3 p-3">
-      <h2 className="text-center my-3">Pro forma Invoice N &#176;</h2>
+      <h2 className="text-center my-3">
+        Pro forma Invoice N &#176;{request.proformaGenerated}
+      </h2>
 
       <CCardBody className="d-flex justify-content-around">
         <div className="col">

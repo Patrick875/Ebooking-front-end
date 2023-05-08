@@ -89,11 +89,7 @@ const _nav = [
         name: 'Delivery note ',
         to: '/booking/accounting/delivery',
       },
-      {
-        component: CNavItem,
-        name: 'Bon de commande ',
-        to: '/booking/accounting/bon-de-commande',
-      },
+      
     ],
   },
   {
@@ -409,72 +405,12 @@ const _nav = [
 ]
 export default _nav
 
-//sauna staff
+
+
+
 
 // {
 //         component: CNavItem,
-//         name: 'All requests',
-//         to: '/booking/sauna/request/all',
-//       },
-
-//  {
-//     component: CNavGroup,
-//     name: 'Sauna',
-//     to: '/sauna',
-//     icon: <TbMassage className="me-3" size={36} />,
-//     items: [
-//       {
-//         component: CNavItem,
-//         name: 'Add item',
-//         to: '/booking/sauna/add',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'Request item',
-//         to: '/booking/sauna/request',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'All items',
-//         to: '/booking/sauna/all',
-//       },
-//     ],
-//   },
-
-// {
-//         component: CNavItem,
-//         name: 'Sales',
-//         to: '/booking/bar/sells/',
-//       },
-
-// {
-//         component: CNavItem,
-//         name: 'Sell',
-//         to: '/booking/products/sell',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'Request item',
-//         to: '/booking/bar/request',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'Add item',
-//         to: '/booking/bar/add',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'All items',
-//         to: '/booking/bar/all',
-//       },
-//       {
-//         component: CNavItem,
-//         name: 'All requests',
-//         to: '/booking/bar/request/all',
-//       },
-
-// {
-//         component: CNavItem,
-//         name: 'Stock reports',
-//         to: '/reports/stock',
+//         name: 'Bon de commande ',
+//         to: '/booking/accounting/bon-de-commande',
 //       },

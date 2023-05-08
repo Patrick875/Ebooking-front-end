@@ -18,7 +18,7 @@ function InvoiceList(props, ref) {
   const { requestItems, setRequestItems, documentTitle } = props
   const VATconstant = useSelector((state) =>
     state.constants.constants.filter((constant) => constant.name === 'VAT'),
-  )[0]
+  )[0] || { value: 0, name: 'VAT' }
 
   const value =
     requestItems && requestItems.length !== 0

@@ -50,7 +50,7 @@ function DeliveryList(props, ref) {
                         <CTableDataCell> {index + 1} </CTableDataCell>
                         <CTableDataCell>
                           {' '}
-                          {added.description || added.name}{' '}
+                          {added.description || added.itemName}{' '}
                         </CTableDataCell>
                         <CTableDataCell>
                           {' '}

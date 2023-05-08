@@ -3,6 +3,17 @@
 .printing-header{
    flex-direction: column !important;
 }
+@media screen and (min-width : 1440px) {
+  .App,.App-container{
+    width: 100%;
+    display: flex;
+    justify-items: center;
+  }
+  
+}
+
+
+
 @media print{
   .client-receipt{
   max-width: 216px !important;
@@ -18,11 +29,10 @@
    .website,.email,.doneOn{
     font-size:smaller
    }
-  
-   
-
   }
 }
+
+
 @font-face {
 font-family: "NumbersFont";
 src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("woff"),

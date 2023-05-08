@@ -120,9 +120,9 @@ function ProformaInvoice() {
                           {' '}
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
-                        <CTableDataCell>{el.invoiceId}</CTableDataCell>
+                        <CTableDataCell>{el.proformaGenerated}</CTableDataCell>
                         <CTableDataCell>
-                          {new Date(el.date_from).toLocaleDateString()}
+                          {new Date(el.createdAt).toLocaleDateString()}
                         </CTableDataCell>
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>

@@ -121,7 +121,7 @@ function Invoice() {
                           {' '}
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
-                        <CTableDataCell>{el.InvoiceId}</CTableDataCell>
+                        <CTableDataCell>{el.invoiceGenerated}</CTableDataCell>
                         <CTableDataCell>
                           {new Date(el.createdAt).toLocaleDateString()}
                         </CTableDataCell>

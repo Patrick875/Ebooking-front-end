@@ -90,7 +90,7 @@ function AllStockRequests() {
                         <CTableDataCell>
                           {new Date(item.date).toLocaleDateString()}
                         </CTableDataCell>
-                        <CTableDataCell></CTableDataCell>
+                        <CTableDataCell>{item.PetitStock.name}</CTableDataCell>
                         <CTableDataCell>
                           {item.status === 'APPROVED' ? (
                             <p className="ms-3">

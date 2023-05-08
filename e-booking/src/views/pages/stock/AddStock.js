@@ -296,6 +296,7 @@ const AddStock = React.forwardRef((props, ref) => {
                         <option value="Kg"> Kg </option>
                         <option value="l"> ltr </option>
                         <option value="piece"> piece </option>
+                        <option value="bottle"> bottle </option>
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>

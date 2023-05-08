@@ -142,7 +142,7 @@ const Users = () => {
                       <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
                       <CTableDataCell> {user.Role.name}</CTableDataCell>
-                      {role !== 'admin' ? (
+                      {role === 'admin' ? (
                         <CTableDataCell>
                           <Link
                             to="/booking/user/edit"

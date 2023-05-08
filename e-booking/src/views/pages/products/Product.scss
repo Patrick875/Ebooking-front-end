@@ -32,8 +32,10 @@
     margin: 0;
     padding:0 0;
     display:grid;
-    grid-template-columns: repeat(5,1fr);
-    grid-template-rows: repeat(5,1fr);
+    width:50%;
+    height: 400px;
+    grid-template-columns: repeat(3,30%);
+    overflow-y: scroll;
 }
 .product-sell-packages{
     

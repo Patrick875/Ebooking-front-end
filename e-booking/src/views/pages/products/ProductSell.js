@@ -96,6 +96,7 @@ const ProductSell = React.forwardRef((props, ref) => {
   const [tables, setTables] = useState()
   const [table, setTable] = useState()
   const [petitStock, setPetitStock] = useState(false)
+  const [allPetitStock, setAllPetitStock] = useState([])
   const onSubmit = (data) => {
     console.log(data)
   }
@@ -218,6 +219,11 @@ const ProductSell = React.forwardRef((props, ref) => {
           toast.error(err.message)
         })
     }
+    const getAllPetitStock = async () => {
+      await instance.get('/petit-stock/all').then((res) => {
+        setAllPetitStock(res.data.data)
+      })
+    }
     const getAllProductCategories = async () => {
       await instance.get('/products/category/all').then((res) => {
         setProductCategories(res.data.data)
@@ -226,6 +232,7 @@ const ProductSell = React.forwardRef((props, ref) => {
     getTables()
     getAllProducts()
     getAllProductCategories()
+    getAllPetitStock()
   }, [])
 
   return (
@@ -325,32 +332,6 @@ const ProductSell = React.forwardRef((props, ref) => {
               ) : (
                 <React.Fragment>No products in database</React.Fragment>
               )}
-            </CCol>
-            <CCol md={2} className="bg-white text-dark">
-              <div className="col d-flex mx-0 px-0 py-2 ">
-                <CButton
-                  className=" mx-0 col btn-light text-dark"
-                  onClick={() => {
-                    setSelectedCategory('all')
-                  }}
-                >
-                  All
-                </CButton>
-              </div>
-              {productCategories && productCategories.length !== 0
-                ? productCategories.map((cat, i) => (
-                    <div key={i} className="col d-flex mx-0 px-0 py-2 ">
-                      <CButton
-                        className=" mx-0 col btn-light text-dark"
-                        onClick={() => {
-                          setSelectedCategory(cat.id)
-                        }}
-                      >
-                        {cat.name}
-                      </CButton>
-                    </div>
-                  ))
-                : null}
             </CCol>
             <CCol md={5} className="row mx-0 bg-white ">
               <div className="col d-flex  px-0">
@@ -532,3 +513,30 @@ const ProductSell = React.forwardRef((props, ref) => {
 })
 
 export default ProductSell
+
+// <CCol md={2} className="bg-white text-dark">
+//               <div className="col d-flex mx-0 px-0 py-2 ">
+//                 <CButton
+//                   className=" mx-0 col btn-light text-dark"
+//                   onClick={() => {
+//                     setSelectedCategory('all')
+//                   }}
+//                 >
+//                   All
+//                 </CButton>
+//               </div>
+//               {productCategories && productCategories.length !== 0
+//                 ? productCategories.map((cat, i) => (
+//                     <div key={i} className="col d-flex mx-0 px-0 py-2 ">
+//                       <CButton
+//                         className=" mx-0 col btn-light text-dark"
+//                         onClick={() => {
+//                           setSelectedCategory(cat.id)
+//                         }}
+//                       >
+//                         {cat.name}
+//                       </CButton>
+//                     </div>
+//                   ))
+//                 : null}
+//             </CCol>

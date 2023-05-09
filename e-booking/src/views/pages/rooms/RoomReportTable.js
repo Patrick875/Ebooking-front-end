@@ -6,10 +6,23 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React from 'react'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { instance } from 'src/API/AxiosInstance'
 import { getRoomStatus } from 'src/utils/functions'
 function RoomReportTable(props) {
-  const { rooms, roomClasses } = props
+  const { rooms, roomClasses, setRooms } = props
+  const [style, setStyle] = useState()
+  const deleteRoom = async (id) => {
+    await instance
+      .delete(`/room/${id}`)
+      .then(() => {
+        toast.success('room deleted!!!!')
+      })
+      .catch((err) => {
+        toast.error('error deleting room ')
+      })
+  }
   return (
     <CTable bordered>
       <CTableHead>
@@ -43,8 +56,18 @@ function RoomReportTable(props) {
                       .map((room) => {
                         const cool = getRoomStatus(room)
                         return (
-                          <CTableRow key={room.id}>
-                            <CTableHeaderCell>{`#${room.name}`}</CTableHeaderCell>
+                          <CTableRow
+                            key={room.id}
+                            onMouseEnter={(e) => {
+                              setStyle({ display: 'block' })
+                            }}
+                            onMouseLeave={(e) => {
+                              setStyle({ display: 'none' })
+                            }}
+                          >
+                            <CTableHeaderCell className="d-flex  gap-2">
+                              {`#${room.name}`}
+                            </CTableHeaderCell>
                             <CTableDataCell></CTableDataCell>
                             <CTableDataCell>
                               {cool.status === 'OCCUPIED'
@@ -58,7 +81,23 @@ function RoomReportTable(props) {
                             </CTableDataCell>
                             <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>
                             <CTableDataCell></CTableDataCell>
-                            <CTableDataCell>{cool.status}</CTableDataCell>
+                            <CTableDataCell className="d-flex gap-2">
+                              {cool.status}
+                              <div
+                                className="btn btn-danger btn-sm"
+                                style={style}
+                                onClick={() => {
+                                  setRooms(
+                                    rooms.filter((el) =>
+                                      el !== room ? el : null,
+                                    ),
+                                  )
+                                  deleteRoom(room.id)
+                                }}
+                              >
+                                Delete room
+                              </div>
+                            </CTableDataCell>
                           </CTableRow>
                         )
                       })}

@@ -29,18 +29,19 @@ import { useForm } from 'react-hook-form'
 
 function ProductPriceUpdateModal(props) {
   let { open, setOpen, item } = props
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const updatePrice = async (data) => {
     data = { ...item, data }
-    console.log('product update data', data)
 
     await instance
       .put('/api/v1/products/package/update', data)
       .then(() => {
         toast.success('product price updated !!!')
+        reset()
       })
-      .catch(() => {
+      .catch((err) => {
         toast.error('error updating product')
+        reset()
       })
   }
   return (

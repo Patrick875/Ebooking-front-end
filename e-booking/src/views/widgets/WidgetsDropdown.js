@@ -76,40 +76,37 @@ const WidgetsDropdown = () => {
   }, [])
 
   return (
-    <CRow className="widgets">
-      <CCol
-        xs={12}
-        sm={6}
-        lg={3}
+    <CRow className="widgets ">
+      <div
+        className="col-md-6 col-sm-12 col"
         onClick={() => {
           navigate('/booking/rooms/available')
         }}
       >
         <CWidgetStatsF
           className="mb-3"
-          icon={<CIcon width={24} icon={cilHouse} size="xl" />}
+          icon={<CIcon width={48} icon={cilHouse} size="xl" />}
           title="Rooms"
           value={rooms.length}
           color="primary"
         />
-      </CCol>
-      <CCol
-        xs={12}
-        sm={6}
-        lg={3}
+      </div>
+      <div
+        className="col-md-6 col-sm-12 col"
         onClick={() => {
           navigate('/booking/halls')
         }}
       >
         <CWidgetStatsF
-          className="mb-3"
-          icon={<CIcon width={24} icon={cilHome} size="xl" />}
+          className="mb-3 "
+          icon={<CIcon width={48} icon={cilHome} size="xl" />}
           title="Halls"
           value={halls.length}
           color="warning"
         />
-      </CCol>
-      <CCol
+      </div>
+      <div
+        className="col-md-6 col-sm-12 col"
         xs={12}
         sm={6}
         lg={3}
@@ -119,13 +116,14 @@ const WidgetsDropdown = () => {
       >
         <CWidgetStatsF
           className="mb-3"
-          icon={<CIcon width={24} icon={cilUser} size="xl" />}
+          icon={<CIcon width={48} icon={cilUser} size="xl" />}
           title="Customers"
           value={customers.length}
           color="info"
         />
-      </CCol>
-      <CCol
+      </div>
+      <div
+        className="col-md-6 col-sm-12 col"
         xs={12}
         sm={6}
         lg={3}
@@ -135,12 +133,12 @@ const WidgetsDropdown = () => {
       >
         <CWidgetStatsF
           className="mb-3"
-          icon={<CIcon width={24} icon={cilUser} size="xl" />}
+          icon={<CIcon width={48} icon={cilUser} size="xl" />}
           title="System User"
           value={users.length}
           color="danger"
         />
-      </CCol>
+      </div>
     </CRow>
   )
 }

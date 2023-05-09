@@ -66,7 +66,6 @@ instance.interceptors.response.use(
       // Clear the token and state fields from local storage
       localStorage.removeItem('token')
       localStorage.removeItem('state')
-      window.location.reload(true)
     }
     return Promise.reject(error)
   },

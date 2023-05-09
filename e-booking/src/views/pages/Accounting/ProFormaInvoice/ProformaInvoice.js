@@ -37,7 +37,7 @@ function ProformaInvoice() {
   }
   if (query && query !== '') {
     invoices = invoices.filter((invoice) =>
-      invoice.invoiceId.toLowerCase().includes(query.toLowerCase()),
+      invoice.proformaGenerated.toLowerCase().includes(query.toLowerCase()),
     )
   }
   useEffect(() => {

@@ -6,9 +6,9 @@ const PrintFooterNoSignatures = (props) => {
   return (
     <div className="mt-2">
       <p>
-        Printed by <span className="fw-bold text-capitalize"> {role}</span>:{' '}
-        {firstName} {lastName}
+        Printed by {firstName} {lastName}
       </p>
+      <p>Printed on {new Date().toLocaleString()}</p>
     </div>
   )
 }

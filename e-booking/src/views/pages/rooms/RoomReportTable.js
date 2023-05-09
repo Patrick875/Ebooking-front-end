@@ -14,7 +14,7 @@ import { getRoomStatus } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
   const role = useSelector((state) => state.auth.role)
-  const [style, setStyle] = useState()
+  const [style, setStyle] = useState({ display: 'none' })
   const deleteRoom = async (id) => {
     await instance
       .delete(`/room/${id}`)
@@ -58,15 +58,7 @@ function RoomReportTable(props) {
                       .map((room) => {
                         const cool = getRoomStatus(room)
                         return (
-                          <CTableRow
-                            key={room.id}
-                            onMouseEnter={(e) => {
-                              setStyle({ display: 'block' })
-                            }}
-                            onMouseLeave={(e) => {
-                              setStyle({ display: 'none' })
-                            }}
-                          >
+                          <CTableRow key={room.id}>
                             <CTableHeaderCell className="d-flex  gap-2">
                               {`#${room.name}`}
                             </CTableHeaderCell>
@@ -83,23 +75,32 @@ function RoomReportTable(props) {
                             </CTableDataCell>
                             <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>
                             <CTableDataCell></CTableDataCell>
-                            <CTableDataCell className="d-flex gap-2">
+                            <CTableDataCell
+                              className="d-flex gap-2"
+                              onMouseEnter={(e) => {
+                                setStyle({ display: 'block' })
+                              }}
+                              onMouseLeave={(e) => {
+                                setStyle({ display: 'none' })
+                              }}
+                            >
                               {cool.status}
 
                               {role === 'admin' ? (
-                                <div
-                                  className="btn btn-danger btn-sm"
-                                  style={style}
-                                  onClick={() => {
-                                    setRooms(
-                                      rooms.filter((el) =>
-                                        el !== room ? el : null,
-                                      ),
-                                    )
-                                    deleteRoom(room.id)
-                                  }}
-                                >
-                                  Delete room
+                                <div style={style}>
+                                  <div
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => {
+                                      setRooms(
+                                        rooms.filter((el) =>
+                                          el !== room ? el : null,
+                                        ),
+                                      )
+                                      deleteRoom(room.id)
+                                    }}
+                                  >
+                                    Delete room
+                                  </div>
                                 </div>
                               ) : null}
                             </CTableDataCell>

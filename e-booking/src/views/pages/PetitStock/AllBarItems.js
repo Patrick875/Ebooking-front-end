@@ -20,6 +20,7 @@ function AllBarItems() {
   const petitStock =
     useSelector((state) => state.selection.selectedPetitStock) || {}
 
+  console.log('coool', petitStock)
   const role = useSelector((state) => state.auth.role)
   const disactivePetitStock = async (id) => {
     await instance
@@ -78,13 +79,16 @@ function AllBarItems() {
         <p className="text-center fs-3">{petitStock.name} stock</p>
         <CRow>
           <div className="d-flex justify-content-between my-3">
-            <Link
-              md={4}
-              className="btn btn-primary"
-              to="/booking/petitstock/request"
-            >
-              <BiCartDownload className="fs-5" /> Request item from stock
-            </Link>
+            {petitStock.status !== 'DISACTIVE' ? (
+              <Link
+                md={4}
+                className="btn btn-primary"
+                to="/booking/petitstock/request"
+              >
+                <BiCartDownload className="fs-5" /> Request item from stock
+              </Link>
+            ) : null}
+
             <Link
               md={4}
               className="btn btn-primary"
@@ -102,6 +106,7 @@ function AllBarItems() {
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Total Value</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -114,10 +119,28 @@ function AllBarItems() {
                         <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                         <CTableDataCell>{`${item.StockItem.name}`}</CTableDataCell>
                         <CTableDataCell>{`${item.quantinty}`}</CTableDataCell>
+                        <CTableDataCell>{`${Number(
+                          item.avgPrice,
+                        ).toLocaleString()}`}</CTableDataCell>
                       </CTableRow>
                     )
                   })
                 : null}
+
+              <CTableRow>
+                <CTableHeaderCell />
+                <CTableHeaderCell colSpan={2}>Total</CTableHeaderCell>
+                <CTableDataCell>
+                  {petitStock &&
+                  petitStock.PetitStockItems &&
+                  petitStock.PetitStockItems.length !== 0
+                    ? petitStock.PetitStockItems.reduce(
+                        (a, b) => a + b.avgPrice,
+                        0,
+                      )
+                    : 0}
+                </CTableDataCell>
+              </CTableRow>
             </CTableBody>
           </CTable>
         </CRow>

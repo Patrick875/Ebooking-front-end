@@ -8,10 +8,12 @@ import {
 } from '@coreui/react'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
 import { getRoomStatus } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
+  const role = useSelector((state) => state.auth.role)
   const [style, setStyle] = useState()
   const deleteRoom = async (id) => {
     await instance
@@ -83,20 +85,23 @@ function RoomReportTable(props) {
                             <CTableDataCell></CTableDataCell>
                             <CTableDataCell className="d-flex gap-2">
                               {cool.status}
-                              <div
-                                className="btn btn-danger btn-sm"
-                                style={style}
-                                onClick={() => {
-                                  setRooms(
-                                    rooms.filter((el) =>
-                                      el !== room ? el : null,
-                                    ),
-                                  )
-                                  deleteRoom(room.id)
-                                }}
-                              >
-                                Delete room
-                              </div>
+
+                              {role === 'admin' ? (
+                                <div
+                                  className="btn btn-danger btn-sm"
+                                  style={style}
+                                  onClick={() => {
+                                    setRooms(
+                                      rooms.filter((el) =>
+                                        el !== room ? el : null,
+                                      ),
+                                    )
+                                    deleteRoom(room.id)
+                                  }}
+                                >
+                                  Delete room
+                                </div>
+                              ) : null}
                             </CTableDataCell>
                           </CTableRow>
                         )

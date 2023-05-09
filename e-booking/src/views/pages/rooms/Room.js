@@ -67,7 +67,11 @@ const Room = React.forwardRef((props, ref) => {
                   </p>
                 </div>
 
-                <RoomReportTable rooms={rooms} roomClasses={roomClasses} />
+                <RoomReportTable
+                  rooms={rooms}
+                  roomClasses={roomClasses}
+                  setRooms={setRooms}
+                />
                 <PrintFooterNoSignatures />
               </div>
             </div>

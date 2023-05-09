@@ -19,8 +19,6 @@ import { toast } from 'react-hot-toast'
 function AllBarItems() {
   const petitStock =
     useSelector((state) => state.selection.selectedPetitStock) || {}
-
-  console.log('coool', petitStock)
   const role = useSelector((state) => state.auth.role)
   const disactivePetitStock = async (id) => {
     await instance
@@ -29,7 +27,6 @@ function AllBarItems() {
         toast.success('Petit stock disactivated successfully')
       })
       .catch((err) => {
-        console.log(err)
         toast.error('error disactivating petit stock')
       })
   }
@@ -40,7 +37,6 @@ function AllBarItems() {
         toast.success('Petit stock ctivated successfully')
       })
       .catch((err) => {
-        console.log(err)
         toast.error('error activating petit stock')
       })
   }

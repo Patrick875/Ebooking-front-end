@@ -11,13 +11,11 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
 .Login{
     text-align: center;
     height: 100%;
-    display: flex;
-    padding: 0em 8em;
+    display: flex;  
     align-items: center;
     .Login__form{
         background-color: rgba(47, 39, 39, 0.766);
         padding: 30px;
-        width: 38%;
         border-radius: 10px;
         
         .form__heading{
@@ -54,17 +52,18 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
 
         }
     }
-
     .Login__guides{
-        padding: 30px;
+
+        padding: .2em ;
+        margin: .2em 0;
         background-color: rgba(37, 9, 9, 0.084);
         line-height: 2em;
-        display: block;
-        
+        display: flex;
+        justify-content: center;
         .heading{
             font-weight: bold;
             color: $secondary__color;
-            //margin: 20px 0px;
+           
             margin: 15% 0%;
         }
 
@@ -88,12 +87,11 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
         }
        
     }
+    
 }
 
 
 .custom-btn {
- 
- 
   border: 2px solid #000;
   color: #fff;
   font-weight: 500;

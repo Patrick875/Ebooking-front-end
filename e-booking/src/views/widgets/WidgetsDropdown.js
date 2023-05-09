@@ -4,13 +4,16 @@ import CIcon from '@coreui/icons-react'
 import { cilUser, cilHome, cilHouse } from '@coreui/icons'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 const WidgetsDropdown = () => {
+  const navigate = useNavigate()
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [users, setUsers] = useState([])
   const [reservations, setReservations] = useState([])
   let [customers, setCustomers] = useState([])
+
   useEffect(() => {
     const getCustomers = async () => {
       await instance
@@ -73,8 +76,15 @@ const WidgetsDropdown = () => {
   }, [])
 
   return (
-    <CRow>
-      <CCol xs={12} sm={6} lg={3}>
+    <CRow className="widgets">
+      <CCol
+        xs={12}
+        sm={6}
+        lg={3}
+        onClick={() => {
+          navigate('/booking/rooms/available')
+        }}
+      >
         <CWidgetStatsF
           className="mb-3"
           icon={<CIcon width={24} icon={cilHouse} size="xl" />}
@@ -83,7 +93,14 @@ const WidgetsDropdown = () => {
           color="primary"
         />
       </CCol>
-      <CCol xs={12} sm={6} lg={3}>
+      <CCol
+        xs={12}
+        sm={6}
+        lg={3}
+        onClick={() => {
+          navigate('/booking/halls')
+        }}
+      >
         <CWidgetStatsF
           className="mb-3"
           icon={<CIcon width={24} icon={cilHome} size="xl" />}
@@ -92,7 +109,14 @@ const WidgetsDropdown = () => {
           color="warning"
         />
       </CCol>
-      <CCol xs={12} sm={6} lg={3}>
+      <CCol
+        xs={12}
+        sm={6}
+        lg={3}
+        onClick={() => {
+          navigate('/customers')
+        }}
+      >
         <CWidgetStatsF
           className="mb-3"
           icon={<CIcon width={24} icon={cilUser} size="xl" />}
@@ -101,7 +125,14 @@ const WidgetsDropdown = () => {
           color="info"
         />
       </CCol>
-      <CCol xs={12} sm={6} lg={3}>
+      <CCol
+        xs={12}
+        sm={6}
+        lg={3}
+        onClick={() => {
+          navigate('/booking/users')
+        }}
+      >
         <CWidgetStatsF
           className="mb-3"
           icon={<CIcon width={24} icon={cilUser} size="xl" />}

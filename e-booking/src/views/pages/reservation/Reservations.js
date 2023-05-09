@@ -165,7 +165,6 @@ const Reservation = () => {
     getReservations()
   }, [])
 
-  console.log('dates', { myDates, reservations })
   return (
     <CRow>
       <CCol xs={12}>

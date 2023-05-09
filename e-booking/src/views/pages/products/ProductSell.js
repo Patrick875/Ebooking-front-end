@@ -282,7 +282,7 @@ const ProductSell = React.forwardRef((props, ref) => {
           </CCardHeader>
           <CRow className="d-flex">
             <CCol
-              md={5}
+              md={6}
               className={`${
                 selectedProduct ? 'product-sell-packages' : 'product-sell'
               } bg-white  `}
@@ -333,7 +333,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                 <React.Fragment>No products in database</React.Fragment>
               )}
             </CCol>
-            <CCol md={5} className="row mx-0 bg-white ">
+            <CCol md={6} className="row mx-0 bg-white ">
               <div className="col d-flex  px-0">
                 <div className="numpad ">
                   {numpadItems.map((digit) => (

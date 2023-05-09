@@ -20,13 +20,13 @@
 }
 
 .numpad-action {
-
     margin: auto 0;
     margin-top:.2em;
     margin-right:.2em;
     display: grid;
     grid-template-rows: 1fr 2fr 2fr;
-    gap: 0.1em
+    gap: 0.1em 
+    
 }
 .product-sell{
     margin: 0;

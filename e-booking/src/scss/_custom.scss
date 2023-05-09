@@ -3,8 +3,18 @@
 .printing-header{
    flex-direction: column !important;
 }
+
+
+
 @media screen and (min-width : 1440px) {
+  .App{
+      height:100vh;
+  }
+  .App-container{
+    height:100vh;
+  }
   .App,.App-container{
+   
     width: 100%;
     display: flex;
     justify-items: center;
@@ -32,7 +42,6 @@
   }
 }
 
-
 @font-face {
 font-family: "NumbersFont";
 src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("woff"),
@@ -46,6 +55,7 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
     box-sizing: border-box;
   }
   body {
+    height: 100%;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -53,7 +63,10 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+  #root{
+    height: 100%;
+    width: 100%;
+  }
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
       monospace;
@@ -62,16 +75,16 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   $primary_color: rgb(109,23,2);
   $secondary__color: rgb(232,170,0);
   $default__color: rgb(241,240,236);
-  
+
+
   .App {
     position: relative;
-    background: url('../../public/assets//images/base-olympic.jpeg') no-repeat ;;
+    background: url('../../public/assets//images/base-olympic.jpeg') no-repeat ;
     background-size:cover;
     opacity: 0.8;
     height: 100vh;
     width: 100%;
-    max-width: 1440px;
-  
+
     input.form__control, textarea.form__control, select.form__control{
       width: 100%;
       padding: 10px;
@@ -79,12 +92,25 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
     .table-row:hover{
       cursor: pointer;
     }
+
+    @media screen and (orientation : landscape) {
+    height: 100%;}
+
+
   }
   
   .App-container{
+    width:100%;
     background-color: rgba(0, 0, 0, 0.434);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height:100vh;
+    @media screen and (orientation : landscape) {
+    height: 100vh;}
   }
   
+.widgets{
+  div{
+    cursor:pointer
+  }
+}

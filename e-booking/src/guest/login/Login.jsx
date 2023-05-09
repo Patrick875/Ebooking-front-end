@@ -34,6 +34,7 @@ function Login() {
     <div className="App">
       <div className="App-container">
         <Navigation />
+
         <div className="Login d-flex flex-column justify-content-center">
           <div className="Login__guides">
             <h1 className="heading my-0"> Olympic Hotel </h1>

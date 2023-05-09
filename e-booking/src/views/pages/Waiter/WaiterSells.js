@@ -15,7 +15,6 @@ import DatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
@@ -146,7 +145,9 @@ function WaiterSells() {
                             </p>
                           ))}
                         </CTableDataCell>
-                        <CTableDataCell>{sale.amount}</CTableDataCell>
+                        <CTableDataCell>
+                          {sale.amount.toLocaleString()}
+                        </CTableDataCell>
                       </CTableRow>
                     ))
                 ) : (
@@ -160,6 +161,16 @@ function WaiterSells() {
                     </CTableDataCell>
                   </CTableRow>
                 )}
+                <CTableRow>
+                  <CTableDataCell />
+                  <CTableHeaderCell colSpan={3}>Total</CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {waiterSells
+                      .reduce((a, b) => a + Number(b.amount), 0)
+                      .toLocaleString()}{' '}
+                    Rwf
+                  </CTableHeaderCell>
+                </CTableRow>
               </CTableBody>
             </CTable>
             {waiterSells.length !== 0 ? (

@@ -34,7 +34,6 @@ function AllStockRequests() {
       await instance
         .get('/petitstock/order/all')
         .then((res) => {
-          console.log(res.data)
           setItems(res.data.data)
         })
         .catch((err) => {

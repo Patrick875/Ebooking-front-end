@@ -40,9 +40,11 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false)
   const petitStock = useSelector((state) => state.selection.selectedPetitStock)
   const [item, setItem] = useState(null)
+  const [submitted, setSubmitted] = useState(false)
   const [requestItems, setRequestItems] = useState([])
   const clearPurchaseOrder = () => {
     setRequestItems([])
+    setSubmitted(!submitted)
   }
   const maxValue = item && item.length !== 0 ? item[0].quantity : null
   const dontAdd =
@@ -67,11 +69,11 @@ const RequestBarItem = React.forwardRef((props, ref) => {
 
   const submitRequest = async () => {
     const data = { data: requestItems }
-    console.log(data)
     await instance
       .post('/petitstock/order/add', data)
       .then(() => {
         toast.success('request submitted')
+        setSubmitted(true)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -82,7 +84,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
       await instance
         .get('/stock/item/balance')
         .then((res) => {
-          console.log(res)
           const items = res.data.data.map((item) => ({
             name: item.StockItem.name,
             quantity: item.quantity,
@@ -252,6 +253,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                 <CButton
                   component="input"
                   value="Submit request"
+                  disabled={submitted}
                   onClick={() => {
                     submitRequest()
                     setVisible(false)

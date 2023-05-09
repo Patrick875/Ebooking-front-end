@@ -59,10 +59,14 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error && error.response && error.response.status === 403) {
+    if (
+      (error && error.response && error.response.status === 403) ||
+      error.response.status === 401
+    ) {
       // Clear the token and state fields from local storage
       localStorage.removeItem('token')
       localStorage.removeItem('state')
+      window.location.reload(true)
     }
     return Promise.reject(error)
   },

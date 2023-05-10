@@ -1,6 +1,6 @@
 //jshint esversion:9
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { STOCK_ITEM_ACTIONS_TYPES } from './StockItemActionTypes'
 
 export const getStockItems = () => {

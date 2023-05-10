@@ -235,7 +235,7 @@ const CashReport = React.forwardRef((props, ref) => {
       </CCardHeader>
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
-          <InvoiceHeader />
+          <InvoiceHeader title="Cash flow" />
           <CashRecords
             time={time}
             myDates={myDates}

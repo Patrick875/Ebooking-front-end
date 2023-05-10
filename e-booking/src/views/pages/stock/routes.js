@@ -4,6 +4,8 @@ import ReceiveVouchers from './ReceiveVouchers'
 import StockRequests from './StockRequests'
 import StockRequestView from './StockRequestView'
 import ReceiveVaucherView from './ReceiveVaucherView'
+import StockReport from './StockReport'
+import StockItemTrack from './StockItemTrack'
 
 export const stockRoutes = [
   {
@@ -11,6 +13,18 @@ export const stockRoutes = [
     exact: true,
     name: 'Add Stock ',
     element: AddStock,
+  },
+  {
+    path: '/booking/stock/report',
+    exact: true,
+    name: 'Stock report ',
+    element: StockReport,
+  },
+  {
+    path: '/booking/stock/item/history',
+    exact: true,
+    name: 'Item tracking ',
+    element: StockItemTrack,
   },
   {
     path: '/booking/stock/available',

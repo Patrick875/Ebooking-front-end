@@ -89,7 +89,6 @@ const _nav = [
         name: 'Delivery note ',
         to: '/booking/accounting/delivery',
       },
-      
     ],
   },
   {
@@ -382,6 +381,11 @@ const _nav = [
         name: 'Outgoing Request',
         to: '/booking/stock/request/out',
       },
+      {
+        component: CNavItem,
+        name: 'Stock report',
+        to: '/booking/stock/report',
+      },
     ],
   },
   {
@@ -404,13 +408,3 @@ const _nav = [
   },
 ]
 export default _nav
-
-
-
-
-
-// {
-//         component: CNavItem,
-//         name: 'Bon de commande ',
-//         to: '/booking/accounting/bon-de-commande',
-//       },

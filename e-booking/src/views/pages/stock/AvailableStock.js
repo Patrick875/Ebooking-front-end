@@ -36,8 +36,9 @@ function ItemDetailsModal(props) {
       .get(
         `/stock/track/item/item=${item.id}&date_from=${startDate}&date_to=${endDate}`,
       )
-      .then(() => {
+      .then((res) => {
         toast.success('item details retrieved')
+        console.log('tracking', res)
       })
       .catch((err) => {
         toast.error('item details retrieve failed')
@@ -100,7 +101,27 @@ function AvailableStock() {
   const query = watch('query') || ''
   const [clicked, setClicked] = useState({})
   const [open, setOpen] = useState(false)
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
 
+  const trackItem = async (item) => {
+    await instance
+      .get(`/stock/track/item`, {
+        params: {
+          item: item.StockItem.id,
+          date_from: startDate,
+          date_to: endDate,
+        },
+      })
+      .then((res) => {
+        toast.success('item details retrieved')
+        console.log('res', res)
+      })
+      .catch((err) => {
+        toast.error('item details retrieve failed')
+        console.log('err', err)
+      })
+  }
   const searchItems = (items, query) => {
     if (!query || query === '') {
       return items
@@ -139,6 +160,27 @@ function AvailableStock() {
           <strong> Available stock </strong>
         </h2>
       </CCardHeader>
+      <div className="ms-3 d-flex gap-2">
+        <div className="col-4">
+          <CFormInput
+            className="form-control col px-2"
+            id="start"
+            name="start-date"
+            onChange={(e) => setStartDate(e.target.value)}
+            startDate={startDate}
+            type="date"
+          />
+        </div>
+        <div className="col-4">
+          <CFormInput
+            id="end"
+            name="end-date"
+            onChange={(e) => setEndDate(e.target.value)}
+            startDate={endDate}
+            type="date"
+          />
+        </div>
+      </div>
       <CCardBody>
         <div className="col-md-4">
           <CFormLabel className="text-center">Search</CFormLabel>
@@ -197,9 +239,9 @@ function AvailableStock() {
                           <div
                             className="btn btn-primary btn-sm"
                             style={style}
-                            onClick={() => {
-                              setClicked(item)
-                              return setOpen(true)
+                            onClick={(e) => {
+                              trackItem(item)
+                              e.preventDefault()
                             }}
                           >
                             Track item

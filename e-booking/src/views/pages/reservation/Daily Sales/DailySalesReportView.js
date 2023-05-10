@@ -14,7 +14,7 @@ const DailySalesReportView = React.forwardRef((props, ref) => {
     (state) => state.selection.selected.DailyMoneyDetails,
   )
   const user = useSelector(
-    (state) => state.selection.selected.DailyMoneyDetails[0].User,
+    (state) => state.selection.selected.receiver,
   )
 
   return (

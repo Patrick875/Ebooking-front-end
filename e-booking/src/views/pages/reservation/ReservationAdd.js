@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Typeahead } from 'react-bootstrap-typeahead'
+import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
 import {
   CButton,
   CCard,
@@ -39,14 +39,14 @@ const CreateCustomerModal = (props) => {
   )
 }
 
-const ReservationAdd = () => {
+const ReservationAdd = (props) => {
   const { register, handleSubmit, watch, reset } = useForm()
   const [customer, setCustomer] = useState([])
   const [service, setService] = useState([])
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [hallServices, setHallServices] = useState([])
-  const [RoomClasses, setRoomClasses] = useState([])
+  let [RoomClasses, setRoomClasses] = useState([])
   let [customers, setCustomers] = useState([])
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
@@ -93,6 +93,21 @@ const ReservationAdd = () => {
     )
     setCustomers(filteredOptions)
   }
+
+  RoomClasses =
+    RoomClasses && RoomClasses.length !== 0 && rooms && rooms.length !== 0
+      ? RoomClasses.map((id, name) => {
+          return { id: id, name: name }
+        })
+      : RoomClasses
+  props = { ...props }
+  props.renderMenuItemChildren = (option, { text }) => (
+    <div>
+      <Highlighter search={text}>
+        {option.name + ' : ' + option.RoomClass.name}
+      </Highlighter>
+    </div>
+  )
 
   const onSubmit = (data) => {
     if (type === 'room' && days && !roomK) {
@@ -154,6 +169,7 @@ const ReservationAdd = () => {
       await instance
         .get('/room/all')
         .then((res) => {
+          console.log('rooms', res.data.data)
           setRooms(res.data.data)
         })
         .catch((err) => {
@@ -263,18 +279,31 @@ const ReservationAdd = () => {
                       </CFormSelect>
                     </CCol>
 
-                    <CCol md={6}>
+                    <CCol md={6} disabled={true}>
                       <CFormLabel htmlFor="service"> Service </CFormLabel>
 
-                      <Typeahead
-                        id="basic-typeahead-single"
-                        labelKey="name"
-                        filterBy={['name']}
-                        onChange={setService}
-                        options={all}
-                        placeholder="service  ..."
-                        selected={service}
-                      />
+                      {type && type === 'room' ? (
+                        <Typeahead
+                          id="basic-typeahead-single"
+                          labelKey="name"
+                          filterBy={['name']}
+                          onChange={setService}
+                          options={rooms}
+                          placeholder="service  ..."
+                          selected={service}
+                          {...props}
+                        />
+                      ) : (
+                        <Typeahead
+                          id="basic-typeahead-single"
+                          labelKey="name"
+                          filterBy={['name']}
+                          onChange={setService}
+                          options={all}
+                          placeholder="service  ..."
+                          selected={service}
+                        />
+                      )}
                     </CCol>
 
                     <CCol md={6} className="d-flex flex-col ">

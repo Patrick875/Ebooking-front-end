@@ -55,6 +55,7 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
 
   let totals = sumAmountsByCurrency(reportItems)
   const submitDailyReport = async () => {
+    console.log('the daily sales data', { data: reportItems, totals })
     await instance
       .post('/daily-sales/add', { data: reportItems, totals })
       .then(() => {

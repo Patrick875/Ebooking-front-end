@@ -39,7 +39,8 @@ export const addStockItem = (payload) => {
         toast.success('Item added to stock')
       })
       .catch((err) => {
-        toast.error(err.message)
+        toast.error(err.status)
+        console.log(err)
       })
   }
 }

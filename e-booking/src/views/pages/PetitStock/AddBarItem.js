@@ -97,7 +97,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
-          return { name: e.StockItem.name, ...e }
+          return { name: e.StockItemNew.name, ...e }
         })
       : order
   const [receivedItems, setReceivedItems] = useState([])
@@ -114,7 +114,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
     item2 = item2
       ? {
           itemName: item2[0].name,
-          item_id: item2[0].stockItemId,
+          item_id: item2[0].stockItemNewId,
           stockPurchaseOrderId: item2[0].stockPurchaseOrderId,
         }
       : item2

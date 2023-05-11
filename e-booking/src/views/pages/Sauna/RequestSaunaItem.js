@@ -98,7 +98,7 @@ const RequestSaunaItem = React.forwardRef((props, ref) => {
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
-          return { name: e.StockItem.name, ...e }
+          return { name: e.StockItemNew.name, ...e }
         })
       : order
 

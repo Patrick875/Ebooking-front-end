@@ -3,6 +3,7 @@ import {
   CCardHeader,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -22,13 +23,22 @@ import Pagination from 'src/utils/Pagination'
 function StockItems() {
   const { register, watch } = useForm()
   const query = watch('query') || ''
+  const storeId = watch('storeId') || null
   let [items, setItems] = useState([])
+  let [stores, setStores] = useState([])
 
   const searchItems = (items, query) => {
     if (!query || query === '') {
       return items
     } else {
       return items.filter((item) => item.name.toLowerCase().includes(query))
+    }
+  }
+  const filterItems = (items, storeId) => {
+    if (!storeId || storeId === '') {
+      return items
+    } else {
+      return items.filter((item) => item.storeId == storeId)
     }
   }
 
@@ -52,32 +62,65 @@ function StockItems() {
           toast.error(err.message)
         })
     }
+    const getStores = async () => {
+      await instance
+        .get('/stock/store/all')
+        .then((res) => {
+          setStores(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getStores()
     getItems()
   }, [])
 
   items = searchItems(items, query)
+  items = filterItems(items, storeId)
   return (
     <div>
-      <CCardHeader>
+      <CCardHeader className="text-center">
         <h2>
           <strong> Stock items </strong>
         </h2>
       </CCardHeader>
       <CCardBody>
-        <div className="col-md-4">
-          <form>
-            <CFormLabel className="text-center">Search</CFormLabel>
+        <form className="d-flex justify-content-between">
+          <div className="col-md-4">
             <CFormInput
               className="mb-1"
               type="text"
               name="itemName"
               id="itemName"
               size="md"
-              placeholder="by name ..."
+              placeholder="search ..."
               {...register('query')}
             />
-          </form>
-        </div>
+          </div>
+          <div className="col-md-4">
+            <CFormSelect
+              name="store"
+              id="store"
+              size="md"
+              className="mb-3"
+              aria-label="store"
+              {...register('storeId', { required: true })}
+            >
+              <option value="" selected={true}>
+                All
+              </option>
+              {stores.length !== 0
+                ? stores.map((store) => (
+                    <option value={store.id} className="text-capitalize">
+                      {store.name}
+                    </option>
+                  ))
+                : null}
+            </CFormSelect>
+          </div>
+        </form>
+
         <CTable bordered>
           <CTableHead>
             <CTableRow>

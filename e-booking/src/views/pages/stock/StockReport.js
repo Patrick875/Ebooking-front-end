@@ -37,7 +37,7 @@ function StockReportTable(props) {
             <CTableHeaderCell scope="col"> ITEM NAME </CTableHeaderCell>
             <CTableHeaderCell scope="col"> ACTION </CTableHeaderCell>
             <CTableHeaderCell scope="col"> PREV QTY </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> NEW QTY </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> BALANCE</CTableHeaderCell>
             <CTableHeaderCell scope="col"> U.P </CTableHeaderCell>
             <CTableHeaderCell scope="col"> T.P</CTableHeaderCell>
           </CTableRow>
@@ -61,15 +61,17 @@ function StockReportTable(props) {
                     {' '}
                     {(currentPage - 1) * perpage + 1 + i}
                   </CTableDataCell>
-                  <CTableDataCell>{item.StockItem.name}</CTableDataCell>
+                  <CTableDataCell>{item.StockItemNew.name}</CTableDataCell>
                   <CTableDataCell>
-                    {item && item.status === 'DEFAULT' ? 'ADDED' : item.status}
+                    {item && item.status === 'DEFAULT'
+                      ? `ADDED ${item.newQuantity}`
+                      : item.status + `  ${item.newQuantity}`}
                   </CTableDataCell>
                   <CTableDataCell>{item.preQuantity}</CTableDataCell>
-                  <CTableDataCell>{item.newQuantity}</CTableDataCell>
+                  <CTableDataCell>{item.balance}</CTableDataCell>
                   <CTableDataCell>{item.price}</CTableDataCell>
                   <CTableDataCell>
-                    {Number(item.price * item.newQuantity).toLocaleString()}
+                    {Number(item.price * item.balance).toLocaleString()}
                   </CTableDataCell>
                 </CTableRow>
               ))

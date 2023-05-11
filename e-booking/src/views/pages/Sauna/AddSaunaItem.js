@@ -123,7 +123,7 @@ const AddSaunaItem = React.forwardRef((props, ref) => {
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
-          return { name: e.StockItem.name, ...e }
+          return { name: e.StockItemNew.name, ...e }
         })
       : order
   const [receivedItems, setReceivedItems] = useState([])
@@ -140,7 +140,7 @@ const AddSaunaItem = React.forwardRef((props, ref) => {
     item2 = item2
       ? {
           itemName: item2[0].name,
-          item_id: item2[0].StockItem.id,
+          item_id: item2[0].StockItemNew.id,
           stockPurchaseOrderId: item2[0].id,
         }
       : item2

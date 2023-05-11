@@ -3,6 +3,7 @@ import {
   CCardHeader,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -23,9 +24,8 @@ import Pagination from 'src/utils/Pagination'
 function AvailableStock() {
   const { register, watch } = useForm()
   const query = watch('query') || ''
+  const storeId = watch('storeId') || ''
 
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -34,17 +34,26 @@ function AvailableStock() {
       return items
     } else {
       return items.filter((item) =>
-        item.StockItem.name.toLowerCase().includes(query),
+        item.StockItemNew.name.toLowerCase().includes(query.toLowerCase()),
       )
     }
   }
+  const filterItems = (items, storeId) => {
+    if (!storeId || storeId === '') {
+      return items
+    } else {
+      return items.filter((item) => item.StockItemNew.storeId == storeId)
+    }
+  }
   let [items, setItems] = useState([])
-
+  const [stores, setStores] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const [style, setStyle] = useState({ display: 'none' })
   items = searchItems(items, query)
+  items = filterItems(items, storeId)
+
   useEffect(() => {
     const getItems = async () => {
       await instance
@@ -57,7 +66,18 @@ function AvailableStock() {
           toast.error(err.message)
         })
     }
+    const getStores = async () => {
+      await instance
+        .get('/stock/store/all')
+        .then((res) => {
+          setStores(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
     getItems()
+    getStores()
   }, [])
 
   return (
@@ -67,41 +87,42 @@ function AvailableStock() {
           <strong> Available stock </strong>
         </h2>
       </CCardHeader>
-      <div className="ms-3 d-flex gap-2">
-        <div className="col-4">
-          <CFormInput
-            className="form-control col px-2"
-            id="start"
-            name="start-date"
-            onChange={(e) => setStartDate(e.target.value)}
-            startDate={startDate}
-            type="date"
-          />
-        </div>
-        <div className="col-4">
-          <CFormInput
-            id="end"
-            name="end-date"
-            onChange={(e) => setEndDate(e.target.value)}
-            startDate={endDate}
-            type="date"
-          />
-        </div>
-      </div>
-      <CCardBody>
-        <div className="col-md-4">
-          <CFormLabel className="text-center">Search</CFormLabel>
-          <CFormInput
-            className="mb-1"
-            type="text"
-            name="stockItemName"
-            id="stockItemName"
-            size="md"
-            placeholder="by  item name ..."
-            {...register('query')}
-          />
-        </div>
 
+      <CCardBody>
+        <form className="d-flex justify-content-between">
+          <div className="col-md-4">
+            <CFormInput
+              className="mb-1"
+              type="text"
+              name="stockItemName"
+              id="stockItemName"
+              size="md"
+              placeholder="search ..."
+              {...register('query')}
+            />
+          </div>
+          <div className="col-md-4">
+            <CFormSelect
+              name="store"
+              id="store"
+              size="md"
+              className="mb-3"
+              aria-label="store"
+              {...register('storeId', { required: true })}
+            >
+              <option value="" selected={true}>
+                All
+              </option>
+              {stores.length !== 0
+                ? stores.map((store) => (
+                    <option value={store.id} className="text-capitalize">
+                      {store.name}
+                    </option>
+                  ))
+                : null}
+            </CFormSelect>
+          </div>
+        </form>
         <CTable bordered>
           <CTableHead>
             <CTableRow>
@@ -130,7 +151,9 @@ function AvailableStock() {
                         <CTableDataCell scope="row">
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
-                        <CTableDataCell>{item.StockItem.name}</CTableDataCell>
+                        <CTableDataCell>
+                          {item.StockItemNew ? item.StockItemNew.name : ''}
+                        </CTableDataCell>
                         <CTableDataCell>{item.quantity}</CTableDataCell>
                         <CTableDataCell
                           onMouseEnter={(e) => {

@@ -17,6 +17,7 @@ import { accountingRoutes } from './views/pages/Accounting/routes'
 import { dashboardRoutes } from './views/dashboard/routes'
 import { serviceRoutes } from './views/pages/services/routes'
 import { userRoutes } from './views/pages/users/routes'
+import { storeRoutes } from './views/pages/store/routes'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -39,6 +40,7 @@ const routes = [
   ...tableRoutes,
   ...waiterRoutes,
   ...userRoutes,
+  ...storeRoutes,
 ]
 
 export default routes

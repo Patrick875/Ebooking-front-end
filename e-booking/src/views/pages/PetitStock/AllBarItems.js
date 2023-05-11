@@ -112,7 +112,7 @@ function AllBarItems() {
                     return (
                       <CTableRow key={item.id}>
                         <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                        <CTableDataCell>{`${item.StockItem.name}`}</CTableDataCell>
+                        <CTableDataCell>{`${item.StockItemNew.name}`}</CTableDataCell>
                         <CTableDataCell>{`${item.quantinty}`}</CTableDataCell>
                       </CTableRow>
                     )

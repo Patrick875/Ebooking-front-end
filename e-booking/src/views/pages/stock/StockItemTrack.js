@@ -38,7 +38,7 @@ function StockReportTable(props) {
             <CTableHeaderCell scope="col"> DATE </CTableHeaderCell>
             <CTableHeaderCell scope="col"> ACTION </CTableHeaderCell>
             <CTableHeaderCell scope="col"> PREV QTY </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> NEW QTY </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> BALANCE </CTableHeaderCell>
             <CTableHeaderCell scope="col"> U.P </CTableHeaderCell>
             <CTableHeaderCell scope="col"> T.P</CTableHeaderCell>
           </CTableRow>
@@ -62,13 +62,15 @@ function StockReportTable(props) {
                     {new Date(item.date).toLocaleDateString()}
                   </CTableDataCell>
                   <CTableDataCell>
-                    {item && item.status === 'DEFAULT' ? 'ADDED' : item.status}
+                    {item && item.status === 'DEFAULT'
+                      ? `ADDED WITH ${Math.abs(Number(item.newQuantity))}`
+                      : item.status + `  ${Math.abs(Number(item.newQuantity))}`}
                   </CTableDataCell>
                   <CTableDataCell>{item.preQuantity}</CTableDataCell>
-                  <CTableDataCell>{item.newQuantity}</CTableDataCell>
+                  <CTableDataCell>{item.balance}</CTableDataCell>
                   <CTableDataCell>{item.price}</CTableDataCell>
                   <CTableDataCell>
-                    {Number(item.price * item.newQuantity).toLocaleString()}
+                    {Number(item.price * item.balance).toLocaleString()}
                   </CTableDataCell>
                 </CTableRow>
               ))
@@ -125,7 +127,7 @@ const StockItemTrack = React.forwardRef((props, ref) => {
         await instance
           .get(`/stock/track/item`, {
             params: {
-              item: item.StockItem.id,
+              item: item.StockItemNew.id,
               date_from: startDate,
               date_to: endDate,
             },
@@ -156,12 +158,12 @@ const StockItemTrack = React.forwardRef((props, ref) => {
               {time === 'all-time' ? (
                 <strong>
                   {' '}
-                  All time report for {item ? item.StockItem.name : ''}{' '}
+                  All time report for {item ? item.StockItemNew.name : ''}{' '}
                 </strong>
               ) : (
                 <strong>
                   {' '}
-                  Stock report of {item ? item.StockItem.name : ''} from{' '}
+                  Stock report of {item ? item.StockItemNew.name : ''} from{' '}
                   {startDate ? startDate.toLocaleDateString() : ''} to{' '}
                   {endDate ? endDate.toLocaleDateString() : ''}{' '}
                 </strong>
@@ -213,9 +215,11 @@ const StockItemTrack = React.forwardRef((props, ref) => {
                   documentTitle={
                     time === 'all-time'
                       ? `STOCK REPORT OF ${
-                          item && item.StockItem.name
+                          item && item.StockItemNew.name
                         } FOR ALL TIME`
-                      : `STOCK REPORT OF ${item && item.StockItem.name} FROM ${
+                      : `STOCK REPORT OF ${
+                          item && item.StockItemNew.name
+                        } FROM ${
                           startDate ? startDate.toLocaleDateString() : ''
                         } to ${endDate ? endDate.toLocaleDateString() : ''}`
                   }

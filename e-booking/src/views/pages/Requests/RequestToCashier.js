@@ -23,6 +23,8 @@ import PurchaseOrder from '../stock/PurchaseOrder'
 import { instance } from 'src/API/AxiosInstance'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 import { units } from 'src/utils/constants'
+import BackButton from 'src/components/Navigating/BackButton'
+import { useSelector } from 'react-redux'
 
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -30,8 +32,8 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   const { register, getValues, watch, reset } = useForm()
   const quantity = watch('quantity')
   const price = watch('price')
-
-  const [stockItems, setStockItems] = useState([])
+  const [stores, setStores] = useState([])
+  let [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
   let items = stockItems
   const [item, setItem] = useState(null)
@@ -39,7 +41,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
-
+  const store = useSelector((state) => state.selection.selectedStore)
   const createPurchaseOrder = async (data) => {
     await instance
       .post('/purchase/order/add', data)
@@ -51,6 +53,10 @@ const RequestToCashier = React.forwardRef((props, ref) => {
       })
   }
 
+  stockItems =
+    store && stockItems.length !== 0
+      ? stockItems.filter((item) => item.storeId === store.id)
+      : stockItems
   const dontAdd =
     !quantity ||
     quantity === '' ||
@@ -83,18 +89,30 @@ const RequestToCashier = React.forwardRef((props, ref) => {
           toast.error(err.message)
         })
     }
+    const getAllStores = async () => {
+      await instance
+        .get('/stock/store/all')
+        .then((res) => {
+          setStores(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
 
     getStockItems()
+    getAllStores()
   }, [])
   return (
     <div>
+      <BackButton />
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
               <div className="d-flex justify-content-between">
                 <h3>
-                  <strong> Stock to Cashier request </strong>
+                  <strong>Create Purchase order </strong>
                 </h3>
                 <CButton
                   component="input"
@@ -128,6 +146,29 @@ const RequestToCashier = React.forwardRef((props, ref) => {
               <CCardBody>
                 <CForm name="roomClassAddFrm" encType="multipart/form">
                   <CRow>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="store"> Store </CFormLabel>
+                      <CFormSelect
+                        name="store"
+                        id="store"
+                        size="md"
+                        disabled={store ? true : false}
+                        className="mb-3"
+                        aria-label="store"
+                        {...register('storeId', { required: true })}
+                      >
+                        {stores && stores.length !== 0
+                          ? stores.map((el) => (
+                              <option
+                                value={el.id}
+                                selected={store ? store.id === el.id : false}
+                              >
+                                {el.name}
+                              </option>
+                            ))
+                          : null}
+                      </CFormSelect>
+                    </CCol>
                     <CCol md={6}>
                       <div className="d-flex justify-content-between">
                         <CFormLabel htmlFor="name"> Item name </CFormLabel>
@@ -193,6 +234,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                   </CRow>
                   <CCol xs={12}>
                     <CButton
+                      className="my-2"
                       component="input"
                       value="Add item"
                       disabled={dontAdd}

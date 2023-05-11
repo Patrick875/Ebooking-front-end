@@ -50,9 +50,9 @@ function AllBarRequest() {
   return (
     <div>
       <CCardHeader>
-        <div className="d-flex ">
-          <BackButton />
-          <h2 className="col-md-8 text-center">
+        <BackButton />
+        <div className="d-flex">
+          <h2 className="col text-center">
             <strong>
               {' '}
               All requests from {petitStock ? petitStock.name : ''} to stock

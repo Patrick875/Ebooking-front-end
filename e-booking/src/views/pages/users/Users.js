@@ -64,8 +64,8 @@ const Users = () => {
   const searchUsers = (users, query) => {
     if (query && query !== '') {
       return users.filter((user) =>
-        user.firstName.toLowerCase().includes(query) ||
-        user.lastName.toLowerCase().includes(query)
+        user.firstName.toLowerCase().includes(query.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(query.toLowerCase())
           ? user
           : null,
       )

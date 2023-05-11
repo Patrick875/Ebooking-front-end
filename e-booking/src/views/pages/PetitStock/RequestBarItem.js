@@ -85,7 +85,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
         .get('/stock/item/balance')
         .then((res) => {
           const items = res.data.data.map((item) => ({
-            name: item.StockItem.name,
+            name: item.StockItemNew.name,
             quantity: item.quantity,
             price: item.price,
             itemValueId: item.id,

@@ -4,6 +4,7 @@ const initialState = {
   selected: {},
   selectedPetitStock: {},
   selectedStockItem: {},
+  selectedStore: {},
 }
 const selectionReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -13,6 +14,8 @@ const selectionReducer = (state = initialState, { type, payload }) => {
       return { ...state, selectedPetitStock: payload }
     case selectActionTypes.SELECT_STOCK_ITEM:
       return { ...state, selectedStockItem: payload }
+    case selectActionTypes.SELECT_STORE:
+      return { ...state, selectedStore: payload }
     default:
       return { ...state }
   }

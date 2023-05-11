@@ -46,8 +46,8 @@ const Request = (props, ref) => {
               StockPurchaseOrderDetails.length !== 0
                 ? StockPurchaseOrderDetails.map((order, i) => (
                     <CTableRow key={i}>
-                      <CTableDataCell>{order.StockItem.name}</CTableDataCell>
-                      <CTableDataCell></CTableDataCell>
+                      <CTableDataCell>{order.StockItemNew.name}</CTableDataCell>
+                      <CTableDataCell>{order.unit}</CTableDataCell>
                       <CTableDataCell>{order.requestQuantity}</CTableDataCell>
                       <CTableDataCell>{order.unitPrice}</CTableDataCell>
                       <CTableDataCell>

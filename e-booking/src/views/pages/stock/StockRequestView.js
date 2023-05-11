@@ -46,7 +46,7 @@ const Request = (props, ref) => {
                 ? stockOrderDetails.map((order, i) => (
                     <CTableRow key={i}>
                       <CTableDataCell>
-                        {order.StockItemValue.StockItem.name}
+                        {order.StockItemValue.StockItemNew.name}
                       </CTableDataCell>
                       <CTableDataCell>{order.quantity}</CTableDataCell>
                       <CTableDataCell>

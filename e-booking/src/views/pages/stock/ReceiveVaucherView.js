@@ -47,7 +47,7 @@ const ReceiveVaucher = (props) => {
                 ? vaucher.StockPurchaseOrder['StockPurchaseOrderDetails'].map(
                     (order, i) => (
                       <CTableRow key={i}>
-                        <CTableDataCell>{order.StockItem.name}</CTableDataCell>
+                        <CTableDataCell>{order.StockItemNew.name}</CTableDataCell>
                         <CTableDataCell></CTableDataCell>
                         <CTableDataCell>{order.requestQuantity}</CTableDataCell>
                         <CTableDataCell>{order.unitPrice}</CTableDataCell>
@@ -86,7 +86,7 @@ const ReceiveVaucher = (props) => {
               {vaucher && vaucher.StockReceiveVoucherDetails.length !== 0
                 ? vaucher.StockReceiveVoucherDetails.map((received, i) => (
                     <CTableRow key={i}>
-                      <CTableDataCell>{received.StockItem.name}</CTableDataCell>
+                      <CTableDataCell>{received.StockItemNew.name}</CTableDataCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>
                         {received.receivedQuantity}

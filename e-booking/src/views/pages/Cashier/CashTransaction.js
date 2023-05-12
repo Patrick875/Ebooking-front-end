@@ -97,6 +97,7 @@ const CashTransaction = () => {
                   <CFormInput
                     name="amount"
                     type="number"
+                    min={0}
                     id="amount"
                     {...register('amount')}
                   />

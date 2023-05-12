@@ -87,6 +87,7 @@ const CreatePackageModal = (props) => {
               <CFormLabel htmlFor="price"> Price in RWF</CFormLabel>
               <CFormInput
                 type="number"
+                min={0}
                 name="price"
                 id="price"
                 placeholder="  RWF"

@@ -202,6 +202,7 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
@@ -214,6 +215,7 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="times"> times </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="times"
                         id="times"
                         placeholder=".. "
@@ -259,6 +261,7 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="price"
                         id="price"
                         placeholder="item price in RWF"

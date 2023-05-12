@@ -13,6 +13,8 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 function HallEdit() {
   const selectedHall = useSelector((state) => state.selection.selected) || {}
@@ -20,8 +22,16 @@ function HallEdit() {
     defaultValues: { ...selectedHall },
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data)
+    await instance
+      .put('/halls/update', data)
+      .then(() => {
+        toast.success('Hall updated')
+      })
+      .catch(() => {
+        toast.error('error updating hall')
+      })
     reset()
     //roomClass.push(formData);
   }

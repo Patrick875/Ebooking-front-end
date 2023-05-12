@@ -96,8 +96,8 @@ const ReservationAdd = (props) => {
 
   RoomClasses =
     RoomClasses && RoomClasses.length !== 0 && rooms && rooms.length !== 0
-      ? RoomClasses.map((id, name) => {
-          return { id: id, name: name }
+      ? RoomClasses.map(({ id, name, price }) => {
+          return { id: id, name: name, price: price }
         })
       : RoomClasses
   props = { ...props }
@@ -202,6 +202,7 @@ const ReservationAdd = (props) => {
         .get('/roomclass/all')
         .then((res) => {
           setRoomClasses(res.data.data)
+          console.log(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -214,6 +215,7 @@ const ReservationAdd = (props) => {
     getCustomers()
   }, [reload])
 
+  console.log('classes', RoomClasses)
   return (
     <React.Fragment>
       <CreateCustomerModal
@@ -279,32 +281,38 @@ const ReservationAdd = (props) => {
                       </CFormSelect>
                     </CCol>
 
-                    <CCol md={6} disabled={true}>
-                      <CFormLabel htmlFor="service"> Service </CFormLabel>
+                    {type &&
+                    type === 'room' &&
+                    customer &&
+                    customer.length !== 0 &&
+                    customer[0].customerType === 'company' ? null : (
+                      <CCol md={6} disabled={true}>
+                        <CFormLabel htmlFor="service"> Service </CFormLabel>
 
-                      {type && type === 'room' ? (
-                        <Typeahead
-                          id="basic-typeahead-single"
-                          labelKey="name"
-                          filterBy={['name']}
-                          onChange={setService}
-                          options={rooms}
-                          placeholder="service  ..."
-                          selected={service}
-                          {...props}
-                        />
-                      ) : (
-                        <Typeahead
-                          id="basic-typeahead-single"
-                          labelKey="name"
-                          filterBy={['name']}
-                          onChange={setService}
-                          options={all}
-                          placeholder="service  ..."
-                          selected={service}
-                        />
-                      )}
-                    </CCol>
+                        {type && type === 'room' ? (
+                          <Typeahead
+                            id="basic-typeahead-single"
+                            labelKey="name"
+                            filterBy={['name']}
+                            onChange={setService}
+                            options={rooms}
+                            placeholder="service  ..."
+                            selected={service}
+                            {...props}
+                          />
+                        ) : (
+                          <Typeahead
+                            id="basic-typeahead-single"
+                            labelKey="name"
+                            filterBy={['name']}
+                            onChange={setService}
+                            options={all}
+                            placeholder="service  ..."
+                            selected={service}
+                          />
+                        )}
+                      </CCol>
+                    )}
 
                     <CCol md={6} className="d-flex flex-col ">
                       <div className="col-4 mx-2">
@@ -416,13 +424,15 @@ const ReservationAdd = (props) => {
                     ) : null}
 
                     {customer &&
+                    type &&
+                    type !== 'room' &&
                     customer.length !== 0 &&
                     customer[0].customerType === 'company' ? (
                       <div className="row my-2 ">
                         <div className="my-2">
                           <CFormLabel
                             htmlFor="additionalInfo"
-                            className="fw-bolder "
+                            className="fw-bolder text-center"
                           >
                             Booking for company
                           </CFormLabel>
@@ -449,33 +459,33 @@ const ReservationAdd = (props) => {
                     type === 'room'
                       ? RoomClasses && RoomClasses.length !== 0
                         ? RoomClasses.map((roomClass) => (
-                            <CCol>
-                              <CFormLabel className="fw-bold pe-3">
-                                {roomClass.name +
-                                  ' rooms at ' +
-                                  roomClass.price +
-                                  'USD'}
-                              </CFormLabel>
-                              <CFormCheck
-                                className=""
-                                id="room class 1 roooms "
-                                value={roomClass.name}
-                                {...register('roomClass')}
-                              />
-                              <p>
-                                Number of available rooms <span></span>
-                              </p>
-                              {roomK && roomK.includes(roomClass.name) ? (
-                                <CFormInput
-                                  type="number"
-                                  id="number of people"
-                                  label="Number of people"
-                                  {...register(
-                                    `details.${roomClass.name}.people`,
-                                  )}
+                            <CRow className="d-flex">
+                              <CCol md={6}>
+                                <CFormLabel className="fw-bold pe-3">
+                                  {roomClass.name +
+                                    ' rooms at ' +
+                                    roomClass.price +
+                                    'USD'}
+                                </CFormLabel>
+                                <CFormCheck
+                                  className=""
+                                  id="room class 1 roooms "
+                                  value={roomClass.name}
+                                  {...register('roomClass')}
                                 />
-                              ) : null}
-                            </CCol>
+                                {roomK && roomK.includes(roomClass.name) ? (
+                                  <CFormInput
+                                    type="number"
+                                    min={0}
+                                    id="number of people"
+                                    label="Number of people"
+                                    {...register(
+                                      `details.${roomClass.name}.people`,
+                                    )}
+                                  />
+                                ) : null}
+                              </CCol>
+                            </CRow>
                           ))
                         : null
                       : null}

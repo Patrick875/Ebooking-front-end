@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 import { IoCreateOutline } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -27,6 +28,7 @@ function ProformaInvoice() {
   const query = watch('query') || ''
 
   let [invoices, setInvoices] = useState([])
+
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
@@ -40,13 +42,14 @@ function ProformaInvoice() {
       invoice.proformaGenerated.toLowerCase().includes(query.toLowerCase()),
     )
   }
+
   useEffect(() => {
     const getAllInvoice = async () => {
       await instance.get('/proforma/all').then((res) => {
         setInvoices(res.data.data)
-        console.log(res.data.data)
       })
     }
+
     getAllInvoice()
   }, [])
 

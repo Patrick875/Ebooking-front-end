@@ -31,7 +31,7 @@ function AllStores(props) {
               }`}
             >
               <div className="m-2 ">
-                <FaWarehouse size="sm" className="text-primary" />
+                <FaWarehouse size="sm" />
               </div>
               <p className="mt-2 text-capitalize ">{item.name}</p>
 

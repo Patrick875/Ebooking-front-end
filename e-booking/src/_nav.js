@@ -1,21 +1,3 @@
-import React from 'react'
-import CIcon from '@coreui/icons-react'
-import { GiTakeMyMoney } from 'react-icons/gi'
-import { AiFillDollarCircle } from 'react-icons/ai'
-import { MdOutlineInsertDriveFile } from 'react-icons/md'
-import {
-  cilBook,
-  cilHouse,
-  cilPeople,
-  cilSatelite,
-  cilSave,
-  cilSpeedometer,
-  cilStorage,
-  cilUser,
-  cilFastfood,
-  cilBasket,
-} from '@coreui/icons'
-import { CNavGroup, CNavItem } from '@coreui/react'
 import { DashboardNav } from './views/dashboard/nav'
 import { CashierNav } from './views/pages/Cashier/nav'
 import { CustomerNav } from './views/pages/Customer/nav'

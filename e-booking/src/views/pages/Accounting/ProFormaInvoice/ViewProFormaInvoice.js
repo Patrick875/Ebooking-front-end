@@ -11,11 +11,11 @@ import {
 } from '@coreui/react'
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
-
 import BackButton from 'src/components/Navigating/BackButton'
-import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
-import InvoiceHeader from '../../Printing/InvoiceHeader'
+import InvoiceFooter from '../../Printing/InvoiceFooter'
+import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
+import ClientDetails from '../../Printing/ClientDetails'
 
 const Item = (props, ref) => {
   const { request, proformaDetails } = props
@@ -75,12 +75,10 @@ const Item = (props, ref) => {
 const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const request = useSelector((state) => state.selection.selected)
-  console.log('req', request)
   let proformaDetails
   if (request && request.ProformaDetails) {
     proformaDetails = request.ProformaDetails
   }
-
   return (
     <CCard>
       <CCardHeader className="d-flex justify-content-between">
@@ -96,13 +94,12 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
           ) : null}
         </div>
       </CCardHeader>
-
       <div style={{ display: 'none' }}>
-        <div ref={ref || componentRef}>
-          <InvoiceHeader />
+        <PrintTemplateInvoice ref={ref || componentRef}>
+          <ClientDetails details={proformaDetails} request={request} />
           <Item request={request} proformaDetails={proformaDetails} />
-          <PrintFooterNoSignatures />
-        </div>
+          <InvoiceFooter />
+        </PrintTemplateInvoice>
       </div>
 
       <Item request={request} proformaDetails={proformaDetails} />

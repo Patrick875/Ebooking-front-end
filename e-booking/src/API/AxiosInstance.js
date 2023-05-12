@@ -21,7 +21,6 @@ instance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    console.log({ request: config })
     return config
   },
   (error) => {
@@ -42,18 +41,6 @@ function getTokenPromise() {
   return tokenPromise
 }
 
-//export { axiosInstance, setToken, getTokenPromise }
-
-// instance.interceptors.request.use(
-//   async (config) => {
-//     //const accessToken= await axios.get('/')
-//     console.log(config)
-//     return config
-//   },
-//   (error) => {
-//     return Promise.reject(error)
-//   },
-// )
 instance.interceptors.response.use(
   (response) => {
     return response

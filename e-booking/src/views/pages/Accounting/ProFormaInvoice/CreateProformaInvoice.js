@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -22,16 +22,20 @@ import InvoiceList from '../Invoice/InvoiceList'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
+import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
+import ClientDetails from '../../Printing/ClientDetails'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const documentTitle = 'Pro forma invoice'
   const { register, getValues, watch, reset } = useForm()
   const quantity = watch('quantity')
-  const price = watch('price')
-  const name = watch('name')
   const [visible, setVisible] = useState(false)
   let [requestItems, setRequestItems] = useState([])
+  let [products, setProducts] = useState([])
+  let [services, setServices] = useState([])
+  let [service, setService] = useState([])
+  let request = {}
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
@@ -48,20 +52,18 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   }
 
   const dontAdd =
-    !quantity ||
-    quantity === '' ||
-    !name ||
-    name === '' ||
-    !price ||
-    price === ''
+    !quantity || quantity === '' || !service || service.length === 0
       ? true
       : false
+
   const onAdd = (data) => {
+    data.name = service[0].name
+    data.price = service[0].price
     setRequestItems([...requestItems, data])
+
     reset({ name: '', quantity: '', price: '', pax: '' })
   }
   const submitRequest = () => {
-    console.log('reqs', requestItems)
     let data
     const outsideData =
       requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
@@ -75,6 +77,64 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
     createInvoice(data)
     reset()
   }
+
+  let presentationProducts = []
+  products =
+    products && products.length !== 0
+      ? products
+          .filter((product) => product && product.Packages.length !== 0)
+          .map((el) => {
+            let newProducts = el.Packages.map((item) => ({
+              name: item.name + ' of ' + el.name,
+              price: item.ProductPackage.price,
+            }))
+            presentationProducts.push(...newProducts)
+            return el
+          })
+      : products
+  let allProductsAndServices = [...presentationProducts, ...services]
+  if (requestItems.length !== 0) {
+    request = { ...request, createdAt: new Date() }
+  }
+  console.log(request)
+  props = { ...props }
+  props.renderMenuItemChildren = (option, { text }) => (
+    <div>
+      <Highlighter search={text}>
+        {option.name + ' : ' + option.price}
+      </Highlighter>
+    </div>
+  )
+
+  useEffect(() => {
+    const getAllProducts = async () => {
+      await instance
+        .get('/products/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setProducts(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    const getAllServices = async () => {
+      await instance
+        .get('/services/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setServices(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+
+    getAllServices()
+    getAllProducts()
+  }, [])
 
   return (
     <div>
@@ -182,14 +242,15 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                     <CCol md={6}>
                       <div>
                         <CFormLabel htmlFor="itemName"> Item name </CFormLabel>
-                        <CFormInput
-                          type="text"
-                          name="itemName"
-                          id="itemName"
-                          placeholder="...item "
-                          size="md"
-                          required
-                          {...register('name')}
+                        <Typeahead
+                          id="basic-typeahead-single"
+                          labelKey="name"
+                          filterBy={['name']}
+                          onChange={setService}
+                          options={allProductsAndServices}
+                          placeholder="item  ..."
+                          selected={service}
+                          {...props}
                         />
                       </div>
                     </CCol>
@@ -215,6 +276,9 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         id="price"
                         placeholder="item price in RWF"
                         size="md"
+                        value={
+                          service && service.length !== 0 ? service[0].price : 0
+                        }
                         required
                         {...register('price')}
                       />
@@ -255,6 +319,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                 ref={ref || componentRef}
                 documentTitle={documentTitle}
               >
+                <ClientDetails details={requestItems} />
                 <InvoiceList
                   documentTitle={documentTitle}
                   requestItems={requestItems}

@@ -27,7 +27,7 @@ export const login = function (payload) {
         })
         toast.success('User Logged in')
         setToken(res1.data.accessToken)
-        Cookies.set('token', res1.data.accessToken, { expires: 2 * (1 / 24) })
+        Cookies.set('token', res1.data.accessToken, { expires: 24 * (1 / 24) })
       })
       .catch((err) => {
         if (err && err.response && err.response.status === 401) {

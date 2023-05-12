@@ -16,6 +16,7 @@ import BackButton from 'src/components/Navigating/BackButton'
 import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
+import ClientDetails from '../../Printing/ClientDetails'
 
 const Item = (props, ref) => {
   const { request, invoiceDetails } = props
@@ -100,6 +101,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
           <InvoiceHeader />
+          <ClientDetails details={invoiceDetails} request={request} />
           <Item request={request} invoiceDetails={invoiceDetails} />
           <PrintFooterNoSignatures />
         </div>

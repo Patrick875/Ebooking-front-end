@@ -2,7 +2,6 @@ import {
   CCardBody,
   CCardHeader,
   CFormInput,
-  CFormLabel,
   CFormSelect,
   CTable,
   CTableBody,
@@ -13,6 +12,7 @@ import {
 } from '@coreui/react'
 
 import React, { useEffect, useState } from 'react'
+import { CSVLink } from 'react-csv'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
@@ -85,6 +85,16 @@ function StockItems() {
           <strong> Stock items </strong>
         </h2>
       </CCardHeader>
+      <div className="d-flex justify-content-end">
+        <CSVLink
+          data={items}
+          headers={[{ label: 'Name', key: 'name' }]}
+          filename="All-stock-item.csv"
+          className="btn btn-primary "
+        >
+          Download in excell
+        </CSVLink>
+      </div>
       <CCardBody>
         <form className="d-flex justify-content-between">
           <div className="col-md-4">

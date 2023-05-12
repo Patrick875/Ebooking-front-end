@@ -191,6 +191,7 @@ const RequestSaunaItem = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
@@ -216,6 +217,7 @@ const RequestSaunaItem = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="price"
                         id="price"
                         placeholder="1000"

@@ -169,6 +169,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         <CFormLabel htmlFor="pax"> Number of PAX </CFormLabel>
                         <CFormInput
                           type="number"
+                          min={0}
                           name="pax"
                           id="pax"
                           placeholder="...pax"
@@ -196,6 +197,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
@@ -208,6 +210,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="price"
                         id="price"
                         placeholder="item price in RWF"

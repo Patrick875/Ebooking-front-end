@@ -72,6 +72,7 @@ const RoomClassAdd = () => {
                   <CFormLabel htmlFor="price"> Class Price in USD </CFormLabel>
                   <CFormInput
                     type="number"
+                    min={0}
                     name="price"
                     id="price"
                     placeholder="price in USD"

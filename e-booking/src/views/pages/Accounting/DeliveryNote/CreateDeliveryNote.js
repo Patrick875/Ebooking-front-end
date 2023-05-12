@@ -189,6 +189,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                       <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
                       <CFormInput
                         type="number"
+                        min={0}
                         name="quantity"
                         id="quantity"
                         placeholder="50  "

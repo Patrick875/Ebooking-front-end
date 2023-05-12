@@ -458,6 +458,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                               <CFormInput
                                 key={`result${index + 1}`}
                                 type="number"
+                                min={0}
                                 {...register(`item${index + 1}_quantity`)}
                                 value={results[index]}
                                 onClick={() => {
@@ -513,6 +514,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                         <CFormInput
                           key={`result${index + 1}`}
                           type="number"
+                          min={0}
                           {...register(`item${index + 1}_quantity`)}
                           value={results[index]}
                           onClick={() => {

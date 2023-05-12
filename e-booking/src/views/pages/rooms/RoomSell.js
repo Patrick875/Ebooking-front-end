@@ -82,6 +82,7 @@ export default function RoomSell() {
                   <CFormInput
                     className="mb-1"
                     type="Number"
+                    min={0}
                     name="quantity"
                     id="title"
                     size="md"

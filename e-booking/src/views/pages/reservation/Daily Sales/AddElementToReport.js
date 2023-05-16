@@ -46,12 +46,7 @@ const AddElementToReport = (props) => {
                         {index + 1}{' '}
                       </CTableHeaderCell>
                       <CTableDataCell> {added.title} </CTableDataCell>
-                      <CTableDataCell>
-                        {' '}
-                        {user && user.length !== 0
-                          ? user[0].firstName + ' ' + user[0].lastName
-                          : null}{' '}
-                      </CTableDataCell>
+                      <CTableDataCell>{added.carriedBy}</CTableDataCell>
                       <CTableDataCell>{added.paymentMethod} </CTableDataCell>
                       <CTableDataCell> {added.currency} </CTableDataCell>
                       <CTableDataCell>

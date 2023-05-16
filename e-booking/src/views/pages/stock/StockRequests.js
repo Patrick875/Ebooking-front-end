@@ -56,6 +56,7 @@ function AllStockRequests() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Requested By</CTableHeaderCell>
               <CTableHeaderCell scope="col">From</CTableHeaderCell>
               <CTableHeaderCell scope="col">Approval</CTableHeaderCell>
               <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
@@ -88,6 +89,9 @@ function AllStockRequests() {
                         </CTableHeaderCell>
                         <CTableDataCell>
                           {new Date(item.date).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.User.firstName + ' ' + item.User.lastName}
                         </CTableDataCell>
                         <CTableDataCell>{item.PetitStock.name}</CTableDataCell>
                         <CTableDataCell>

@@ -33,7 +33,6 @@ function Customers() {
       await instance
         .get('/customers/all')
         .then((res) => {
-          console.log('les customers', res.data.data)
           setCustomers(res.data.data)
         })
         .catch((err) => {

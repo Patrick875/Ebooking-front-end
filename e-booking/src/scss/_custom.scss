@@ -19,12 +19,27 @@
     display: flex;
     justify-items: center;
   }
+
+
+
+  
   
 }
 
 
 
 @media print{
+
+
+  /* Show all columns in print */
+
+  .ag-theme-alpine .ag-header-cell,
+  .ag-theme-alpine .ag-cell {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+
   .client-receipt{
   max-width: 216px !important;
    display:flex;

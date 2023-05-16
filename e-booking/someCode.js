@@ -1,118 +1,59 @@
 import React, { useState } from 'react'
+import { AgGridReact } from 'ag-grid-react'
+import 'ag-grid-community/dist/styles/ag-grid.css'
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 
-const Pagination = ({ data, RenderComponent, pageLimit, dataLimit }) => {
-  const [pages] = useState(Math.ceil(data.length / dataLimit))
-  const [currentPage, setCurrentPage] = useState(1)
+const AgGridTable = () => {
+  const [rowData, setRowData] = useState([
+    { make: 'Toyota', model: 'Celica', price: 35000 },
+    { make: 'Ford', model: 'Mondeo', price: 32000 },
+    { make: 'Porsche', model: 'Boxter', price: 72000 },
+  ])
 
-  const goToNextPage = () => {
-    setCurrentPage((page) => page + 1)
-  }
+  const [columnDefs] = useState([
+    {
+      headerName: 'Make',
+      field: 'make',
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      headerName: 'Model',
+      field: 'model',
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      headerName: 'Price',
+      field: 'price',
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+  ])
 
-  const goToPreviousPage = () => {
-    setCurrentPage((page) => page - 1)
-  }
-
-  const changePage = (event) => {
-    const pageNumber = Number(event.target.textContent)
-    setCurrentPage(pageNumber)
-  }
-
-  const getPaginatedData = () => {
-    const startIndex = currentPage * dataLimit - dataLimit
-    const endIndex = startIndex + dataLimit
-    return data.slice(startIndex, endIndex)
-  }
-
-  const getPaginationGroup = () => {
-    const start = Math.floor((currentPage - 1) / pageLimit) * pageLimit
-    return new Array(pageLimit).fill().map((_, idx) => start + idx + 1)
-  }
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  const handleLogin = () => {
-    setIsLoggedIn(true)
-  }
-
-  const handleLogout = () => {
-    setIsLoggedIn(false)
-  }
-
-  const isLoggedInRender = () => {
-    if (isLoggedIn) {
-      return (
-        <>
-          <button onClick={handleLogout}>Logout</button>
-          <RenderComponent data={getPaginatedData()} />
-        </>
-      )
-    } else {
-      return (
-        <>
-          <button onClick={handleLogin}>Login</button>
-        </>
-      )
-    }
+  const onGridReady = (params) => {
+    params.api.sizeColumnsToFit()
   }
 
   return (
-    <>
-      {isLoggedInRender()}
-      <div className="pagination">
-        <button
-          onClick={goToPreviousPage}
-          className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
-        >
-          prev
-        </button>
-
-        {getPaginationGroup().map((item, index) => (
-          <button
-            key={index}
-            onClick={changePage}
-            className={`paginationItem ${
-              currentPage === item ? 'active' : null
-            }`}
-          >
-            <span>{item}</span>
-          </button>
-        ))}
-
-        <button
-          onClick={goToNextPage}
-          className={`next ${currentPage === pages ? 'disabled' : ''}`}
-        >
-          next
-        </button>
-      </div>
-    </>
+    <div
+      className="ag-theme-alpine"
+      style={{ height: '400px', width: '600px' }}
+    >
+      <AgGridReact
+        rowData={rowData}
+        columnDefs={columnDefs}
+        onGridReady={onGridReady}
+        suppressCellSelection={true}
+        singleClickEdit={true}
+        rowSelection="multiple"
+        suppressRowClickSelection={true}
+      />
+    </div>
   )
 }
 
-export default Pagination
-
-
-
-
-import React from 'react';
-import Pagination from './Pagination';
-
-const ExampleComponent = () => {
-  const data = [...]; // your data goes here
-  const RenderComponent = ({ data }) => {
-    return (
-      <div>
-        {data.map((item) => (
-          <p key={item.id}>{item.text}</p>
-        ))}
-      </div>
-    );
-  };
-  return (
-    <div>
-      <Pagination data={data} RenderComponent={RenderComponent} pageLimit={5} dataLimit={10} />
-    </div>
-  );
-};
-
-export default
+export default AgGridTable

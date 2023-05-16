@@ -25,6 +25,7 @@ function SellsPending() {
         .get('/products/package/sells')
         .then((res) => {
           setSells(res.data.data)
+          console.log('these are pending services', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -83,6 +84,7 @@ function SellsPending() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Done by</CTableHeaderCell>
               <CTableHeaderCell scope="col">Product</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price</CTableHeaderCell>
               <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
@@ -97,6 +99,7 @@ function SellsPending() {
                     <CTableRow key={item.id}>
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                       <CTableDataCell>{`${item.petitStock.name}`}</CTableDataCell>
+                      <CTableDataCell>{`${item.user.firstName}  ${item.user.lastName} `}</CTableDataCell>
                       <CTableDataCell>
                         <div>
                           {item.petitStockSaleDetails.map((el, i) => (

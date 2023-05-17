@@ -15,7 +15,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 
 function HallServicesAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
@@ -24,7 +24,7 @@ function HallServicesAdd() {
     await instance
       .post('/hall/services/add', data)
       .then(() => {
-        toast.success('hall service create')
+        toast.success('hall service created')
       })
       .catch((err) => {
         toast.error(err.message)

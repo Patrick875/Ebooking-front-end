@@ -13,14 +13,27 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import Pagination from 'src/utils/Pagination'
+import { useSelector } from 'react-redux'
 
 const Services = () => {
   const [services, setServices] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
+  const user = useSelector((state) => state.auth.role)
+  const deleteService = async (id) => {
+    await instance
+      .delete(`/services/delete/${id}`)
+      .then(() => {
+        toast.success('service deleted successfuly')
+      })
+      .catch((err) => {
+        console.log(err)
+        toast.error('error deleting service')
+      })
+  }
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
   useEffect(() => {
     const services = async () => {
@@ -58,7 +71,9 @@ const Services = () => {
                     {' '}
                     Service Price{' '}
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
+                  {user !== 'admin' ? null : (
+                    <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
+                  )}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -81,11 +96,21 @@ const Services = () => {
                           </CTableHeaderCell>
                           <CTableDataCell> {service.name} </CTableDataCell>
                           <CTableDataCell> {service.price} </CTableDataCell>
-                          <CTableDataCell>
-                            <Link to="" className="btn btn-sm btn-warning">
-                              Edit
-                            </Link>
-                          </CTableDataCell>
+                          {user !== 'admin' ? null : (
+                            <CTableDataCell className="d-flex gap-2">
+                              <Link to="" className="btn btn-sm btn-warning">
+                                Edit
+                              </Link>
+                              <Link
+                                onClick={() => {
+                                  return deleteService(service.id)
+                                }}
+                                className="btn btn-sm btn-danger"
+                              >
+                                Delete
+                              </Link>
+                            </CTableDataCell>
+                          )}
                         </CTableRow>
                       ))
                   : null}

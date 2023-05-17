@@ -1,9 +1,9 @@
+
+import React, { useState, useRef } from 'react'
 import {
   CCard,
   CCardBody,
   CCardHeader,
-  CImage,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -11,7 +11,6 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintHeader from '../Printing/PrintHeader'

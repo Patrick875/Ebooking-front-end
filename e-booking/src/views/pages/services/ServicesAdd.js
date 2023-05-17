@@ -12,7 +12,6 @@ import {
   CRow,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
@@ -21,7 +20,6 @@ const ServiceAdd = () => {
   const [categories, setCategories] = useState([])
 
   const onSubmit = async (data) => {
-    console.log('this is service add data', data)
     await instance
       .post('/services/add', data)
       .then(() => {

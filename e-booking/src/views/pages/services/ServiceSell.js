@@ -27,7 +27,7 @@ function ServiceSell() {
       singleSelections && singleSelections.length !== 0
         ? singleSelections[0].id
         : null
-    data.name =
+    data.client_name =
       customer && customer.length !== 0
         ? customers.includes(customer[0])
           ? customer[0].names

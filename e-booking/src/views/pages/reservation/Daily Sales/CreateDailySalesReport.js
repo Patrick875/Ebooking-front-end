@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -23,65 +23,33 @@ import PrintHeader from '../../Printing/PrintHeader'
 import PrintDailyReport from '../../Printing/PrintDailyReport'
 import AddElementToReport from './AddElementToReport'
 
-function removeNullEmptyProperties(obj) {
-  const result = {}
-
-  for (let key in obj) {
-    if (obj[key] !== null && obj[key] !== '') {
-      result[key] = obj[key]
-    }
-  }
-
-  return result
-}
-
 const CreateDailySalesReport = React.forwardRef((props, ref) => {
   const { register, getValues, reset, watch } = useForm()
   const title = watch('title')
   const amount = watch('amount')
   const currency = watch('currency')
-  const user = watch('carriedBy')
-  let payment = watch('pay')
   const paymentMethod = watch('paymentMethod')
   const componentRef = useRef()
   let [reportItems, setReportItems] = useState([])
   const [visible, setVisible] = useState(false)
-
+  let [users, setUsers] = useState([])
+  const [user, setUser] = useState([])
   const dontAdd =
     !title ||
     title === '' ||
+    !amount ||
+    amount === '' ||
+    !currency ||
+    currency === '' ||
+    !paymentMethod ||
+    paymentMethod === '' ||
     !user ||
-    user === '' ||
-    Object.values(payment).every((value) => value === null || value === '')
+    user.length === 0
       ? true
       : false
   const onAdd = (data) => {
-    let newObjects = []
-    data = { ...data, carriedBy: user }
-    let payments = data.pay
-    if (
-      payments &&
-      Object.values(payments).every((value) => value === null || value === '')
-    ) {
-      dontAdd = true
-    } else if (
-      payments &&
-      !Object.values(payments).every((value) => value === null || value === '')
-    ) {
-      payments = removeNullEmptyProperties(payments)
-      delete data.pay
-      newObjects = Object.keys(payments).map((el) => {
-        return {
-          ...data,
-          paymentMethod: el.split('_')[0],
-          currency: el.split('_')[1],
-          amount: payments[el],
-        }
-      })
-    }
-
-    console.log('new datas', newObjects)
-    setReportItems([...reportItems, ...newObjects])
+    data = { ...data, carriedBy: user[0].id }
+    setReportItems([...reportItems, data])
     reset()
   }
 
@@ -94,9 +62,19 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
         toast.success('report successfuly submited')
       })
       .catch((err) => {
+        console.log(err)
         toast.error(err.response.message)
       })
   }
+
+  useEffect(() => {
+    const getAllUsers = async () => {
+      await instance.get('/users/all').then((res) => {
+        setUsers(res.data.users)
+      })
+    }
+    getAllUsers()
+  }, [])
 
   return (
     <div>
@@ -144,46 +122,34 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                       <div className="d-flex justify-content-between">
                         <CFormLabel htmlFor="name"> Designation </CFormLabel>
                       </div>
-                      <CFormSelect
-                        name="itemName"
-                        id="itemName"
+
+                      <CFormInput
+                        type="text"
+                        name="designation"
+                        id="designation"
+                        placeholder="item name  "
                         size="md"
-                        className="mb-3"
+                        required
                         {...register('title')}
-                      >
-                        <option value="MAIN-BAR[SALES]">MAIN-BAR[SALES]</option>
-                        <option value="ACCOMODATION[SALES]">
-                          ACCOMODATION[SALES]
-                        </option>
-                        <option value="HEALTH CLUB SALES">
-                          HEALTH CLUB SALES
-                        </option>
-                        <option value="RECEPTION SALES">RECEPTION SALES</option>
-                        <option value="WEDDING CEREMONY">
-                          WEDDING CEREMONY
-                        </option>
-                        <option value="RESERVATION SALES">
-                          RESERVATION SALES
-                        </option>
-                        <option value="RENTING">RENTING</option>
-                      </CFormSelect>
+                      />
                     </CCol>
                     <CCol md={6}>
                       <div className="d-flex justify-content-between">
-                        <CFormLabel htmlFor="user">Given by </CFormLabel>
+                        <CFormLabel htmlFor="user">From </CFormLabel>
                       </div>
-                      <CFormInput
-                        type="text"
-                        name="user"
-                        id="user"
-                        placeholder="..."
-                        size="md"
-                        required
-                        {...register('carriedBy')}
+
+                      <Typeahead
+                        id="basic-typeahead-single"
+                        filterBy={['firstName']}
+                        labelKey="firstName"
+                        onChange={setUser}
+                        options={users}
+                        placeholder="user name ..."
+                        selected={user}
                       />
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="cash_RWF"> Cash (RWF) </CFormLabel>
+                      <CFormLabel htmlFor="name"> Amount </CFormLabel>
                       <CFormInput
                         type="text"
                         name="amount"
@@ -191,56 +157,46 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         placeholder="50  "
                         size="md"
                         required
-                        {...register('pay.Cash_RWF')}
+                        {...register('amount')}
                       />
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="card_RWF"> Card (RWF) </CFormLabel>
-                      <CFormInput
-                        type="text"
-                        name="amount"
-                        id="amount"
-                        placeholder="50  "
+                      <CFormLabel htmlFor="paymentMethod">
+                        {' '}
+                        Payment method{' '}
+                      </CFormLabel>
+                      <CFormSelect
+                        name="paymentMethod"
+                        id="paymentMethod"
                         size="md"
-                        required
-                        {...register('pay.Card_RWF')}
-                      />
+                        className="mb-3"
+                        {...register('paymentMethod')}
+                      >
+                        <option value="Cash">Cash</option>
+                        <option value="Mobile Money">Mobile Money</option>
+                        <option value="Credit card">Credit card</option>
+                        <option value="Credit">Credit</option>
+                        <option value="Cheque">Cheque</option>
+                      </CFormSelect>
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="cash_USD"> Cash (USD) </CFormLabel>
-                      <CFormInput
-                        type="text"
-                        name="amount"
-                        id="amount"
-                        placeholder="50  "
+                      <CFormLabel htmlFor="paymentCurrency">
+                        Currency
+                      </CFormLabel>
+                      <CFormSelect
+                        name="paymentCurrency"
+                        id="currency"
                         size="md"
-                        required
-                        {...register('pay.Cash_USD')}
-                      />
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="card_USD"> Card (USD) </CFormLabel>
-                      <CFormInput
-                        type="text"
-                        name="amount"
-                        id="amount"
-                        placeholder="50  "
-                        size="md"
-                        required
-                        {...register('pay.Card_USD')}
-                      />
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="MoMo"> MoMo </CFormLabel>
-                      <CFormInput
-                        type="text"
-                        name="amount"
-                        id="amount"
-                        placeholder="50  "
-                        size="md"
-                        required
-                        {...register('pay.MoMo_RWF')}
-                      />
+                        className="mb-3"
+                        defaultValue={'RWF'}
+                        {...register('currency')}
+                      >
+                        {Object.keys(currencies).map((curr, i) => (
+                          <option value={curr} key={i + 1}>
+                            {curr} :{currencies[curr]}{' '}
+                          </option>
+                        ))}
+                      </CFormSelect>
                     </CCol>
                   </CRow>
                   <CCol xs={12}>
@@ -323,42 +279,3 @@ export default CreateDailySalesReport
 //                           setOrder([])
 //                           return onAddItemToStock(receivedItems)
 //                         }}
-
-// <CCol md={6}>
-//                       <CFormLabel htmlFor="paymentMethod">
-//                         {' '}
-//                         Payment method{' '}
-//                       </CFormLabel>
-//                       <CFormSelect
-//                         name="paymentMethod"
-//                         id="paymentMethod"
-//                         size="md"
-//                         className="mb-3"
-//                         {...register('paymentMethod')}
-//                       >
-//                         <option value="Cash">Cash</option>
-//                         <option value="Mobile Money">Mobile Money</option>
-//                         <option value="Credit card">Credit card</option>
-//                         <option value="Credit">Credit</option>
-//                         <option value="Cheque">Cheque</option>
-//                       </CFormSelect>
-//                     </CCol>
-//                     <CCol md={6}>
-//                       <CFormLabel htmlFor="paymentCurrency">
-//                         Currency
-//                       </CFormLabel>
-//                       <CFormSelect
-//                         name="paymentCurrency"
-//                         id="currency"
-//                         size="md"
-//                         className="mb-3"
-//                         defaultValue={'RWF'}
-//                         {...register('currency')}
-//                       >
-//                         {Object.keys(currencies).map((curr, i) => (
-//                           <option value={curr} key={i + 1}>
-//                             {curr} :{currencies[curr]}{' '}
-//                           </option>
-//                         ))}
-//                       </CFormSelect>
-//                     </CCol>

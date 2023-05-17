@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react'
 import {
   CCard,
@@ -82,7 +83,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
     stockOrderDetails = request.PetitStockRequesitionDetails
   }
 
-  const approveStockOrder = async (quantity) => {
+  const approveStockOrder = async () => {
     await instance
       .post('petitstock/order/approve', { request: request.id })
       .then(() => {
@@ -126,11 +127,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
       </CCardHeader>
 
       <div style={{ display: 'none' }}>
-        <div ref={ref ? ref.current || componentRef : componentRef}>
+        <div ref={ref || componentRef}>
           <PrintHeader />
-          <div className="mx-2">
-            <Request request={request} stockOrderDetails={stockOrderDetails} />
-          </div>
+          <Request request={request} stockOrderDetails={stockOrderDetails} />
           <PrintFooterNoSignatures />
         </div>
       </div>

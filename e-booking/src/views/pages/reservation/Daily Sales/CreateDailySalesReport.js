@@ -94,6 +94,7 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
         toast.success('report successfuly submited')
       })
       .catch((err) => {
+        console.log('err', err)
         toast.error(err.response.message)
       })
   }

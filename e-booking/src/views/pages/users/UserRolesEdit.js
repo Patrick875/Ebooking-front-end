@@ -20,7 +20,7 @@ import _nav from 'src/_nav'
 function UserRolesEdit() {
   const { register, handleSubmit, watch, reset } = useForm()
   const userRoleObject = useSelector((state) => state.selection.selected.access)
-  const userRoleName = useSelector((state) => state.selection.selected.name)
+  const userRole = useSelector((state) => state.selection.selected)
   const userAccessFields = Object.keys(userRoleObject)
   let items = _nav
   const [loading, setLoading] = useState(false)
@@ -37,10 +37,7 @@ function UserRolesEdit() {
     ) || []
   itemsForAccess = itemsForAccess.filter(Boolean)
 
-  console.log('this is item for access array', itemsForAccess)
-
   const onSubmit = async (data) => {
-    console.log('data12', data)
     data.access = data.access.reduce((obj, e) => {
       obj[e] = data[e].permission ? data[e].permission : data[e]
       return obj
@@ -62,18 +59,18 @@ function UserRolesEdit() {
       }
     }
 
-    data = { name: data.name, access: data.access }
+    data = { id: userRole.id, name: data.name, access: data.access }
 
     setLoading(true)
-
+    console.log('cool', data)
     await instance
-      .post('/roles/add', data)
+      .put('/roles/update', { ...data })
       .then(() => {
-        toast.success('role created')
+        toast.success('user role updated')
         reset()
       })
       .catch(() => {
-        toast.error('role not created')
+        toast.error('user role not updated')
         reset()
       })
       .finally(() => {
@@ -104,7 +101,7 @@ function UserRolesEdit() {
                 name="role"
                 id="role"
                 size="md"
-                defaultValue={userRoleName}
+                defaultValue={userRole.name}
                 required
                 {...register('name')}
               />

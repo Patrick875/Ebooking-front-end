@@ -186,7 +186,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                       </div>
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
+                      <CFormLabel htmlFor="quantity"> Times </CFormLabel>
                       <CFormInput
                         type="number"
                         min={0}

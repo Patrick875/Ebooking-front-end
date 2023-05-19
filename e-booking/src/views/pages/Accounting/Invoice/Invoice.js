@@ -3,6 +3,7 @@ import {
   CCol,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CRow,
   CTable,
   CTableBody,
@@ -14,6 +15,8 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { IoCreateOutline } from 'react-icons/io5'
+import { RiCheckLine } from 'react-icons/ri'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useDispatch } from 'react-redux'
 
 import { Link, useNavigate } from 'react-router-dom'
@@ -26,6 +29,7 @@ function Invoice() {
   const navigate = useNavigate()
   const { register, watch } = useForm()
   const query = watch('query') || ''
+  const status = watch('status') || ''
 
   let [invoices, setInvoices] = useState([])
   const perpage = 10
@@ -41,6 +45,10 @@ function Invoice() {
       invoice.invoiceId.toLowerCase().includes(query.toLowerCase()),
     )
   }
+  invoices =
+    invoices && invoices.length !== 0 && status !== ''
+      ? invoices.filter((invoice) => invoice.status.toLowerCase() === status)
+      : invoices
   useEffect(() => {
     const getAllInvoice = async () => {
       await instance.get('/invoices/all').then((res) => {
@@ -68,18 +76,45 @@ function Invoice() {
             </div>
             <div>
               <form>
-                <div>
-                  <CFormLabel className="text-center">Search</CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="id"
-                    id="id/no"
-                    size="md"
-                    placeholder="by id/no ..."
-                    {...register('query')}
-                  />
-                </div>
+                <CCol md={10} className="d-flex gap-2">
+                  <CCol>
+                    <CFormLabel className="text-center">Search</CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="id"
+                      id="id/no"
+                      size="md"
+                      placeholder="by id/no ..."
+                      {...register('query')}
+                    />
+                  </CCol>
+                  <CCol>
+                    <CFormLabel className="text-center">Filter</CFormLabel>
+                    <CFormSelect
+                      className="mb-1"
+                      type="text"
+                      name="status"
+                      id="status"
+                      size="md"
+                      placeholder="by status"
+                      {...register('status')}
+                    >
+                      <option value="" className="text-capitalize">
+                        All
+                      </option>
+                      <option value="pending" className="text-capitalize">
+                        pending
+                      </option>
+                      <option value="half-paid" className="text-capitalize">
+                        half-paid
+                      </option>
+                      <option value="paid" className="text-capitalize">
+                        paid
+                      </option>
+                    </CFormSelect>
+                  </CCol>
+                </CCol>
               </form>
             </div>
           </CCol>
@@ -92,8 +127,10 @@ function Invoice() {
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">id</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Created by</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Client </CTableHeaderCell>
                 <CTableHeaderCell scope="col">Function</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Total</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
@@ -125,8 +162,26 @@ function Invoice() {
                         <CTableDataCell>
                           {new Date(el.createdAt).toLocaleDateString()}
                         </CTableDataCell>
+                        <CTableDataCell>
+                          {el.User.firstName + ' ' + el.User.lastName}
+                        </CTableDataCell>
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>
+                        <CTableDataCell>
+                          {el.status === 'PENDING' ? (
+                            <p>PENDING</p>
+                          ) : el.status === 'paid' ? (
+                            <p className="ms-3">
+                              Paid
+                              <RiCheckLine className=" ms-3 text-success ri-lg" />
+                            </p>
+                          ) : (
+                            <p className="ms-3">
+                              Half-paid
+                              <AiOutlineLoading3Quarters className=" ms-3 text-danger ri-lg" />
+                            </p>
+                          )}
+                        </CTableDataCell>
                         <CTableDataCell>
                           {Number(el.total).toLocaleString()}
                         </CTableDataCell>

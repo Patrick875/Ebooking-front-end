@@ -59,6 +59,7 @@ function AllDailySalesReports() {
         .get('/daily-sales/all')
         .then((res) => {
           setReports(res.data.data)
+          console.log('res', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)

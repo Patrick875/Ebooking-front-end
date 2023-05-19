@@ -32,11 +32,11 @@ function ProductPriceUpdateModal(props) {
   const { register, handleSubmit, reset } = useForm()
   const updatePrice = async (data) => {
     data = { ...item, data }
-
     await instance
-      .put('/api/v1/products/package/update', data)
-      .then(() => {
-        toast.success('product price updated !!!')
+      .put('/products/package/update', data)
+      .then((res) => {
+        console.log(res)
+        // toast.success('product price updated !!!')
         reset()
       })
       .catch((err) => {
@@ -87,7 +87,7 @@ function ProductPriceUpdateModal(props) {
             </div>
           </CModalBody>
           <CModalFooter>
-            <button className="btn btn-primary" onClick={() => {}}>
+            <button className="btn btn-primary" type="submit">
               Update price
             </button>
           </CModalFooter>

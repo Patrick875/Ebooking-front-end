@@ -17,6 +17,8 @@ import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import ClientDetails from '../../Printing/ClientDetails'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const Item = (props, ref) => {
   const { request, invoiceDetails } = props
@@ -81,12 +83,38 @@ const ViewInvoice = React.forwardRef((props, ref) => {
   if (request && request.InvoiceDetails) {
     invoiceDetails = request.InvoiceDetails
   }
+  const updateInvoiceStatus = async (data) => {
+    await instance.post('/invoices/approve', { ...data }).then((res) => {
+      console.log(res)
+      toast.success('Invoice status updated !!!')
+    })
+  }
 
   return (
     <CCard>
       <CCardHeader className="d-flex justify-content-between">
         <BackButton />
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-end gap-2">
+          <button
+            className="btn btn-success"
+            disabled={request.status === 'paid'}
+            onClick={() => {
+              updateInvoiceStatus({ id: request.id, status: 'paid' })
+            }}
+          >
+            Paid
+          </button>
+          <button
+            className="btn btn-warning"
+            disabled={
+              request.status === 'half-paid' || request.status === 'paid'
+            }
+            onClick={() => {
+              updateInvoiceStatus({ id: request.id, status: 'half-paid' })
+            }}
+          >
+            Half paid
+          </button>
           {invoiceDetails && invoiceDetails.length !== 0 ? (
             <ReactToPrint
               trigger={() => (
@@ -97,7 +125,10 @@ const ViewInvoice = React.forwardRef((props, ref) => {
           ) : null}
         </div>
       </CCardHeader>
-
+      <p className="fs-3">
+        Payment status :{' '}
+        <span className="fw-bolder text-capitalize">{request.status}</span>{' '}
+      </p>
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
           <InvoiceHeader />

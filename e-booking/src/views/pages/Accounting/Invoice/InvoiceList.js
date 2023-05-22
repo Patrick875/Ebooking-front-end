@@ -31,12 +31,12 @@ function InvoiceList(props, ref) {
   const VAT =
     requestItems && requestItems.length !== 0
       ? requestItems[0].VAT
-      : 'exclusive'
+      : 'inclusive'
 
   const amountVAT = Number((value * VATconstant.value) / 100)
 
   const total =
-    VAT === 'inclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
+    VAT === 'exclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
   const [style, setStyle] = useState({ display: 'none' })
   return (
     <CRow>

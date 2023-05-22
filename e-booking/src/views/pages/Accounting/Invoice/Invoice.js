@@ -16,7 +16,6 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { IoCreateOutline } from 'react-icons/io5'
 import { RiCheckLine } from 'react-icons/ri'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useDispatch } from 'react-redux'
 
 import { Link, useNavigate } from 'react-router-dom'
@@ -40,6 +39,24 @@ function Invoice() {
     dispatch(selectItem(item))
     navigate('/booking/accounting/invoice/view')
   }
+  if (invoices && invoices.length) {
+    invoices = invoices.map((invoice) => {
+      if (invoice && invoice.InvoicePayments.length !== 0) {
+        let allPayment = invoice.InvoicePayments.reduce(
+          (acc, b) => acc + b.amount,
+          0,
+        )
+        if (allPayment < invoice.total) {
+          invoice.status = `pending`
+        } else {
+          invoice.status = 'Completely paid'
+        }
+        return invoice
+      } else {
+        return invoice
+      }
+    })
+  }
   if (query && query !== '') {
     invoices = invoices.filter((invoice) =>
       invoice.invoiceId.toLowerCase().includes(query.toLowerCase()),
@@ -47,7 +64,9 @@ function Invoice() {
   }
   invoices =
     invoices && invoices.length !== 0 && status !== ''
-      ? invoices.filter((invoice) => invoice.status.toLowerCase() === status)
+      ? invoices.filter((invoice) =>
+          invoice.status.toLowerCase().includes(status.toLowerCase()),
+        )
       : invoices
   useEffect(() => {
     const getAllInvoice = async () => {
@@ -106,10 +125,10 @@ function Invoice() {
                       <option value="pending" className="text-capitalize">
                         pending
                       </option>
-                      <option value="half-paid" className="text-capitalize">
-                        half-paid
-                      </option>
-                      <option value="paid" className="text-capitalize">
+                      <option
+                        value="Completely paid"
+                        className="text-capitalize"
+                      >
                         paid
                       </option>
                     </CFormSelect>
@@ -168,17 +187,12 @@ function Invoice() {
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>
                         <CTableDataCell>
-                          {el.status === 'PENDING' ? (
+                          {el.status.toLowerCase() === 'pending' ? (
                             <p>PENDING</p>
-                          ) : el.status === 'paid' ? (
+                          ) : (
                             <p className="ms-3">
                               Paid
                               <RiCheckLine className=" ms-3 text-success ri-lg" />
-                            </p>
-                          ) : (
-                            <p className="ms-3">
-                              Half-paid
-                              <AiOutlineLoading3Quarters className=" ms-3 text-danger ri-lg" />
                             </p>
                           )}
                         </CTableDataCell>

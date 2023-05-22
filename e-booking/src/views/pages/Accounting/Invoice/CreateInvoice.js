@@ -228,10 +228,10 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         aria-label="VAT"
                         {...register('VAT', { required: true })}
                       >
-                        <option value="inclusive">Inclusive</option>
-                        <option value="exclusive" selected>
-                          Exclusive
+                        <option value="inclusive" selected>
+                          Inclusive
                         </option>
+                        <option value="exclusive">Exclusive</option>
                       </CFormSelect>
                     </CCol>
                   </CRow>
@@ -269,7 +269,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
               <CCol xs={12}>
                 <CButton
                   component="input"
-                  value="Submit request"
+                  value="Create invoice"
                   onClick={() => {
                     submitRequest()
                     setVisible(false)
@@ -285,18 +285,3 @@ const CreateInvoice = React.forwardRef((props, ref) => {
 })
 
 export default CreateInvoice
-//  <CCol md={6}>
-//                       <CFormLabel htmlFor="VAT">VAT</CFormLabel>
-//                       <CFormInput
-//                         type="number"
-//                         name="VAT"
-//                         id="VAT"
-//                         placeholder="...% VAT"
-//                         size="md"
-//                         min={0}
-//                         max={100}
-//                         step="any"
-//                         required
-//                         {...register('VAT')}
-//                       />
-//                     </CCol>

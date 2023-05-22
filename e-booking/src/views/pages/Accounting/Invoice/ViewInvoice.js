@@ -9,7 +9,7 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import BackButton from 'src/components/Navigating/BackButton'
@@ -19,6 +19,8 @@ import InvoiceHeader from '../../Printing/InvoiceHeader'
 import ClientDetails from '../../Printing/ClientDetails'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
+import InvoicePaymentModal from './InvoicePaymentModal'
+import { RiStethoscopeLine } from 'react-icons/ri'
 
 const Item = (props, ref) => {
   const { request, invoiceDetails } = props
@@ -78,16 +80,10 @@ const Item = (props, ref) => {
 const ViewInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const request = useSelector((state) => state.selection.selected)
-  console.log('req', request)
+  const [open, setOpen] = useState(false)
   let invoiceDetails
   if (request && request.InvoiceDetails) {
     invoiceDetails = request.InvoiceDetails
-  }
-  const updateInvoiceStatus = async (data) => {
-    await instance.post('/invoices/approve', { ...data }).then((res) => {
-      console.log(res)
-      toast.success('Invoice status updated !!!')
-    })
   }
 
   return (
@@ -96,25 +92,22 @@ const ViewInvoice = React.forwardRef((props, ref) => {
         <BackButton />
         <div className="d-flex justify-content-end gap-2">
           <button
-            className="btn btn-success"
-            disabled={request.status === 'paid'}
-            onClick={() => {
-              updateInvoiceStatus({ id: request.id, status: 'paid' })
-            }}
-          >
-            Paid
-          </button>
-          <button
-            className="btn btn-warning"
+            className="btn btn-primary"
             disabled={
-              request.status === 'half-paid' || request.status === 'paid'
+              Number(
+                request.total -
+                  request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
+              ) === 0
+                ? true
+                : false
             }
             onClick={() => {
-              updateInvoiceStatus({ id: request.id, status: 'half-paid' })
+              setOpen(true)
             }}
           >
-            Half paid
+            Add Payment
           </button>
+
           {invoiceDetails && invoiceDetails.length !== 0 ? (
             <ReactToPrint
               trigger={() => (
@@ -125,9 +118,21 @@ const ViewInvoice = React.forwardRef((props, ref) => {
           ) : null}
         </div>
       </CCardHeader>
-      <p className="fs-3">
+      <p className="fs-6">
         Payment status :{' '}
-        <span className="fw-bolder text-capitalize">{request.status}</span>{' '}
+        <span className="text-capitalize">
+          {request.InvoicePayments && request.InvoicePayments.length !== 0
+            ? Number(
+                request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
+              ) +
+              ' paid  ' +
+              Number(
+                request.total -
+                  request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
+              ) +
+              ' remaining'
+            : request.status}
+        </span>{' '}
       </p>
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
@@ -139,6 +144,15 @@ const ViewInvoice = React.forwardRef((props, ref) => {
       </div>
 
       <Item request={request} invoiceDetails={invoiceDetails} />
+      <InvoicePaymentModal
+        maxPayment={Number(
+          request.total -
+            request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
+        )}
+        invoice={request}
+        open={open}
+        setOpen={RiStethoscopeLine}
+      />
     </CCard>
   )
 })

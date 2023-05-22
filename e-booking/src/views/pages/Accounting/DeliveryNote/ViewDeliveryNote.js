@@ -100,7 +100,7 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
           <InvoiceHeader title="Delivery note" />
-          <Item request={request} proformaDetails={DeliveryNoteDetails} />
+          <Item request={request} DeliveryNoteDetails={DeliveryNoteDetails} />
           <DeliveryFooter />
           <PrintFooterNoSignatures />
         </div>

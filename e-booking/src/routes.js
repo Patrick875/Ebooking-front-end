@@ -18,7 +18,7 @@ import { dashboardRoutes } from './views/dashboard/routes'
 import { serviceRoutes } from './views/pages/services/routes'
 import { userRoutes } from './views/pages/users/routes'
 import { storeRoutes } from './views/pages/store/routes'
-import { contractRoutes } from './views/pages/Contracts/routes'
+//import { contractRoutes } from './views/pages/Contracts/routes'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -42,7 +42,7 @@ const routes = [
   ...waiterRoutes,
   ...userRoutes,
   ...storeRoutes,
-  ...contractRoutes,
+  //...contractRoutes,
 ]
 
 export default routes

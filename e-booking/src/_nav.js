@@ -12,7 +12,7 @@ import { ServicesNav } from './views/pages/services/nav'
 import { UsersNav } from './views/pages/users/nav'
 import { StockItemNav } from './views/pages/stockItems/nav'
 import { StockNav } from './views/pages/stock/nav'
-import { ContractNav } from './views/pages/Contracts/nav'
+//import { ContractNav } from './views/pages/Contracts/nav'
 const _nav = [
   DashboardNav,
   CashierNav,
@@ -29,6 +29,6 @@ const _nav = [
   StockItemNav,
   StockNav,
   CustomerNav,
-  ContractNav,
+  // ContractNav,
 ]
 export default _nav

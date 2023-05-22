@@ -20,6 +20,8 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { useEffect, useState } from 'react'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 function ContractItemsList(props, ref) {
   const { items, setItems, documentTitle } = props
@@ -94,6 +96,8 @@ function ContractItemsList(props, ref) {
 function CreateContract() {
   const { register, handleSubmit, getValues, reset } = useForm()
   const [items, setItems] = useState([])
+  const [products, setProducts] = useState([])
+
   const onAddItem = (item) => {
     setItems([...items, item])
   }
@@ -103,7 +107,23 @@ function CreateContract() {
     reset()
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    const getAllProducts = async () => {
+      await instance
+        .get('/products/all')
+        .then((res) => {
+          console.log('okay', res.data.data)
+          if (res.status === 200) {
+            setProducts(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+
+    getAllProducts()
+  }, [])
   return (
     <div>
       <CRow>

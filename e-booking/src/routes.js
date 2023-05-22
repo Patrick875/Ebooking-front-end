@@ -42,7 +42,7 @@ const routes = [
   ...waiterRoutes,
   ...userRoutes,
   ...storeRoutes,
-  // ...contractRoutes,
+  ...contractRoutes,
 ]
 
 export default routes

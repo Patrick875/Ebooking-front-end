@@ -1,6 +1,5 @@
 import Products from './Products'
 import ProductSell from './ProductSell'
-import ProductSells from './ProductSells'
 import ProductsAdd from './ProductsAdd'
 import ProductEdit from './ProductEdit'
 import ProductCategoryAdd from './ProductCategoryAdd'
@@ -21,12 +20,6 @@ export const productRoutes = [
     exact: true,
     name: 'Product',
     element: ProductSell,
-  },
-  {
-    path: '/booking/products/sell/all',
-    exact: true,
-    name: 'Product sell',
-    element: ProductSells,
   },
   {
     path: '/booking/products/add',

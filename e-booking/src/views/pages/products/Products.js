@@ -28,16 +28,18 @@ import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 
 function ProductPriceUpdateModal(props) {
-  let { open, setOpen, item } = props
+  let { open, setOpen, item, setReload } = props
+
   const { register, handleSubmit, reset } = useForm()
   const updatePrice = async (data) => {
-    data = { ...item, data }
+    data = { ...item, price: data.price }
+
     await instance
       .put('/products/package/update', data)
       .then((res) => {
-        console.log(res)
-        // toast.success('product price updated !!!')
+        toast.success('product price updated !!!')
         reset()
+        setReload(true)
       })
       .catch((err) => {
         toast.error('error updating product')
@@ -67,6 +69,7 @@ function ProductPriceUpdateModal(props) {
                   className="form-control col px-2"
                   id="oldPrice"
                   name="oldPrice"
+                  readOnly={true}
                   value={item.price}
                   type="number"
                   min={0}
@@ -100,6 +103,7 @@ function ProductPriceUpdateModal(props) {
 const Products = () => {
   const { register, watch } = useForm()
   const query = watch('query') || ''
+  let [reload, setReload] = useState(false)
   const [editFields, setEditFields] = useState([])
   const role = useSelector((state) => state.auth.role)
   const [clicked, setClicked] = useState({})
@@ -136,12 +140,17 @@ const Products = () => {
     )
   }
 
+  const reloadComponent = (reload) => {
+    if (reload) {
+      window.location.reload()
+    }
+  }
   if (query && query !== '') {
     products = products.filter((product) =>
       product.name.toLowerCase().includes(query.toLowerCase()),
     )
   }
-
+  reloadComponent(reload)
   useEffect(() => {
     const getAllProducts = async () => {
       await instance
@@ -149,6 +158,7 @@ const Products = () => {
         .then((res) => {
           if (res.status === 200) {
             setProducts(res.data.data)
+            console.log('prods', res.data.data)
           }
         })
         .catch((err) => {
@@ -213,18 +223,6 @@ const Products = () => {
                                     loggedInUser === 'controller'
                                       ? 'disabled'
                                       : ''
-                                  } btn btn-sm btn-warning`}
-                                  onClick={() => {
-                                    return setEditField(rowIndex)
-                                  }}
-                                >
-                                  Edit
-                                </Link>
-                                <Link
-                                  className={`${
-                                    loggedInUser === 'controller'
-                                      ? 'disabled'
-                                      : ''
                                   } btn btn-sm btn-primary`}
                                   onClick={() => {
                                     setOpen(true)
@@ -262,6 +260,7 @@ const Products = () => {
               open={open}
               item={clicked}
               setOpen={setOpen}
+              setReload={setReload}
             />
           </CCardBody>
         </CCard>

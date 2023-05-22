@@ -29,5 +29,6 @@ const _nav = [
   StockItemNav,
   StockNav,
   CustomerNav,
+  ContractNav,
 ]
 export default _nav

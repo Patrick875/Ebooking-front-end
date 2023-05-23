@@ -110,7 +110,7 @@ const CashRecords = (props) => {
                       <CTableDataCell>{i + 1}</CTableDataCell>
                       <CTableDataCell>{order['account']}</CTableDataCell>
                       <CTableDataCell>
-                        {order['description'].substring(0, 23)}
+                        {order['description'].substring(0, 28)}
                       </CTableDataCell>
                       <CTableDataCell>
                         {order['accountType'] === 'DEBIT'

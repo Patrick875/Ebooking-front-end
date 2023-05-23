@@ -109,7 +109,9 @@ const CashRecords = (props) => {
                       </CTableDataCell>
                       <CTableDataCell>{i + 1}</CTableDataCell>
                       <CTableDataCell>{order['account']}</CTableDataCell>
-                      <CTableDataCell>{order['description']}</CTableDataCell>
+                      <CTableDataCell>
+                        {order['description'].substring(0, 23)}
+                      </CTableDataCell>
                       <CTableDataCell>
                         {order['accountType'] === 'DEBIT'
                           ? order['amount'].toLocaleString()

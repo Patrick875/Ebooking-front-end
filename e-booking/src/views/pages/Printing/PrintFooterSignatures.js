@@ -2,7 +2,7 @@ import React from 'react'
 
 function PrintFooterSignatures() {
   return (
-    <div className="my-4 d-flex justify-content-between">
+    <div className="ms-2 my-4 d-flex justify-content-between">
       <div className="text-center">
         <p className="fw-bolder">Supplied by</p>
         <p className="fw-bolder text-uppercase">MARKET</p>

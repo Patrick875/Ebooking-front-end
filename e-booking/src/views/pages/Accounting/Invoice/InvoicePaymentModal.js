@@ -19,7 +19,9 @@ import { instance } from 'src/API/AxiosInstance'
 export default function InvoicePaymentModal(props) {
   let { open, setOpen, invoice, maxPayment } = props
   console.log('id', invoice.id)
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, watch } = useForm()
+  const amount = watch('amount')
+
   const addInvoicePayment = async (data) => {
     data = { ...data, invoiceId: invoice.id }
     console.log('data', data)
@@ -62,8 +64,8 @@ export default function InvoicePaymentModal(props) {
                   type="text"
                   size="md"
                   className="mb-3"
-                  minValue={0}
-                  maxValue={maxPayment}
+                  min={0}
+                  max={maxPayment}
                   {...register('amount')}
                 />
               </CCol>
@@ -103,9 +105,30 @@ export default function InvoicePaymentModal(props) {
             </CRow>
           </CModalBody>
           <CModalFooter>
-            <button className="btn btn-primary" type="submit">
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={
+                amount &&
+                Number(amount) &&
+                (Number(amount) > maxPayment || Number(amount) < 0)
+                  ? true
+                  : false
+              }
+            >
               Add payment
             </button>
+            {amount && Number(amount) ? (
+              Number(amount > maxPayment) ? (
+                <p className="m-1 text-danger fs-5 fw-bold border border-1 border-danger">
+                  Can't not more than the required amount
+                </p>
+              ) : Number(amount < 0) ? (
+                <p className="m-1 text-danger fs-5 fw-bold border border-1 border-danger">
+                  Amount must be greater than 0
+                </p>
+              ) : null
+            ) : null}
           </CModalFooter>
         </CForm>
       </CModal>

@@ -4,7 +4,7 @@ const PrintFooterNoSignatures = (props) => {
   const role = useSelector((state) => state.auth.role)
   const { firstName, lastName } = useSelector((state) => state.auth.user)
   return (
-    <div className="mt-2">
+    <div className="mt-2 ms-3">
       <p>
         Printed by {firstName} {lastName}
       </p>

@@ -154,6 +154,8 @@ const ReservationAdd = (props) => {
     reset()
   }
 
+  console.log('selected room classes', roomK)
+
   useEffect(() => {
     const getCustomers = async () => {
       await instance
@@ -192,9 +194,7 @@ const ReservationAdd = (props) => {
         .then((res) => {
           setHalls(res.data.data)
         })
-        .catch((err) => {
-          console.log(err.message)
-        })
+        .catch((err) => {})
     }
 
     const getRoomClasses = async () => {
@@ -216,6 +216,9 @@ const ReservationAdd = (props) => {
   }, [reload])
 
   console.log('classes', RoomClasses)
+  console.log('classes', details)
+  console.log('classes', roomK)
+  console.log('classes', totalPrice)
   return (
     <React.Fragment>
       <CreateCustomerModal

@@ -17,21 +17,43 @@ import { useEffect, useState } from 'react'
 import { instance } from 'src/API/AxiosInstance'
 
 const StockItemAdd = () => {
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, watch } = useForm()
+  const itemName = watch('name') || ''
   const dispatch = useDispatch()
   const [stores, setStores] = useState([])
+  const [items, setItems] = useState([])
 
+  const exists = (items) => {
+    let foundItems = []
+    if (itemName && items && items.length !== 0 && itemName !== '') {
+      foundItems = items.filter(
+        (el) => el.name.toLowerCase() === itemName.toLowerCase(),
+      )
+    }
+
+    if (foundItems.length === 0) {
+      return false
+    } else {
+      return true
+    }
+  }
   const onSubmit = (data) => {
     dispatch(addStockItem(data))
     reset()
   }
-
+  const dontCreate = exists(items)
   useEffect(() => {
     const getAllStores = async () => {
       await instance.get('/stock/store/all').then((res) => {
         setStores(res.data.data)
       })
     }
+    const getItems = async () => {
+      await instance.get('/stock/item/all').then((res) => {
+        setItems(res.data.data)
+      })
+    }
+    getItems()
     getAllStores()
   }, [])
   return (
@@ -83,12 +105,16 @@ const StockItemAdd = () => {
 
                 <CCol xs={12}>
                   <CButton
+                    disabled={dontCreate}
                     component="input"
                     type="submit"
                     value="Create item"
                   />
                 </CCol>
               </CForm>
+              {dontCreate ? (
+                <p className="fs-6 text-danger">Item already exists</p>
+              ) : null}
             </CCardBody>
           </CCard>
         </CCol>

@@ -437,7 +437,20 @@ export const numpadItems = [
   '00',
 ]
 
-export const tables = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '10', '11']
+export const allowedKeys = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '0',
+  '.',
+  'Backspace',
+]
 export const units = [
   { name: 'gram', symbol: 'g' },
   { name: 'kilogram', symbol: 'kg' },

@@ -31,7 +31,7 @@ export const deleteUser = (payloadApi, payloadLocal) => {
   }
   return async function (dispatch) {
     await instance
-      .get(`/users/disactive/${payloadApi.id}`)
+      .get(`/users/disactivate/${payloadApi.id}`)
       .then(() => {
         toast.success('user disactivated')
         dispatch({

@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
+import BackButton from 'src/components/Navigating/BackButton'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
 import {
@@ -58,7 +59,6 @@ function WaiterSells() {
       await instance
         .get(`/products/package/waiter/sells/${roleId}`)
         .then((res) => {
-          console.log('res', res)
           setWaiterSells(res.data.data)
         })
         .catch(() => {
@@ -70,6 +70,7 @@ function WaiterSells() {
   return (
     <div>
       <CCol xs={12}>
+        <BackButton />
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
@@ -112,6 +113,7 @@ function WaiterSells() {
                 <CTableRow>
                   <CTableHeaderCell scope="col"> # </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Date </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Account </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Product </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
@@ -132,10 +134,13 @@ function WaiterSells() {
                     })
                     .map((sale, i) => (
                       <CTableRow key={i}>
-                        <CTableDataCell>{sale.id}</CTableDataCell>
+                        <CTableDataCell>
+                          {(currentPage - 1) * perpage + 1 + i}
+                        </CTableDataCell>
                         <CTableDataCell>
                           {new Date(sale.date).toLocaleDateString()}
                         </CTableDataCell>
+                        <CTableDataCell>{sale.status}</CTableDataCell>
                         <CTableDataCell>{sale.petitStock.name}</CTableDataCell>
                         <CTableDataCell>
                           {sale.petitStockSaleDetails.map((item, i) => (
@@ -153,7 +158,7 @@ function WaiterSells() {
                 ) : (
                   <CTableRow>
                     <CTableDataCell
-                      colSpan={4}
+                      colSpan={5}
                       className=" text-capitalize fw-bolder text-center"
                     >
                       {' '}
@@ -163,7 +168,7 @@ function WaiterSells() {
                 )}
                 <CTableRow>
                   <CTableDataCell />
-                  <CTableHeaderCell colSpan={3}>Total</CTableHeaderCell>
+                  <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
                   <CTableHeaderCell>
                     {waiterSells
                       .reduce((a, b) => a + Number(b.amount), 0)

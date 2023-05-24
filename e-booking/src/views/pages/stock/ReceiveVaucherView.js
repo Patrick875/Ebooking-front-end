@@ -15,6 +15,7 @@ import ReactToPrint from 'react-to-print'
 import PrintHeader from '../Printing/PrintHeader'
 import PrintFooterSignatures from '../Printing/PrintFooterSignatures'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const ReceiveVaucher = (props) => {
   const { vaucher, receiveTotal, purchaseTotal } = props
@@ -47,7 +48,9 @@ const ReceiveVaucher = (props) => {
                 ? vaucher.StockPurchaseOrder['StockPurchaseOrderDetails'].map(
                     (order, i) => (
                       <CTableRow key={i}>
-                        <CTableDataCell>{order.StockItemNew.name}</CTableDataCell>
+                        <CTableDataCell>
+                          {order.StockItemNew.name}
+                        </CTableDataCell>
                         <CTableDataCell></CTableDataCell>
                         <CTableDataCell>{order.requestQuantity}</CTableDataCell>
                         <CTableDataCell>{order.unitPrice}</CTableDataCell>
@@ -86,7 +89,9 @@ const ReceiveVaucher = (props) => {
               {vaucher && vaucher.StockReceiveVoucherDetails.length !== 0
                 ? vaucher.StockReceiveVoucherDetails.map((received, i) => (
                     <CTableRow key={i}>
-                      <CTableDataCell>{received.StockItemNew.name}</CTableDataCell>
+                      <CTableDataCell>
+                        {received.StockItemNew.name}
+                      </CTableDataCell>
                       <CTableDataCell></CTableDataCell>
                       <CTableDataCell>
                         {received.receivedQuantity}
@@ -136,7 +141,8 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
       : 0
   return (
     <CCard>
-      <CCardHeader>
+      <CCardHeader className="d-flex justify-content-between">
+        <BackButton />
         <ReactToPrint
           trigger={() => (
             <button className="btn btn-ghost-primary">Print</button>

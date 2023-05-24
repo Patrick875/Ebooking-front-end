@@ -8,6 +8,7 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CRow,
 } from '@coreui/react'
 
@@ -43,17 +44,32 @@ const CreatePetitStock = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 encType="multipart/form"
               >
-                <CCol md={6} className="mb-3">
-                  <CFormLabel htmlFor="name"> Name </CFormLabel>
-                  <CFormInput
-                    type="text"
-                    name="name"
-                    id="name"
-                    placeholder="...kitchen"
-                    size="md"
-                    {...register('name', { required: true })}
-                  />
-                </CCol>
+                <CRow>
+                  <CCol md={6} className="mb-3">
+                    <CFormLabel htmlFor="name"> Name </CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name="name"
+                      id="name"
+                      placeholder="...kitchen"
+                      size="md"
+                      {...register('name', { required: true })}
+                    />
+                  </CCol>
+                  <CCol md={6} className="mb-3">
+                    <CFormLabel htmlFor="name"> Type </CFormLabel>
+                    <CFormSelect
+                      name="type"
+                      id="type"
+                      size="md"
+                      {...register('selling', { required: true })}
+                    >
+                      <option value="selling">Selling</option>
+                      <option value="non-selling">Non-selling</option>
+                    </CFormSelect>
+                  </CCol>
+                </CRow>
+
                 <CCol xs={12}>
                   <CButton component="input" type="submit" value="Create" />
                 </CCol>

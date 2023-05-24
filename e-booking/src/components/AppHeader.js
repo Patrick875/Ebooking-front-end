@@ -5,7 +5,6 @@ import {
   CContainer,
   CHeader,
   CHeaderBrand,
-  CHeaderDivider,
   CHeaderNav,
   CHeaderToggler,
   CNavLink,
@@ -13,9 +12,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilExitToApp, cilMenu, cilLockLocked } from '@coreui/icons'
-import { AppBreadcrumb } from './index'
 import { logout } from 'src/redux/Auth/authActions'
-// import { logo } from 'src/assets/brand/logo'
 
 const AppHeader = () => {
   const role = useSelector((state) => state.auth.role)

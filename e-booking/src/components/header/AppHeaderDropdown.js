@@ -10,8 +10,6 @@ import {
 } from '@coreui/react'
 import { cilLockLocked, cilSettings, cilUser } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
-import avatar8 from '../../assets/images/avatars/anathole.jpeg'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from 'src/redux/Auth/authActions'

@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
-  const [formState, setformState] = useState({})
+  const [formState] = useState({})
   const {
     register,
     handleSubmit,

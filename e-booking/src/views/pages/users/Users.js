@@ -25,7 +25,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
-import { USER_ACTIONS } from 'src/redux/User/userActionTypes'
 
 const ConfirmDeleteUserModel = (props) => {
   const { visible, setVisible, user, users } = props
@@ -80,12 +79,11 @@ const Users = () => {
     const getUsers = async () => {
       await instance.get(`/users/all`).then((res) => {
         setUsers(res.data.users)
+        console.log('users', res.data.users)
       })
     }
     getUsers()
   }, [])
-
-  console.log('users', users, query)
   return (
     <CRow>
       <CCol xs={12}>
@@ -119,7 +117,8 @@ const Users = () => {
                   <CTableHeaderCell scope="col"> Names </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Phone </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Email </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Roles </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Role </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
                   {role === 'admin' ? (
                     <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
                   ) : null}
@@ -142,6 +141,7 @@ const Users = () => {
                       <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
                       <CTableDataCell> {user.Role.name}</CTableDataCell>
+                      <CTableDataCell> {user.status}</CTableDataCell>
                       {role === 'admin' ? (
                         <CTableDataCell>
                           <Link

@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux'
 import { useRef } from 'react'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const CustomerView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -39,6 +40,7 @@ const CustomerView = React.forwardRef((props, ref) => {
   return (
     <CRow>
       <CCol xs={12}>
+        <BackButton />
         <CCard className="mb-4">
           <CCardHeader className="d-flex justify-content-between">
             <h3>

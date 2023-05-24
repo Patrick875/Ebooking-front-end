@@ -12,7 +12,6 @@ import {
 import React, { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
@@ -73,15 +72,9 @@ function Sells() {
       : 0
   useEffect(() => {
     const getItems = async () => {
-      await instance
-        .get('/products/package/sells')
-        .then((res) => {
-          console.log(res)
-          setSells(res.data.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
+      await instance.get('/products/package/sells').then((res) => {
+        setSells(res.data.data)
+      })
     }
     getItems()
   }, [])
@@ -131,7 +124,7 @@ function Sells() {
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
               <CTableHeaderCell scope="col">By</CTableHeaderCell>
               <CTableHeaderCell scope="col">Product</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Price</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
             </CTableRow>
           </CTableHead>

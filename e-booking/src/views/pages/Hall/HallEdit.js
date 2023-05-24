@@ -67,16 +67,16 @@ function HallEdit() {
                 />
               </CCol>
               <CCol md={6}>
-                <CFormLabel htmlFor="name">Size</CFormLabel>
+                <CFormLabel htmlFor="size">Size</CFormLabel>
                 <CFormInput
                   className="mb-1"
                   type="text"
-                  name="name"
+                  name="size"
                   id="title"
                   size="md"
                   defaultValue={selectedHall.size ? selectedHall.size : ''}
                   required
-                  {...register('name')}
+                  {...register('size')}
                 />
               </CCol>
               <CCol md={6}>

@@ -22,6 +22,16 @@ function HallServices() {
   const dispatch = useDispatch()
   const [hallServices, setHallServices] = useState([])
   const role = useSelector((state) => state.auth.role)
+  const deleteService = async (service) => {
+    await instance
+      .post(`/hall/services/delete`, { id: service })
+      .then(() => {
+        toast.success('Hall service delete successfully')
+      })
+      .catch(() => {
+        toast.error('error deleting service')
+      })
+  }
   useEffect(() => {
     const getHallServices = async () => {
       await instance
@@ -51,6 +61,7 @@ function HallServices() {
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Price</CTableHeaderCell>
                   {role && role === 'admin' ? (
                     <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
                   ) : null}
@@ -64,11 +75,13 @@ function HallServices() {
                           <CTableHeaderCell scope="row">
                             {i + 1}
                           </CTableHeaderCell>
-                          <CTableDataCell>{`${hallService.name}`}</CTableDataCell>
+                          <CTableDataCell>{hallService.name}</CTableDataCell>
+                          <CTableDataCell>{hallService.price}</CTableDataCell>
                           {role && role === 'admin' ? (
-                            <CTableDataCell>
+                            <CTableDataCell className="d-flex gap-2">
                               <Link
                                 to="/booking/halls/services/edit"
+                                className="btn btn-warning"
                                 onClick={() => {
                                   return dispatch(selectItem(hallService))
                                 }}
@@ -76,10 +89,10 @@ function HallServices() {
                                 edit
                               </Link>{' '}
                               <Link
-                                to="/booking/halls/services/"
                                 onClick={() => {
-                                  console.log('hall edit')
+                                  deleteService(hallService.id)
                                 }}
+                                className="btn btn-danger"
                               >
                                 remove
                               </Link>{' '}

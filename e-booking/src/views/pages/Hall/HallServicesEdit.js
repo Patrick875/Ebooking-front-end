@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -8,23 +8,31 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CFormTextarea,
   CRow,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 function HallServiceEdit() {
   const selectedService = useSelector((state) => state.selection.selected) || {}
-  const { register, handleSubmit, watch, reset } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: { ...selectedService },
   })
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    data.id = selectedService.id
+    await instance
+      .put('/hall/services/update', data)
+      .then(() => {
+        toast.success('hall service updated!!!')
+      })
+      .catch(() => {
+        toast.error('error updating hall service')
+      })
     reset()
-    //roomClass.push(formData);
   }
 
   useEffect(() => {}, [])

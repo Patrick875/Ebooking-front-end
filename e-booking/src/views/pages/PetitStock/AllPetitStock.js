@@ -36,7 +36,7 @@ function AllPetitStock(props) {
                 <FcIcons8Cup size="sm" />
               </div>
               <p className="mt-2 text-capitalize ">{item.name}</p>
-              {item.selling === 'non-selling' ? null : selling ? (
+              {selling ? (
                 item.status === 'DISACTIVE' && role !== 'admin' ? null : (
                   <div className="overlay">
                     <Link

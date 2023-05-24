@@ -20,7 +20,7 @@ import { instance } from 'src/API/AxiosInstance'
 
 const UserEdit = () => {
   const { register, handleSubmit, watch } = useForm()
-  let users = useSelector((state) => state.systemUsers.users)
+  // let users = useSelector((state) => state.systemUsers.users)
   const selectedUser = useSelector((state) => state.selection.selected) || {}
   const roles = useSelector((state) => state.roles.userRoles) || []
   let formData = { ...selectedUser }
@@ -30,10 +30,6 @@ const UserEdit = () => {
   const onSubmit = async (data) => {
     data.id = selectedUser.id ? selectedUser.id : null
     //updating users array
-
-    users = users.map((user) =>
-      user._id === selectedUser._id ? (user = { ...user, ...data }) : user,
-    )
     data.role = selectedUser.Role.name || role
 
     await instance

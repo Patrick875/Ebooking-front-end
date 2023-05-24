@@ -13,7 +13,6 @@ import ProductSell from '../pages/products/ProductSell'
 const Dashboard = () => {
   const dispatch = useDispatch()
   const userRole = useSelector((state) => state.auth.role)
-  console.log(userRole)
   const getInitialData = () => {
     dispatch(getProductCategories())
     dispatch(getServiceCategories())
@@ -25,12 +24,14 @@ const Dashboard = () => {
 
   return (
     <React.Fragment>
-      {userRole && userRole !== 'waiter' ? (
+      {userRole && userRole.toLowerCase() !== 'waiter' ? (
         <WidgetsDropdown />
       ) : (
         <CCard className="mb-4">
           <CCardBody>
-            {userRole && userRole === 'waiter' ? <ProductSell /> : null}
+            {userRole && userRole.toLowerCase() === 'waiter' ? (
+              <ProductSell />
+            ) : null}
           </CCardBody>
         </CCard>
       )}

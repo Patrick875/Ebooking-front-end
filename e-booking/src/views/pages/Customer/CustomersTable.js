@@ -1,25 +1,13 @@
 import { CTableDataCell, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React from 'react'
-import { toast } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
 function CustomersTable(props) {
   const { customers, currentPage, perpage } = props
   const role = useSelector((state) => state.auth.role)
   const dispatch = useDispatch()
-  const deleteCustomer = async (id) => {
-    await instance
-      .delete(`/customers/delete/${id}`)
-      .then(() => {
-        toast.success('Customer deleted successfully')
-      })
-      .catch((err) => {
-        toast.error(err.message)
-      })
-  }
 
   return customers && customers.length !== 0 ? (
     customers.map((customer, i) => (
@@ -52,12 +40,6 @@ function CustomersTable(props) {
                 }}
               >
                 Edit details
-              </Link>{' '}
-              <Link
-                className="btn btn-danger text-decoration-none"
-                onClick={() => deleteCustomer(customer.id)}
-              >
-                Delete
               </Link>{' '}
             </React.Fragment>
           ) : null}

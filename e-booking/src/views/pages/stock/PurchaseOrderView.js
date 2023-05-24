@@ -13,8 +13,6 @@ import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
-import { instance } from 'src/API/AxiosInstance'
-import { toast } from 'react-hot-toast'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 import BackButton from 'src/components/Navigating/BackButton'
 
@@ -71,21 +69,7 @@ const Request = (props, ref) => {
 
 const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const [approved, setApproved] = useState(false)
   const request = useSelector((state) => state.selection.selected)
-
-  const approvePurchaseOrder = async () => {
-    await instance
-      .post('/purchase/order/approve', { orderId: request.id })
-      .then(() => {
-        toast.success('purchase order approved !!')
-        setApproved(!approved)
-      })
-      .catch(() => {
-        toast.error('purchase order approval failed !!!')
-      })
-  }
-
   let StockPurchaseOrderDetails
   if (request && request.StockPurchaseOrderDetails) {
     StockPurchaseOrderDetails = request.StockPurchaseOrderDetails
@@ -110,20 +94,6 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
               content={() => ref || componentRef.current}
             />
           ) : null}
-          <button
-            className="btn btn-ghost-success text-black"
-            onClick={approvePurchaseOrder}
-            disabled={request.status === 'APPROVED' || approved}
-          >
-            Approve
-          </button>
-
-          <button
-            className="btn btn-ghost-danger text-black"
-            disabled={request.status === 'APPROVED' || approved}
-          >
-            Cancel
-          </button>
         </div>
       </CCardHeader>
       <div style={{ display: 'none' }}>

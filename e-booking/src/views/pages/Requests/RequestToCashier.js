@@ -152,7 +152,6 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         name="store"
                         id="store"
                         size="md"
-                        disabled={store ? true : false}
                         className="mb-3"
                         aria-label="store"
                         {...register('storeId', { required: true })}

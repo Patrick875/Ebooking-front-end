@@ -34,6 +34,11 @@ export const StockNav = {
     },
     {
       component: CNavItem,
+      name: 'All Purchase orders',
+      to: '/booking/stock/purchaseOrders',
+    },
+    {
+      component: CNavItem,
       name: 'All Receive Vouchers',
       to: '/booking/stock/received',
     },

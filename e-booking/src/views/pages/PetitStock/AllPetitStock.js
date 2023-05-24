@@ -16,6 +16,7 @@ function AllPetitStock(props) {
     const getAllPetitStock = async () => {
       await instance.get('/petit-stock/all').then((res) => {
         setPetitStock(res.data.data)
+        console.log('all the stuff', res.data.data)
       })
     }
     getAllPetitStock()
@@ -23,8 +24,8 @@ function AllPetitStock(props) {
   return (
     <div className="d-flex gap-2 flex-wrap ">
       {petitStock && petitStock.length !== 0 ? (
-        petitStock.map((item, i) =>
-          item.status === 'DISACTIVE' && role !== 'admin' ? null : (
+        petitStock.map((item, i) => {
+          return item.status === 'DISACTIVE' && role !== 'admin' ? null : (
             <CCard
               key={i}
               className={`col-2 text-center p-2 flex-grow-2 petit-card ${
@@ -35,7 +36,7 @@ function AllPetitStock(props) {
                 <FcIcons8Cup size="sm" />
               </div>
               <p className="mt-2 text-capitalize ">{item.name}</p>
-              {selling ? (
+              {item.selling === 'non-selling' ? null : selling ? (
                 item.status === 'DISACTIVE' && role !== 'admin' ? null : (
                   <div className="overlay">
                     <Link
@@ -61,8 +62,8 @@ function AllPetitStock(props) {
                 </div>
               )}
             </CCard>
-          ),
-        )
+          )
+        })
       ) : (
         <div>No Petit Stock registered</div>
       )}

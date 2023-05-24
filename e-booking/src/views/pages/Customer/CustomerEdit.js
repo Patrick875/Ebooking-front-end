@@ -15,6 +15,7 @@ import {
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import BackButton from 'src/components/Navigating/BackButton'
 
 function CustomerEdit() {
   const selectedCustomer = useSelector((state) => state.selection.selected)
@@ -41,10 +42,11 @@ function CustomerEdit() {
   return (
     <CRow>
       <CCol xs={12}>
+        <BackButton />
         <CCard className="mb-4">
           <CCardHeader>
             <h5>
-              <strong> Add Customer </strong>
+              <strong> Edit Customer </strong>
             </h5>
           </CCardHeader>
           <CCardBody>

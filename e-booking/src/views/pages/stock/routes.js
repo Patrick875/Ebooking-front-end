@@ -6,6 +6,8 @@ import StockRequestView from './StockRequestView'
 import ReceiveVaucherView from './ReceiveVaucherView'
 import StockReport from './StockReport'
 import StockItemTrack from './StockItemTrack'
+import AllPurchaseOrders from './AllPurchaseOrders'
+import PurchaseOrderView from './PurchaseOrderView'
 
 export const stockRoutes = [
   {
@@ -55,5 +57,17 @@ export const stockRoutes = [
     exact: true,
     name: 'Stock Items',
     element: ReceiveVaucherView,
+  },
+  {
+    path: '/booking/stock/purchaseOrders',
+    exact: true,
+    name: 'Purchase orders',
+    element: AllPurchaseOrders,
+  },
+  {
+    path: '/booking/stock/purchaseOrder/view',
+    exact: true,
+    name: 'View Purchase order',
+    element: PurchaseOrderView,
   },
 ]

@@ -21,7 +21,7 @@ const DefaultLayout = () => {
     }
     getConstants()
   }, [])
-  if (role === 'waiter') {
+  if (role.toLowerCase() === 'waiter') {
     return (
       <div className="wrapper min-vh-100 bg-light">
         <div className="body flex-grow-1 px-3">

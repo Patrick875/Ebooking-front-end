@@ -17,13 +17,11 @@ import { useForm } from 'react-hook-form'
 import './Product.scss'
 import { AiOutlineCloseCircle, AiOutlineEnter } from 'react-icons/ai'
 import { IoReturnUpBack } from 'react-icons/io5'
-import { numpadItems } from 'src/utils/constants'
+import { allowedKeys, numpadItems } from 'src/utils/constants'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import PrintHeader from '../Printing/PrintHeader'
-import OrdersTable from '../PetitStock/OrdersTable'
 import ReactToPrint from 'react-to-print'
-
 import { RiCheckLine } from 'react-icons/ri'
 import AllPetitStock from '../PetitStock/AllPetitStock'
 
@@ -33,10 +31,8 @@ const ProductSell = React.forwardRef((props, ref) => {
   const [selectedInput, setSelectedInput] = useState(1)
   let [results, setResults] = useState(Array(10).fill(''))
   const [products, setProducts] = useState([])
-  const [productCategories, setProductCategories] = useState([])
   let [orderItems, setOrderItems] = useState([])
   const [selectedProduct, setSelectedProduct] = useState()
-  const [selectedCategory, setSelectedCategory] = useState('all')
   const [disabled, setDisabled] = useState(true)
 
   const handleInput = (e) => {
@@ -96,10 +92,6 @@ const ProductSell = React.forwardRef((props, ref) => {
   const [tables, setTables] = useState()
   const [table, setTable] = useState()
   const [petitStock, setPetitStock] = useState(false)
-  const [allPetitStock, setAllPetitStock] = useState([])
-  const onSubmit = (data) => {
-    console.log(data)
-  }
   const handleProductClick = (product) => {
     if (product.Packages && product.Packages.length > 0) {
       setSelectedProduct(product)
@@ -126,20 +118,6 @@ const ProductSell = React.forwardRef((props, ref) => {
     setSelectedProduct(null)
   }
   const handleKeyboardInput = (event) => {
-    const allowedKeys = [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '0',
-      '.',
-      'Backspace',
-    ]
     if (allowedKeys.includes(event.key)) {
       if (event.key === 'Backspace') {
         backspace()
@@ -151,7 +129,6 @@ const ProductSell = React.forwardRef((props, ref) => {
   }
   const createOrder = async () => {
     results = results.filter((el) => el !== '')
-    console.log('as', results)
     if (
       results.includes(null) ||
       results.length === 0 ||
@@ -185,7 +162,6 @@ const ProductSell = React.forwardRef((props, ref) => {
       .post('/products/package/sell', { packages: data })
       .then(() => {
         toast.success('Order created')
-        setOrderItems([])
         setTable([])
       })
       .catch(() => {
@@ -210,7 +186,6 @@ const ProductSell = React.forwardRef((props, ref) => {
       await instance
         .get('/products/all')
         .then((res) => {
-          console.log('okay', res.data.data)
           if (res.status === 200) {
             setProducts(res.data.data)
           }
@@ -219,20 +194,9 @@ const ProductSell = React.forwardRef((props, ref) => {
           toast.error(err.message)
         })
     }
-    const getAllPetitStock = async () => {
-      await instance.get('/petit-stock/all').then((res) => {
-        setAllPetitStock(res.data.data)
-      })
-    }
-    const getAllProductCategories = async () => {
-      await instance.get('/products/category/all').then((res) => {
-        setProductCategories(res.data.data)
-      })
-    }
+
     getTables()
     getAllProducts()
-    getAllProductCategories()
-    getAllPetitStock()
   }, [])
 
   return (

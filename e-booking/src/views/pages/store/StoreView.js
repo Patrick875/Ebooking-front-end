@@ -79,7 +79,7 @@ function StoreView() {
             />
           </div>
           <p className="text-center fs-4">
-            <strong>
+            <strong className="text-capitalize">
               {' '}
               {store && Object.keys(store).length !== 0
                 ? store.name + ' stock'

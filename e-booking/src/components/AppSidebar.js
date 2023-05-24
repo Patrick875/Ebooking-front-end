@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
 import {
   CSidebar,
   CSidebarBrand,
@@ -8,11 +7,9 @@ import {
   CSidebarToggler,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-
 import { AppSidebarNav } from './AppSidebarNav'
 import { sygnet } from 'src/assets/brand/sygnet'
 import logo from '../assets/images/olympic_hotel_logo.png'
-
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 

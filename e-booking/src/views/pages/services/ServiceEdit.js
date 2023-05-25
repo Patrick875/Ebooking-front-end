@@ -22,6 +22,7 @@ function ServiceEdit() {
   })
 
   const onSubmit = async (data) => {
+    data.id = selectedService.id
     await instance
       .put('/services/update', data)
       .then(() => {

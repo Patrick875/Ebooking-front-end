@@ -16,9 +16,11 @@ import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import Pagination from 'src/utils/Pagination'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectItem } from 'src/redux/Select/selectionActions'
 
 const Services = () => {
+  const dispatch = useDispatch()
   const [services, setServices] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -30,7 +32,6 @@ const Services = () => {
         toast.success('service deleted successfuly')
       })
       .catch((err) => {
-        console.log(err)
         toast.error('error deleting service')
       })
   }
@@ -41,7 +42,6 @@ const Services = () => {
         .get('/services/all')
         .then((res) => {
           setServices(res.data.data)
-          console.log('all services', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -99,7 +99,13 @@ const Services = () => {
                           <CTableDataCell> {service.price} </CTableDataCell>
                           {user !== 'admin' ? null : (
                             <CTableDataCell className="d-flex gap-2">
-                              <Link to="" className="btn btn-sm btn-warning">
+                              <Link
+                                to="/booking/services/edit"
+                                className="btn btn-sm btn-warning"
+                                onClick={() => {
+                                  dispatch(selectItem(service))
+                                }}
+                              >
                                 Edit
                               </Link>
                               <Link

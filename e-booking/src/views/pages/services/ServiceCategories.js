@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import { FcInfo } from 'react-icons/fc'
 
 function ServiceCategories() {
   const [items, setItems] = useState([])
@@ -32,7 +33,6 @@ function ServiceCategories() {
         .get('/services/category/all')
         .then((res) => {
           setItems(res.data.data)
-          console.log('all service categories', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -68,7 +68,19 @@ function ServiceCategories() {
                         <Link
                           className="btn btn-danger"
                           onClick={() => {
-                            deleteServiceCategory(item.id)
+                            if (!item.Service) {
+                              deleteServiceCategory(item.id)
+                            } else {
+                              toast.custom(
+                                <div className="p-4 bg-white rounded rounded-3 d-flex gap-2">
+                                  <FcInfo size={32} />
+                                  <p>
+                                    Can not delete service category as it has
+                                    services attached to it
+                                  </p>
+                                </div>,
+                              )
+                            }
                           }}
                         >
                           Delete

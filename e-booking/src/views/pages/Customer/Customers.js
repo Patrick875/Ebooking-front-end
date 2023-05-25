@@ -13,8 +13,6 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-
-import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
@@ -23,7 +21,6 @@ import Pagination from 'src/utils/Pagination'
 function Customers() {
   const { watch, register } = useForm()
   const query = watch('query') || ''
-  const role = useSelector((state) => state.auth.role)
   let [customers, setCustomers] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)

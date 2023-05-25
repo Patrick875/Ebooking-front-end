@@ -14,22 +14,26 @@ import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 function ServiceEdit() {
   const selectedService = useSelector((state) => state.selection.selected) || {}
-  const { register, handleSubmit, reset } = useForm({
+  const { register, reset, getValues } = useForm({
     defaultValues: { ...selectedService },
   })
-
-  const onSubmit = async (data) => {
+  const navigate = useNavigate()
+  const onServiceUpdate = async () => {
+    let data = getValues()
     data.id = selectedService.id
+    console.log('...STAFF STAFF...', data)
     await instance
       .put('/services/update', data)
       .then(() => {
         toast.success('Service updated successfully')
+        navigate(-1)
       })
-      .catch(() => {
-        toast.error('error updating hall')
+      .catch((err) => {
+        toast.error('error updating service', err)
       })
     reset()
   }
@@ -49,7 +53,6 @@ function ServiceEdit() {
               className="row"
               name="serviceEditFrm"
               encType="multipart/form"
-              onSubmit={handleSubmit(onSubmit)}
             >
               <CCol md={6}>
                 <CFormLabel htmlFor="name"> Name </CFormLabel>
@@ -58,7 +61,6 @@ function ServiceEdit() {
                   type="text"
                   name="name"
                   id="title"
-                  size="md"
                   defaultValue={selectedService.name}
                   required
                   {...register('name')}
@@ -71,7 +73,6 @@ function ServiceEdit() {
                   type="text"
                   name="price"
                   id="title"
-                  size="md"
                   defaultValue={selectedService.price}
                   required
                   {...register('price')}
@@ -80,7 +81,9 @@ function ServiceEdit() {
               <CCol xs={12} className="text-center my-3">
                 <CButton
                   component="input"
-                  type="submit"
+                  onClick={() => {
+                    return onServiceUpdate()
+                  }}
                   value=" Update service"
                 />
               </CCol>

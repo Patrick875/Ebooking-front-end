@@ -55,7 +55,7 @@ const ServiceAdd = () => {
             <CCardBody>
               <CForm
                 className="row"
-                name="roomClassAddFrm"
+                name="serviceAddFrm"
                 encType="multipart/form"
                 onSubmit={handleSubmit(onSubmit)}
               >
@@ -66,7 +66,7 @@ const ServiceAdd = () => {
                     id="category"
                     size="md"
                     className="mb-3"
-                    aria-label="Room class"
+                    aria-label="service category"
                     {...register('category', { required: true })}
                   >
                     <option>-- Select -- </option>

@@ -41,6 +41,7 @@ const Services = () => {
         .get('/services/all')
         .then((res) => {
           setServices(res.data.data)
+          console.log('all services', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)

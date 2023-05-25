@@ -4,6 +4,8 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CFormInput,
+  CFormLabel,
   CRow,
   CTable,
   CTableBody,
@@ -18,10 +20,14 @@ import { toast } from 'react-hot-toast'
 import Pagination from 'src/utils/Pagination'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { useForm } from 'react-hook-form'
 
 const Services = () => {
   const dispatch = useDispatch()
-  const [services, setServices] = useState([])
+  const { register, watch } = useForm()
+
+  const query = watch('query') || ''
+  let [services, setServices] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const user = useSelector((state) => state.auth.role)
@@ -36,6 +42,11 @@ const Services = () => {
       })
   }
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  if (query && query !== '') {
+    services = services.filter((service) =>
+      service.name.toLowerCase().includes(query.toLowerCase()),
+    )
+  }
   useEffect(() => {
     const services = async () => {
       await instance
@@ -54,10 +65,27 @@ const Services = () => {
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <h2>
-              <strong> All Services </strong>
-            </h2>
+          <CCardHeader className="row d-flex justify-content-between">
+            <CCol md={6}>
+              <h2>
+                <strong> All Services </strong>
+              </h2>
+            </CCol>
+            <CCol md={6}>
+              <form className="col d-flex">
+                <div className="col">
+                  <CFormLabel className="text-center">Search</CFormLabel>
+                  <CFormInput
+                    className="mb-1"
+                    type="text"
+                    name="serviceName"
+                    id="serviceName"
+                    placeholder="by name ..."
+                    {...register('query')}
+                  />
+                </div>
+              </form>
+            </CCol>
           </CCardHeader>
           <CCardBody>
             <CTable bordered>

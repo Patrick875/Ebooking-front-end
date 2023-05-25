@@ -4,6 +4,7 @@ import ServiceSell from './ServiceSell'
 import ServicesAdd from './ServicesAdd'
 import ServiceEdit from './ServiceEdit'
 import Services from './Services'
+import AllServiceSells from './AllServiceSells'
 
 export const serviceRoutes = [
   {
@@ -19,10 +20,34 @@ export const serviceRoutes = [
     element: ServiceCategories,
   },
   {
-    path: '/booking/services/sell',
+    path: '/booking/services/spa',
     exact: true,
-    name: 'Service',
+    name: 'Service sells',
     element: ServiceSell,
+  },
+  {
+    path: '/booking/services/laundry',
+    exact: true,
+    name: 'Service sells',
+    element: ServiceSell,
+  },
+  {
+    path: '/booking/services/dry-cleaning',
+    exact: true,
+    name: 'Service sells',
+    element: ServiceSell,
+  },
+  {
+    path: '/booking/services/swimming-pool',
+    exact: true,
+    name: 'Service sells',
+    element: ServiceSell,
+  },
+  {
+    path: '/booking/services/allSells',
+    exact: true,
+    name: 'All service sells',
+    element: AllServiceSells,
   },
   {
     path: '/booking/services/add',

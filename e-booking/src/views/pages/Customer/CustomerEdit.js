@@ -14,21 +14,20 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import BackButton from 'src/components/Navigating/BackButton'
 
 function CustomerEdit() {
   const selectedCustomer = useSelector((state) => state.selection.selected)
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, watch, getValues, reset } = useForm()
   const customerType = watch('customerType') || 'individual'
   const loggedInUser = useSelector((state) => state.auth.role)
-  const onSubmit = async (data) => {
-    console.log('903184-04389148-')
+  const onClientEdit = async () => {
+    let data = getValues()
     if (customerType && customerType === 'company') {
       delete data['gender']
     }
-
-    //update user
+    //
     await instance
       .put('/customers/update', { ...data, id: selectedCustomer.id })
       .then(() => {
@@ -52,8 +51,7 @@ function CustomerEdit() {
           <CCardBody>
             <CForm
               className="row"
-              name="roomClassAddFrm"
-              onSubmit={handleSubmit(onSubmit)}
+              name="customerEditFrm"
               encType="multipart/form"
             >
               <CCol md={6}>
@@ -151,10 +149,10 @@ function CustomerEdit() {
               <CCol xs={12} className="mt-2">
                 <CButton
                   component="input"
-                  className={`${
-                    loggedInUser === 'controller' ? 'disabled' : ''
-                  }`}
-                  type="submit"
+                  className={loggedInUser === 'controller' ? 'disabled' : ''}
+                  onClick={() => {
+                    return onClientEdit()
+                  }}
                   value="Update Customer"
                 />
               </CCol>

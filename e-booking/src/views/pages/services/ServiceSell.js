@@ -77,12 +77,12 @@ function ServiceSell() {
           )
         : services
 
-    sells =
-      services && services.length !== 0 && sells && sells.length !== 0
-        ? sells.filter((sell) =>
-            services.includes(sell.Service) ? sell : null,
-          )
-        : sells
+    // sells =
+    //   services && services.length !== 0 && sells && sells.length !== 0
+    //     ? sells.filter((sell) =>
+    //         services.includes(sell.Service) ? sell : null,
+    //       )
+    //     : sells
   }
 
   useEffect(() => {

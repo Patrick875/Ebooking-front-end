@@ -75,6 +75,7 @@ function AllServiceSells() {
     const getAllSells = async () => {
       await instance.get('/services/sells').then((res) => {
         setSells(res.data.data)
+        console.log('sells', res.data.data)
       })
     }
     getAllSells()

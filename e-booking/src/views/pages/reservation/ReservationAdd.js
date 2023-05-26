@@ -136,6 +136,7 @@ const ReservationAdd = (props) => {
       checkOut: new Date(endDate.toString()).getTime(),
     }
     data = { ...data, status: 'in progress' }
+    console.log('reservation data', data)
     const createReservation = async () => {
       await instance
         .post('/reservation/add', data)
@@ -143,7 +144,8 @@ const ReservationAdd = (props) => {
           toast.success('Reservation added')
           setReload(res)
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log('error', err)
           toast.error('Rerservation add failed')
         })
 

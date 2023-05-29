@@ -87,13 +87,6 @@ const ReservationAdd = (props) => {
   const removeDates =
     service && service.length !== 0 ? getAllRemoveDates(service[0]) : []
   const [reload, setReload] = useState()
-  const handleSearch = (query) => {
-    const filteredOptions = customers.filter((option) =>
-      option.name.toLowerCase().includes(query.toLowerCase()),
-    )
-    setCustomers(filteredOptions)
-  }
-
   RoomClasses =
     RoomClasses && RoomClasses.length !== 0 && rooms && rooms.length !== 0
       ? RoomClasses.map(({ id, name, price }) => {
@@ -110,13 +103,13 @@ const ReservationAdd = (props) => {
   )
 
   const onSubmit = (data) => {
-    if (type === 'room' && days && !roomK) {
+    if (type === 'room' && days && !details) {
       data.roomId = service[0].id
       data.amount = service[0].RoomClass.price * days
     } else if (type === 'room' && days && roomK && roomK.length !== 0) {
-      data.amount = totalPrice.reduce((a, b) => a + b) * days
+      data.amount = totalPrice
       delete data.roomClass
-    } else if (days) {
+    } else if (days && !details) {
       data.hallId = service[0].id
       data.amount = priceHall * days + additionalServicesTotal
       delete data.children_number
@@ -155,9 +148,6 @@ const ReservationAdd = (props) => {
     createReservation()
     reset()
   }
-
-  console.log('selected room classes', roomK)
-
   useEffect(() => {
     const getCustomers = async () => {
       await instance
@@ -173,7 +163,6 @@ const ReservationAdd = (props) => {
       await instance
         .get('/room/all')
         .then((res) => {
-          console.log('rooms', res.data.data)
           setRooms(res.data.data)
         })
         .catch((err) => {
@@ -191,12 +180,9 @@ const ReservationAdd = (props) => {
         })
     }
     const getHalls = async () => {
-      await instance
-        .get('/halls/all')
-        .then((res) => {
-          setHalls(res.data.data)
-        })
-        .catch((err) => {})
+      await instance.get('/halls/all').then((res) => {
+        setHalls(res.data.data)
+      })
     }
 
     const getRoomClasses = async () => {
@@ -204,7 +190,6 @@ const ReservationAdd = (props) => {
         .get('/roomclass/all')
         .then((res) => {
           setRoomClasses(res.data.data)
-          console.log(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -217,10 +202,32 @@ const ReservationAdd = (props) => {
     getCustomers()
   }, [reload])
 
-  console.log('classes', RoomClasses)
-  console.log('classes', details)
-  console.log('classes', roomK)
-  console.log('classes', totalPrice)
+  const calculateTotal = (info) => {
+    let roomKlasses = []
+    let cals = []
+    if (info && Object.keys(info).length !== 0) {
+      roomKlasses.push(Object.keys(info))
+      if (
+        RoomClasses &&
+        RoomClasses.length !== 0 &&
+        info &&
+        roomKlasses.length !== 0
+      ) {
+        cals = RoomClasses.filter((el) => roomKlasses[0].includes(el.name))
+        if (cals.length !== 0) {
+          totalPrice = cals.reduce(
+            (acc, b) => acc + Number(b.price * info[b.name].people * days),
+            0,
+          )
+          return totalPrice
+        }
+        return 0
+      }
+      return 0
+    }
+    return 0
+  }
+  totalPrice = calculateTotal(details)
   return (
     <React.Fragment>
       <CreateCustomerModal
@@ -457,48 +464,34 @@ const ReservationAdd = (props) => {
                       </div>
                     ) : null}
 
-                    {customer &&
-                    customer.length !== 0 &&
-                    customer[0].customerType === 'company' &&
-                    type &&
-                    type === 'room'
-                      ? RoomClasses && RoomClasses.length !== 0
-                        ? RoomClasses.map((roomClass) => (
-                            <CRow className="d-flex">
+                    <CRow>
+                      {customer &&
+                      customer.length !== 0 &&
+                      customer[0].customerType === 'company' &&
+                      type &&
+                      type === 'room'
+                        ? RoomClasses && RoomClasses.length !== 0
+                          ? RoomClasses.map((roomClass) => (
                               <CCol md={6}>
-                                <CFormLabel className="fw-bold pe-3">
-                                  {roomClass.name +
-                                    ' rooms at ' +
-                                    roomClass.price +
-                                    'USD'}
-                                </CFormLabel>
-                                <CFormCheck
-                                  className=""
-                                  id="room class 1 roooms "
-                                  value={roomClass.name}
-                                  {...register('roomClass')}
+                                {roomClass.name}
+                                <CFormInput
+                                  type="number"
+                                  min={0}
+                                  id="number of people"
+                                  {...register(
+                                    `details.${roomClass.name}.people`,
+                                  )}
                                 />
-                                {roomK && roomK.includes(roomClass.name) ? (
-                                  <CFormInput
-                                    type="number"
-                                    min={0}
-                                    id="number of people"
-                                    label="Number of people"
-                                    {...register(
-                                      `details.${roomClass.name}.people`,
-                                    )}
-                                  />
-                                ) : null}
                               </CCol>
-                            </CRow>
-                          ))
-                        : null
-                      : null}
+                            ))
+                          : null
+                        : null}
+                    </CRow>
 
                     <div className="d-flex flex-row my-2 ">
                       <strong> Total </strong>
                       <p className="mx-2">
-                        {type === 'room' && !roomK
+                        {type === 'room' && !details
                           ? type === 'room' && service.length !== 0
                             ? Number(priceRoom) * days + '  USD'
                             : Number(priceRoom) + '  USD'
@@ -510,30 +503,10 @@ const ReservationAdd = (props) => {
                               '  RWF'
                             : additionalServicesTotal + '  RWF'
                           : ''}
-
-                        {type === 'room' &&
-                        details &&
-                        roomK &&
-                        roomK.length !== 0
-                          ? RoomClasses.map((e, i) => {
-                              if (roomK.includes(e.name)) {
-                                totalPrice.push(
-                                  Number(e.price) *
-                                    Number(details[e.name].people),
-                                )
-
-                                if (i === roomK.length - 1) {
-                                  return (
-                                    totalPrice.reduce((a, b) => a + b) * days +
-                                    ' USD'
-                                  )
-                                }
-                              } else {
-                                return null
-                              }
-                            })
-                          : null}
                       </p>
+                      {details && type === 'room' ? (
+                        <p> {totalPrice.toLocaleString()} USD</p>
+                      ) : null}
                     </div>
 
                     <CCol md={6}>

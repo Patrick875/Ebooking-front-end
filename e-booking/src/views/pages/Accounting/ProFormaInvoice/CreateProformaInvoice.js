@@ -190,7 +190,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           name="clientName"
                           id="clientName"
                           placeholder="...client name"
-                          size="md"
                           required
                           {...register('outside.clientName')}
                         />
@@ -201,7 +200,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="clientType"
                         id="clientType"
-                        size="md"
                         className="mb-3"
                         aria-label="client type"
                         {...register('outside.clientType', { required: true })}
@@ -218,7 +216,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           name="function"
                           id="function"
                           placeholder="...function"
-                          size="md"
                           required
                           {...register('outside.function')}
                         />
@@ -233,7 +230,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           name="pax"
                           id="pax"
                           placeholder="...pax"
-                          size="md"
                           required
                           {...register('times')}
                         />
@@ -262,7 +258,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />
@@ -275,7 +270,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         name="price"
                         id="price"
                         placeholder="item price in RWF"
-                        size="md"
                         value={
                           service && service.length !== 0 ? service[0].price : 0
                         }
@@ -288,7 +282,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="VAT"
                         id="VAT"
-                        size="md"
                         className="mb-3"
                         aria-label="VAT"
                         {...register('VAT', { required: true })}
@@ -361,7 +354,7 @@ export default CreateProformaInvoice
 //                         name="VAT"
 //                         id="VAT"
 //                         placeholder="...% VAT"
-//                         size="md"
+//
 //                         min={0}
 //                         max={100}
 //                         step="any"

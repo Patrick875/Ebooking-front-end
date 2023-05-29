@@ -53,7 +53,6 @@ function HallAdd() {
                   name="hallName"
                   id="hallName"
                   placeholder="hall name"
-                  size="md"
                   {...register('name', { required: true })}
                 />
               </div>
@@ -64,7 +63,6 @@ function HallAdd() {
                   name="hallCapacity"
                   id="hallCapacity"
                   placeholder="maximum number of people"
-                  size="md"
                   {...register('size', { required: true })}
                 />
               </div>
@@ -76,7 +74,6 @@ function HallAdd() {
                     name="hallPrice "
                     id="hallPrice"
                     placeholder="price in RWF"
-                    size="md"
                     {...register('price', { required: true })}
                   />
                 </div>

@@ -70,7 +70,6 @@ const UserEdit = () => {
                     type="text"
                     name="firstName"
                     id="firstName"
-                    size="md"
                     defaultValue={formData.firstName}
                     {...register('firstName')}
                     required
@@ -83,7 +82,6 @@ const UserEdit = () => {
                     type="text"
                     name="lastName"
                     id="lastName"
-                    size="md"
                     defaultValue={formData.lastName}
                     {...register('lastName')}
                     required
@@ -97,7 +95,6 @@ const UserEdit = () => {
                     type="text"
                     name="phone"
                     id="phone"
-                    size="md"
                     required
                     defaultValue={formData.phone ? formData.phone : ''}
                     {...register('phone')}
@@ -113,7 +110,6 @@ const UserEdit = () => {
                     type="text"
                     name="email"
                     id="email"
-                    size="md"
                     defaultValue={formData.email}
                     {...register('email')}
                     required
@@ -125,7 +121,6 @@ const UserEdit = () => {
                   <CFormSelect
                     name="role"
                     id="role"
-                    size="md"
                     className="mb-3"
                     aria-label="update user role"
                     {...register('role')}

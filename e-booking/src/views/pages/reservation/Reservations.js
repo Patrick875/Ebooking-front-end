@@ -183,7 +183,6 @@ const Reservation = () => {
                       type="text"
                       name="customerName"
                       id="customerName"
-                      size="md"
                       placeholder="by customer ..."
                       {...register('query')}
                     />

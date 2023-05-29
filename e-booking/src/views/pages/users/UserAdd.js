@@ -62,7 +62,6 @@ const UserAdd = () => {
                     type="text"
                     name="firstName"
                     id="firstName"
-                    size="md"
                     required
                     {...register('firstName')}
                   />
@@ -74,7 +73,6 @@ const UserAdd = () => {
                     type="text"
                     name="lastName"
                     id="lastName"
-                    size="md"
                     required
                     {...register('lastName')}
                   />
@@ -87,7 +85,6 @@ const UserAdd = () => {
                     type="text"
                     name="phone"
                     id="phone"
-                    size="md"
                     required
                     {...register('phone')}
                   />
@@ -105,7 +102,6 @@ const UserAdd = () => {
                     type="text"
                     name="email"
                     id="email"
-                    size="md"
                     required
                     {...register('email')}
                   />
@@ -116,7 +112,6 @@ const UserAdd = () => {
                   <CFormSelect
                     name="role"
                     id="role"
-                    size="md"
                     className="mb-3"
                     aria-label="Room class"
                     {...register('role')}

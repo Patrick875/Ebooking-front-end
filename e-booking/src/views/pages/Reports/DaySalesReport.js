@@ -113,7 +113,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_rwf"
-                      size="md"
                       {...register('transcation.cash_rwf')}
                       placeholder="...main bar sales "
                     />
@@ -127,7 +126,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_usd"
-                      size="md"
                       {...register('transcation.cash_usd')}
                       placeholder="...main bar sales "
                     />
@@ -141,7 +139,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_momo"
-                      size="md"
                       {...register('transcation.momo')}
                       placeholder="...main bar sales "
                     />
@@ -155,7 +152,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="rwfVisa"
-                      size="md"
                       {...register('transcation.cash_rwfVisa')}
                       placeholder="...main bar sales "
                     />
@@ -169,7 +165,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="usdVisa"
-                      size="md"
                       {...register('transcation.cash_usdVisa')}
                       placeholder="...main bar sales "
                     />
@@ -183,7 +178,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="credit"
-                      size="md"
                       {...register('transcation.credit')}
                       placeholder="...main bar sales "
                     />
@@ -197,7 +191,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cheque"
-                      size="md"
                       {...register('transcation.cheque')}
                       placeholder="...main bar sales "
                     />
@@ -218,7 +211,6 @@ function DaySalesReport() {
                 type="text"
                 name="name"
                 id="accomodation item 1"
-                size="md"
                 {...register('accomodation.item1.name')}
                 placeholder="...Room xxx,Room xxx final payment "
               />
@@ -302,7 +294,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_rwf"
-                      size="md"
                       {...register('transcation.cash_rwf')}
                       placeholder="...accomodation sale amount "
                     />
@@ -316,7 +307,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_usd"
-                      size="md"
                       {...register('transcation.cash_usd')}
                       placeholder="...accomodation sale amount "
                     />
@@ -330,7 +320,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_momo"
-                      size="md"
                       {...register('transcation.momo')}
                       placeholder="...accomodation sale amount "
                     />
@@ -344,7 +333,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="rwfVisa"
-                      size="md"
                       {...register('transcation.cash_rwfVisa')}
                       placeholder="...accomodation sale amount "
                     />
@@ -358,7 +346,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="usdVisa"
-                      size="md"
                       {...register('transcation.cash_usdVisa')}
                       placeholder="...accomodation sale amount "
                     />
@@ -372,7 +359,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="credit"
-                      size="md"
                       {...register('transcation.credit')}
                       placeholder="...accomodation sale amount "
                     />
@@ -386,7 +372,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cheque"
-                      size="md"
                       {...register('transcation.cheque')}
                       placeholder="...accomodation sale amount "
                     />
@@ -488,7 +473,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_rwf"
-                      size="md"
                       {...register('swimmingPool.cash_rwf')}
                       placeholder="...amount "
                     />
@@ -504,7 +488,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_usd"
-                      size="md"
                       {...register('swimmingPool.cash_usd')}
                       placeholder="... amount "
                     />
@@ -520,7 +503,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_momo"
-                      size="md"
                       {...register('swimmingPool.momo')}
                       placeholder="... amount "
                     />
@@ -536,7 +518,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="rwfVisa"
-                      size="md"
                       {...register('swimmingPool.cash_rwfVisa')}
                       placeholder="... amount "
                     />
@@ -552,7 +533,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="usdVisa"
-                      size="md"
                       {...register('swimmingPool.cash_usdVisa')}
                       placeholder="... amount "
                     />
@@ -568,7 +548,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="credit"
-                      size="md"
                       {...register('swimmingPool.credit')}
                       placeholder="... amount "
                     />
@@ -584,7 +563,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cheque"
-                      size="md"
                       {...register('swimmingPool.cheque')}
                       placeholder="... amount "
                     />
@@ -673,7 +651,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_rwf"
-                      size="md"
                       {...register('saunaMassage.cash_rwf')}
                       placeholder="...amount "
                     />
@@ -689,7 +666,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_usd"
-                      size="md"
                       {...register('saunaMassage.cash_usd')}
                       placeholder="... amount "
                     />
@@ -705,7 +681,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_momo"
-                      size="md"
                       {...register('saunaMassage.momo')}
                       placeholder="... amount "
                     />
@@ -721,7 +696,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="rwfVisa"
-                      size="md"
                       {...register('saunaMassage.cash_rwfVisa')}
                       placeholder="... amount "
                     />
@@ -737,7 +711,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="usdVisa"
-                      size="md"
                       {...register('saunaMassage.cash_usdVisa')}
                       placeholder="... amount "
                     />
@@ -753,7 +726,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="credit"
-                      size="md"
                       {...register('saunaMassage.credit')}
                       placeholder="... amount "
                     />
@@ -769,7 +741,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cheque"
-                      size="md"
                       {...register('saunaMassage.cheque')}
                       placeholder="... amount "
                     />
@@ -790,7 +761,6 @@ function DaySalesReport() {
                 type="text"
                 name="name"
                 id="accomodation item 1"
-                size="md"
                 {...register('receiption.item1.name')}
                 placeholder="..."
               />
@@ -876,7 +846,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_rwf"
-                      size="md"
                       {...register('receiption.cash_rwf')}
                       placeholder="... amount "
                     />
@@ -892,7 +861,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_usd"
-                      size="md"
                       {...register('receiption.cash_usd')}
                       placeholder="... amount "
                     />
@@ -908,7 +876,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cash_momo"
-                      size="md"
                       {...register('receiption.momo')}
                       placeholder="... amount "
                     />
@@ -924,7 +891,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="rwfVisa"
-                      size="md"
                       {...register('receiption.cash_rwfVisa')}
                       placeholder="...amount "
                     />
@@ -940,7 +906,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="usdVisa"
-                      size="md"
                       {...register('receiption.cash_usdVisa')}
                       placeholder="... amount "
                     />
@@ -956,7 +921,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="credit"
-                      size="md"
                       {...register('receiption.credit')}
                       placeholder="... amount "
                     />
@@ -972,7 +936,6 @@ function DaySalesReport() {
                       type="text"
                       name="mainBar"
                       id="cheque"
-                      size="md"
                       {...register('receiption.cheque')}
                       placeholder="... amount "
                     />

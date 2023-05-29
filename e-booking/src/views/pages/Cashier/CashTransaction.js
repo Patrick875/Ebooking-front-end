@@ -86,7 +86,6 @@ const CashTransaction = () => {
                     name="To"
                     id="To"
                     placeholder=".....receiver name"
-                    size="md"
                     {...register('doneTo')}
                   />
                 </div>
@@ -122,7 +121,6 @@ const CashTransaction = () => {
                     <CFormSelect
                       name="paymentMethod"
                       id="paymentMethod"
-                      size="md"
                       className="mb-3"
                       {...register('paymentMethod')}
                     >

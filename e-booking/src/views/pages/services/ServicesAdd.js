@@ -66,7 +66,6 @@ const ServiceAdd = () => {
                   <CFormSelect
                     name="category"
                     id="category"
-                    size="md"
                     className="mb-3"
                     aria-label="service category"
                     {...register('category', { required: true })}
@@ -88,7 +87,6 @@ const ServiceAdd = () => {
                     type="text"
                     name="title"
                     id="title"
-                    size="md"
                     required
                     {...register('name')}
                   />
@@ -100,7 +98,6 @@ const ServiceAdd = () => {
                     type="text"
                     name="price"
                     id="title"
-                    size="md"
                     required
                     {...register('price')}
                   />

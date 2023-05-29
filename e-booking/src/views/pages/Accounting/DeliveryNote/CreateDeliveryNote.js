@@ -123,7 +123,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           name="clientName"
                           id="clientName"
                           placeholder="...client name"
-                          size="md"
                           required
                           {...register('outside.clientName')}
                         />
@@ -134,7 +133,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="clientType"
                         id="clientType"
-                        size="md"
                         className="mb-3"
                         aria-label="client type"
                         {...register('outside.clientType', { required: true })}
@@ -151,7 +149,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           name="function"
                           id="function"
                           placeholder="...function"
-                          size="md"
                           required
                           {...register('outside.function')}
                         />
@@ -165,7 +162,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           name="pax"
                           id="pax"
                           placeholder="...pax"
-                          size="md"
                           required
                           {...register('times')}
                         />
@@ -179,7 +175,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           name="itemName"
                           id="itemName"
                           placeholder="...item "
-                          size="md"
                           required
                           {...register('description')}
                         />
@@ -193,7 +188,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />

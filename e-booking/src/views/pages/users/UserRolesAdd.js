@@ -98,7 +98,6 @@ function UserRolesAdd() {
                 type="text"
                 name="role"
                 id="role"
-                size="md"
                 required
                 {...register('name')}
               />

@@ -59,7 +59,6 @@ function HallServiceEdit() {
                   type="text"
                   name="name"
                   id="title"
-                  size="md"
                   defaultvalue={selectedService.name}
                   required
                   {...register('name')}
@@ -72,7 +71,6 @@ function HallServiceEdit() {
                   type="text"
                   name="price"
                   id="title"
-                  size="md"
                   defaultValue={selectedService.price}
                   required
                   {...register('price')}

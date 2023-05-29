@@ -73,7 +73,6 @@ function StoreView() {
               type="text"
               name="stockItemName"
               id="stockItemName"
-              size="md"
               placeholder="search ..."
               {...register('query')}
             />

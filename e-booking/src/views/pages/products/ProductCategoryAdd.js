@@ -62,7 +62,6 @@ const ProductCategoryAdd = () => {
                     name="name"
                     id="name"
                     placeholder="meet "
-                    size="md"
                     {...register('name', { required: true })}
                   />
                 </CCol>

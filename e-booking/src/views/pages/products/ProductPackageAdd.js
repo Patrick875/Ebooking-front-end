@@ -65,7 +65,6 @@ const MultiStepForm = () => {
                 name="name"
                 id="name"
                 placeholder="...package name"
-                size="md"
                 {...register('name')}
               />
             </CCol>

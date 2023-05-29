@@ -77,7 +77,6 @@ function ProformaInvoice() {
                     type="text"
                     name="id"
                     id="id/no"
-                    size="md"
                     placeholder="by id/no ..."
                     {...register('query')}
                   />

@@ -61,7 +61,6 @@ function CustomerAdd({ reload }) {
                   type="text"
                   name="names"
                   id="names"
-                  size="md"
                   placeholder="...firstname & lastname"
                   required
                   {...register('names', { required: true })}
@@ -74,7 +73,6 @@ function CustomerAdd({ reload }) {
                   type="text"
                   name="nationality"
                   id="nationality"
-                  size="md"
                   required
                   {...register('nationality', { required: true })}
                 >
@@ -92,7 +90,6 @@ function CustomerAdd({ reload }) {
                 <CFormSelect
                   name="type"
                   id="type"
-                  size="md"
                   className="mb-3"
                   aria-label="customer type"
                   {...register('customerType', { required: true })}
@@ -109,7 +106,6 @@ function CustomerAdd({ reload }) {
                   type="text"
                   name="phone"
                   id="phone"
-                  size="md"
                   required
                   {...register('phone')}
                 />
@@ -121,7 +117,6 @@ function CustomerAdd({ reload }) {
                   type="text"
                   name="email"
                   id="email"
-                  size="md"
                   required
                   {...register('email')}
                 />
@@ -139,7 +134,6 @@ function CustomerAdd({ reload }) {
                   type="text"
                   name="id"
                   id="id"
-                  size="md"
                   required
                   {...register('identification', { required: true })}
                 />
@@ -150,7 +144,6 @@ function CustomerAdd({ reload }) {
                   <CFormSelect
                     name="gender"
                     id="gender"
-                    size="md"
                     className="mb-3"
                     aria-label="gender"
                     {...register('gender')}

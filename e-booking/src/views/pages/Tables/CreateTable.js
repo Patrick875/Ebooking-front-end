@@ -51,7 +51,6 @@ const CreateTable = () => {
                     name="number"
                     id="number"
                     placeholder="....table"
-                    size="md"
                     {...register('name', { required: true })}
                   />
                 </CCol>

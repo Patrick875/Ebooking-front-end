@@ -149,7 +149,6 @@ function CreateContract() {
                       name="startDate"
                       id="startDate"
                       placeholder=". "
-                      size="md"
                       {...register('startDate', { required: true })}
                     />
                   </CCol>
@@ -160,7 +159,6 @@ function CreateContract() {
                       name="endDate"
                       id="endDate"
                       placeholder="....telephone "
-                      size="md"
                       {...register('endDate', { required: true })}
                     />
                   </CCol>
@@ -176,7 +174,6 @@ function CreateContract() {
                         name="address"
                         id="address"
                         placeholder="....umurenge/akarere "
-                        size="md"
                         {...register('address1', { required: true })}
                       />
                     </CCol>
@@ -190,7 +187,6 @@ function CreateContract() {
                         name="address2"
                         id="address2"
                         placeholder="....province "
-                        size="md"
                         {...register('address2', { required: true })}
                       >
                         <option value="Kigali city">Kigali city</option>
@@ -211,7 +207,6 @@ function CreateContract() {
                       name="name"
                       id="name"
                       placeholder=". "
-                      size="md"
                       {...register('clientName', { required: true })}
                     />
                   </CCol>
@@ -222,7 +217,6 @@ function CreateContract() {
                       name="telephone"
                       id="telephone"
                       placeholder="....telephone "
-                      size="md"
                       {...register('telephone', { required: true })}
                     />
                   </CCol>
@@ -236,7 +230,6 @@ function CreateContract() {
                       name="itemName"
                       id="itemName"
                       placeholder="....product or service "
-                      size="md"
                       {...register('itemName', { required: true })}
                     >
                       <option value="item1">...</option>
@@ -251,7 +244,6 @@ function CreateContract() {
                       id="price"
                       placeholder="....RWF "
                       required
-                      size="md"
                       {...register('price')}
                     />
                   </CCol>
@@ -264,7 +256,6 @@ function CreateContract() {
                       id="maximum"
                       min={0}
                       placeholder="....max items"
-                      size="md"
                       {...register('maximum')}
                     />
                   </CCol>

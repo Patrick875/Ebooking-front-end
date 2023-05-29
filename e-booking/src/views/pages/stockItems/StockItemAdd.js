@@ -80,7 +80,6 @@ const StockItemAdd = () => {
                       name="name"
                       id="name"
                       placeholder="....meat "
-                      size="md"
                       {...register('name', { required: true })}
                     />
                   </CCol>
@@ -91,7 +90,6 @@ const StockItemAdd = () => {
                       name="store"
                       id="storeId"
                       placeholder="....store "
-                      size="md"
                       {...register('storeId', { required: true })}
                     >
                       {stores && stores.length !== 0

@@ -68,7 +68,6 @@ function AddPaymentModal(props) {
                 name="payment"
                 id="payment"
                 type="text"
-                size="md"
                 className="mb-3"
                 {...register('payment')}
               />
@@ -79,7 +78,6 @@ function AddPaymentModal(props) {
                 <CFormSelect
                   name="paymentMethod"
                   id="paymentMethod"
-                  size="md"
                   className="mb-3"
                   {...register('paymentMethod')}
                 >
@@ -95,7 +93,6 @@ function AddPaymentModal(props) {
                 <CFormSelect
                   name="paymentMethod"
                   id="paymentMethod"
-                  size="md"
                   className="mb-3"
                   defaultValue={'RWF'}
                   {...register('currency')}

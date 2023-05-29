@@ -155,7 +155,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                       <CFormInput
                         name="petit-stock"
                         id="petit-stock"
-                        size="md"
                         readOnly={petitStock ? true : false}
                         value={petitStock ? petitStock.name : ''}
                         className="mb-3"
@@ -192,7 +191,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         id="quantity"
                         min={0}
                         placeholder="50  "
-                        size="md"
                         {...register('quantity', {
                           min: 0,
                           max: maxValue,
@@ -211,7 +209,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="unit"
                         id="unit"
-                        size="md"
                         className="mb-3"
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}

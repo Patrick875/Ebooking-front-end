@@ -57,7 +57,7 @@ const ReservationAdd = (props) => {
   let priceHall = 0
   let priceRoom = 0
 
-  const type = watch('booking_type') || '---'
+  const type = watch('booking_type') || 'room'
   const additional = watch('additionalServices') || {}
   const roomK = watch('roomClass') || null
   const details = watch('details') || null
@@ -69,8 +69,6 @@ const ReservationAdd = (props) => {
         )
       : [0]
   const additionalServicesTotal = additionalTotal.reduce((a, b) => a + b) || 0
-  let all = []
-  all = type && type === 'room' ? [...rooms] : [...halls]
 
   if (type === 'hall' && service.length !== 0) {
     priceHall = service[0].price
@@ -129,7 +127,6 @@ const ReservationAdd = (props) => {
       checkOut: new Date(endDate.toString()).getTime(),
     }
     data = { ...data, status: 'in progress' }
-    console.log('reservation data', data)
     const createReservation = async () => {
       await instance
         .post('/reservation/add', data)
@@ -283,12 +280,12 @@ const ReservationAdd = (props) => {
                       <CFormSelect
                         name="booking"
                         id="booking"
-                        size="md"
                         className="mb-3"
                         {...register('booking_type')}
                       >
-                        <option>---</option>
-                        <option value="room">Room</option>
+                        <option value="room" selected>
+                          Room
+                        </option>
                         <option value="hall">Hall</option>
                       </CFormSelect>
                     </CCol>
@@ -318,7 +315,7 @@ const ReservationAdd = (props) => {
                             labelKey="name"
                             filterBy={['name']}
                             onChange={setService}
-                            options={all}
+                            options={halls}
                             placeholder="service  ..."
                             selected={service}
                           />
@@ -515,7 +512,6 @@ const ReservationAdd = (props) => {
                         name="payment"
                         id="payment"
                         type="text"
-                        size="md"
                         className="mb-3"
                         {...register('payment')}
                       />
@@ -528,7 +524,6 @@ const ReservationAdd = (props) => {
                         <CFormSelect
                           name="paymentMethod"
                           id="paymentMethod"
-                          size="md"
                           className="mb-3"
                           {...register('paymentMethod')}
                         >
@@ -546,7 +541,6 @@ const ReservationAdd = (props) => {
                         <CFormSelect
                           name="paymentMethod"
                           id="currency"
-                          size="md"
                           className="mb-3"
                           defaultValue={'RWF'}
                           {...register('currency')}

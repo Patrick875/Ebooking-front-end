@@ -65,7 +65,6 @@ const FormControl = () => {
                   name="roomNumber"
                   id="roomNumber"
                   placeholder="V10MT"
-                  size="md"
                   {...register('name')}
                 />
               </div>
@@ -74,7 +73,6 @@ const FormControl = () => {
                 <CFormSelect
                   name="roomClassId"
                   id="roomClassId"
-                  size="md"
                   className="mb-3"
                   aria-label="Room class"
                   {...register('roomClassId', { required: true })}

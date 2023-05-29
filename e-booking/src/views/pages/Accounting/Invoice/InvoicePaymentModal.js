@@ -62,7 +62,6 @@ export default function InvoicePaymentModal(props) {
                   name="payment"
                   id="payment"
                   type="text"
-                  size="md"
                   className="mb-3"
                   min={0}
                   max={maxPayment}
@@ -77,7 +76,6 @@ export default function InvoicePaymentModal(props) {
                   <CFormSelect
                     name="paymentMethod"
                     id="paymentMethod"
-                    size="md"
                     className="mb-3"
                     {...register('paymentMethod')}
                   >
@@ -97,7 +95,6 @@ export default function InvoicePaymentModal(props) {
                   name="paymentIdentification"
                   id="paymentIdentification"
                   type="text"
-                  size="md"
                   className="mb-3"
                   {...register('paymentIdentification')}
                 />

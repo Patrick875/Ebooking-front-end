@@ -60,7 +60,6 @@ function HallEdit() {
                   type="text"
                   name="name"
                   id="title"
-                  size="md"
                   defaultValue={selectedHall.name}
                   required
                   {...register('name')}
@@ -73,7 +72,6 @@ function HallEdit() {
                   type="text"
                   name="size"
                   id="title"
-                  size="md"
                   defaultValue={selectedHall.size ? selectedHall.size : ''}
                   required
                   {...register('size')}
@@ -86,7 +84,6 @@ function HallEdit() {
                   type="text"
                   name="price"
                   id="title"
-                  size="md"
                   defaultValue={selectedHall.price}
                   required
                   {...register('price')}

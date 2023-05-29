@@ -103,7 +103,6 @@ function StockItems() {
               type="text"
               name="itemName"
               id="itemName"
-              size="md"
               placeholder="search ..."
               {...register('query')}
             />
@@ -112,7 +111,6 @@ function StockItems() {
             <CFormSelect
               name="store"
               id="store"
-              size="md"
               className="mb-3"
               aria-label="store"
               {...register('storeId', { required: true })}

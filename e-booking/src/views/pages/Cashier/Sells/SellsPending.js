@@ -25,7 +25,6 @@ function SellsPending() {
         .get('/products/package/sells')
         .then((res) => {
           setSells(res.data.data)
-          console.log('these are pending services', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)

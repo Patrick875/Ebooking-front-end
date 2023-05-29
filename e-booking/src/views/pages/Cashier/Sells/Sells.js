@@ -23,7 +23,9 @@ import {
 function Sells() {
   const { register, watch } = useForm()
   const [sells, setSells] = useState([])
+  const [serviceSells, setServiceSells] = useState([])
   const time = watch('time')
+  const type = watch('type')
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
@@ -35,10 +37,19 @@ function Sells() {
     setEndDate(end)
   }
   let myDates = datesInRangeWithUnix(startDate, endDate)
+  const filterSells = (sells) => {
+    return type === 'product'
+      ? sells.filter((sell) => sell.petitStock)
+      : type === 'service'
+      ? sells.filter((sell) => sell.Service)
+      : sells
+  }
   let confirmedSells =
     sells && sells.length !== 0
       ? sells.filter((sell) => sell.status.toLowerCase() === 'comfirmed')
-      : null
+      : []
+  confirmedSells = [...confirmedSells, ...serviceSells]
+  confirmedSells = filterSells(confirmedSells)
 
   if (
     confirmedSells &&
@@ -48,7 +59,9 @@ function Sells() {
     time !== 'all-time'
   ) {
     confirmedSells = confirmedSells.filter((sell) =>
-      myDates.includes(getUTCDateWithoutHours(sell.date)) ? sell : '',
+      myDates.includes(getUTCDateWithoutHours(sell.date || sell.updatedAt))
+        ? sell
+        : '',
     )
   } else {
     confirmedSells =
@@ -68,7 +81,10 @@ function Sells() {
 
   const total =
     confirmedSells && confirmedSells.length !== 0
-      ? confirmedSells.reduce((acc, curr) => acc + curr.amount, 0)
+      ? confirmedSells.reduce(
+          (acc, curr) => acc + (curr.amount ? curr.amount : curr.total),
+          0,
+        )
       : 0
   useEffect(() => {
     const getItems = async () => {
@@ -76,44 +92,74 @@ function Sells() {
         setSells(res.data.data)
       })
     }
+    const getServiceSells = async () => {
+      await instance
+        .get('/services/sells')
+        .then((res) => {
+          setServiceSells(res.data.data)
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    }
+    getServiceSells()
     getItems()
   }, [])
 
   return (
     <div>
-      <CCardHeader className="d-flex align-items- ">
-        <h2 className="col">
-          <strong> All sells </strong>
-        </h2>
-        <div className="col d-flex gap-2 flex-wrap">
-          <div className="col">
-            <label className="text-center py-1">Time</label>
-            <select
-              className="form-select form-select-sm col"
-              aria-label="Default select example"
-              defaultValue={'all-time'}
-              {...register('time')}
-            >
-              <option value="all-time">All-time</option>
-              <option value="date">Date</option>
-            </select>
-          </div>
-          {time && time === 'date' ? (
-            <div className="col d-flex align-items-end ">
-              <ReactDatePicker
-                className="form-control col px-2"
-                onChange={onChange}
-                startDate={startDate}
-                endDate={endDate}
-                dateFormat="dd/MM/yy"
-                selectsRange
-                portalId="root-portal"
-                popperPlacement="bottom-end"
-                popperContainer={CalendarContainer}
-                placeholderText="Select date range"
-              />
+      <CCardHeader>
+        <div className="my-2">
+          <h2 className="row">
+            <strong> All sells </strong>
+          </h2>
+          <div className="d-flex justify-content-between  ">
+            <div className="col-6 d-flex gap-2 flex-wrap">
+              <div className="col">
+                <label className="text-center py-1">Time</label>
+                <select
+                  className="form-select form-select-sm col"
+                  aria-label="Default select example"
+                  defaultValue={'all-time'}
+                  {...register('time')}
+                >
+                  <option value="all-time">All-time</option>
+                  <option value="date">Date</option>
+                </select>
+              </div>
+              {time && time === 'date' ? (
+                <div className="col d-flex align-items-end ">
+                  <ReactDatePicker
+                    className="form-control col px-2"
+                    onChange={onChange}
+                    startDate={startDate}
+                    endDate={endDate}
+                    dateFormat="dd/MM/yy"
+                    selectsRange
+                    portalId="root-portal"
+                    popperPlacement="bottom-end"
+                    popperContainer={CalendarContainer}
+                    placeholderText="Select date range"
+                  />
+                </div>
+              ) : null}
             </div>
-          ) : null}
+            <div className="col-4">
+              <div className="col">
+                <label className="text-center py-1">Type</label>
+                <select
+                  className="form-select form-select-sm col"
+                  aria-label=" sell type select"
+                  defaultValue={'all'}
+                  {...register('type')}
+                >
+                  <option value="all">All</option>
+                  <option value="product">Product</option>
+                  <option value="service">Service</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </CCardHeader>
       <CCardBody>
@@ -123,7 +169,7 @@ function Sells() {
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
               <CTableHeaderCell scope="col">By</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Product</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Product/Service</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
             </CTableRow>
@@ -136,32 +182,50 @@ function Sells() {
                       <CTableHeaderCell scope="row">
                         {(currentPage - 1) * perpage + 1 + i}
                       </CTableHeaderCell>
-                      <CTableDataCell>{`${item.petitStock.name}`}</CTableDataCell>
-                      <CTableDataCell>{`${item.user.firstName}  ${item.user.lastName}`}</CTableDataCell>
+                      <CTableDataCell>
+                        {item.petitStock
+                          ? item.petitStock.name
+                          : item.Service.name}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.Service
+                          ? item.User.firstName + ' ' + item.User.lastName
+                          : item.user.firstName + ' ' + item.user.lastName}
+                      </CTableDataCell>
                       <CTableDataCell>
                         <div>
-                          {item.petitStockSaleDetails.map((el, i) => (
-                            <p key={el + i}>
-                              {' '}
-                              {el.quantity}{' '}
-                              {el.quantity > 1
-                                ? `${el.Package.name}s`
-                                : el.Package.name}{' '}
-                              of {el.Package.Products.name}{' '}
+                          {item.Service ? (
+                            <p key={item.id * 100}>
+                              {item.Service.name}
+                              {' ' + item.total / item.Service.price + ' times'}
                             </p>
-                          ))}
+                          ) : (
+                            item.petitStockSaleDetails.map((el, i) => (
+                              <p key={el + i}>
+                                {el.quantity}{' '}
+                                {el.quantity > 1
+                                  ? `${el.Package.name}s`
+                                  : el.Package.name}{' '}
+                                of {el.Package.Products.name}{' '}
+                              </p>
+                            ))
+                          )}
                         </div>
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>
-                          {item.petitStockSaleDetails.map((el, i) => (
-                            <p key={el + i}>
-                              {el.Package.Products.ProductPackage.price}
-                            </p>
-                          ))}
+                          {item.Service
+                            ? item.Service.price
+                            : item.petitStockSaleDetails.map((el, i) => (
+                                <p key={el + i}>
+                                  {el.Package.Products.ProductPackage.price}
+                                </p>
+                              ))}
                         </div>
                       </CTableDataCell>
-                      <CTableDataCell>{`${item.amount}`}</CTableDataCell>
+                      <CTableDataCell>
+                        {item.Service ? item.total : item.amount}
+                      </CTableDataCell>
                     </CTableRow>
                   )
                 })

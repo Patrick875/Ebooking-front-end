@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
+import { useLocation } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import BackButton from 'src/components/Navigating/BackButton'
 import CalendarContainer from 'src/utils/CalendarContainer'
@@ -23,7 +24,7 @@ import {
 
 function AllServiceSells() {
   const { register, watch } = useForm()
-  const [sells, setSells] = useState([])
+  let [sells, setSells] = useState([])
   const time = watch('time')
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -35,6 +36,15 @@ function AllServiceSells() {
     setStartDate(start)
     setEndDate(end)
   }
+  const location = useLocation()?.pathname
+
+  let department = location ? location.split('/') : null
+  department = department ? department[department.length - 2] : null
+  const departmentSearchString = department
+    ? department.includes('-')
+      ? department.split('-')[0]
+      : department
+    : ''
   let myDates = datesInRangeWithUnix(startDate, endDate)
   //   let confirmedSells =
   //     sells && sells.length !== 0
@@ -66,6 +76,18 @@ function AllServiceSells() {
   //           })
   //         : []
   //   }
+  if (departmentSearchString !== '') {
+    sells =
+      sells && sells.length !== 0
+        ? sells.filter((sell) =>
+            sell.ServiceCategory.name
+              .toLowerCase()
+              .startsWith(departmentSearchString)
+              ? sell
+              : null,
+          )
+        : sells
+  }
 
   const total =
     sells && sells.length !== 0
@@ -125,6 +147,7 @@ function AllServiceSells() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Service</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Times</CTableHeaderCell>
               <CTableHeaderCell scope="col">Seller</CTableHeaderCell>
               <CTableHeaderCell scope="col">Client</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
@@ -140,6 +163,9 @@ function AllServiceSells() {
                       </CTableHeaderCell>
                       <CTableDataCell>{item.Service.name}</CTableDataCell>
                       <CTableDataCell>
+                        {Number(item.total / item.Service.price)}
+                      </CTableDataCell>
+                      <CTableDataCell>
                         {item.User.firstName + ' ' + item.User.lastName}
                       </CTableDataCell>
                       <CTableDataCell>{item.client_name}</CTableDataCell>
@@ -153,7 +179,7 @@ function AllServiceSells() {
 
             <CTableRow>
               <CTableDataCell />
-              <CTableDataCell colSpan={3}>Total</CTableDataCell>
+              <CTableDataCell colSpan={4}>Total</CTableDataCell>
               <CTableHeaderCell>
                 {Number(total).toLocaleString()}
               </CTableHeaderCell>

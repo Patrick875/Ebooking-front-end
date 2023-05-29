@@ -34,6 +34,7 @@ export const login = function (payload) {
           toast.error('Wrong username or password ! try again')
         } else {
           toast.error('user login failed')
+          console.log('err', err)
         }
 
         dispatch({

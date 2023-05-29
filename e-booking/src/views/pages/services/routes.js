@@ -44,7 +44,7 @@ export const serviceRoutes = [
     element: ServiceSell,
   },
   {
-    path: '/booking/services/allSells',
+    path: '/booking/services/:service/allSells',
     exact: true,
     name: 'All service sells',
     element: AllServiceSells,

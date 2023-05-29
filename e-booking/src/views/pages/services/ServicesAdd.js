@@ -16,7 +16,7 @@ import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const ServiceAdd = () => {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const [categories, setCategories] = useState([])
 
   const onSubmit = async (data) => {
@@ -24,9 +24,11 @@ const ServiceAdd = () => {
       .post('/services/add', data)
       .then(() => {
         toast.success('service added')
+        reset()
       })
       .catch((err) => {
         toast.error(err.message)
+        reset()
       })
   }
   useEffect(() => {

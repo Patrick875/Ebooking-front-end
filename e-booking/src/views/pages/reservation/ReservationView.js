@@ -9,7 +9,6 @@ import {
   CRow,
 } from '@coreui/react'
 import React, { useRef } from 'react'
-import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
 import ReactToPrint from 'react-to-print'
@@ -22,7 +21,11 @@ const ReservationReceipt = (props) => {
   return (
     <CCard>
       <CCardBody>
-        <CForm className="row" name="roomClassAddFrm" encType="multipart/form">
+        <CForm
+          className="row"
+          name="reservationViewFrm"
+          encType="multipart/form"
+        >
           <div className="mb-4">
             <CCardBody className="row">
               <CCol md={6}>
@@ -34,7 +37,6 @@ const ReservationReceipt = (props) => {
                     type="text"
                     name="title"
                     id="title"
-                    size="md"
                     required
                     value={reservation.Customer.names}
                   />
@@ -44,7 +46,6 @@ const ReservationReceipt = (props) => {
                     type="text"
                     name="title"
                     id="title"
-                    size="md"
                     required
                     value={reservation.Customer.phone}
                   />
@@ -54,7 +55,6 @@ const ReservationReceipt = (props) => {
                     type="text"
                     name="title"
                     id="title"
-                    size="md"
                     required
                     value={reservation.Customer.identification}
                   />

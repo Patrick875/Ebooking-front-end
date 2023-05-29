@@ -118,7 +118,6 @@ const AddStock = () => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />
@@ -128,7 +127,6 @@ const AddStock = () => {
                       <CFormSelect
                         name="unit"
                         id="unit"
-                        size="md"
                         className="mb-3"
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
@@ -145,7 +143,6 @@ const AddStock = () => {
                         name="price"
                         id="price"
                         placeholder="1000"
-                        size="md"
                         required
                         {...register('price')}
                       />

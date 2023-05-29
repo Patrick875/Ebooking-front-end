@@ -151,7 +151,6 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="store"
                         id="store"
-                        size="md"
                         className="mb-3"
                         aria-label="store"
                         {...register('storeId', { required: true })}
@@ -197,7 +196,6 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />
@@ -207,7 +205,6 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="unit"
                         id="unit"
-                        size="md"
                         className="mb-3"
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
@@ -225,7 +222,6 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         name="price"
                         id="price"
                         placeholder="item price in RWF"
-                        size="md"
                         required
                         {...register('price')}
                       />

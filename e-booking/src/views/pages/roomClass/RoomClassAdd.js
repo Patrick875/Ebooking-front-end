@@ -76,7 +76,6 @@ const RoomClassAdd = () => {
                     name="price"
                     id="price"
                     placeholder="price in USD"
-                    size="md"
                     required
                     {...register('price')}
                   />

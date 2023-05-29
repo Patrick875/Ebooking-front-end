@@ -45,7 +45,6 @@ function HallInfo() {
                   type="text"
                   name="name"
                   id="title"
-                  size="md"
                   value={selectedHall.name}
                   readOnly={true}
                 />
@@ -57,7 +56,6 @@ function HallInfo() {
                   type="text"
                   name="price"
                   id="title"
-                  size="md"
                   value={selectedHall.price}
                   readOnly={true}
                 />

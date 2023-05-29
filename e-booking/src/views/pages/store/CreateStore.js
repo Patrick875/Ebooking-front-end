@@ -50,7 +50,6 @@ const CreateStore = () => {
                     name="name"
                     id="name"
                     placeholder="...materials store "
-                    size="md"
                     {...register('name', { required: true })}
                   />
                 </CCol>

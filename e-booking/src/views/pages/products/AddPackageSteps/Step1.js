@@ -13,7 +13,6 @@ const Step1 = (props) => {
           type="text"
           name="name"
           id="name"
-          size="md"
           required
           {...register('name')}
         />
@@ -23,7 +22,6 @@ const Step1 = (props) => {
         <CFormSelect
           name="category"
           id="category"
-          size="md"
           className="mb-3"
           aria-label="Room class"
           {...register('category', { required: true })}

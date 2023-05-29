@@ -148,7 +148,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="itemName"
                         id="itemName"
-                        size="md"
                         className="mb-3"
                         {...register('title')}
                       >
@@ -178,7 +177,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         name="user"
                         id="user"
                         placeholder="..."
-                        size="md"
                         required
                         {...register('carriedBy')}
                       />
@@ -190,7 +188,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         name="amount"
                         id="amount"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('pay.Cash_RWF')}
                       />
@@ -202,7 +199,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         name="amount"
                         id="amount"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('pay.Card_RWF')}
                       />
@@ -214,7 +210,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         name="amount"
                         id="amount"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('pay.Cash_USD')}
                       />
@@ -226,7 +221,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         name="amount"
                         id="amount"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('pay.Card_USD')}
                       />
@@ -238,7 +232,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         name="amount"
                         id="amount"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('pay.MoMo_RWF')}
                       />

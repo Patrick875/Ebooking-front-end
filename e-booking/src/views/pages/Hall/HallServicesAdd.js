@@ -50,7 +50,6 @@ function HallServicesAdd() {
                   name="hallName"
                   id="hallName"
                   placeholder="product name"
-                  size="md"
                   {...register('name', { required: true })}
                 />
               </div>
@@ -62,7 +61,6 @@ function HallServicesAdd() {
                     name="hallServicePrice "
                     id="hallServicePrice"
                     placeholder="price in RWF"
-                    size="md"
                     {...register('price', { required: true })}
                   />
                 </div>

@@ -103,7 +103,6 @@ function Invoice() {
                       type="text"
                       name="id"
                       id="id/no"
-                      size="md"
                       placeholder="by id/no ..."
                       {...register('query')}
                     />
@@ -115,7 +114,6 @@ function Invoice() {
                       type="text"
                       name="status"
                       id="status"
-                      size="md"
                       placeholder="by status"
                       {...register('status')}
                     >

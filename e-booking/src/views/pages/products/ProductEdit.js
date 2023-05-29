@@ -108,7 +108,6 @@ function ProductEdit() {
                       name="title"
                       id="title"
                       defaultValue={selectedProduct.name}
-                      size="md"
                       required
                       {...register('name')}
                     />
@@ -121,7 +120,6 @@ function ProductEdit() {
                     <CFormSelect
                       name="category"
                       id="category"
-                      size="md"
                       className="mb-3"
                       aria-label="edit product category"
                       value={

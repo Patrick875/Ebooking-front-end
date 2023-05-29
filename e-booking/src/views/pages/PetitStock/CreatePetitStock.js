@@ -52,7 +52,6 @@ const CreatePetitStock = () => {
                       name="name"
                       id="name"
                       placeholder="...kitchen"
-                      size="md"
                       {...register('name', { required: true })}
                     />
                   </CCol>
@@ -61,7 +60,6 @@ const CreatePetitStock = () => {
                     <CFormSelect
                       name="type"
                       id="type"
-                      size="md"
                       {...register('selling', { required: true })}
                     >
                       <option value="selling">Selling</option>

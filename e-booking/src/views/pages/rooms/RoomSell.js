@@ -85,7 +85,6 @@ export default function RoomSell() {
                     min={0}
                     name="quantity"
                     id="title"
-                    size="md"
                     required
                     {...register('days')}
                   />

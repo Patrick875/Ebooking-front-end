@@ -206,7 +206,6 @@ const AddBarItem = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="bar"
                         id="unit"
-                        size="md"
                         className="mb-3"
                         aria-label="bar "
                         {...register('bar', { required: true })}
@@ -267,7 +266,6 @@ const AddBarItem = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />
@@ -277,7 +275,6 @@ const AddBarItem = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="unit"
                         id="unit"
-                        size="md"
                         className="mb-3"
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
@@ -295,7 +292,6 @@ const AddBarItem = React.forwardRef((props, ref) => {
                         name="price"
                         id="price"
                         placeholder="1000"
-                        size="md"
                         required
                         {...register('price')}
                       />

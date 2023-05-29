@@ -74,7 +74,6 @@ const PackageEditModal = (props) => {
               <CFormSelect
                 name="package id"
                 id="packageId"
-                size="md"
                 className="mb-3"
                 aria-label="package id"
                 {...register('packageId', { required: true })}
@@ -106,7 +105,6 @@ const PackageEditModal = (props) => {
                 id="price"
                 defaultValue={productPackage.ProductPackage.price}
                 placeholder="  RWF"
-                size="md"
                 required
                 {...register('price')}
               />
@@ -141,7 +139,6 @@ const PackageEditModal = (props) => {
                 name="quantity"
                 id="quantity"
                 placeholder=" "
-                size="md"
                 step="any"
                 min={0}
                 required
@@ -153,7 +150,6 @@ const PackageEditModal = (props) => {
               <CFormSelect
                 name="unit"
                 id="unit"
-                size="md"
                 className="mb-3"
                 aria-label="item quantity unit"
                 {...register('unit', { required: true })}

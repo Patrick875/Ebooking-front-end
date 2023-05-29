@@ -101,7 +101,6 @@ const Users = () => {
                     type="text"
                     name="userName"
                     id="userName"
-                    size="md"
                     placeholder="by name ..."
                     {...register('query')}
                   />

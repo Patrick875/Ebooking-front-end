@@ -54,7 +54,6 @@ const RoomClassEdit = () => {
                   name="roomNumber"
                   id="roomNumber"
                   defaultValue={selectedRoomClass.name}
-                  size="md"
                   {...register('name')}
                 />
               </div>
@@ -65,7 +64,6 @@ const RoomClassEdit = () => {
                   name="roomClassPrice"
                   id="roomClassPrice"
                   defaultValue={selectedRoomClass.price}
-                  size="md"
                   {...register('price')}
                 />
               </div>

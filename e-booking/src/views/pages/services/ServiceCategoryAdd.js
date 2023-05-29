@@ -61,7 +61,6 @@ const ServiceCategoryAdd = () => {
                   <CFormInput
                     name="category_name"
                     id="category_name"
-                    size="md"
                     className="mb-3"
                     aria-label="Room class"
                     {...register('name', { required: true })}

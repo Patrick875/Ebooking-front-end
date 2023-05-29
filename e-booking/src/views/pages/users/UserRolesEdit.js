@@ -100,7 +100,6 @@ function UserRolesEdit() {
                 type="text"
                 name="role"
                 id="role"
-                size="md"
                 defaultValue={userRole.name}
                 required
                 {...register('name')}

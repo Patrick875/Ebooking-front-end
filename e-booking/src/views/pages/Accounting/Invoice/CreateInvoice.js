@@ -128,7 +128,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           name="clientName"
                           id="clientName"
                           placeholder="...client name"
-                          size="md"
                           required
                           {...register('outside.clientName')}
                         />
@@ -139,7 +138,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="clientType"
                         id="clientType"
-                        size="md"
                         className="mb-3"
                         aria-label="client type"
                         {...register('outside.clientType', { required: true })}
@@ -156,7 +154,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           name="function"
                           id="function"
                           placeholder="...function"
-                          size="md"
                           required
                           {...register('outside.function')}
                         />
@@ -172,7 +169,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           id="pax"
                           placeholder="...pax"
                           defaultvalue={1}
-                          size="md"
                           required
                           {...register('times')}
                         />
@@ -186,7 +182,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           name="itemName"
                           id="itemName"
                           placeholder="...item "
-                          size="md"
                           required
                           {...register('name')}
                         />
@@ -200,7 +195,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />
@@ -213,7 +207,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         name="price"
                         id="price"
                         placeholder="item price in RWF"
-                        size="md"
                         required
                         {...register('price')}
                       />
@@ -223,7 +216,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="VAT"
                         id="VAT"
-                        size="md"
                         className="mb-3"
                         aria-label="VAT"
                         {...register('VAT', { required: true })}

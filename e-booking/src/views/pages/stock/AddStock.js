@@ -276,7 +276,6 @@ const AddStock = React.forwardRef((props, ref) => {
                         min={0}
                         id="quantity"
                         placeholder="quantity  "
-                        size="md"
                         defaultValue={
                           item2 && item2[0] ? item2[0].requestQuantity : ''
                         }
@@ -289,7 +288,6 @@ const AddStock = React.forwardRef((props, ref) => {
                       <CFormSelect
                         name="unit"
                         id="unit"
-                        size="md"
                         className="mb-3"
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
@@ -311,7 +309,6 @@ const AddStock = React.forwardRef((props, ref) => {
                         defaultValue={
                           item2 && item2[0] ? item2[0].unitPrice : ''
                         }
-                        size="md"
                         required
                         {...register('price')}
                       />

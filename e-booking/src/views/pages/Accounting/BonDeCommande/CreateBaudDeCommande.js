@@ -133,7 +133,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                           name="company"
                           id="company"
                           placeholder="...company"
-                          size="md"
                           required
                           {...register('outside.company')}
                         />
@@ -147,7 +146,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                           name="guest"
                           id="guest"
                           placeholder="...guest"
-                          size="md"
                           required
                           {...register('outside.guest_name')}
                         />
@@ -161,7 +159,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                           name="function"
                           id="function"
                           placeholder="...function"
-                          size="md"
                           required
                           {...register('outside.function')}
                         />
@@ -175,7 +172,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                           name="fax"
                           id="fax"
                           placeholder="...fax"
-                          size="md"
                           required
                           {...register('outside.fax')}
                         />
@@ -192,7 +188,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                           name="description"
                           id="description"
                           placeholder="...description "
-                          size="md"
                           required
                           {...register('description')}
                         />
@@ -206,7 +201,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
-                        size="md"
                         required
                         {...register('quantity')}
                       />
@@ -220,7 +214,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                         id="times"
                         placeholder=".. "
                         defaultValue={1}
-                        size="md"
                         required
                         {...register('times')}
                       />
@@ -265,7 +258,6 @@ const CreateBaudDeCommande = React.forwardRef((props, ref) => {
                         name="price"
                         id="price"
                         placeholder="item price in RWF"
-                        size="md"
                         required
                         {...register('price')}
                       />
@@ -331,7 +323,7 @@ export default CreateBaudDeCommande
 //                         name="VAT"
 //                         id="VAT"
 //                         placeholder="...% VAT"
-//                         size="md"
+//
 //                         min={0}
 //                         max={100}
 //                         step="any"

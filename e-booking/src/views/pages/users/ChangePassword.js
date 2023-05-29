@@ -57,7 +57,6 @@ const ChangePassword = () => {
                       name="oldPassword"
                       id="oldPassword"
                       placeholder="*********"
-                      size="md"
                       {...register('password', { required: true })}
                     />
                   </CCol>
@@ -71,7 +70,6 @@ const ChangePassword = () => {
                       name="newPassword"
                       id="newPassword"
                       placeholder="**********"
-                      size="md"
                       {...register('newPassword', { required: true })}
                     />
                   </CCol>
@@ -85,7 +83,6 @@ const ChangePassword = () => {
                       name="newPasswordConfirm"
                       id="newPasswordConfirm"
                       placeholder="**********"
-                      size="md"
                       {...register('confirmPassword', { required: true })}
                     />
                   </CCol>

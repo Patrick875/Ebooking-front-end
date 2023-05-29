@@ -183,7 +183,6 @@ const Products = () => {
                     type="text"
                     name="productName"
                     id="productName"
-                    size="md"
                     placeholder="by name ..."
                     {...register('query')}
                   />

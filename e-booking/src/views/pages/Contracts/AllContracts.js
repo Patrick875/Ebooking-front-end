@@ -60,7 +60,6 @@ function AllContracts() {
                     type="text"
                     name="id"
                     id="id/no"
-                    size="md"
                     placeholder="by client name"
                     {...register('query')}
                   />

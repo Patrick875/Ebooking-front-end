@@ -16,8 +16,6 @@ import {
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
-import { currencies } from 'src/utils/constants'
-import { Typeahead } from 'react-bootstrap-typeahead'
 import { sumAmountsByCurrency } from 'src/utils/functions'
 import PrintHeader from '../../Printing/PrintHeader'
 import PrintDailyReport from '../../Printing/PrintDailyReport'
@@ -38,11 +36,8 @@ function removeNullEmptyProperties(obj) {
 const CreateDailySalesReport = React.forwardRef((props, ref) => {
   const { register, getValues, reset, watch } = useForm()
   const title = watch('title')
-  const amount = watch('amount')
-  const currency = watch('currency')
   const user = watch('carriedBy')
   let payment = watch('pay')
-  const paymentMethod = watch('paymentMethod')
   const componentRef = useRef()
   let [reportItems, setReportItems] = useState([])
   const [visible, setVisible] = useState(false)
@@ -79,8 +74,6 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
         }
       })
     }
-
-    console.log('new datas', newObjects)
     setReportItems([...reportItems, ...newObjects])
     reset()
   }

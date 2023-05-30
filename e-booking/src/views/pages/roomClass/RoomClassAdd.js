@@ -17,10 +17,9 @@ import { cilArrowRight, cilClone } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 
 const RoomClassAdd = () => {
-  const [roomClass, setroomClass] = useState([])
   const { register, handleSubmit, reset } = useForm()
 
   const onSubmit = async (data) => {
@@ -35,10 +34,6 @@ const RoomClassAdd = () => {
         reset()
       })
   }
-
-  useEffect(() => {
-    console.log(roomClass)
-  }, [roomClass])
 
   return (
     <React.Fragment>
@@ -102,36 +97,6 @@ const RoomClassAdd = () => {
           </CCard>
         </CCol>
       </CRow>
-      {roomClass.length ? (
-        <CRow>
-          {roomClass.map((item, index) => (
-            <CCol xs={12} sm={6} lg={3} key={index}>
-              <CWidgetStatsF
-                className="mb-3"
-                icon={<CIcon width={24} icon={cilClone} size="xl" />}
-                title={item.name}
-                value={item.price}
-                color="warning"
-                footer={
-                  <Link
-                    className="font-weight-bold font-xs text-medium-emphasis"
-                    to="/"
-                  >
-                    View 40 Rooms
-                    <CIcon
-                      icon={cilArrowRight}
-                      className="float-end"
-                      width={16}
-                    />
-                  </Link>
-                }
-              />
-            </CCol>
-          ))}
-        </CRow>
-      ) : (
-        <div> No Records </div>
-      )}
     </React.Fragment>
   )
 }

@@ -14,7 +14,7 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 
 const RoomClassEdit = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)

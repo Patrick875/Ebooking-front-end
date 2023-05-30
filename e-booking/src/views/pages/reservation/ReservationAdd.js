@@ -377,7 +377,7 @@ const ReservationAdd = (props) => {
                                 ? hallServices.map((hallService, i) => (
                                     <div className="d-flex flex-row">
                                       <CFormCheck
-                                        id="service 1"
+                                        id={`service ${i + 1}`}
                                         value={hallService.price}
                                         label={
                                           hallService.name +
@@ -474,7 +474,7 @@ const ReservationAdd = (props) => {
                                 <CFormInput
                                   type="number"
                                   min={0}
-                                  id="number of people"
+                                  id={`"number of people" for ${roomClass.name}`}
                                   {...register(
                                     `details.${roomClass.name}.people`,
                                   )}

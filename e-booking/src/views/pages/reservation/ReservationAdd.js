@@ -474,7 +474,7 @@ const ReservationAdd = (props) => {
                                 <CFormInput
                                   type="number"
                                   min={0}
-                                  id="number of people"
+                                  id={`"number of people" for ${roomClass.name}`}
                                   {...register(
                                     `details.${roomClass.name}.people`,
                                   )}

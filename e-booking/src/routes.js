@@ -2,7 +2,6 @@ import { waiterRoutes } from './views/pages/Waiter/routes'
 import { tableRoutes } from './views/pages/Tables/routes'
 import { stockItemRoutes } from './views/pages/stockItems/routes'
 import { stockRoutes } from './views/pages/stock/routes'
-import { saunaRoutes } from './views/pages/Sauna/routes'
 import { roomRoutes } from './views/pages/rooms/routes'
 import { roomClassRoutes } from './views/pages/roomClass/routes'
 import { reservationRoutes } from './views/pages/reservation/routes'
@@ -35,7 +34,6 @@ const routes = [
   ...roomClassRoutes,
   ...roomRoutes,
   ...serviceRoutes,
-  ...saunaRoutes,
   ...stockRoutes,
   ...stockItemRoutes,
   ...tableRoutes,

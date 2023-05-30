@@ -47,7 +47,7 @@ function StockItems() {
       toast.success('item deleted!!!!')
     })
   }
-  const perpage = 10
+  const perpage = 30
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const role = useSelector((state) => state.auth.role)

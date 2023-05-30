@@ -300,7 +300,7 @@ const ReservationAdd = (props) => {
 
                         {type && type === 'room' ? (
                           <Typeahead
-                            id="basic-typeahead-single"
+                            id="rooms"
                             labelKey="name"
                             filterBy={['name']}
                             onChange={setService}
@@ -311,7 +311,7 @@ const ReservationAdd = (props) => {
                           />
                         ) : (
                           <Typeahead
-                            id="basic-typeahead-single"
+                            id="halls"
                             labelKey="name"
                             filterBy={['name']}
                             onChange={setService}

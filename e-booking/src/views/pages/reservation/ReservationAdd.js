@@ -377,7 +377,7 @@ const ReservationAdd = (props) => {
                                 ? hallServices.map((hallService, i) => (
                                     <div className="d-flex flex-row">
                                       <CFormCheck
-                                        id="service 1"
+                                        id={`service ${i + 1}`}
                                         value={hallService.price}
                                         label={
                                           hallService.name +

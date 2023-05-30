@@ -42,7 +42,7 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
   let [reportItems, setReportItems] = useState([])
   const [visible, setVisible] = useState(false)
 
-  const dontAdd =
+  let dontAdd =
     !title ||
     title === '' ||
     !user ||

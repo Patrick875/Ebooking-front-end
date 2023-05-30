@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -11,10 +9,7 @@ import {
   CFormLabel,
   CFormTextarea,
   CRow,
-  CWidgetStatsF,
 } from '@coreui/react'
-import { cilArrowRight, cilClone } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'

@@ -20,13 +20,16 @@ import { IoReturnUpBack } from 'react-icons/io5'
 import { allowedKeys, numpadItems } from 'src/utils/constants'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
-import PrintHeader from '../Printing/PrintHeader'
 import ReactToPrint from 'react-to-print'
 import { RiCheckLine } from 'react-icons/ri'
 import AllPetitStock from '../PetitStock/AllPetitStock'
+import { useSelector } from 'react-redux'
 
 const ProductSell = React.forwardRef((props, ref) => {
   const { register, setValue, getValues } = useForm()
+  const user = useSelector(
+    (state) => state.auth.user.firstName + ' ' + state.auth.user.lastName,
+  )
   const componentRef = useRef()
   const [selectedInput, setSelectedInput] = useState(1)
   let [results, setResults] = useState(Array(10).fill(''))
@@ -377,32 +380,36 @@ const ProductSell = React.forwardRef((props, ref) => {
                   ref={ref || componentRef}
                 >
                   <div style={{ width: '100%', height: '100%' }}>
-                    <PrintHeader />
-                    <p className="fs-4 fw-bolder text-center my-1"> Receipt </p>
-                    <CTable bordered>
-                      <CTableHead>
-                        <CTableRow>
-                          <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">
-                            {' '}
-                            Item{' '}
-                          </CTableHeaderCell>
-                          <CTableHeaderCell scope="col"> P.U </CTableHeaderCell>
-                          <CTableHeaderCell scope="col"> Qty </CTableHeaderCell>
-                          <CTableHeaderCell scope="col">
-                            {' '}
-                            Amount{' '}
-                          </CTableHeaderCell>
-                        </CTableRow>
-                      </CTableHead>
+                    <p className="my-0 py-0 ">
+                      MOMO Pay CODE : 005685 // OLYMPIC HOTEL{' '}
+                    </p>
+                    <p className="my-0 py-0 ">-------------------</p>
+                    <p className="my-0 py-0 ">OLYMPIC HOTEL</p>
+                    <p className="my-0 py-0 ">KIMIRONKO-KIGALI</p>
+                    <p className="my-0 py-0 ">TEL:+250783103500</p>
+                    <p className="my-0 py-0 ">TIN:102556009</p>
+                    <p>{new Date().toLocaleString()}</p>
+                    <p
+                      className="text-center my-1"
+                      style={{ fontSize: '14px' }}
+                    >
+                      {' '}
+                      CUSTOMER BILL{' '}
+                    </p>
+                    <table bordered>
+                      <tr>
+                        <th>#</th>
+                        <th> Item </th>
+                        <th> P.U </th>
+                        <th> Qty </th>
+                        <th> Amount </th>
+                      </tr>
                       {orderItems && orderItems.length !== 0 ? (
                         orderItems.map((item, index) => (
-                          <CTableRow>
-                            <CTableHeaderCell scope="row">
-                              {index + 1}
-                            </CTableHeaderCell>
-                            <CTableDataCell>
-                              <CFormInput
+                          <tr>
+                            <td scope="row">{index + 1}</td>
+                            <td>
+                              <input
                                 size="sm"
                                 {...register(`item${index + 1}`)}
                                 defaultValue={
@@ -412,14 +419,14 @@ const ProductSell = React.forwardRef((props, ref) => {
                                 }
                                 className="border-none outline-none"
                               />
-                            </CTableDataCell>
-                            <CTableDataCell>
+                            </td>
+                            <td>
                               {Number(
                                 item.ProductPackage.price,
                               ).toLocaleString()}
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              <CFormInput
+                            </td>
+                            <td>
+                              <input
                                 key={`result${index + 1}`}
                                 type="number"
                                 min={0}
@@ -430,18 +437,27 @@ const ProductSell = React.forwardRef((props, ref) => {
                                 }}
                                 onKeyDown={handleKeyboardInput}
                               />
-                            </CTableDataCell>
-                            <CTableDataCell>
+                            </td>
+                            <td>
                               {Number(
                                 item.ProductPackage.price * results[index],
                               ).toLocaleString()}
-                            </CTableDataCell>
-                          </CTableRow>
+                            </td>
+                          </tr>
                         ))
                       ) : (
-                        <CTableRow>0 items on order</CTableRow>
+                        <tr>0 items on order</tr>
                       )}
-                    </CTable>
+                    </table>
+                    <p>Served by :{user} </p>
+                    <p>Location :{table ? table : ''} </p>
+                    <p className="text-center my-0"> NOT OFFICAL RECEIPT</p>
+                    <p className="text-center my-0">
+                      {' '}
+                      PLEASE WAIT FOR YOUR EBM
+                    </p>
+                    <p className="text-center  my-0"> MURAKOZE</p>
+                    <p className="text-center  my-0">-----------------</p>
                   </div>
                 </div>
               </div>
@@ -515,6 +531,13 @@ const ProductSell = React.forwardRef((props, ref) => {
                         <CTableRow
                           onClick={() => {
                             setTable(item.name)
+                            toast.success(
+                              `${item.name.toLowerCase()} selected`,
+                              {
+                                duration: 5600,
+                                position: 'bottom-right',
+                              },
+                            )
                           }}
                         >
                           <CTableHeaderCell scope="row">
@@ -537,30 +560,3 @@ const ProductSell = React.forwardRef((props, ref) => {
 })
 
 export default ProductSell
-
-// <CCol md={2} className="bg-white text-dark">
-//               <div className="col d-flex mx-0 px-0 py-2 ">
-//                 <CButton
-//                   className=" mx-0 col btn-light text-dark"
-//                   onClick={() => {
-//                     setSelectedCategory('all')
-//                   }}
-//                 >
-//                   All
-//                 </CButton>
-//               </div>
-//               {productCategories && productCategories.length !== 0
-//                 ? productCategories.map((cat, i) => (
-//                     <div key={i} className="col d-flex mx-0 px-0 py-2 ">
-//                       <CButton
-//                         className=" mx-0 col btn-light text-dark"
-//                         onClick={() => {
-//                           setSelectedCategory(cat.id)
-//                         }}
-//                       >
-//                         {cat.name}
-//                       </CButton>
-//                     </div>
-//                   ))
-//                 : null}
-//             </CCol>

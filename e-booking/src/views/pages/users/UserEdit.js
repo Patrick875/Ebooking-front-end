@@ -27,12 +27,14 @@ const UserEdit = () => {
   let role = watch('role') || selectedUser.Role.name
   const dispatch = useDispatch()
   const reactivateUser = async (id) => {
+    console.log('id', id)
     await instance
-      .get(`/users/reactivate/:${id}`)
+      .get(`/users/reactivate/${id}`)
       .then(() => {
         toast.success('user re-activated !!')
       })
       .catch((err) => {
+        console.log(err)
         toast.error(err.status)
       })
   }

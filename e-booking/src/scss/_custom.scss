@@ -45,14 +45,14 @@
    display:flex;
    justify-content: center;
    h3,p,th,td{
-     font-size: small;
+     font-size: 10px;
    }
   .printing-header{
 
     flex-direction: row !important;
   }
    .website,.email,.doneOn{
-    font-size:smaller
+    font-size:10px
    }
   }
 }

@@ -31,7 +31,9 @@ function StockItems() {
     if (!query || query === '') {
       return items
     } else {
-      return items.filter((item) => item.name.toLowerCase().includes(query))
+      return items.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase()),
+      )
     }
   }
   const filterItems = (items, storeId) => {

@@ -159,7 +159,7 @@ const Reservation = () => {
           setReservations(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          toast.error(err.status)
         })
     }
     getReservations()

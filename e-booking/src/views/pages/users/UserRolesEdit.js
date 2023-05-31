@@ -116,9 +116,9 @@ function UserRolesEdit() {
                           <CFormCheck
                             key={i + 100}
                             id={`Access${i + 1}`}
-                            value={role.toLocaleLowerCase()}
+                            value={role}
                             label={role}
-                            defaultChecked={userAccessFields.includes(role)}
+                            checked={access.includes(role)}
                             className="text-capitalize"
                             {...register(`access`)}
                           />

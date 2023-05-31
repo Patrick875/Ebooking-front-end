@@ -198,7 +198,13 @@ function Sells() {
                       <CTableDataCell>
                         {item.Service
                           ? item.User.firstName + ' ' + item.User.lastName
-                          : item.user.firstName + ' ' + item.user.lastName}
+                          : !item.status.split(' ')[2]
+                          ? ' '
+                          : item.status.split(' ')[2] +
+                            ' ' +
+                            !item.status.split(' ')[3]
+                          ? ' '
+                          : item.status.split(' ')[3]}
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>

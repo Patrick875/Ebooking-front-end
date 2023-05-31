@@ -8,12 +8,11 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { orderBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { RiCheckLine } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import Pagination from 'src/utils/Pagination'

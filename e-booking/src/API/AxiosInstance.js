@@ -11,9 +11,10 @@ import Cookies from 'js-cookie'
 
 //url home
 //localhost:4000
+// http://localhost:4000/api/v1
 
 const instance = axios.create({
-  baseURL: 'http://localhost:4000/api/v1',
+  baseURL: 'http://192.168.122.1:8080/api/v1',
 })
 
 let tokenPromise

@@ -43,6 +43,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   }
   const store = useSelector((state) => state.selection.selectedStore)
   const createPurchaseOrder = async (data) => {
+    console.log('data', data)
     await instance
       .post('/purchase/order/add', data)
       .then(() => {
@@ -219,6 +220,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       <CFormInput
                         type="number"
                         min={0}
+                        step="0.0000001"
                         name="price"
                         id="price"
                         placeholder="item price in RWF"

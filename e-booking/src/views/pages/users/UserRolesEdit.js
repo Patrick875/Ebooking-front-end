@@ -118,7 +118,7 @@ function UserRolesEdit() {
                             id={`Access${i + 1}`}
                             value={role}
                             label={role}
-                            checked={access.includes(role)}
+                            defaultChecked={userAccessFields.includes(role)}
                             className="text-capitalize"
                             {...register(`access`)}
                           />

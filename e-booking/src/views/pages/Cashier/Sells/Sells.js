@@ -46,7 +46,9 @@ function Sells() {
   }
   let confirmedSells =
     sells && sells.length !== 0
-      ? sells.filter((sell) => sell.status.toLowerCase() === 'comfirmed')
+      ? sells.filter((sell) =>
+          sell.status.toLowerCase().startsWith('comfirmed'),
+        )
       : []
   confirmedSells = [...confirmedSells, ...serviceSells]
   confirmedSells = filterSells(confirmedSells)
@@ -169,6 +171,7 @@ function Sells() {
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
               <CTableHeaderCell scope="col">By</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Confirmed By</CTableHeaderCell>
               <CTableHeaderCell scope="col">Product/Service</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
@@ -186,6 +189,11 @@ function Sells() {
                         {item.petitStock
                           ? item.petitStock.name
                           : item.Service.name}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.Service
+                          ? item.User.firstName + ' ' + item.User.lastName
+                          : item.user.firstName + ' ' + item.user.lastName}
                       </CTableDataCell>
                       <CTableDataCell>
                         {item.Service

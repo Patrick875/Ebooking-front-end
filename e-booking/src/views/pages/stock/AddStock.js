@@ -24,6 +24,7 @@ import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import ReceiveVaucherPrint from '../Printing/ReceiveVaucherPrint'
 import { instance } from 'src/API/AxiosInstance'
+import { units } from 'src/utils/constants'
 
 const AddStockToTable = (props) => {
   const [show, setShow] = useState(false)
@@ -124,14 +125,6 @@ const AddStock = React.forwardRef((props, ref) => {
   // const selectedItem = watch('item') || ''
   const price = watch('price') || ''
   const quantity = watch('quantity') || ''
-
-  // if (price === '' && quantity === '' && item2 && item2.length !== 0) {
-  //   let values = {
-  //     price: item2[0].unitPrice,
-  //     quantity: item2[0].requestQuantity,
-  //   }
-  //   setDefaultValues(values)
-  // }
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
@@ -292,10 +285,11 @@ const AddStock = React.forwardRef((props, ref) => {
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
                       >
-                        <option value="Kg"> Kg </option>
-                        <option value="l"> ltr </option>
-                        <option value="piece"> piece </option>
-                        <option value="bottle"> bottle </option>
+                        {units.map((el, i) => (
+                          <option value={el.name} key={el.name + i}>
+                            {el.symbol}
+                          </option>
+                        ))}
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>

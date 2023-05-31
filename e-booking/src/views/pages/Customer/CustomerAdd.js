@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -117,7 +117,6 @@ function CustomerAdd({ reload }) {
                   type="text"
                   name="email"
                   id="email"
-                  required
                   {...register('email')}
                 />
               </CCol>

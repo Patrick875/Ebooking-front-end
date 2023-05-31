@@ -27,7 +27,7 @@ function AddPaymentModal(props) {
       .then(() => {
         toast.success('payment added')
       })
-      .then((err) => {
+      .catch((err) => {
         toast.error(err.message)
       })
     // reset()

@@ -71,7 +71,7 @@ const ReservationAdd = (props) => {
   const additionalServicesTotal = additionalTotal.reduce((a, b) => a + b) || 0
 
   if (type === 'hall' && service.length !== 0) {
-    priceHall = service[0].price
+    priceHall = service && service.length !== 0 ? service[0].price : 0
   } else if (type === 'room' && service.length !== 0 && service[0].RoomClass) {
     priceRoom = service[0].RoomClass.price
   }
@@ -243,7 +243,7 @@ const ReservationAdd = (props) => {
             <CCardBody>
               <CForm
                 className="row"
-                name="roomClassAddFrm"
+                name="reservationAddFrm"
                 onSubmit={handleSubmit(onSubmit)}
                 encType="multipart/form"
               >
@@ -297,7 +297,6 @@ const ReservationAdd = (props) => {
                     customer[0].customerType === 'company' ? null : (
                       <CCol md={6} disabled={true}>
                         <CFormLabel htmlFor="service"> Service </CFormLabel>
-
                         {type && type === 'room' ? (
                           <Typeahead
                             id="rooms"
@@ -380,13 +379,15 @@ const ReservationAdd = (props) => {
                                         id={`service ${i + 1}`}
                                         value={hallService.price}
                                         label={
-                                          hallService.name +
+                                          hallService.name.split(',')[0] +
                                           ' ' +
                                           hallService.price +
                                           ' RWF'
                                         }
                                         {...register(
-                                          `additionalServices.${hallService.name}`,
+                                          `additionalServices.${
+                                            hallService.name.split(',')[0]
+                                          }`,
                                         )}
                                       />
                                     </div>

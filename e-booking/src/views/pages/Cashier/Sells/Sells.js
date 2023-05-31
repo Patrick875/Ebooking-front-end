@@ -26,7 +26,7 @@ function Sells() {
   const [serviceSells, setServiceSells] = useState([])
   const time = watch('time')
   const type = watch('type')
-  const perpage = 10
+  const perpage = 14
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const [startDate, setStartDate] = useState(new Date())
@@ -88,6 +88,7 @@ function Sells() {
           0,
         )
       : 0
+  console.log('confirmed sells', confirmedSells)
   useEffect(() => {
     const getItems = async () => {
       await instance.get('/products/package/sells').then((res) => {
@@ -247,7 +248,7 @@ function Sells() {
 
             <CTableRow>
               <CTableDataCell />
-              <CTableDataCell colSpan={4}>Total</CTableDataCell>
+              <CTableDataCell colSpan={5}>Total</CTableDataCell>
               <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
             </CTableRow>
           </CTableBody>

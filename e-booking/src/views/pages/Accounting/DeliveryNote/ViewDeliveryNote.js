@@ -49,7 +49,7 @@ const Item = (props, ref) => {
                       <CTableDataCell>{el.description}</CTableDataCell>
                       <CTableDataCell>{el.quantity}</CTableDataCell>
                       <CTableDataCell>{el.times}</CTableDataCell>
-                      <CTableDataCell>{el.price || 1}</CTableDataCell>
+                      <CTableDataCell>{0}</CTableDataCell>
                       <CTableDataCell>
                         {Number(
                           el.quantity * el.times * (el.price || 0),
@@ -80,11 +80,15 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
   if (request && request.DeliveryNoteDetails) {
     DeliveryNoteDetails = request.DeliveryNoteDetails
   }
+  const transferToInvoice = () => {
+    console.log('transfer to invoice trial')
+  }
 
   return (
     <CCard>
       <CCardHeader className="d-flex justify-content-between">
         <BackButton />
+        <button className="btn btn-ghost-primary">Transfer to invoice</button>
         <div className="d-flex justify-content-end">
           {DeliveryNoteDetails && DeliveryNoteDetails.length !== 0 ? (
             <ReactToPrint

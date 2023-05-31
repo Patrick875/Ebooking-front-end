@@ -17,15 +17,25 @@ import { getRoles } from 'src/redux/Roles/RolesActions'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const UserEdit = () => {
   const { register, handleSubmit, watch } = useForm()
-  // let users = useSelector((state) => state.systemUsers.users)
   const selectedUser = useSelector((state) => state.selection.selected) || {}
   const roles = useSelector((state) => state.roles.userRoles) || []
   let formData = { ...selectedUser }
   let role = watch('role') || selectedUser.Role.name
   const dispatch = useDispatch()
+  const reactivateUser = async (id) => {
+    await instance
+      .get(`/users/reactivate/:${id}`)
+      .then(() => {
+        toast.success('user re-activated !!')
+      })
+      .catch((err) => {
+        toast.error(err.status)
+      })
+  }
 
   const onSubmit = async (data) => {
     data.id = selectedUser.id ? selectedUser.id : null
@@ -50,11 +60,22 @@ const UserEdit = () => {
     <>
       <CRow>
         <CCol xs={12}>
+          <BackButton />
           <CCard className="mb-4">
-            <CCardHeader>
-              <h2>
+            <CCardHeader className="d-flex justify-content-between">
+              <p>
                 <strong> Edit user </strong>
-              </h2>
+              </p>
+              {selectedUser.status !== 'ACTIVE' ? (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    reactivateUser(selectedUser.id)
+                  }}
+                >
+                  ACTIVATE
+                </button>
+              ) : null}
             </CCardHeader>
             <CCardBody>
               <CForm

@@ -452,8 +452,8 @@ export const allowedKeys = [
   'Backspace',
 ]
 export const units = [
-  { name: 'gram', symbol: 'g' },
-  { name: 'kilogram', symbol: 'Kg' },
+  { name: 'g', symbol: 'g' },
+  { name: 'Kg', symbol: 'Kg' },
   { name: 'bottle', symbol: 'Bottle' },
   { name: 'crate/caisse', symbol: 'Crate/Caisse' },
   { name: 'litter', symbol: 'L' },

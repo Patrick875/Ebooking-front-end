@@ -26,18 +26,28 @@ import AllPetitStock from '../PetitStock/AllPetitStock'
 import { useSelector } from 'react-redux'
 
 const ProductSell = React.forwardRef((props, ref) => {
-  const { register, setValue, getValues } = useForm()
+  const { register, setValue, getValues, watch } = useForm()
+  let query = watch('query')
   const user = useSelector(
     (state) => state.auth.user.firstName + ' ' + state.auth.user.lastName,
   )
   const componentRef = useRef()
   const [selectedInput, setSelectedInput] = useState(1)
   let [results, setResults] = useState(Array(10).fill(''))
-  const [products, setProducts] = useState([])
+  let [products, setProducts] = useState([])
   let [orderItems, setOrderItems] = useState([])
   const [selectedProduct, setSelectedProduct] = useState()
   const [disabled, setDisabled] = useState(true)
-
+  const searchItems = (items, query) => {
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase()),
+      )
+    }
+  }
+  products = searchItems(products, query)
   const handleInput = (e) => {
     const currentResult = results[selectedInput - 1]
     const newValue = currentResult + e.target.name
@@ -46,7 +56,7 @@ const ProductSell = React.forwardRef((props, ref) => {
         index === selectedInput - 1 ? newValue : result,
       ),
     )
-    setValue(`result${selectedInput}`, newValue)
+    setValue(`result${selectedInput}`, parseInt(newValue))
   }
 
   const clearItems = () => {
@@ -207,18 +217,36 @@ const ProductSell = React.forwardRef((props, ref) => {
       {!petitStock ? (
         <AllPetitStock selling={true} setStock={setPetitStock} />
       ) : (
-        <CRow>
+        <CRow className="my-0 py-0">
           {petitStock ? (
-            <div>
-              <button
-                className="btn btn-dark"
-                onClick={() => {
-                  setPetitStock(false)
-                }}
-              >
-                <IoReturnUpBack />
-              </button>
-              <p className="fs-4 fst-normal text-uppercase">{petitStock}</p>
+            <div className="my-0 py-0">
+              <div className="my-0 py-0 d-flex">
+                <button
+                  className="btn btn-dark my-0"
+                  onClick={() => {
+                    setPetitStock(false)
+                  }}
+                >
+                  <IoReturnUpBack />
+                </button>
+                <p className=" ms-4 fs-4 fst-normal text-uppercase my-0 py-0">
+                  {petitStock}
+                </p>
+              </div>
+              <div className="d-flex justify-content-center my-1">
+                <form className="my-0">
+                  <div className="col">
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="itemName"
+                      id="itemName"
+                      placeholder="search ..."
+                      {...register('query')}
+                    />
+                  </div>
+                </form>
+              </div>
             </div>
           ) : null}
           <CCardHeader className="d-flex justify-content-between">
@@ -397,57 +425,59 @@ const ProductSell = React.forwardRef((props, ref) => {
                       CUSTOMER BILL{' '}
                     </p>
                     <table bordered>
-                      <tr>
+                      <thead>
                         <th>#</th>
                         <th> Item </th>
                         <th> P.U </th>
                         <th> Qty </th>
                         <th> Amount </th>
-                      </tr>
-                      {orderItems && orderItems.length !== 0 ? (
-                        orderItems.map((item, index) => (
-                          <tr>
-                            <td scope="row">{index + 1}</td>
-                            <td>
-                              <input
-                                size="sm"
-                                {...register(`item${index + 1}`)}
-                                defaultValue={
-                                  item
-                                    ? item.name + ' of ' + item.productName
-                                    : ''
-                                }
-                                className="border-none outline-none"
-                              />
-                            </td>
-                            <td>
-                              {Number(
-                                item.ProductPackage.price,
-                              ).toLocaleString()}
-                            </td>
-                            <td>
-                              <input
-                                key={`result${index + 1}`}
-                                type="number"
-                                min={0}
-                                {...register(`item${index + 1}_quantity`)}
-                                value={results[index]}
-                                onClick={() => {
-                                  setSelectedInput(index + 1)
-                                }}
-                                onKeyDown={handleKeyboardInput}
-                              />
-                            </td>
-                            <td>
-                              {Number(
-                                item.ProductPackage.price * results[index],
-                              ).toLocaleString()}
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>0 items on order</tr>
-                      )}
+                      </thead>
+                      <tbody>
+                        {orderItems && orderItems.length !== 0 ? (
+                          orderItems.map((item, index) => (
+                            <tr>
+                              <td scope="row">{index + 1}</td>
+                              <td>
+                                <input
+                                  size="sm"
+                                  {...register(`item${index + 1}`)}
+                                  defaultValue={
+                                    item
+                                      ? item.name + ' of ' + item.productName
+                                      : ''
+                                  }
+                                  className="border-none outline-none"
+                                />
+                              </td>
+                              <td>
+                                {Number(
+                                  item.ProductPackage.price,
+                                ).toLocaleString()}
+                              </td>
+                              <td>
+                                <input
+                                  key={`result${index + 1}`}
+                                  type="number"
+                                  min={0}
+                                  {...register(`item${index + 1}_quantity`)}
+                                  value={Number(results[index])}
+                                  onClick={() => {
+                                    setSelectedInput(index + 1)
+                                  }}
+                                  onKeyDown={handleKeyboardInput}
+                                />
+                              </td>
+                              <td>
+                                {Number(
+                                  item.ProductPackage.price * results[index],
+                                ).toLocaleString()}
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>0 items on order</tr>
+                        )}
+                      </tbody>
                     </table>
                     <p>Served by :{user} </p>
                     <p>Location :{table ? table : ''} </p>
@@ -496,7 +526,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                           type="number"
                           min={0}
                           {...register(`item${index + 1}_quantity`)}
-                          value={results[index]}
+                          value={Number(results[index])}
                           onClick={() => {
                             setSelectedInput(index + 1)
                           }}

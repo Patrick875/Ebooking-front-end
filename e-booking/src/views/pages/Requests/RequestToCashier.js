@@ -220,7 +220,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       <CFormInput
                         type="number"
                         min={0}
-                        step="0.0000001"
+                        step="any"
                         name="price"
                         id="price"
                         placeholder="item price in RWF"

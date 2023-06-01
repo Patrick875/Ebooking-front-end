@@ -1,6 +1,7 @@
 // axiosInstance.js
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { toast } from 'react-hot-toast'
 
 //url outside of premisses
 //http://206.81.29.111:8080/api/v1
@@ -44,20 +45,28 @@ function setToken(token) {
 function getTokenPromise() {
   return tokenPromise
 }
-
 instance.interceptors.response.use(
   (response) => {
     return response
   },
   (error) => {
-    if (
-      (error && error.response && error.response.status === 403) ||
-      error.response.status === 401
-    ) {
-      // Clear the token and state fields from local storage
-      localStorage.removeItem('token')
-      localStorage.removeItem('state')
+    try {
+      if (!navigator.onLine) {
+        toast.error('No Internet connection !!!! 🚫🚫🚫')
+      }
+
+      if (
+        error.response &&
+        (error.response.status === 403 || error.response.status === 401)
+      ) {
+        // Clear the token and state fields from local storage
+        localStorage.removeItem('token')
+        localStorage.removeItem('state')
+      }
+    } catch (e) {
+      console.error('Error in response interceptor:', e)
     }
+
     return Promise.reject(error)
   },
 )

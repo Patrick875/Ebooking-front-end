@@ -22,13 +22,11 @@ const CreatePackageModal = (props) => {
     stockItems,
     packageItems,
     setPackageItems,
-    category,
     productPackages,
     setProductPackages,
     visible,
     setVisible,
     packages,
-    setPackages,
   } = props
 
   const [item, setItem] = useState([])
@@ -108,7 +106,7 @@ const CreatePackageModal = (props) => {
                 ) : null}
               </div>
               <Typeahead
-                id="basic-typeahead-single"
+                id="itemtypeahead"
                 filterBy={['name']}
                 labelKey="name"
                 onChange={setItem}
@@ -152,8 +150,7 @@ const CreatePackageModal = (props) => {
                 style={{ backgroundColor: 'black' }}
                 onClick={() => {
                   const data = getValues()
-                  console.log('this is on add data', data)
-                  return onAdd(data)
+                  onAdd(data)
                 }}
               />
             </CCol>

@@ -30,7 +30,12 @@ export const login = function (payload) {
         Cookies.set('token', res1.data.accessToken, { expires: 24 * (1 / 24) })
       })
       .catch((err) => {
-        if (err && err.response && err.response.status === 401) {
+        if (
+          err &&
+          !err.response === null &&
+          !err.response.status === null &&
+          err.response.status === 401
+        ) {
           toast.error('Wrong username or password ! try again')
         } else {
           toast.error('user login failed')

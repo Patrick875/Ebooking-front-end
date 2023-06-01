@@ -16,7 +16,6 @@ function AllPetitStock(props) {
     const getAllPetitStock = async () => {
       await instance.get('/petit-stock/all').then((res) => {
         setPetitStock(res.data.data)
-        console.log('all the stuff', res.data.data)
       })
     }
     getAllPetitStock()

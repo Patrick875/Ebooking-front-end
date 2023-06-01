@@ -61,6 +61,10 @@ const ReservationAdd = (props) => {
   const additional = watch('additionalServices') || {}
   const roomK = watch('roomClass') || null
   const details = watch('details') || null
+  const payment = watch('payment') || 0
+
+  const dontSubmit =
+    !service || service.length === 0 || payment < 0 ? true : false
 
   const additionalTotal =
     Object.keys(additional).length !== 0
@@ -514,6 +518,8 @@ const ReservationAdd = (props) => {
                         id="payment"
                         type="text"
                         className="mb-3"
+                        min={0}
+                        defaultValue={0}
                         {...register('payment')}
                       />
                     </CCol>
@@ -564,6 +570,7 @@ const ReservationAdd = (props) => {
                     className={`${
                       loggedInUser === 'controller' ||
                       customer.length === 0 ||
+                      dontSubmit ||
                       service === 0
                         ? 'disabled'
                         : ''
@@ -571,6 +578,12 @@ const ReservationAdd = (props) => {
                     value="Book now"
                   />
                 </CCol>
+                {!service || service.length === 0 ? (
+                  <p className="text-danger ">Please select service</p>
+                ) : null}
+                {payment < 0 ? (
+                  <p className="text-danger ">Paymen can not be negative</p>
+                ) : null}
               </CForm>
             </CCardBody>
           </CCard>

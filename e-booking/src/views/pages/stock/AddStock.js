@@ -286,7 +286,16 @@ const AddStock = React.forwardRef((props, ref) => {
                         {...register('unit', { required: true })}
                       >
                         {units.map((el, i) => (
-                          <option value={el.name} key={el.name + i}>
+                          <option
+                            value={el.name}
+                            key={el.name + i}
+                            selected={
+                              item2 &&
+                              item2.length !== 0 &&
+                              item2[0].unit.toLowerCase() ===
+                                el.name.toLowerCase()
+                            }
+                          >
                             {el.symbol}
                           </option>
                         ))}
@@ -354,7 +363,6 @@ const AddStock = React.forwardRef((props, ref) => {
                         component="input"
                         value="Submit voucher"
                         onClick={() => {
-                          console.log(receivedItems)
                           setReceivedItems([])
                           setVisible(!visible)
                           setOrder([])

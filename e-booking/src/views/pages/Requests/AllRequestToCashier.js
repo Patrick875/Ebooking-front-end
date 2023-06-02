@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { sortingWithDates } from 'src/utils/functions'
 
 function AllRequestToCashier() {
   const [items, setItems] = useState([])
@@ -33,7 +34,6 @@ function AllRequestToCashier() {
       await instance
         .get('/purchase/order/all')
         .then((res) => {
-          console.log(res.data)
           setItems(res.data.data)
         })
         .catch((err) => {
@@ -64,7 +64,7 @@ function AllRequestToCashier() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? items
+              ? sortingWithDates(items)
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null

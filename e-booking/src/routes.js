@@ -17,6 +17,7 @@ import { dashboardRoutes } from './views/dashboard/routes'
 import { serviceRoutes } from './views/pages/services/routes'
 import { userRoutes } from './views/pages/users/routes'
 import { storeRoutes } from './views/pages/store/routes'
+import { currencyRoutes } from './views/pages/Currencies/routes'
 //import { contractRoutes } from './views/pages/Contracts/routes'
 
 const routes = [
@@ -40,6 +41,7 @@ const routes = [
   ...waiterRoutes,
   ...userRoutes,
   ...storeRoutes,
+  ...currencyRoutes,
   //...contractRoutes,
 ]
 

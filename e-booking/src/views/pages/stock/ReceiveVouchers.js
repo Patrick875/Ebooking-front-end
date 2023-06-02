@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import Pagination from 'src/utils/Pagination'
+import { sortingWithDates } from 'src/utils/functions'
 
 function ReceiveVouchers() {
   const dispatch = useDispatch()
@@ -30,7 +31,6 @@ function ReceiveVouchers() {
       await instance
         .get('/receive/voucher/all')
         .then((res) => {
-          console.log(res)
           setReceiveVauchers(res.data.data)
         })
         .catch((err) => {
@@ -60,7 +60,7 @@ function ReceiveVouchers() {
               </CTableHead>
               <CTableBody>
                 {receiveVauchers && receiveVauchers.length !== 0 ? (
-                  receiveVauchers
+                  sortingWithDates(receiveVauchers)
                     .filter((el, i) => {
                       if (currentPage === 1) {
                         return i >= 0 && i < perpage ? el : null
@@ -73,7 +73,10 @@ function ReceiveVouchers() {
                     })
                     .map((vaucher, i) => (
                       <CTableRow key={i}>
-                        <CTableDataCell>{vaucher.id}</CTableDataCell>
+                        <CTableDataCell>
+                          {' '}
+                          {(currentPage - 1) * perpage + 1 + i}
+                        </CTableDataCell>
                         <CTableDataCell>
                           {new Date(vaucher.date).toLocaleDateString()}
                         </CTableDataCell>

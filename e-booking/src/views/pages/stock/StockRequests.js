@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import Pagination from 'src/utils/Pagination'
+import { sortingWithDates } from 'src/utils/functions'
 
 function AllStockRequests() {
   const [items, setItems] = useState([])
@@ -63,7 +64,7 @@ function AllStockRequests() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? items
+              ? sortingWithDates(items)
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null

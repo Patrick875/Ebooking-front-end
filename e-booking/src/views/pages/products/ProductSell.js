@@ -24,6 +24,8 @@ import ReactToPrint from 'react-to-print'
 import { RiCheckLine } from 'react-icons/ri'
 import AllPetitStock from '../PetitStock/AllPetitStock'
 import { useSelector } from 'react-redux'
+import CustomerBill from '../Printing/CustomerBill'
+import PetitStockBaudDeCommande from '../Printing/PetitStockBaudDeCommande'
 
 const ProductSell = React.forwardRef((props, ref) => {
   const { register, setValue, getValues, watch } = useForm()
@@ -32,6 +34,7 @@ const ProductSell = React.forwardRef((props, ref) => {
     (state) => state.auth.user.firstName + ' ' + state.auth.user.lastName,
   )
   const componentRef = useRef()
+  const componentRef2 = useRef()
   const [selectedInput, setSelectedInput] = useState(1)
   let [results, setResults] = useState(Array(10).fill(''))
   let [products, setProducts] = useState([])
@@ -254,9 +257,19 @@ const ProductSell = React.forwardRef((props, ref) => {
               <div className="d-flex gap-2">
                 <ReactToPrint
                   trigger={() => (
-                    <button className="btn btn-ghost-primary">Print</button>
+                    <button className="btn btn-ghost-primary">
+                      Customer bill
+                    </button>
                   )}
                   content={() => ref || componentRef.current}
+                />
+                <ReactToPrint
+                  trigger={() => (
+                    <button className="btn btn-ghost-primary">
+                      Baud de commande
+                    </button>
+                  )}
+                  content={() => ref || componentRef2.current}
                 />
                 <button
                   className="btn btn-ghost-danger"
@@ -407,88 +420,25 @@ const ProductSell = React.forwardRef((props, ref) => {
                   className="m-3 p-0 client-receipt"
                   ref={ref || componentRef}
                 >
-                  <div style={{ width: '100%', height: '100%' }}>
-                    <p className="my-0 py-0 ">
-                      MOMO Pay CODE : 005685 // OLYMPIC HOTEL{' '}
-                    </p>
-                    <p className="my-0 py-0 ">-------------------</p>
-                    <p className="my-0 py-0 ">OLYMPIC HOTEL</p>
-                    <p className="my-0 py-0 ">KIMIRONKO-KIGALI</p>
-                    <p className="my-0 py-0 ">TEL:+250783103500</p>
-                    <p className="my-0 py-0 ">TIN:102556009</p>
-                    <p>{new Date().toLocaleString()}</p>
-                    <p
-                      className="text-center my-1"
-                      style={{ fontSize: '14px' }}
-                    >
-                      {' '}
-                      CUSTOMER BILL{' '}
-                    </p>
-                    <table bordered>
-                      <thead>
-                        <th>#</th>
-                        <th> Item </th>
-                        <th> P.U </th>
-                        <th> Qty </th>
-                        <th> Amount </th>
-                      </thead>
-                      <tbody>
-                        {orderItems && orderItems.length !== 0 ? (
-                          orderItems.map((item, index) => (
-                            <tr>
-                              <td scope="row">{index + 1}</td>
-                              <td>
-                                <input
-                                  size="sm"
-                                  {...register(`item${index + 1}`)}
-                                  defaultValue={
-                                    item
-                                      ? item.name + ' of ' + item.productName
-                                      : ''
-                                  }
-                                  className="border-none outline-none"
-                                />
-                              </td>
-                              <td>
-                                {Number(
-                                  item.ProductPackage.price,
-                                ).toLocaleString()}
-                              </td>
-                              <td>
-                                <input
-                                  key={`result${index + 1}`}
-                                  type="number"
-                                  min={0}
-                                  {...register(`item${index + 1}_quantity`)}
-                                  value={Number(results[index])}
-                                  onClick={() => {
-                                    setSelectedInput(index + 1)
-                                  }}
-                                  onKeyDown={handleKeyboardInput}
-                                />
-                              </td>
-                              <td>
-                                {Number(
-                                  item.ProductPackage.price * results[index],
-                                ).toLocaleString()}
-                              </td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr>0 items on order</tr>
-                        )}
-                      </tbody>
-                    </table>
-                    <p>Served by :{user} </p>
-                    <p>Location :{table ? table : ''} </p>
-                    <p className="text-center my-0"> NOT OFFICAL RECEIPT</p>
-                    <p className="text-center my-0">
-                      {' '}
-                      PLEASE WAIT FOR YOUR EBM
-                    </p>
-                    <p className="text-center  my-0"> MURAKOZE</p>
-                    <p className="text-center  my-0">-----------------</p>
-                  </div>
+                  <CustomerBill
+                    user={user}
+                    table={table}
+                    orderItems={orderItems}
+                    results={results}
+                  />
+                </div>
+
+                <div
+                  className="m-3 p-0 client-receipt"
+                  ref={ref || componentRef2}
+                >
+                  <PetitStockBaudDeCommande
+                    petitStock={petitStock}
+                    user={user}
+                    table={table}
+                    orderItems={orderItems}
+                    results={results}
+                  />
                 </div>
               </div>
               <CTable bordered>
@@ -509,8 +459,8 @@ const ProductSell = React.forwardRef((props, ref) => {
                       </CTableHeaderCell>
                       <CTableDataCell>
                         <CFormInput
-                          size="sm"
                           {...register(`item${index + 1}`)}
+                          readOnly={true}
                           defaultValue={
                             item ? item.name + ' of ' + item.productName : ''
                           }
@@ -559,6 +509,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                       .filter((table) => table.status === 'ACTIVE')
                       .map((item, index) => (
                         <CTableRow
+                          key={index * 10000}
                           onClick={() => {
                             setTable(item.name)
                             toast.success(

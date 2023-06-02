@@ -1,6 +1,13 @@
 import dayjs from 'dayjs'
 const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 dayjs.extend(isSameOrBefore)
+
+function sortByDate(a, b) {
+  const date1 = new Date(a.date)
+  const date2 = new Date(b.date)
+  return date2.getTime() - date1.getTime()
+}
+
 export const datesInRange = function (startDate, endDate, steps = 1) {
   const dateArray = []
   let currentDate = new Date(startDate)
@@ -67,6 +74,10 @@ export const getAllRemoveDates = function (service) {
     return uniqueDates
   }
   return []
+}
+
+export const sortingWithDates = function (data) {
+  return data.sort(sortByDate, true)
 }
 
 export function sumAmountsByCurrency(transactions) {

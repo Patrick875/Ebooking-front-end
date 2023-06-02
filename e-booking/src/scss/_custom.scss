@@ -41,11 +41,12 @@
 
 
   .client-receipt{
-  max-width: 200px !important;
+   max-width: 200px !important;
    display:flex;
    justify-content: center;
    h3,p,th,td{
      font-size: 10px;
+     font-weight: bolder;
    }
   .printing-header{
 

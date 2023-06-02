@@ -13,6 +13,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilExitToApp, cilMenu, cilLockLocked } from '@coreui/icons'
 import { logout } from 'src/redux/Auth/authActions'
+import { MdCurrencyExchange } from 'react-icons/md'
 
 const AppHeader = () => {
   const role = useSelector((state) => state.auth.role)
@@ -49,6 +50,15 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
+        <CHeaderNav>
+          <CNavItem>
+            <CNavLink href="/general/currencies">
+              <MdCurrencyExchange size={28} />
+              <span className="ps-1">Currencies</span>
+            </CNavLink>
+          </CNavItem>
+        </CHeaderNav>
+
         <CHeaderNav>
           <CNavItem>
             <CNavLink href="/password">

@@ -16,6 +16,7 @@ import PrintHeader from '../Printing/PrintHeader'
 import PrintFooterSignatures from '../Printing/PrintFooterSignatures'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import BackButton from 'src/components/Navigating/BackButton'
+import { RiCheckLine } from 'react-icons/ri'
 
 const ReceiveVaucher = (props) => {
   const { vaucher, receiveTotal, purchaseTotal } = props
@@ -168,6 +169,20 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
         receiveTotal={receiveTotal}
         purchaseTotal={purchaseTotal}
       />
+      {receiveTotal === purchaseTotal ? (
+        <p className="text-center">
+          Balanced <RiCheckLine className=" ms-3 text-success ri-lg" />{' '}
+        </p>
+      ) : receiveTotal > purchaseTotal ? (
+        <p className="text-center">
+          {Number(receiveTotal - purchaseTotal).toLocaleString()} deficit
+        </p>
+      ) : (
+        <p className="text-center">
+          {Number(purchaseTotal - receiveTotal).toLocaleString()} to be returned
+          to cashier
+        </p>
+      )}
     </CCard>
   )
 })

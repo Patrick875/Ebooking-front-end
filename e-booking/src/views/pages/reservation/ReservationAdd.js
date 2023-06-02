@@ -48,6 +48,7 @@ const ReservationAdd = (props) => {
   const [hallServices, setHallServices] = useState([])
   let [RoomClasses, setRoomClasses] = useState([])
   let [customers, setCustomers] = useState([])
+  let [apicurrencies, setApiCurrencies] = useState([])
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const [visible, setVisible] = useState(false)
@@ -150,6 +151,11 @@ const ReservationAdd = (props) => {
     reset()
   }
   useEffect(() => {
+    const getCurrencyRates = async () => {
+      await instance.get('/currency/rate').then((res) => {
+        setApiCurrencies([...apicurrencies, res.data.data])
+      })
+    }
     const getCustomers = async () => {
       await instance
         .get('/customers/all')
@@ -196,6 +202,7 @@ const ReservationAdd = (props) => {
           toast.error(err.message)
         })
     }
+    getCurrencyRates()
     getRoomClasses()
     getRooms()
     getHalls()
@@ -495,7 +502,16 @@ const ReservationAdd = (props) => {
                       <p className="mx-2">
                         {type === 'room' && !details
                           ? type === 'room' && service.length !== 0
-                            ? Number(priceRoom) * days + '  USD'
+                            ? Number(priceRoom) * days +
+                              '  USD  /  ' +
+                              Number(
+                                apicurrencies[0].filter(
+                                  (el) => el.name === 'RWF',
+                                )[0].rate *
+                                  Number(priceRoom) *
+                                  days,
+                              ).toLocaleString() +
+                              ' RWF'
                             : Number(priceRoom) + '  USD'
                           : ''}
                         {type === 'hall'
@@ -507,7 +523,18 @@ const ReservationAdd = (props) => {
                           : ''}
                       </p>
                       {details && type === 'room' ? (
-                        <p> {totalPrice.toLocaleString()} USD</p>
+                        <p>
+                          {' '}
+                          {totalPrice.toLocaleString()} USD RWF /{'  '}
+                          {apicurrencies && apicurrencies.length !== 0
+                            ? Number(
+                                apicurrencies[0].filter(
+                                  (el) => el.name === 'RWF',
+                                )[0].rate * totalPrice,
+                              ).toLocaleString()
+                            : null}{' '}
+                          RWF
+                        </p>
                       ) : null}
                     </div>
 

@@ -11,6 +11,7 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CRow,
 } from '@coreui/react'
 import ReactToPrint from 'react-to-print'
@@ -205,11 +206,11 @@ const ServiceSell = React.forwardRef((props, ref) => {
             <CCardBody className="py-0 my-0">
               <CForm
                 className="row"
-                name="roomClassAddFrm"
+                name="serviceSellFrm"
                 encType="multipart/form"
                 onSubmit={handleSubmit(onServiceSell)}
               >
-                <CCol md={4} className="py-0 my-0">
+                <CCol md={6} className="py-0 my-0">
                   <CFormLabel htmlFor="title"> Client name </CFormLabel>
                   <Typeahead
                     id="basic-typeahead-single"
@@ -221,7 +222,7 @@ const ServiceSell = React.forwardRef((props, ref) => {
                   />
                 </CCol>
 
-                <CCol md={4} className="py-0 my-0">
+                <CCol md={6} className="py-0 my-0">
                   <CFormLabel htmlFor="title"> Service name </CFormLabel>
                   <Typeahead
                     id="basic-typeahead-single"
@@ -232,7 +233,7 @@ const ServiceSell = React.forwardRef((props, ref) => {
                     selected={singleSelections}
                   />
                 </CCol>
-                <CCol md={4} className="py-0 my-0">
+                <CCol md={6} className="py-0 my-0">
                   <CFormLabel htmlFor="times"> Times </CFormLabel>
                   <CFormInput
                     type="number"
@@ -242,19 +243,33 @@ const ServiceSell = React.forwardRef((props, ref) => {
                     min={0}
                     {...register('times')}
                   />
-                  <CFormLabel className="d-flex my-3 flex-col">
-                    Total :{' '}
-                    <strong className="px-2">
-                      {singleSelections && singleSelections.length !== 0
-                        ? Number(
-                            singleSelections[0].price * times,
-                          ).toLocaleString()
-                        : 0}{' '}
-                      RWF
-                    </strong>
-                  </CFormLabel>
                 </CCol>
-
+                <CCol md={6} className="py-0 my-0">
+                  <CFormLabel htmlFor="paymentMethod">
+                    {' '}
+                    Payment method{' '}
+                  </CFormLabel>
+                  <CFormSelect
+                    name="paymentMethod"
+                    id="paymentMethod"
+                    {...register('paymentMethod')}
+                  >
+                    <option value="Cash">Cash</option>
+                    <option value="Mobile Money">Mobile Money</option>
+                    <option value="Credit card">Credit card</option>
+                  </CFormSelect>
+                </CCol>
+                <CFormLabel className="d-flex my-3 flex-col">
+                  Total :{' '}
+                  <strong className="px-2">
+                    {singleSelections && singleSelections.length !== 0
+                      ? Number(
+                          singleSelections[0].price * times,
+                        ).toLocaleString()
+                      : 0}{' '}
+                    RWF
+                  </strong>
+                </CFormLabel>
                 <CCol xs={12} className="text-center mb-3">
                   <CButton
                     component="input"

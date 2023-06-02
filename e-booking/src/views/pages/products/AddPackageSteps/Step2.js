@@ -194,7 +194,6 @@ const Step2 = (props) => {
     productPackages,
     setProductPackages,
     packages,
-    setPackages,
   } = props
   const [visible, setVisible] = useState(false)
   const data = getValues()

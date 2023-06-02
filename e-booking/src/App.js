@@ -20,6 +20,9 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+const NetworkError = React.lazy(() =>
+  import('./views/pages/page404/NetworkError'),
+)
 const Login = React.lazy(() => import('./guest/login/Login'))
 const ResetPassword = React.lazy(() =>
   import('./guest/resetPassword/ResetPassword'),
@@ -35,7 +38,10 @@ function App() {
       dispatch(logout())
     }
   }, [])
-  console.log('App component', isAuth)
+
+  if (navigator.onLine === false) {
+    return <NetworkError />
+  }
 
   return (
     <BrowserRouter>
@@ -54,8 +60,6 @@ function App() {
             name="Reset Page"
             element={<ResetPassword />}
           />
-          <Route exact path="/404" name="Page 404" element={<Page404 />} />
-          <Route exact path="/500" name="Page 500" element={<Page500 />} />
           <Route
             path={'*'}
             name="Home"

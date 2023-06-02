@@ -1,7 +1,7 @@
 import React from 'react'
 
 function CustomerBill(props) {
-  const { user, orderItems, table, results } = props
+  const { user, orderItems, table, results, total } = props
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <p className="my-0 py-0 ">MOMO Pay CODE : 005685 // OLYMPIC HOTEL </p>
@@ -45,6 +45,12 @@ function CustomerBill(props) {
           ) : (
             <tr>0 items on order</tr>
           )}
+          <tr>
+            <td />
+            <td />
+            TOTAL
+          </tr>
+          <tr colSpan={2}>{total}</tr>
         </tbody>
       </table>
       <p className="my-0">Served by :{user} </p>

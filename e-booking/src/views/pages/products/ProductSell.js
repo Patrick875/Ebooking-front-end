@@ -425,6 +425,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                     table={table}
                     orderItems={orderItems}
                     results={results}
+                    total={orderTotal.toLocaleString()}
                   />
                 </div>
 

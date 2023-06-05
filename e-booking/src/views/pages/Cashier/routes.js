@@ -1,5 +1,7 @@
 import AllCustomerBills from '../PetitStock/AllCustomerBiils'
 import AllPosBills from '../PetitStock/AllPosBills'
+import ViewCustomerBill from '../PetitStock/ViewCustomerBill'
+import ViewPosBill from '../PetitStock/ViewPosBill'
 import CashReport from './CashReport'
 import CashTransaction from './CashTransaction'
 import Sells from './Sells/Sells'
@@ -41,5 +43,17 @@ export const cashierRoutes = [
     exact: true,
     name: 'Pos bon de commande bills',
     element: AllPosBills,
+  },
+  {
+    path: '/cashier/posbonbills/view',
+    exact: true,
+    name: 'Pos bon de commande bill view',
+    element: ViewPosBill,
+  },
+  {
+    path: '/cashier/customerbills/view',
+    exact: true,
+    name: 'Customer bill view',
+    element: ViewCustomerBill,
   },
 ]

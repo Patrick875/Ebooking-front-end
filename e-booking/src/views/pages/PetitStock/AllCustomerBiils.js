@@ -15,9 +15,10 @@ import React, { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import { selectItem } from 'src/redux/Select/selectionActions'
 import Pagination from 'src/utils/Pagination'
 import { sortingWithDates } from 'src/utils/functions'
 
@@ -27,6 +28,8 @@ function AllCustomerBills() {
   const stockId = watch('stockId') || null
   const [petitStock, setPetitStock] = useState([])
   let [items, setItems] = useState([])
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const role = useSelector((state) => state.auth.role)
 
   const searchWaiters = (items, query) => {
@@ -56,7 +59,7 @@ function AllCustomerBills() {
   const perpage = 30
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
-  //const role = useSelector((state) => state.auth.role)
+
   useEffect(() => {
     const getItems = async () => {
       await instance
@@ -94,7 +97,7 @@ function AllCustomerBills() {
               type="text"
               name="itemName"
               id="itemName"
-              placeholder="search ..."
+              placeholder="search by waiter..."
               {...register('query')}
             />
           </div>
@@ -111,7 +114,11 @@ function AllCustomerBills() {
               </option>
               {petitStock.length !== 0
                 ? petitStock.map((stock) => (
-                    <option value={stock.id} className="text-capitalize">
+                    <option
+                      value={stock.id}
+                      className="text-capitalize"
+                      key={stock.id * 10}
+                    >
                       {stock.name}
                     </option>
                   ))
@@ -145,7 +152,13 @@ function AllCustomerBills() {
                   })
                   .map((item, i) => {
                     return (
-                      <CTableRow key={item.id}>
+                      <CTableRow
+                        key={item.id}
+                        onClick={() => {
+                          dispatch(selectItem(item))
+                          navigate('/cashier/customerbills/view')
+                        }}
+                      >
                         <CTableHeaderCell scope="row">
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableHeaderCell>

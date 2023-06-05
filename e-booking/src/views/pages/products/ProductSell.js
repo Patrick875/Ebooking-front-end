@@ -164,7 +164,7 @@ const ProductSell = React.forwardRef((props, ref) => {
 
     const cool = getValues()
 
-    let data = orderItems.map((order) => {
+    let packages = orderItems.map((order) => {
       let { productId, packageId, quantity } = order
       return {
         productId,
@@ -176,7 +176,7 @@ const ProductSell = React.forwardRef((props, ref) => {
     })
 
     await instance
-      .post('/products/package/sell', { packages: data })
+      .post('/products/package/sell', { packages: packages, table: table })
       .then(() => {
         toast.success('Order created')
         setTable([])
@@ -383,6 +383,7 @@ const ProductSell = React.forwardRef((props, ref) => {
 
                   <button
                     className="btn btn-light rounded-1 shadow-sm"
+                    disabled={!table || table.length !== 0}
                     onClick={() => {
                       createOrder()
                     }}

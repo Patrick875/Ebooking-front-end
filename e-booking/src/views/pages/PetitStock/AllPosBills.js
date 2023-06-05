@@ -12,80 +12,80 @@ import {
 } from '@coreui/react'
 
 import React, { useEffect, useState } from 'react'
-import { CSVLink } from 'react-csv'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import { selectItem } from 'src/redux/Select/selectionActions'
 import Pagination from 'src/utils/Pagination'
+import { sortingWithDates } from 'src/utils/functions'
 
 function AllPosBills() {
   const { register, watch } = useForm()
   const query = watch('query') || ''
-  const storeId = watch('storeId') || null
+  const stockId = watch('stockId') || null
+  const [petitStock, setPetitStock] = useState([])
   let [items, setItems] = useState([])
-  let [stores, setStores] = useState([])
+  const role = useSelector((state) => state.auth.role)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  //   const searchItems = (items, query) => {
-  //     if (!query || query === '') {
-  //       return items
-  //     } else {
-  //       return items.filter((item) =>
-  //         item.name.toLowerCase().includes(query.toLowerCase()),
-  //       )
-  //     }
-  //   }
-  //   const filterItems = (items, storeId) => {
-  //     if (!storeId || storeId === '') {
-  //       return items
-  //     } else {
-  //       return items.filter((item) => item.storeId == storeId)
-  //     }
-  //   }
+  const searchWaiters = (items, query) => {
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter(
+        (item) =>
+          item.User.firstName.toLowerCase().includes(query.toLowerCase()) ||
+          item.User.lastName.toLowerCase().includes(query.toLowerCase()),
+      )
+    }
+  }
+  const filterBills = (items, petiStockId) => {
+    if (!petiStockId || petiStockId === '') {
+      return items
+    } else {
+      return items.filter((item) => item.petiStockId == petiStockId)
+    }
+  }
 
-  //   const deleteStockItem = async (id) => {
-  //     await instance.delete(`/stock/item/delete/${id}`).then(() => {
-  //       toast.success('item deleted!!!!')
-  //     })
-  //   }
+  const deletePosCustomerBill = async (id) => {
+    await instance.post('/posbondecommande/delete/', { id }).then(() => {
+      toast.success('bill deleted!!!!')
+    })
+  }
   const perpage = 30
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
-  const role = useSelector((state) => state.auth.role)
   useEffect(() => {
     const getItems = async () => {
       await instance
         .get('/posbondecommande/all')
         .then((res) => {
           setItems(res.data.data)
-          console.log('pos bills', res.data)
+          console.log('cool', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
-    const getStores = async () => {
-      await instance
-        .get('/stock/store/all')
-        .then((res) => {
-          setStores(res.data.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
+    const getAllPetitStock = async () => {
+      await instance.get('/petit-stock/all').then((res) => {
+        setPetitStock(res.data.data)
+      })
     }
-    getStores()
+    getAllPetitStock()
     getItems()
   }, [])
 
-  //   items = searchItems(items, query)
-  //   items = filterItems(items, storeId)
+  items = searchWaiters(items, query)
+  items = filterBills(items, stockId)
   return (
     <div>
       <CCardHeader className="text-center">
         <h2>
-          <strong> Customer Bills </strong>
+          <strong> Pos Bon de Commande Bills </strong>
         </h2>
       </CCardHeader>
       <CCardBody>
@@ -96,7 +96,7 @@ function AllPosBills() {
               type="text"
               name="itemName"
               id="itemName"
-              placeholder="search ..."
+              placeholder="search by waiter ..."
               {...register('query')}
             />
           </div>
@@ -106,15 +106,15 @@ function AllPosBills() {
               id="store"
               className="mb-3"
               aria-label="store"
-              {...register('storeId', { required: true })}
+              {...register('stockId', { required: true })}
             >
               <option value="" selected={true}>
                 All
               </option>
-              {stores.length !== 0
-                ? stores.map((store) => (
-                    <option value={store.id} className="text-capitalize">
-                      {store.name}
+              {petitStock.length !== 0
+                ? petitStock.map((stock) => (
+                    <option value={stock.id} className="text-capitalize">
+                      {stock.name}
                     </option>
                   ))
                 : null}
@@ -126,10 +126,63 @@ function AllPosBills() {
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Account</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Posted By</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
+          <CTableBody>
+            {items && items.length !== 0
+              ? sortingWithDates(items)
+                  .filter((el, i) => {
+                    if (currentPage === 1) {
+                      return i >= 0 && i < perpage ? el : null
+                    } else {
+                      return i >= (currentPage - 1) * perpage &&
+                        i <= perpage * currentPage - 1
+                        ? el
+                        : null
+                    }
+                  })
+                  .map((item, i) => {
+                    return (
+                      <CTableRow
+                        key={item.id}
+                        onClick={() => {
+                          dispatch(selectItem(item))
+                          navigate('/cashier/posbonbills/view')
+                        }}
+                      >
+                        <CTableHeaderCell scope="row">
+                          {(currentPage - 1) * perpage + 1 + i}
+                        </CTableHeaderCell>
+                        <CTableDataCell>
+                          {item.PetitStock ? item.PetitStock.name : ''}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.User
+                            ? item.User.firstName + ' ' + item.User.lastName
+                            : ''}
+                        </CTableDataCell>
+                        <CTableDataCell>{item.amount}</CTableDataCell>
+                        <CTableDataCell>
+                          {role && role === 'admin' ? (
+                            <Link
+                              className={` btn btn-sm btn-danger`}
+                              onClick={() => {
+                                return deletePosCustomerBill(item.id)
+                              }}
+                            >
+                              Delete
+                            </Link>
+                          ) : null}
+                        </CTableDataCell>
+                      </CTableRow>
+                    )
+                  })
+              : null}
+          </CTableBody>
         </CTable>
         {items.length !== 0 ? (
           <Pagination
@@ -144,41 +197,3 @@ function AllPosBills() {
 }
 
 export default AllPosBills
-
-// <CTableBody>
-//             {items && items.length !== 0
-//               ? items
-//                   .filter((el, i) => {
-//                     if (currentPage === 1) {
-//                       return i >= 0 && i < perpage ? el : null
-//                     } else {
-//                       return i >= (currentPage - 1) * perpage &&
-//                         i <= perpage * currentPage - 1
-//                         ? el
-//                         : null
-//                     }
-//                   })
-//                   .map((item, i) => {
-//                     return (
-//                       <CTableRow key={item.id}>
-//                         <CTableHeaderCell scope="row">
-//                           {(currentPage - 1) * perpage + 1 + i}
-//                         </CTableHeaderCell>
-//                         <CTableDataCell>{`${item.name}`}</CTableDataCell>
-//                         <CTableDataCell className="d-flex ">
-//                           {role && role === 'admin' ? (
-//                             <Link
-//                               className={` btn btn-sm btn-danger`}
-//                               onClick={() => {
-//                                 return deleteStockItem(item.id)
-//                               }}
-//                             >
-//                               Delete
-//                             </Link>
-//                           ) : null}
-//                         </CTableDataCell>
-//                       </CTableRow>
-//                     )
-//                   })
-//               : null}
-//           </CTableBody>

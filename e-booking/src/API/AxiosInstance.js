@@ -2,6 +2,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { toast } from 'react-hot-toast'
+import NetworkError from 'src/views/pages/page404/NetworkError'
 
 //url outside of premisses
 //http://206.81.29.111:8080/api/v1
@@ -19,6 +20,20 @@ const instance = axios.create({
 })
 
 let tokenPromise
+const errorInterceptor = ({ config, error }) => {
+  if (error) {
+    return (
+      <div>
+        <NetworkError />
+      </div>
+    )
+  }
+
+  return config
+}
+
+axios.interceptors.request.use(errorInterceptor)
+axios.interceptors.response.use(errorInterceptor)
 
 instance.interceptors.request.use(
   (config) => {
@@ -53,6 +68,7 @@ instance.interceptors.response.use(
     try {
       if (!navigator.onLine) {
         toast.error('No Internet connection !!!! 🚫🚫🚫')
+        return <NetworkError />
       }
 
       if (
@@ -63,6 +79,7 @@ instance.interceptors.response.use(
         localStorage.removeItem('token')
         localStorage.removeItem('state')
       }
+      return <NetworkError />
     } catch (e) {
       console.error('Error in response interceptor:', e)
     }

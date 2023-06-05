@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AppHeaderWaiter from 'src/components/AppHeaderWaiter'
 import { instance } from 'src/API/AxiosInstance'
 import { storeConstants } from 'src/redux/Constants/constantsActions'
+import NetworkError from 'src/views/pages/page404/NetworkError'
 
 const DefaultLayout = () => {
   const role = useSelector((state) => state.auth.role)
@@ -30,6 +31,8 @@ const DefaultLayout = () => {
         </div>
       </div>
     )
+  } else if (navigator.onLine === false) {
+    return <NetworkError />
   } else {
     return (
       <div>

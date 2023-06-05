@@ -25,6 +25,7 @@ import ReactToPrint from 'react-to-print'
 import ReceiveVaucherPrint from '../Printing/ReceiveVaucherPrint'
 import { instance } from 'src/API/AxiosInstance'
 import { units } from 'src/utils/constants'
+import { sortingWithDates } from 'src/utils/functions'
 
 const AddStockToTable = (props) => {
   const [show, setShow] = useState(false)
@@ -119,10 +120,7 @@ const AddStock = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let [purchaseOrders, setPurchaseOrders] = useState([])
   const [visible, setVisible] = useState(false)
-
   const [order, setOrder] = useState([])
-
-  // const selectedItem = watch('item') || ''
   const price = watch('price') || ''
   const quantity = watch('quantity') || ''
   let stockItems =
@@ -150,6 +148,7 @@ const AddStock = React.forwardRef((props, ref) => {
     setItem2([])
     reset()
   }
+
   const clearPurchaseOrderSelect = () => {
     setOrder([])
   }
@@ -168,6 +167,7 @@ const AddStock = React.forwardRef((props, ref) => {
       })
   }
 
+  purchaseOrders = sortingWithDates(purchaseOrders)
   props = { ...props }
   props.renderMenuItemChildren = (option, { text }) => (
     <div>
@@ -181,7 +181,6 @@ const AddStock = React.forwardRef((props, ref) => {
         .get('/purchase/order/approved')
         .then((res) => {
           setPurchaseOrders(res.data.data)
-          console.log('purchase orders', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -272,7 +271,6 @@ const AddStock = React.forwardRef((props, ref) => {
                         defaultValue={
                           item2 && item2[0] ? item2[0].requestQuantity : ''
                         }
-                        required
                         {...register('quantity')}
                       />
                     </CCol>
@@ -323,6 +321,9 @@ const AddStock = React.forwardRef((props, ref) => {
                       value="Add item"
                       onClick={() => {
                         const data = getValues()
+                        if (data.quantity === '') {
+                          data.quantity = item2[0].requestQuantity
+                        }
                         return onAdd(data)
                       }}
                     />

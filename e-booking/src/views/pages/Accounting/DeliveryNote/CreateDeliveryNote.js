@@ -24,6 +24,7 @@ import DeliveryFooter from '../../Printing/DeliveryFooter'
 
 const DeliveryNote = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+
   const { register, getValues, watch, reset } = useForm()
   const documentTitle = 'Delivery note'
   const quantity = watch('quantity')
@@ -42,7 +43,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       })
       .catch((err) => {
         toast.error(err.message)
-        console.log(err)
       })
   }
 

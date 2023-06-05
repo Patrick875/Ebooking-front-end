@@ -41,6 +41,7 @@ const ProductSell = React.forwardRef((props, ref) => {
   let [orderItems, setOrderItems] = useState([])
   const [selectedProduct, setSelectedProduct] = useState()
   const [disabled, setDisabled] = useState(true)
+  const [orderState, setOrderState] = useState(false)
   const searchItems = (items, query) => {
     if (!query || query === '') {
       return items
@@ -179,6 +180,7 @@ const ProductSell = React.forwardRef((props, ref) => {
       .then(() => {
         toast.success('Order created')
         setTable([])
+        setOrderState(true)
       })
       .catch(() => {
         toast.error('order creation failed')
@@ -257,7 +259,10 @@ const ProductSell = React.forwardRef((props, ref) => {
               <div className="d-flex gap-2">
                 <ReactToPrint
                   trigger={() => (
-                    <button className="btn btn-ghost-primary">
+                    <button
+                      className="btn btn-ghost-primary"
+                      disabled={!orderState}
+                    >
                       Customer bill
                     </button>
                   )}
@@ -265,7 +270,10 @@ const ProductSell = React.forwardRef((props, ref) => {
                 />
                 <ReactToPrint
                   trigger={() => (
-                    <button className="btn btn-ghost-primary">
+                    <button
+                      className="btn btn-ghost-primary"
+                      disabled={!orderState}
+                    >
                       Baud de commande
                     </button>
                   )}

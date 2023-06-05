@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { sortingWithDates } from 'src/utils/functions'
 
 function AllPurchaseOrders() {
   const [items, setItems] = useState([])
@@ -64,7 +65,7 @@ function AllPurchaseOrders() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? items
+              ? sortingWithDates(items)
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null

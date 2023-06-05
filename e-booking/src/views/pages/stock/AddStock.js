@@ -132,8 +132,11 @@ const AddStock = React.forwardRef((props, ref) => {
   const [receivedItems, setReceivedItems] = useState([])
   const onAdd = (data) => {
     if (item2 && quantity === '' && price === '') {
-      console.log('data1', item2[0])
-      data = { price: item2[0].unitPrice, quantity: item2[0].requestQuantity }
+      data = {
+        price: item2[0].unitPrice,
+        quantity: item2[0].requestQuantity,
+        unit: item2[0].unit,
+      }
     }
     item2 = item2
       ? {
@@ -143,7 +146,7 @@ const AddStock = React.forwardRef((props, ref) => {
         }
       : item2
     data = { ...data, ...item2 }
-    console.log('data2', data)
+
     setReceivedItems([...receivedItems, data])
     setItem2([])
     reset()
@@ -285,7 +288,7 @@ const AddStock = React.forwardRef((props, ref) => {
                       >
                         {units.map((el, i) => (
                           <option
-                            value={el.name}
+                            value={el.symbol}
                             key={el.name + i}
                             selected={
                               item2 &&
@@ -323,6 +326,7 @@ const AddStock = React.forwardRef((props, ref) => {
                         const data = getValues()
                         if (data.quantity === '') {
                           data.quantity = item2[0].requestQuantity
+                          data.unit = item2[0].unit
                         }
                         return onAdd(data)
                       }}

@@ -1,26 +1,11 @@
-import React, { useEffect } from 'react'
-
+import React from 'react'
 import { CCard, CCardBody } from '@coreui/react'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import { useDispatch, useSelector } from 'react-redux'
-import { getProducts } from 'src/redux/Product/productActions'
-import {
-  getProductCategories,
-  getServiceCategories,
-} from 'src/redux/Categories/categoriesActions'
+import { useSelector } from 'react-redux'
 import ProductSell from '../pages/products/ProductSell'
 
 const Dashboard = () => {
-  const dispatch = useDispatch()
   const userRole = useSelector((state) => state.auth.role)
-  const getInitialData = () => {
-    dispatch(getProductCategories())
-    dispatch(getServiceCategories())
-    dispatch(getProducts())
-  }
-  useEffect(() => {
-    getInitialData()
-  }, [])
 
   return (
     <React.Fragment>

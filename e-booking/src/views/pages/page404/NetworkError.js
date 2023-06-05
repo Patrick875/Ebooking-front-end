@@ -2,6 +2,9 @@ import React from 'react'
 import { CCol, CContainer, CRow } from '@coreui/react'
 
 const NetworkError = () => {
+  if (navigator.onLine) {
+    window.location.reload()
+  }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>

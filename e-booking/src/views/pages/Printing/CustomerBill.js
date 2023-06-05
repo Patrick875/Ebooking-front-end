@@ -47,10 +47,11 @@ function CustomerBill(props) {
           )}
           <tr>
             <td />
-            <td />
-            TOTAL
+            <td className="px-1" colSpan={3}>
+              TOTAL
+            </td>
+            <td className="px-1">{total}</td>
           </tr>
-          <tr colSpan={2}>{total}</tr>
         </tbody>
       </table>
       <p className="my-0">Served by :{user} </p>

@@ -19,6 +19,17 @@ export const CashierNav = {
     },
     {
       component: CNavItem,
+      name: 'Customer bills ',
+      to: '/cashier/customerbills',
+    },
+    {
+      component: CNavItem,
+      name: 'Pos bon de commande ',
+      to: '/cashier/posbonbills',
+    },
+
+    {
+      component: CNavItem,
       name: 'Cash transaction ',
       to: '/booking/cashier/transaction',
     },

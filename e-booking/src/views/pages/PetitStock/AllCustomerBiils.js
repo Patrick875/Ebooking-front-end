@@ -19,69 +19,66 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import Pagination from 'src/utils/Pagination'
+import { sortingWithDates } from 'src/utils/functions'
 
 function AllCustomerBills() {
   const { register, watch } = useForm()
   const query = watch('query') || ''
-  const storeId = watch('storeId') || null
+  const stockId = watch('stockId') || null
+  const [petitStock, setPetitStock] = useState([])
   let [items, setItems] = useState([])
-  let [stores, setStores] = useState([])
+  const role = useSelector((state) => state.auth.role)
 
-  //   const searchItems = (items, query) => {
-  //     if (!query || query === '') {
-  //       return items
-  //     } else {
-  //       return items.filter((item) =>
-  //         item.name.toLowerCase().includes(query.toLowerCase()),
-  //       )
-  //     }
-  //   }
-  //   const filterItems = (items, storeId) => {
-  //     if (!storeId || storeId === '') {
-  //       return items
-  //     } else {
-  //       return items.filter((item) => item.storeId == storeId)
-  //     }
-  //   }
+  const searchWaiters = (items, query) => {
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter(
+        (item) =>
+          item.User.firstName.toLowerCase().includes(query.toLowerCase()) ||
+          item.User.lastName.toLowerCase().includes(query.toLowerCase()),
+      )
+    }
+  }
+  const filterBills = (items, petiStockId) => {
+    if (!petiStockId || petiStockId === '') {
+      return items
+    } else {
+      return items.filter((item) => item.petiStockId == petiStockId)
+    }
+  }
 
-  //   const deleteStockItem = async (id) => {
-  //     await instance.delete(`/stock/item/delete/${id}`).then(() => {
-  //       toast.success('item deleted!!!!')
-  //     })
-  //   }
+  const deleteCustomerBill = async (id) => {
+    await instance.post('/customerbill/delete/', { id }).then(() => {
+      toast.success('bill deleted!!!!')
+    })
+  }
   const perpage = 30
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
-  const role = useSelector((state) => state.auth.role)
+  //const role = useSelector((state) => state.auth.role)
   useEffect(() => {
     const getItems = async () => {
       await instance
         .get('/customerbill/all')
         .then((res) => {
-          //setItems(res.data.data)
-          console.log('customer bills', res.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-          console.log('err', err)
-        })
-    }
-    const getStores = async () => {
-      await instance
-        .get('/stock/store/all')
-        .then((res) => {
-          setStores(res.data.data)
+          setItems(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
-    getStores()
+    const getAllPetitStock = async () => {
+      await instance.get('/petit-stock/all').then((res) => {
+        setPetitStock(res.data.data)
+      })
+    }
+    getAllPetitStock()
     getItems()
   }, [])
 
-  //   items = searchItems(items, query)
-  //   items = filterItems(items, storeId)
+  items = searchWaiters(items, query)
+  items = filterBills(items, stockId)
   return (
     <div>
       <CCardHeader className="text-center">
@@ -107,15 +104,15 @@ function AllCustomerBills() {
               id="store"
               className="mb-3"
               aria-label="store"
-              {...register('storeId', { required: true })}
+              {...register('stockId', { required: true })}
             >
               <option value="" selected={true}>
                 All
               </option>
-              {stores.length !== 0
-                ? stores.map((store) => (
-                    <option value={store.id} className="text-capitalize">
-                      {store.name}
+              {petitStock.length !== 0
+                ? petitStock.map((stock) => (
+                    <option value={stock.id} className="text-capitalize">
+                      {stock.name}
                     </option>
                   ))
                 : null}
@@ -127,10 +124,57 @@ function AllCustomerBills() {
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Account</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Posted By</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
+          <CTableBody>
+            {items && items.length !== 0
+              ? sortingWithDates(items)
+                  .filter((el, i) => {
+                    if (currentPage === 1) {
+                      return i >= 0 && i < perpage ? el : null
+                    } else {
+                      return i >= (currentPage - 1) * perpage &&
+                        i <= perpage * currentPage - 1
+                        ? el
+                        : null
+                    }
+                  })
+                  .map((item, i) => {
+                    return (
+                      <CTableRow key={item.id}>
+                        <CTableHeaderCell scope="row">
+                          {(currentPage - 1) * perpage + 1 + i}
+                        </CTableHeaderCell>
+                        <CTableDataCell>
+                          {item.PetitStock ? item.PetitStock.name : ''}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.User
+                            ? item.User.firstName + ' ' + item.User.lastName
+                            : ''}
+                        </CTableDataCell>
+                        <CTableDataCell>{item.amount}</CTableDataCell>
+                        <CTableDataCell>
+                          {role && role === 'admin' ? (
+                            <Link
+                              className={` btn btn-sm btn-danger`}
+                              onClick={() => {
+                                return deleteCustomerBill(item.id)
+                              }}
+                            >
+                              Delete
+                            </Link>
+                          ) : null}
+                        </CTableDataCell>
+                      </CTableRow>
+                    )
+                  })
+              : null}
+          </CTableBody>
         </CTable>
         {items.length !== 0 ? (
           <Pagination
@@ -145,41 +189,3 @@ function AllCustomerBills() {
 }
 
 export default AllCustomerBills
-
-// <CTableBody>
-//             {items && items.length !== 0
-//               ? items
-//                   .filter((el, i) => {
-//                     if (currentPage === 1) {
-//                       return i >= 0 && i < perpage ? el : null
-//                     } else {
-//                       return i >= (currentPage - 1) * perpage &&
-//                         i <= perpage * currentPage - 1
-//                         ? el
-//                         : null
-//                     }
-//                   })
-//                   .map((item, i) => {
-//                     return (
-//                       <CTableRow key={item.id}>
-//                         <CTableHeaderCell scope="row">
-//                           {(currentPage - 1) * perpage + 1 + i}
-//                         </CTableHeaderCell>
-//                         <CTableDataCell>{`${item.name}`}</CTableDataCell>
-//                         <CTableDataCell className="d-flex ">
-//                           {role && role === 'admin' ? (
-//                             <Link
-//                               className={` btn btn-sm btn-danger`}
-//                               onClick={() => {
-//                                 return deleteStockItem(item.id)
-//                               }}
-//                             >
-//                               Delete
-//                             </Link>
-//                           ) : null}
-//                         </CTableDataCell>
-//                       </CTableRow>
-//                     )
-//                   })
-//               : null}
-//           </CTableBody>

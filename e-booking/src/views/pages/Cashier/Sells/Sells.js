@@ -13,24 +13,24 @@ import React, { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
-import useApiCall from 'src/API/useApiCall'
+//import useApiCall from 'src/API/useApiCall'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
 import {
   datesInRangeWithUnix,
   getUTCDateWithoutHours,
 } from 'src/utils/functions'
-import NetworkError from '../../page404/NetworkError'
+//import NetworkError from '../../page404/NetworkError'
 
 function Sells() {
   const { register, watch } = useForm()
-  const { loading, data, error, makeApiCall } = useApiCall(instance)
-  const {
-    loading: loading1,
-    data: data1,
-    error: error1,
-    makeApiCall: makeApiCall1,
-  } = useApiCall(instance)
+  // const { loading, data, error, makeApiCall } = useApiCall(instance)
+  // const {
+  //   loading: loading1,
+  //   data: data1,
+  //   error: error1,
+  //   makeApiCall: makeApiCall1,
+  // } = useApiCall(instance)
   const [sells, setSells] = useState([])
   const [serviceSells, setServiceSells] = useState([])
   const time = watch('time')
@@ -99,200 +99,353 @@ function Sells() {
       : 0
 
   useEffect(() => {
-    makeApiCall('get', '/products/package/sells')
-    makeApiCall1('get', '/services/sells')
-    if (data) {
-      setSells(data.data)
-    }
-    if (data1) {
-      setServiceSells(data1.data)
-    }
+    // makeApiCall('get', '/products/package/sells')
+    // makeApiCall1('get', '/services/sells')
+    // if (data) {
+    //   setSells(data.data)
+    // }
+    // if (data1) {
+    //   setServiceSells(data1.data)
+    // }
 
-    // const getItems = async () => {
-    //   await instance.get('/products/package/sells').then((res) => {
-    //     setSells(res.data.data)
-    //   })
-    // }
-    // const getServiceSells = async () => {
-    //   await instance
-    //     .get('/services/sells')
-    //     .then((res) => {
-    //       setServiceSells(res.data.data)
-    //     })
-    //     .catch((err) => {
-    //       console.log('err', err)
-    //     })
-    // }
-    // getServiceSells()
-    // getItems()
+    const getItems = async () => {
+      await instance.get('/products/package/sells').then((res) => {
+        setSells(res.data.data)
+      })
+    }
+    const getServiceSells = async () => {
+      await instance
+        .get('/services/sells')
+        .then((res) => {
+          setServiceSells(res.data.data)
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    }
+    getServiceSells()
+    getItems()
   }, [])
 
   return (
-    <div>
-      {loading || loading1 ? (
-        <div className="text-center">Loading ...</div>
-      ) : error || error1 ? (
-        <NetworkError />
-      ) : (
-        <React.Fragment>
-          <CCardHeader>
-            <div className="my-2">
-              <h2 className="row">
-                <strong> All sells </strong>
-              </h2>
-              <div className="d-flex justify-content-between  ">
-                <div className="col-6 d-flex gap-2 flex-wrap">
-                  <div className="col">
-                    <label className="text-center py-1">Time</label>
-                    <select
-                      className="form-select form-select-sm col"
-                      aria-label="Default select example"
-                      defaultValue={'all-time'}
-                      {...register('time')}
-                    >
-                      <option value="all-time">All-time</option>
-                      <option value="date">Date</option>
-                    </select>
-                  </div>
-                  {time && time === 'date' ? (
-                    <div className="col d-flex align-items-end ">
-                      <ReactDatePicker
-                        className="form-control col px-2"
-                        onChange={onChange}
-                        startDate={startDate}
-                        endDate={endDate}
-                        dateFormat="dd/MM/yy"
-                        selectsRange
-                        portalId="root-portal"
-                        popperPlacement="bottom-end"
-                        popperContainer={CalendarContainer}
-                        placeholderText="Select date range"
-                      />
-                    </div>
-                  ) : null}
+    <React.Fragment>
+      <CCardHeader>
+        <div className="my-2">
+          <h2 className="row">
+            <strong> All sells </strong>
+          </h2>
+          <div className="d-flex justify-content-between  ">
+            <div className="col-6 d-flex gap-2 flex-wrap">
+              <div className="col">
+                <label className="text-center py-1">Time</label>
+                <select
+                  className="form-select form-select-sm col"
+                  aria-label="Default select example"
+                  defaultValue={'all-time'}
+                  {...register('time')}
+                >
+                  <option value="all-time">All-time</option>
+                  <option value="date">Date</option>
+                </select>
+              </div>
+              {time && time === 'date' ? (
+                <div className="col d-flex align-items-end ">
+                  <ReactDatePicker
+                    className="form-control col px-2"
+                    onChange={onChange}
+                    startDate={startDate}
+                    endDate={endDate}
+                    dateFormat="dd/MM/yy"
+                    selectsRange
+                    portalId="root-portal"
+                    popperPlacement="bottom-end"
+                    popperContainer={CalendarContainer}
+                    placeholderText="Select date range"
+                  />
                 </div>
-                <div className="col-4">
-                  <div className="col">
-                    <label className="text-center py-1">Type</label>
-                    <select
-                      className="form-select form-select-sm col"
-                      aria-label=" sell type select"
-                      defaultValue={'all'}
-                      {...register('type')}
-                    >
-                      <option value="all">All</option>
-                      <option value="product">Product</option>
-                      <option value="service">Service</option>
-                    </select>
-                  </div>
-                </div>
+              ) : null}
+            </div>
+            <div className="col-4">
+              <div className="col">
+                <label className="text-center py-1">Type</label>
+                <select
+                  className="form-select form-select-sm col"
+                  aria-label=" sell type select"
+                  defaultValue={'all'}
+                  {...register('type')}
+                >
+                  <option value="all">All</option>
+                  <option value="product">Product</option>
+                  <option value="service">Service</option>
+                </select>
               </div>
             </div>
-          </CCardHeader>
-          <CCardBody>
-            <CTable bordered>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">By</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Confirmed By</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Product/Service
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {confirmedSells && confirmedSells.length !== 0
-                  ? confirmedSells.map((item, i) => {
-                      return (
-                        <CTableRow key={item.id}>
-                          <CTableHeaderCell scope="row">
-                            {(currentPage - 1) * perpage + 1 + i}
-                          </CTableHeaderCell>
-                          <CTableDataCell>
-                            {item.petitStock
-                              ? item.petitStock.name
-                              : item.Service.name}
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {item.Service
-                              ? item.User.firstName + ' ' + item.User.lastName
-                              : item.user.firstName + ' ' + item.user.lastName}
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {item.Service
-                              ? item.User.firstName + ' ' + item.User.lastName
-                              : !item.status.split(' ')[2]
-                              ? ' '
-                              : item.status.split(' ')[2] +
-                                ' ' +
-                                !item.status.split(' ')[3]
-                              ? ' '
-                              : item.status.split(' ')[3]}
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>
-                              {item.Service ? (
-                                <p key={item.id * 100}>
-                                  {item.Service.name}
-                                  {' ' +
-                                    item.total / item.Service.price +
-                                    ' times'}
+          </div>
+        </div>
+      </CCardHeader>
+      <CCardBody>
+        <CTable bordered>
+          <CTableHead>
+            <CTableRow>
+              <CTableHeaderCell scope="col">#</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Account</CTableHeaderCell>
+              <CTableHeaderCell scope="col">By</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Confirmed By</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Product/Service</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Total</CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
+          <CTableBody>
+            {confirmedSells && confirmedSells.length !== 0
+              ? confirmedSells.map((item, i) => {
+                  return (
+                    <CTableRow key={item.id}>
+                      <CTableHeaderCell scope="row">
+                        {(currentPage - 1) * perpage + 1 + i}
+                      </CTableHeaderCell>
+                      <CTableDataCell>
+                        {item.petitStock
+                          ? item.petitStock.name
+                          : item.Service.name}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.Service
+                          ? item.User.firstName + ' ' + item.User.lastName
+                          : item.user.firstName + ' ' + item.user.lastName}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.Service
+                          ? item.User.firstName + ' ' + item.User.lastName
+                          : !item.status.split(' ')[2]
+                          ? ' '
+                          : item.status.split(' ')[2] +
+                            ' ' +
+                            !item.status.split(' ')[3]
+                          ? ' '
+                          : item.status.split(' ')[3]}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>
+                          {item.Service ? (
+                            <p key={item.id * 100}>
+                              {item.Service.name}
+                              {' ' + item.total / item.Service.price + ' times'}
+                            </p>
+                          ) : (
+                            item.petitStockSaleDetails.map((el, i) => (
+                              <p key={el + i}>
+                                {el.quantity}{' '}
+                                {el.quantity > 1
+                                  ? `${el.Package.name}s`
+                                  : el.Package.name}{' '}
+                                of {el.Package.Products.name}{' '}
+                              </p>
+                            ))
+                          )}
+                        </div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>
+                          {item.Service
+                            ? item.Service.price
+                            : item.petitStockSaleDetails.map((el, i) => (
+                                <p key={el + i}>
+                                  {el.Package.Products.ProductPackage.price}
                                 </p>
-                              ) : (
-                                item.petitStockSaleDetails.map((el, i) => (
-                                  <p key={el + i}>
-                                    {el.quantity}{' '}
-                                    {el.quantity > 1
-                                      ? `${el.Package.name}s`
-                                      : el.Package.name}{' '}
-                                    of {el.Package.Products.name}{' '}
-                                  </p>
-                                ))
-                              )}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>
-                              {item.Service
-                                ? item.Service.price
-                                : item.petitStockSaleDetails.map((el, i) => (
-                                    <p key={el + i}>
-                                      {el.Package.Products.ProductPackage.price}
-                                    </p>
-                                  ))}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {item.Service ? item.total : item.amount}
-                          </CTableDataCell>
-                        </CTableRow>
-                      )
-                    })
-                  : null}
+                              ))}
+                        </div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.Service ? item.total : item.amount}
+                      </CTableDataCell>
+                    </CTableRow>
+                  )
+                })
+              : null}
 
-                <CTableRow>
-                  <CTableDataCell />
-                  <CTableDataCell colSpan={5}>Total</CTableDataCell>
-                  <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
-            {confirmedSells ? (
-              <Pagination
-                postsPerPage={perpage}
-                totalPosts={confirmedSells.length}
-                paginate={paginate}
-              />
-            ) : null}
-          </CCardBody>
-        </React.Fragment>
-      )}
-    </div>
+            <CTableRow>
+              <CTableDataCell />
+              <CTableDataCell colSpan={5}>Total</CTableDataCell>
+              <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
+            </CTableRow>
+          </CTableBody>
+        </CTable>
+        {confirmedSells ? (
+          <Pagination
+            postsPerPage={perpage}
+            totalPosts={confirmedSells.length}
+            paginate={paginate}
+          />
+        ) : null}
+      </CCardBody>
+    </React.Fragment>
   )
 }
 
 export default Sells
+
+// <div>
+//       {loading || loading1 ? (
+//         <div className="text-center">Loading ...</div>
+//       ) : error || error1 ? (
+//         <NetworkError />
+//       ) : (
+//         <React.Fragment>
+//           <CCardHeader>
+//             <div className="my-2">
+//               <h2 className="row">
+//                 <strong> All sells </strong>
+//               </h2>
+//               <div className="d-flex justify-content-between  ">
+//                 <div className="col-6 d-flex gap-2 flex-wrap">
+//                   <div className="col">
+//                     <label className="text-center py-1">Time</label>
+//                     <select
+//                       className="form-select form-select-sm col"
+//                       aria-label="Default select example"
+//                       defaultValue={'all-time'}
+//                       {...register('time')}
+//                     >
+//                       <option value="all-time">All-time</option>
+//                       <option value="date">Date</option>
+//                     </select>
+//                   </div>
+//                   {time && time === 'date' ? (
+//                     <div className="col d-flex align-items-end ">
+//                       <ReactDatePicker
+//                         className="form-control col px-2"
+//                         onChange={onChange}
+//                         startDate={startDate}
+//                         endDate={endDate}
+//                         dateFormat="dd/MM/yy"
+//                         selectsRange
+//                         portalId="root-portal"
+//                         popperPlacement="bottom-end"
+//                         popperContainer={CalendarContainer}
+//                         placeholderText="Select date range"
+//                       />
+//                     </div>
+//                   ) : null}
+//                 </div>
+//                 <div className="col-4">
+//                   <div className="col">
+//                     <label className="text-center py-1">Type</label>
+//                     <select
+//                       className="form-select form-select-sm col"
+//                       aria-label=" sell type select"
+//                       defaultValue={'all'}
+//                       {...register('type')}
+//                     >
+//                       <option value="all">All</option>
+//                       <option value="product">Product</option>
+//                       <option value="service">Service</option>
+//                     </select>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </CCardHeader>
+//           <CCardBody>
+//             <CTable bordered>
+//               <CTableHead>
+//                 <CTableRow>
+//                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
+//                   <CTableHeaderCell scope="col">Account</CTableHeaderCell>
+//                   <CTableHeaderCell scope="col">By</CTableHeaderCell>
+//                   <CTableHeaderCell scope="col">Confirmed By</CTableHeaderCell>
+//                   <CTableHeaderCell scope="col">
+//                     Product/Service
+//                   </CTableHeaderCell>
+//                   <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
+//                   <CTableHeaderCell scope="col">Total</CTableHeaderCell>
+//                 </CTableRow>
+//               </CTableHead>
+//               <CTableBody>
+//                 {confirmedSells && confirmedSells.length !== 0
+//                   ? confirmedSells.map((item, i) => {
+//                       return (
+//                         <CTableRow key={item.id}>
+//                           <CTableHeaderCell scope="row">
+//                             {(currentPage - 1) * perpage + 1 + i}
+//                           </CTableHeaderCell>
+//                           <CTableDataCell>
+//                             {item.petitStock
+//                               ? item.petitStock.name
+//                               : item.Service.name}
+//                           </CTableDataCell>
+//                           <CTableDataCell>
+//                             {item.Service
+//                               ? item.User.firstName + ' ' + item.User.lastName
+//                               : item.user.firstName + ' ' + item.user.lastName}
+//                           </CTableDataCell>
+//                           <CTableDataCell>
+//                             {item.Service
+//                               ? item.User.firstName + ' ' + item.User.lastName
+//                               : !item.status.split(' ')[2]
+//                               ? ' '
+//                               : item.status.split(' ')[2] +
+//                                 ' ' +
+//                                 !item.status.split(' ')[3]
+//                               ? ' '
+//                               : item.status.split(' ')[3]}
+//                           </CTableDataCell>
+//                           <CTableDataCell>
+//                             <div>
+//                               {item.Service ? (
+//                                 <p key={item.id * 100}>
+//                                   {item.Service.name}
+//                                   {' ' +
+//                                     item.total / item.Service.price +
+//                                     ' times'}
+//                                 </p>
+//                               ) : (
+//                                 item.petitStockSaleDetails.map((el, i) => (
+//                                   <p key={el + i}>
+//                                     {el.quantity}{' '}
+//                                     {el.quantity > 1
+//                                       ? `${el.Package.name}s`
+//                                       : el.Package.name}{' '}
+//                                     of {el.Package.Products.name}{' '}
+//                                   </p>
+//                                 ))
+//                               )}
+//                             </div>
+//                           </CTableDataCell>
+//                           <CTableDataCell>
+//                             <div>
+//                               {item.Service
+//                                 ? item.Service.price
+//                                 : item.petitStockSaleDetails.map((el, i) => (
+//                                     <p key={el + i}>
+//                                       {el.Package.Products.ProductPackage.price}
+//                                     </p>
+//                                   ))}
+//                             </div>
+//                           </CTableDataCell>
+//                           <CTableDataCell>
+//                             {item.Service ? item.total : item.amount}
+//                           </CTableDataCell>
+//                         </CTableRow>
+//                       )
+//                     })
+//                   : null}
+
+//                 <CTableRow>
+//                   <CTableDataCell />
+//                   <CTableDataCell colSpan={5}>Total</CTableDataCell>
+//                   <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
+//                 </CTableRow>
+//               </CTableBody>
+//             </CTable>
+//             {confirmedSells ? (
+//               <Pagination
+//                 postsPerPage={perpage}
+//                 totalPosts={confirmedSells.length}
+//                 paginate={paginate}
+//               />
+//             ) : null}
+//           </CCardBody>
+//         </React.Fragment>
+//       )}
+//     </div>

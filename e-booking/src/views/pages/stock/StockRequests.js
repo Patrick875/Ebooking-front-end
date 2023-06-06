@@ -218,7 +218,7 @@ function AllStockRequests() {
                               <RiCheckLine className=" ms-3 text-success ri-lg" />
                             </p>
                           ) : (
-                            <p className="ms-3">Pending</p>
+                            <p className="ms-3">{item.status}</p>
                           )}
                         </CTableDataCell>
                         <CTableDataCell>

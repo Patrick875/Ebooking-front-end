@@ -101,7 +101,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
           request: request.id,
         })
         .then(() => {
-          toast.success('stock order approved')
+          toast.success('stock order canceled')
           setApproved(!approved)
         })
         .catch(() => {
@@ -125,7 +125,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
           ) : null}
           <button
             className={`btn btn-ghost-success text-black ${
-              request.status === 'APPROVED' || approved ? 'disabled' : null
+              request.status === 'APPROVED' || approved || 'CANCELED'
+                ? 'disabled'
+                : null
             }`}
             onClick={() => updateStockOrder('approve')}
           >
@@ -133,7 +135,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
           </button>
           <button
             className={`btn btn-ghost-danger text-black ${
-              request.status === 'APPROVED' || approved ? 'disabled' : null
+              request.status === 'APPROVED' || approved || 'CANCELED'
+                ? 'disabled'
+                : null
             }`}
             onClick={() => updateStockOrder('cancel')}
           >

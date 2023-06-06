@@ -8,7 +8,7 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Pagination from 'src/utils/Pagination'
 import { toast } from 'react-hot-toast'
 import { RiCheckLine } from 'react-icons/ri'
@@ -16,15 +16,64 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
-import { sortingWithDates } from 'src/utils/functions'
+import {
+  datesInRangeWithUnix,
+  getUTCDateWithoutHours,
+  sortingWithDates,
+} from 'src/utils/functions'
+import ReactDatePicker from 'react-datepicker'
+import { useForm } from 'react-hook-form'
+import CalendarContainer from 'src/utils/CalendarContainer'
 
 function AllRequestToCashier() {
-  const [items, setItems] = useState([])
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  let [items, setItems] = useState([])
+  items = useMemo(() => sortingWithDates(items), [items])
+  const { register, watch } = useForm()
+  const time = watch('time')
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const onChange = (dates) => {
+    const [start, end] = dates
+    setStartDate(start)
+    setEndDate(end)
+  }
+  let myDates = useMemo(
+    () => datesInRangeWithUnix(startDate, endDate),
+    [time, startDate, endDate],
+  )
+
+  if (
+    items &&
+    items.length !== 0 &&
+    myDates &&
+    myDates.length !== 0 &&
+    time !== 'all-time'
+  ) {
+    items = items.filter((sell) =>
+      myDates.includes(getUTCDateWithoutHours(sell.date || sell.updatedAt))
+        ? sell
+        : '',
+    )
+  } else {
+    items =
+      items && items.length !== 0
+        ? items.filter((el, i) => {
+            if (currentPage === 1) {
+              return i >= 0 && i < perpage ? el : null
+            } else {
+              return i >= (currentPage - 1) * perpage &&
+                i <= perpage * currentPage - 1
+                ? el
+                : null
+            }
+          })
+        : []
+  }
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const handleOnRowClick = async (item) => {
     dispatch(selectItem(item))
     navigate('/booking/requests/cashier/view')
@@ -49,6 +98,38 @@ function AllRequestToCashier() {
         <h2>
           <strong> All Purchase orders </strong>
         </h2>
+        <div className="d-flex justify-content-between  ">
+          <div className="col-4 d-flex gap-2 flex-wrap">
+            <div className="col">
+              <label className="text-center py-1">Time</label>
+              <select
+                className="form-select form-select-sm col"
+                aria-label="Default select example"
+                defaultValue={'all-time'}
+                {...register('time')}
+              >
+                <option value="all-time">All-time</option>
+                <option value="date">Date</option>
+              </select>
+            </div>
+            {time && time === 'date' ? (
+              <div className="col d-flex align-items-end ">
+                <ReactDatePicker
+                  className="form-control col px-2"
+                  onChange={onChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  dateFormat="dd/MM/yy"
+                  selectsRange
+                  portalId="root-portal"
+                  popperPlacement="bottom-end"
+                  popperContainer={CalendarContainer}
+                  placeholderText="Select date range"
+                />
+              </div>
+            ) : null}
+          </div>
+        </div>
       </CCardHeader>
       <CCardBody>
         <CTable bordered>
@@ -64,7 +145,7 @@ function AllRequestToCashier() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? sortingWithDates(items)
+              ? items
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null

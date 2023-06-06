@@ -66,7 +66,16 @@ const ReceiveVaucher = (props) => {
 
               <CTableRow>
                 <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableDataCell>{purchaseTotal}</CTableDataCell>
+                <CTableDataCell>
+                  {Number(purchaseTotal).toLocaleString()}
+                </CTableDataCell>
+              </CTableRow>
+              <CTableRow>
+                <CTableHeaderCell>Balance</CTableHeaderCell>
+                <CTableHeaderCell />
+                <CTableHeaderCell />
+                <CTableHeaderCell />
+                <CTableDataCell />
               </CTableRow>
             </CTableBody>
           </CTable>
@@ -107,7 +116,18 @@ const ReceiveVaucher = (props) => {
                 : null}
               <CTableRow>
                 <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableHeaderCell>{receiveTotal}</CTableHeaderCell>
+                <CTableHeaderCell>
+                  {Number(receiveTotal).toLocaleString()}
+                </CTableHeaderCell>
+              </CTableRow>
+              <CTableRow>
+                <CTableHeaderCell />
+                <CTableHeaderCell />
+                <CTableHeaderCell />
+                <CTableHeaderCell />
+                <CTableHeaderCell>
+                  {Number(receiveTotal - purchaseTotal).toLocaleString()}
+                </CTableHeaderCell>
               </CTableRow>
             </CTableBody>
           </CTable>
@@ -126,19 +146,17 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
       ? vaucher.StockReceiveVoucherDetails.reduce(
           (acc, b) => acc + Number(b.receivedQuantity) * Number(b.unitPrice),
           0,
-        ).toLocaleString()
+        )
       : 0
 
   const purchaseTotal =
     vaucher &&
     vaucher.StockPurchaseOrder &&
     vaucher.StockPurchaseOrder.StockPurchaseOrderDetails !== 0
-      ? vaucher.StockPurchaseOrder['StockPurchaseOrderDetails']
-          .reduce(
-            (acc, b) => acc + Number(b.requestQuantity) * Number(b.unitPrice),
-            0,
-          )
-          .toLocaleString()
+      ? vaucher.StockPurchaseOrder['StockPurchaseOrderDetails'].reduce(
+          (acc, b) => acc + Number(b.requestQuantity) * Number(b.unitPrice),
+          0,
+        )
       : 0
   return (
     <CCard>
@@ -169,20 +187,6 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
         receiveTotal={receiveTotal}
         purchaseTotal={purchaseTotal}
       />
-      {receiveTotal === purchaseTotal ? (
-        <p className="text-center">
-          Balanced <RiCheckLine className=" ms-3 text-success ri-lg" />{' '}
-        </p>
-      ) : receiveTotal > purchaseTotal ? (
-        <p className="text-center">
-          {Number(receiveTotal - purchaseTotal).toLocaleString()} deficit
-        </p>
-      ) : (
-        <p className="text-center">
-          {Number(purchaseTotal - receiveTotal).toLocaleString()} to be returned
-          to cashier
-        </p>
-      )}
     </CCard>
   )
 })

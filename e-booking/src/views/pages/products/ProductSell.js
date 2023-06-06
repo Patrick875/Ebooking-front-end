@@ -383,7 +383,7 @@ const ProductSell = React.forwardRef((props, ref) => {
 
                   <button
                     className="btn btn-light rounded-1 shadow-sm"
-                    disabled={!table || table.length !== 0}
+                    disabled={!table || table.length === 0}
                     onClick={() => {
                       createOrder()
                     }}

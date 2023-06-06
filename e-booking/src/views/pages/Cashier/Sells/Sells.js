@@ -9,7 +9,7 @@ import {
   CTableRow,
 } from '@coreui/react'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
@@ -20,21 +20,15 @@ import {
   datesInRangeWithUnix,
   getUTCDateWithoutHours,
 } from 'src/utils/functions'
-//import NetworkError from '../../page404/NetworkError'
 
 function Sells() {
   const { register, watch } = useForm()
-  // const { loading, data, error, makeApiCall } = useApiCall(instance)
-  // const {
-  //   loading: loading1,
-  //   data: data1,
-  //   error: error1,
-  //   makeApiCall: makeApiCall1,
-  // } = useApiCall(instance)
   const [sells, setSells] = useState([])
+  const [petitStock, setPetitStock] = useState([])
   const [serviceSells, setServiceSells] = useState([])
   const time = watch('time')
   const type = watch('type')
+  const pos = watch('pos')
   const perpage = 14
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
@@ -53,14 +47,25 @@ function Sells() {
       ? sells.filter((sell) => sell.Service)
       : sells
   }
-  let confirmedSells =
-    sells && sells.length !== 0
+  const filterByPos = (sells, pos) => {
+    return pos === 'all'
+      ? sells
+      : sells.filter((sell) => sell.petitStock.name === pos)
+  }
+  let confirmedSells = useMemo(() => {
+    return sells && sells.length !== 0
       ? sells.filter((sell) =>
           sell.status.toLowerCase().startsWith('comfirmed'),
         )
       : []
+  })
   confirmedSells = [...confirmedSells, ...serviceSells]
-  confirmedSells = filterSells(confirmedSells)
+
+  confirmedSells = useMemo(() => filterSells(confirmedSells), [confirmedSells])
+  confirmedSells = useMemo(
+    () => filterByPos(confirmedSells, pos),
+    [confirmedSells, pos],
+  )
 
   if (
     confirmedSells &&
@@ -99,15 +104,6 @@ function Sells() {
       : 0
 
   useEffect(() => {
-    // makeApiCall('get', '/products/package/sells')
-    // makeApiCall1('get', '/services/sells')
-    // if (data) {
-    //   setSells(data.data)
-    // }
-    // if (data1) {
-    //   setServiceSells(data1.data)
-    // }
-
     const getItems = async () => {
       await instance.get('/products/package/sells').then((res) => {
         setSells(res.data.data)
@@ -123,6 +119,12 @@ function Sells() {
           console.log('err', err)
         })
     }
+    const getAllPetitStock = async () => {
+      await instance.get('/petit-stock/all').then((res) => {
+        setPetitStock(res.data.data)
+      })
+    }
+    getAllPetitStock()
     getServiceSells()
     getItems()
   }, [])
@@ -135,7 +137,7 @@ function Sells() {
             <strong> All sells </strong>
           </h2>
           <div className="d-flex justify-content-between  ">
-            <div className="col-6 d-flex gap-2 flex-wrap">
+            <div className="col-3 d-flex gap-2 flex-wrap">
               <div className="col">
                 <label className="text-center py-1">Time</label>
                 <select
@@ -165,7 +167,27 @@ function Sells() {
                 </div>
               ) : null}
             </div>
-            <div className="col-4">
+            <div className="col-3">
+              <div className="col">
+                <label className="text-center py-1">Point of Sale</label>
+                <select
+                  className="form-select form-select-sm col"
+                  aria-label=" sell type select"
+                  defaultValue={'all'}
+                  {...register('pos')}
+                >
+                  <option value="all">All</option>
+                  {petitStock && petitStock.length !== 0
+                    ? petitStock.map((el, i) => (
+                        <option value={el.name} key={i * 2}>
+                          {el.name}
+                        </option>
+                      ))
+                    : null}
+                </select>
+              </div>
+            </div>
+            <div className="col-3">
               <div className="col">
                 <label className="text-center py-1">Type</label>
                 <select

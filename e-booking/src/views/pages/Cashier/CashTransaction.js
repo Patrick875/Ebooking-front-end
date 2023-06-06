@@ -72,8 +72,8 @@ const CashTransaction = () => {
                     id="type"
                     {...register('type')}
                   >
-                    <option value="credit">Credit</option>
-                    <option value="debit">Debit</option>
+                    <option value="credit">Cash out</option>
+                    <option value="debit">Cash in </option>
                   </CFormSelect>
                 </div>
                 <div className="mb-3 col-6">

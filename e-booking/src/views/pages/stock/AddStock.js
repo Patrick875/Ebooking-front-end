@@ -328,6 +328,10 @@ const AddStock = React.forwardRef((props, ref) => {
                           data.quantity = item2[0].requestQuantity
                           data.unit = item2[0].unit
                         }
+                        if (data.price === '') {
+                          data.price = item2[0].unitPrice
+                          data.unit = item2[0].unit
+                        }
                         return onAdd(data)
                       }}
                     />

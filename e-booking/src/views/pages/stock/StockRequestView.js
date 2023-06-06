@@ -82,16 +82,32 @@ const StockRequestView = React.forwardRef((props, ref) => {
     stockOrderDetails = request.PetitStockRequesitionDetails
   }
 
-  const approveStockOrder = async () => {
-    await instance
-      .post('petitstock/order/approve', { request: request.id })
-      .then(() => {
-        toast.success('stock order approved')
-        setApproved(!approved)
-      })
-      .catch(() => {
-        toast.error('error approving order')
-      })
+  const updateStockOrder = async (action) => {
+    if (action === 'approve') {
+      await instance
+        .post('petitstock/order/approve', {
+          request: request.id,
+        })
+        .then(() => {
+          toast.success('stock order approved')
+          setApproved(!approved)
+        })
+        .catch(() => {
+          toast.error('error approving order')
+        })
+    } else if (action === 'cancel') {
+      await instance
+        .post('petitstock/order/cancel', {
+          request: request.id,
+        })
+        .then(() => {
+          toast.success('stock order approved')
+          setApproved(!approved)
+        })
+        .catch(() => {
+          toast.error('error approving order')
+        })
+    }
   }
 
   return (
@@ -111,7 +127,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
             className={`btn btn-ghost-success text-black ${
               request.status === 'APPROVED' || approved ? 'disabled' : null
             }`}
-            onClick={() => approveStockOrder()}
+            onClick={() => updateStockOrder('approve')}
           >
             Approve
           </button>
@@ -119,6 +135,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
             className={`btn btn-ghost-danger text-black ${
               request.status === 'APPROVED' || approved ? 'disabled' : null
             }`}
+            onClick={() => updateStockOrder('cancel')}
           >
             Cancel
           </button>

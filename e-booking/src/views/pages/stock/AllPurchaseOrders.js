@@ -16,25 +16,74 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
-import { sortingWithDates } from 'src/utils/functions'
+import {
+  datesInRangeWithUnix,
+  getUTCDateWithoutHours,
+  sortingWithDates,
+} from 'src/utils/functions'
+import { useForm } from 'react-hook-form'
+import ReactDatePicker from 'react-datepicker'
+import CalendarContainer from 'src/utils/CalendarContainer'
 
 function AllPurchaseOrders() {
-  const [items, setItems] = useState([])
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  let [items, setItems] = useState([])
+
+  const { register, watch } = useForm()
+  let time = watch('time')
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  const onChange = (dates) => {
+    const [start, end] = dates
+    setStartDate(start)
+    setEndDate(end)
+  }
+  let myDates = datesInRangeWithUnix(startDate, endDate)
+
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+
+  if (
+    items &&
+    items.length !== 0 &&
+    myDates &&
+    myDates.length !== 0 &&
+    time !== 'all-time'
+  ) {
+    items = items.filter((request) =>
+      myDates.includes(
+        getUTCDateWithoutHours(request.date || request.updatedAt),
+      )
+        ? request
+        : '',
+    )
+  } else {
+    items =
+      items && items.length !== 0
+        ? items.filter((el, i) => {
+            if (currentPage === 1) {
+              return i >= 0 && i < perpage ? el : null
+            } else {
+              return i >= (currentPage - 1) * perpage &&
+                i <= perpage * currentPage - 1
+                ? el
+                : null
+            }
+          })
+        : []
+  }
   const handleOnRowClick = async (item) => {
     dispatch(selectItem(item))
     navigate('/booking/stock/purchaseOrder/view')
   }
+
   useEffect(() => {
     const getPurchaseOrders = async () => {
       await instance
         .get('/purchase/order/all')
         .then((res) => {
-          console.log(res.data)
           setItems(res.data.data)
         })
         .catch((err) => {
@@ -50,6 +99,39 @@ function AllPurchaseOrders() {
         <h2>
           <strong> All Purchase orders </strong>
         </h2>
+
+        <div className="d-flex justify-content-between  ">
+          <div className="col-3 d-flex gap-2 flex-wrap">
+            <div className="col">
+              <label className="text-center py-1">Time</label>
+              <select
+                className="form-select form-select-sm col"
+                aria-label="Default select example"
+                defaultValue={'all-time'}
+                {...register('time')}
+              >
+                <option value="all-time">All-time</option>
+                <option value="date">Date</option>
+              </select>
+            </div>
+            {time && time === 'date' ? (
+              <div className="col d-flex align-items-end ">
+                <ReactDatePicker
+                  className="form-control col px-2"
+                  onChange={onChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  dateFormat="dd/MM/yy"
+                  selectsRange
+                  portalId="root-portal"
+                  popperPlacement="bottom-end"
+                  popperContainer={CalendarContainer}
+                  placeholderText="Select date range"
+                />
+              </div>
+            ) : null}
+          </div>
+        </div>
       </CCardHeader>
       <CCardBody>
         <CTable bordered>

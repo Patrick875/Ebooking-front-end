@@ -50,7 +50,11 @@ function Sells() {
   const filterByPos = (sells, pos) => {
     return pos === 'all'
       ? sells
-      : sells.filter((sell) => sell.petitStock.name === pos)
+      : sells.filter((sell) =>
+          sell.petitStock
+            ? sell.petitStock.name === pos
+            : sell.Service.name === pos,
+        )
   }
   let confirmedSells = useMemo(() => {
     return sells && sells.length !== 0
@@ -212,7 +216,6 @@ function Sells() {
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Account</CTableHeaderCell>
               <CTableHeaderCell scope="col">By</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Confirmed By</CTableHeaderCell>
               <CTableHeaderCell scope="col">Product/Service</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total</CTableHeaderCell>
@@ -235,17 +238,6 @@ function Sells() {
                         {item.Service
                           ? item.User.firstName + ' ' + item.User.lastName
                           : item.user.firstName + ' ' + item.user.lastName}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {item.Service
-                          ? item.User.firstName + ' ' + item.User.lastName
-                          : !item.status.split(' ')[2]
-                          ? ' '
-                          : item.status.split(' ')[2] +
-                            ' ' +
-                            !item.status.split(' ')[3]
-                          ? ' '
-                          : item.status.split(' ')[3]}
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>

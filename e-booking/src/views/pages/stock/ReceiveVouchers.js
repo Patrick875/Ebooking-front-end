@@ -83,9 +83,9 @@ function ReceiveVouchers() {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <p>
+            <h2>
               <strong> All Receive vaucher </strong>
-            </p>
+            </h2>
 
             <div className="d-flex justify-content-between  ">
               <div className="col-4 d-flex gap-2 flex-wrap">

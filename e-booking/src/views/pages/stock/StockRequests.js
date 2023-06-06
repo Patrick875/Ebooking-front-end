@@ -48,10 +48,10 @@ function AllStockRequests() {
   const filterByPos = (requests, pos) => {
     return pos === 'all'
       ? requests
-      : requests.filter((request) => request.petitStock.name === pos)
+      : requests.filter((request) => request.PetitStock.name === pos)
   }
 
-  items = useMemo(() => filterByPos(items, pos), [items])
+  items = useMemo(() => filterByPos(items, pos), [items, pos])
 
   if (
     items &&
@@ -110,9 +110,9 @@ function AllStockRequests() {
   return (
     <div>
       <CCardHeader>
-        <p>
+        <h2>
           <strong> All out stock requests </strong>
-        </p>
+        </h2>
 
         <div className="d-flex justify-content-between  ">
           <div className="col-3 d-flex gap-2 flex-wrap">

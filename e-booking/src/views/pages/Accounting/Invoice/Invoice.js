@@ -79,6 +79,7 @@ function Invoice() {
     const getAllInvoice = async () => {
       await instance.get('/invoices/all').then((res) => {
         setInvoices(res.data.data)
+        console.log('all invoices', res.data.data)
       })
     }
     getAllInvoice()

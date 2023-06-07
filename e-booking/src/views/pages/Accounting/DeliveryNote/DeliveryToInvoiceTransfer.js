@@ -22,14 +22,16 @@ import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import InvoiceList from '../Invoice/InvoiceList'
+import { Typeahead } from 'react-bootstrap-typeahead'
 
 const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const deliveryNote = useSelector((state) => state.selection.selected)
+  const [item, setItem] = useState([])
+  const [items, setItems] = useState([...deliveryNote.DeliveryNoteDetails])
   const { register, getValues, watch, reset } = useForm()
   const quantity = watch('quantity')
   const price = watch('price')
-  const name = watch('name')
   const [visible, setVisible] = useState(false)
   let [requestItems, setRequestItems] = useState([])
   const documentTitle = 'Invoice'
@@ -38,6 +40,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   }
 
   const createInvoice = async (data) => {
+    data.deliveryLink = deliveryNote.id
     await instance
       .post('/invoices/add', data)
       .then(() => {
@@ -49,15 +52,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   }
 
   const dontAdd =
-    !quantity ||
-    quantity === '' ||
-    !name ||
-    name === '' ||
-    !price ||
-    price === ''
-      ? true
-      : false
+    !quantity || quantity === '' || !price || price === '' ? true : false
   const onAdd = (data) => {
+    data.name = item[0].description
     setRequestItems([...requestItems, data])
     reset({ name: '', quantity: '', price: '' })
   }
@@ -128,6 +125,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                           type="text"
                           name="clientName"
                           id="clientName"
+                          defaultValue={deliveryNote.clientName}
                           placeholder="...client name"
                           required
                           {...register('outside.clientName')}
@@ -143,8 +141,18 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                         aria-label="client type"
                         {...register('outside.clientType', { required: true })}
                       >
-                        <option value="COMPANY">COMPANY</option>
-                        <option value="INDIVIDUAL">INDIVIDUAL</option>
+                        <option
+                          value="COMPANY"
+                          selected={deliveryNote === 'COMPANY'}
+                        >
+                          COMPANY
+                        </option>
+                        <option
+                          value="INDIVIDUAL"
+                          selected={deliveryNote === 'INDIVIDUAL'}
+                        >
+                          INDIVIDUAL
+                        </option>
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
@@ -154,7 +162,8 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                           type="text"
                           name="function"
                           id="function"
-                          placeholder="...function"
+                          defaultValue={deliveryNote.function}
+                          placeholder="..."
                           required
                           {...register('outside.function')}
                         />
@@ -166,6 +175,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                         <CFormInput
                           type="number"
                           min={0}
+                          defaultValue={
+                            item && item.length !== 0 ? item[0].times : null
+                          }
                           name="pax"
                           id="pax"
                           placeholder="...pax"
@@ -178,13 +190,15 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                     <CCol md={6}>
                       <div>
                         <CFormLabel htmlFor="itemName"> Item name </CFormLabel>
-                        <CFormInput
-                          type="text"
-                          name="itemName"
-                          id="itemName"
-                          placeholder="...item "
-                          required
-                          {...register('name')}
+                        <Typeahead
+                          id="basic-typeahead-single"
+                          labelKey="description"
+                          filterBy={['description']}
+                          onChange={setItem}
+                          options={items}
+                          placeholder="item  ..."
+                          selected={item}
+                          {...props}
                         />
                       </div>
                     </CCol>
@@ -193,6 +207,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                       <CFormInput
                         type="number"
                         min={0}
+                        defaultValue={
+                          item && item.length !== 0 ? item[0].quantity : null
+                        }
                         name="quantity"
                         id="quantity"
                         placeholder="50  "
@@ -235,6 +252,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                       disabled={dontAdd}
                       onClick={() => {
                         const data = getValues()
+
                         return onAdd(data)
                       }}
                     />

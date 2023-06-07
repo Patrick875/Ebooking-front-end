@@ -1,4 +1,5 @@
 import {
+  CButton,
   CCardBody,
   CFormInput,
   CRow,
@@ -13,8 +14,6 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { BiCartDownload } from 'react-icons/bi'
-import { MdOutlineShoppingCartCheckout } from 'react-icons/md'
-import { BsFiles } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
@@ -45,13 +44,22 @@ function StoreView() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const [style, setStyle] = useState({ display: 'none' })
   items = searchItems(items, query)
+  const deleteStore = async (id) => {
+    await instance
+      .delete(`/stock/store/delete/${id}`)
+      .then(() => {
+        toast.success('store deleted')
+      })
+      .catch((err) => {
+        toast.error(err.message)
+      })
+  }
   useEffect(() => {
     const getItems = async () => {
       await instance
         .get('/stock/item/balance')
         .then((res) => {
           setItems(res.data.data)
-          console.log('available stock', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -64,6 +72,14 @@ function StoreView() {
     <div>
       <div className="d-flex justify-content-between">
         <BackButton />
+        <CButton
+          className="btn-danger"
+          onClick={() => {
+            deleteStore(store.id)
+          }}
+        >
+          Delete store
+        </CButton>
       </div>
       <CRow className="bg-white shadow shadow-sm">
         <div className="d-flex justify-content-between align-items-center">

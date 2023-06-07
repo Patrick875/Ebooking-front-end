@@ -17,7 +17,6 @@ const InvoiceHeader = (props) => {
           <p className="website my-0">Web:www.olympichotel.rw</p>
           <p className="my-0 fw-bolder">TIN/VAT: 102556009</p>
         </div>
-        <hr className="fw-bold" />
         <div className="col d-flex justify-content-center">
           <p className="border border-1 text-center col-6">{documentTitle} </p>
         </div>

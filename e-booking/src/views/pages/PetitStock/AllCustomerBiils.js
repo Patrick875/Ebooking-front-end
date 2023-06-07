@@ -66,6 +66,7 @@ function AllCustomerBills() {
         .get('/customerbill/all')
         .then((res) => {
           setItems(res.data.data)
+          console.log('bills', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)

@@ -1,17 +1,9 @@
-import {
-  CCardBody,
-  CCardHeader,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
+import { CCardBody, CCardHeader } from '@coreui/react'
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
+import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
 //import useApiCall from 'src/API/useApiCall'
 import CalendarContainer from 'src/utils/CalendarContainer'
@@ -20,8 +12,12 @@ import {
   datesInRangeWithUnix,
   getUTCDateWithoutHours,
 } from 'src/utils/functions'
+import SellsTable from './SellsTable'
+import PrintTemplate1 from '../../Printing/PrintTemplate1'
 
-function Sells() {
+const Sells = () => {
+  const componentRef = useRef()
+  let stuff = []
   const { register, watch } = useForm()
   const [sells, setSells] = useState([])
   const [petitStock, setPetitStock] = useState([])
@@ -58,9 +54,7 @@ function Sells() {
   }
   let confirmedSells = useMemo(() => {
     return sells && sells.length !== 0
-      ? sells.filter((sell) =>
-          sell.status.toLowerCase().startsWith('comfirmed'),
-        )
+      ? sells.filter((sell) => sell.status.toLowerCase().includes('comfirmed'))
       : []
   })
   confirmedSells = [...confirmedSells, ...serviceSells]
@@ -84,7 +78,7 @@ function Sells() {
         : '',
     )
   } else {
-    confirmedSells =
+    stuff =
       confirmedSells && confirmedSells.length !== 0
         ? confirmedSells.filter((el, i) => {
             if (currentPage === 1) {
@@ -98,6 +92,7 @@ function Sells() {
           })
         : []
   }
+  // console.log('not cool', confirmedSells)
 
   const total =
     confirmedSells && confirmedSells.length !== 0
@@ -111,6 +106,7 @@ function Sells() {
     const getItems = async () => {
       await instance.get('/products/package/sells').then((res) => {
         setSells(res.data.data)
+        console.log('okay sawaw', res.data.data)
       })
     }
     const getServiceSells = async () => {
@@ -137,9 +133,20 @@ function Sells() {
     <React.Fragment>
       <CCardHeader>
         <div className="my-2">
-          <h2 className="row">
-            <strong> All sells </strong>
-          </h2>
+          <div className="d-flex justify-content-between">
+            <h2 className="row">
+              <strong> All sells </strong>
+            </h2>
+
+            <div>
+              <ReactToPrint
+                trigger={() => (
+                  <button className="btn btn-ghost-primary">Print</button>
+                )}
+                content={() => componentRef.current}
+              />
+            </div>
+          </div>
           <div className="d-flex justify-content-between  ">
             <div className="col-3 d-flex gap-2 flex-wrap">
               <div className="col">
@@ -210,81 +217,26 @@ function Sells() {
         </div>
       </CCardHeader>
       <CCardBody>
-        <CTable bordered>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Account</CTableHeaderCell>
-              <CTableHeaderCell scope="col">By</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Product/Service</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {confirmedSells && confirmedSells.length !== 0
-              ? confirmedSells.map((item, i) => {
-                  return (
-                    <CTableRow key={item.id}>
-                      <CTableHeaderCell scope="row">
-                        {(currentPage - 1) * perpage + 1 + i}
-                      </CTableHeaderCell>
-                      <CTableDataCell>
-                        {item.petitStock
-                          ? item.petitStock.name
-                          : item.Service.name}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {item.Service
-                          ? item.User.firstName + ' ' + item.User.lastName
-                          : item.user.firstName + ' ' + item.user.lastName}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>
-                          {item.Service ? (
-                            <p key={item.id * 100}>
-                              {item.Service.name}
-                              {' ' + item.total / item.Service.price + ' times'}
-                            </p>
-                          ) : (
-                            item.petitStockSaleDetails.map((el, i) => (
-                              <p key={el + i}>
-                                {el.quantity}{' '}
-                                {el.quantity > 1
-                                  ? `${el.Package.name}s`
-                                  : el.Package.name}{' '}
-                                of {el.Package.Products.name}{' '}
-                              </p>
-                            ))
-                          )}
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>
-                          {item.Service
-                            ? item.Service.price
-                            : item.petitStockSaleDetails.map((el, i) => (
-                                <p key={el + i}>
-                                  {el.Package.Products.ProductPackage.price}
-                                </p>
-                              ))}
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {item.Service ? item.total : item.amount}
-                      </CTableDataCell>
-                    </CTableRow>
-                  )
-                })
-              : null}
+        <div style={{ display: 'none' }}>
+          <div ref={componentRef}>
+            <PrintTemplate1>
+              <p className="text-center fw-bold">Sells Report</p>
+              <SellsTable
+                confirmedSells={stuff}
+                perpage={perpage}
+                currentPage={currentPage}
+                total={total}
+              />
+            </PrintTemplate1>
+          </div>
+        </div>
+        <SellsTable
+          confirmedSells={stuff}
+          perpage={perpage}
+          currentPage={currentPage}
+          total={total}
+        />
 
-            <CTableRow>
-              <CTableDataCell />
-              <CTableDataCell colSpan={5}>Total</CTableDataCell>
-              <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
-            </CTableRow>
-          </CTableBody>
-        </CTable>
         {confirmedSells ? (
           <Pagination
             postsPerPage={perpage}

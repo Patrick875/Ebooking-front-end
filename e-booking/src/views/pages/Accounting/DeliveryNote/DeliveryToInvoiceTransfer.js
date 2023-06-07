@@ -17,30 +17,31 @@ import {
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
+import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
-import DeliveryList from './DeliveryList'
-import DeliveryFooter from '../../Printing/DeliveryFooter'
+import { useSelector } from 'react-redux'
+import InvoiceList from '../Invoice/InvoiceList'
 
-const DeliveryNote = React.forwardRef((props, ref) => {
+const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-
+  const deliveryNote = useSelector((state) => state.selection.selected)
   const { register, getValues, watch, reset } = useForm()
-  const documentTitle = 'Delivery note'
   const quantity = watch('quantity')
-  const times = watch('times')
-  const description = watch('description')
+  const price = watch('price')
+  const name = watch('name')
   const [visible, setVisible] = useState(false)
   let [requestItems, setRequestItems] = useState([])
+  const documentTitle = 'Invoice'
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
 
-  const createDeliveryNote = async (data) => {
+  const createInvoice = async (data) => {
     await instance
-      .post('/deliveryNote/add', data)
+      .post('/invoices/add', data)
       .then(() => {
-        toast.success('Delivery note created')
+        toast.success('Invoice created')
       })
       .catch((err) => {
         toast.error(err.message)
@@ -50,32 +51,27 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   const dontAdd =
     !quantity ||
     quantity === '' ||
-    Number(quantity) < 0 ||
-    !times ||
-    times === '' ||
-    Number(times) < 0 ||
-    !description ||
-    description === ''
+    !name ||
+    name === '' ||
+    !price ||
+    price === ''
       ? true
       : false
   const onAdd = (data) => {
-    data.unitPrice = 0
     setRequestItems([...requestItems, data])
-    reset({ name: '', quantity: '' })
+    reset({ name: '', quantity: '', price: '' })
   }
   const submitRequest = () => {
     let data
     const outsideData =
       requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
     requestItems = requestItems.map((requestItem) => {
+      requestItem.unitPrice = requestItem.price
       delete requestItem.outside
       return { ...requestItem }
     })
-
     data = { ...outsideData, details: requestItems }
-
-    console.log('cools', data)
-    createDeliveryNote({ ...data })
+    createInvoice(data)
     reset()
   }
 
@@ -88,7 +84,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
             <CCardHeader>
               <div className="d-flex justify-content-between">
                 <h3>
-                  <strong> Create Delivery note </strong>
+                  <strong> Transfer to Invoice </strong>
                 </h3>
                 <CButton
                   component="input"
@@ -166,18 +162,16 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                     </CCol>
                     <CCol md={6}>
                       <div>
-                        <CFormLabel htmlFor="quantity">
-                          {' '}
-                          Number of PAX{' '}
-                        </CFormLabel>
+                        <CFormLabel htmlFor="pax"> Number of PAX </CFormLabel>
                         <CFormInput
-                          type="text"
-                          name="quantity"
-                          id="quantity"
+                          type="number"
+                          min={0}
+                          name="pax"
+                          id="pax"
                           placeholder="...pax"
-                          defaultValue={1}
+                          defaultvalue={1}
                           required
-                          {...register('quantity')}
+                          {...register('times')}
                         />
                       </div>
                     </CCol>
@@ -190,7 +184,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           id="itemName"
                           placeholder="...item "
                           required
-                          {...register('description')}
+                          {...register('name')}
                         />
                       </div>
                     </CCol>
@@ -199,13 +193,39 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                       <CFormInput
                         type="number"
                         min={0}
-                        defaultValue={1}
-                        name="times"
-                        id="times"
-                        placeholder="... "
+                        name="quantity"
+                        id="quantity"
+                        placeholder="50  "
                         required
-                        {...register('times')}
+                        {...register('quantity')}
                       />
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
+                      <CFormInput
+                        type="number"
+                        min={0}
+                        name="price"
+                        id="price"
+                        placeholder="item price in RWF"
+                        required
+                        {...register('price')}
+                      />
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="unit"> VAT </CFormLabel>
+                      <CFormSelect
+                        name="VAT"
+                        id="VAT"
+                        className="mb-3"
+                        aria-label="VAT"
+                        {...register('VAT', { required: true })}
+                      >
+                        <option value="inclusive" selected>
+                          Inclusive
+                        </option>
+                        <option value="exclusive">Exclusive</option>
+                      </CFormSelect>
                     </CCol>
                   </CRow>
                   <CCol xs={12} className="mt-3">
@@ -227,16 +247,14 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                 ref={ref || componentRef}
                 documentTitle={documentTitle}
               >
-                <DeliveryList
-                  documentTitle={documentTitle}
+                <InvoiceList
                   requestItems={requestItems}
                   setRequestItems={setRequestItems}
                 />
-                <DeliveryFooter />
+                <InvoiceFooter />
               </PrintTemplateInvoice>
             </div>
-            <DeliveryList
-              documentTitle={documentTitle}
+            <InvoiceList
               requestItems={requestItems}
               setRequestItems={setRequestItems}
             />
@@ -244,7 +262,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
               <CCol xs={12}>
                 <CButton
                   component="input"
-                  value="Submit request"
+                  value="Create invoice"
                   onClick={() => {
                     submitRequest()
                     setVisible(false)
@@ -259,4 +277,4 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   )
 })
 
-export default DeliveryNote
+export default DeliveryToInvoiceTransfer

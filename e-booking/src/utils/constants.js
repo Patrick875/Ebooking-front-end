@@ -457,6 +457,7 @@ export const units = [
   { name: 'bottle', symbol: 'Bottle' },
   { name: 'crate/caisse', symbol: 'Crate/Caisse' },
   { name: 'litter', symbol: 'L' },
+  { name: 'Tot', symbol: 'Tot' },
   { name: 'militter', symbol: 'mL' },
   { name: 'piece', symbol: 'Piece' },
   { name: 'whole', symbol: 'Whole' },

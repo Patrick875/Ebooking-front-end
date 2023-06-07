@@ -30,6 +30,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const documentTitle = 'Pro forma invoice'
   const { register, getValues, watch, reset } = useForm()
   const quantity = watch('quantity')
+  const times = watch('times')
   const [visible, setVisible] = useState(false)
   let [requestItems, setRequestItems] = useState([])
   let [products, setProducts] = useState([])
@@ -52,7 +53,13 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   }
 
   const dontAdd =
-    !quantity || quantity === '' || !service || service.length === 0
+    !quantity ||
+    quantity === '' ||
+    Number(quantity) < 0 ||
+    times === ' ' ||
+    Number(times) < 0 ||
+    !service ||
+    service.length === 0
       ? true
       : false
 
@@ -227,11 +234,12 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         <CFormInput
                           type="number"
                           min={0}
-                          name="pax"
-                          id="pax"
-                          placeholder="...pax"
+                          defaultValue={1}
+                          name="quantity"
+                          id="quantity"
+                          placeholder="...quantity"
                           required
-                          {...register('times')}
+                          {...register('quantity')}
                         />
                       </div>
                     </CCol>
@@ -251,15 +259,16 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       </div>
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="quantity"> Times</CFormLabel>
+                      <CFormLabel htmlFor="times"> Times</CFormLabel>
                       <CFormInput
                         type="number"
                         min={0}
-                        name="quantity"
-                        id="quantity"
-                        placeholder="50  "
+                        defaultValue={1}
+                        name="times"
+                        id="times"
+                        placeholder=".. "
                         required
-                        {...register('quantity')}
+                        {...register('times')}
                       />
                     </CCol>
                     <CCol md={6}>

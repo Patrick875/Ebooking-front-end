@@ -12,7 +12,7 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { IoCreateOutline } from 'react-icons/io5'
 import { RiCheckLine } from 'react-icons/ri'
@@ -68,11 +68,17 @@ function Invoice() {
           invoice.status.toLowerCase().includes(status.toLowerCase()),
         )
       : invoices
+
+  const totalPayments = (invoice) => {
+    return invoice.InvoicePayments && invoice.InvoicePayments.length !== 0
+      ? invoice.InvoicePayments.reduce((a, b) => a + b.amount, 0)
+      : 0
+  }
+
   useEffect(() => {
     const getAllInvoice = async () => {
       await instance.get('/invoices/all').then((res) => {
         setInvoices(res.data.data)
-        console.log(res.data.data)
       })
     }
     getAllInvoice()
@@ -185,12 +191,17 @@ function Invoice() {
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>
                         <CTableDataCell>
-                          {el.status.toLowerCase() === 'pending' ? (
+                          {el.InvoicePayments.length === 0 ? (
                             <p>PENDING</p>
-                          ) : (
+                          ) : Number(totalPayments(el)) ===
+                            Number(el.amount) ? (
                             <p className="ms-3">
                               Paid
                               <RiCheckLine className=" ms-3 text-success ri-lg" />
+                            </p>
+                          ) : (
+                            <p>
+                              {Number(totalPayments(el)).toLocaleString()} paid
                             </p>
                           )}
                         </CTableDataCell>

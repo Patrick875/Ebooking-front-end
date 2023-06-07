@@ -10,6 +10,7 @@ import ViewDeliveryNote from './DeliveryNote/ViewDeliveryNote'
 import BaudDeCommande from './BonDeCommande/BaudDeCommande'
 import CreateBaudDeCommande from './BonDeCommande/CreateBaudDeCommande'
 import ViewBonDeCommande from './BonDeCommande/ViewBonDeCommande'
+import DeliveryToInvoiceTransfer from './DeliveryNote/DeliveryToInvoiceTransfer'
 
 export const accountingRoutes = [
   {
@@ -65,6 +66,12 @@ export const accountingRoutes = [
     exact: true,
     name: 'View Delivery Note',
     element: ViewDeliveryNote,
+  },
+  {
+    path: '/booking/accounting/delivery/transfer',
+    exact: true,
+    name: 'Delivery Note Transfer',
+    element: DeliveryToInvoiceTransfer,
   },
   {
     path: '/booking/accounting/bon-de-commande',

@@ -13,7 +13,6 @@ function AllStores(props) {
   useEffect(() => {
     const getAllStores = async () => {
       await instance.get('/stock/store/all').then((res) => {
-        console.log('all stores fetched', res.data.data)
         setStore(res.data.data)
       })
     }

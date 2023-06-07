@@ -15,23 +15,19 @@ import BackButton from 'src/components/Navigating/BackButton'
 import ReactToPrint from 'react-to-print'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
-import ClientDetails from '../../Printing/ClientDetails'
+import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
 
 const Item = (props, ref) => {
   const { request, proformaDetails } = props
   const orderTotal = request && request.total ? request.total : 0
   return (
     <div className="m-3 p-3">
-      <h2 className="text-center my-3">
-        Pro forma Invoice N &#176;{request.proformaGenerated}
-      </h2>
-
       <CCardBody className="d-flex justify-content-around">
         <div className="col">
           <CTable bordered>
             <CTableHead>
               <CTableRow>
-                <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Date</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Description</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
                 <CTableHeaderCell scope="col">times</CTableHeaderCell>
@@ -44,7 +40,9 @@ const Item = (props, ref) => {
               {proformaDetails && proformaDetails.length !== 0
                 ? proformaDetails.map((el, i) => (
                     <CTableRow key={i}>
-                      <CTableDataCell>{i + 1}</CTableDataCell>
+                      <CTableDataCell>
+                        {new Date(request.createdAt).toLocaleDateString()}
+                      </CTableDataCell>
                       <CTableDataCell>{el.name}</CTableDataCell>
                       <CTableDataCell>{el.quantity}</CTableDataCell>
                       <CTableDataCell>{el.times}</CTableDataCell>
@@ -58,8 +56,8 @@ const Item = (props, ref) => {
                   ))
                 : null}
               <CTableRow>
-                <CTableHeaderCell />
                 <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
+                <CTableHeaderCell />
                 <CTableHeaderCell>
                   {Number(orderTotal).toLocaleString()}
                 </CTableHeaderCell>
@@ -96,12 +94,20 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       </CCardHeader>
       <div style={{ display: 'none' }}>
         <PrintTemplateInvoice ref={ref || componentRef}>
-          <ClientDetails details={proformaDetails} request={request} />
+          <p className="text-center my-3 text-uppercase fw-bold ">
+            Pro forma Invoice N &#176;{request.proformaGenerated}
+          </p>
+          <ClientDetailsProForma details={proformaDetails} request={request} />
           <Item request={request} proformaDetails={proformaDetails} />
+          <p className="text-center py-1 my-1">
+            Your satisfaction is our concern
+          </p>
           <InvoiceFooter />
         </PrintTemplateInvoice>
       </div>
-
+      <p className="text-center my-3 text-uppercase fw-bold">
+        Pro forma Invoice N &#176;{request.proformaGenerated}
+      </p>
       <Item request={request} proformaDetails={proformaDetails} />
     </CCard>
   )

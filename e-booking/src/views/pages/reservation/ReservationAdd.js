@@ -368,7 +368,7 @@ const ReservationAdd = (props) => {
                           popperPlacement="bottom-end"
                           onChange={(date) => setEndDate(date)}
                           excludeDates={[...removeDates]}
-                          placeholderText="Select a date other than today or yesterday"
+                          placeholderText="Select a date other than  yesterday"
                         />
                       </div>
                     </CCol>

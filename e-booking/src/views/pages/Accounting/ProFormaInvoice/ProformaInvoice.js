@@ -13,7 +13,6 @@ import {
 } from '@coreui/react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
 import { IoCreateOutline } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'

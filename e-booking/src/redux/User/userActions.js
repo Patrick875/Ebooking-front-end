@@ -24,6 +24,7 @@ export const updateUser = (payloadApi, payloadLocal) =>
       })
   }
 export const deleteUser = (payloadApi, payloadLocal) => {
+  console.log('stuff', payloadApi)
   if (payloadLocal.length !== 0) {
     payloadLocal = payloadLocal.map((user) =>
       user._id === payloadApi.id ? { ...user, status: 'disactive' } : user,
@@ -31,7 +32,7 @@ export const deleteUser = (payloadApi, payloadLocal) => {
   }
   return async function (dispatch) {
     await instance
-      .get(`/users/disactivate/${payloadApi.id}`)
+      .delete(`/users/delete/${payloadApi.id}`)
       .then(() => {
         toast.success('user disactivated')
         dispatch({

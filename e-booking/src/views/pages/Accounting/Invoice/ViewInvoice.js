@@ -17,8 +17,6 @@ import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import ClientDetails from '../../Printing/ClientDetails'
-import { instance } from 'src/API/AxiosInstance'
-import { toast } from 'react-hot-toast'
 import InvoicePaymentModal from './InvoicePaymentModal'
 import { RiStethoscopeLine } from 'react-icons/ri'
 
@@ -134,6 +132,9 @@ const ViewInvoice = React.forwardRef((props, ref) => {
             : request.status}
         </span>{' '}
       </p>
+      {request.deliveryLink ? (
+        <p className="fs-6">Linked to deliver note n: {request.deliveryLink}</p>
+      ) : null}
       <div style={{ display: 'none' }}>
         <div ref={ref || componentRef}>
           <InvoiceHeader />

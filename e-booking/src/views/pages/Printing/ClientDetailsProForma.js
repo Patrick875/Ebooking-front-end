@@ -1,4 +1,4 @@
-const ClientDetails = (props) => {
+const ClientDetailsProForma = (props) => {
   const { details, request } = props
   return (
     <div className="col d-flex flex-row border border-2">
@@ -30,8 +30,27 @@ const ClientDetails = (props) => {
           </p>
         ) : null}
       </div>
+
+      <div className="my-0 mx-2">
+        <p className="fw-bold my-0 py-0">
+          Expected Date of Arrival :{' '}
+          <span className="fw-normal">
+            {request.dateIn
+              ? new Date(request.dateIn).toLocaleDateString()
+              : null}
+          </span>
+        </p>
+        <p className="fw-bold my-0 py-0">
+          Expected Date of Departure :{' '}
+          <span className="fw-normal">
+            {request.dateOut
+              ? new Date(request.dateOut).toLocaleDateString()
+              : null}
+          </span>
+        </p>
+      </div>
     </div>
   )
 }
 
-export default ClientDetails
+export default ClientDetailsProForma

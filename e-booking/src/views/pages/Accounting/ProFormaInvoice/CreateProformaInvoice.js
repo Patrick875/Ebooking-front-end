@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-
 import {
   CButton,
   CCard,
@@ -24,6 +23,7 @@ import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
 import ClientDetails from '../../Printing/ClientDetails'
+import DatePicker from 'react-datepicker'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -32,6 +32,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const quantity = watch('quantity')
   const times = watch('times')
   const [visible, setVisible] = useState(false)
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
   let [requestItems, setRequestItems] = useState([])
   let [products, setProducts] = useState([])
   let [services, setServices] = useState([])
@@ -80,7 +82,12 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       return { ...requestItem }
     })
 
-    data = { ...outsideData, details: requestItems }
+    data = {
+      ...outsideData,
+      details: requestItems,
+      dateIn: new Date(startDate.toString()).getTime(),
+      dateOut: new Date(endDate.toString()).getTime(),
+    }
     createInvoice(data)
     reset()
   }
@@ -103,7 +110,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   if (requestItems.length !== 0) {
     request = { ...request, createdAt: new Date() }
   }
-  console.log(request)
   props = { ...props }
   props.renderMenuItemChildren = (option, { text }) => (
     <div>
@@ -287,7 +293,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       />
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="unit"> VAT </CFormLabel>
+                      <CFormLabel htmlFor="VAT"> VAT </CFormLabel>
                       <CFormSelect
                         name="VAT"
                         id="VAT"
@@ -300,6 +306,38 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           Exclusive
                         </option>
                       </CFormSelect>
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="date of arrival">
+                        {' '}
+                        Expected date of Arrival{' '}
+                      </CFormLabel>
+                      <DatePicker
+                        className="form-control"
+                        selected={new Date()}
+                        timeFormat="p"
+                        minDate={new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        onChange={(date) => setStartDate(date)}
+                        placeholderText="Select a date other than  yesterday"
+                      />
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="date of departure">
+                        {' '}
+                        Expected date of Departure{' '}
+                      </CFormLabel>
+                      <DatePicker
+                        className="form-control"
+                        selected={new Date()}
+                        timeFormat="p"
+                        minDate={new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        onChange={(date) => setEndDate(date)}
+                        placeholderText="Select a date other than  yesterday"
+                      />
                     </CCol>
                   </CRow>
                   <CCol xs={12} className="mt-3">

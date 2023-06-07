@@ -94,7 +94,7 @@ function ViewCustomerBill() {
       <BackButton />
       <CCardHeader className="text-center">
         <h2>
-          <strong> POS BILL {selectedBill.id} </strong>
+          <strong> CUSTOMER BILL {selectedBill.id} </strong>
         </h2>
       </CCardHeader>
       <CCardBody className="bg-white shadow shadow-1 p-4">

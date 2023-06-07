@@ -38,6 +38,7 @@ function DeliveryList(props, ref) {
                   </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Description </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Qty </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Times </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Price/unit </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
                 </CTableRow>
@@ -56,6 +57,7 @@ function DeliveryList(props, ref) {
                           {' '}
                           {added.quantity} {added.unit}{' '}
                         </CTableDataCell>
+                        <CTableDataCell>{added.times}</CTableDataCell>
                         <CTableDataCell> {added.unitPrice} </CTableDataCell>
                         <CTableDataCell
                           onMouseEnter={(e) => {
@@ -68,7 +70,8 @@ function DeliveryList(props, ref) {
                         >
                           {' '}
                           {Number(added.unitPrice) *
-                            Number(added.quantity)}{' '}
+                            Number(added.quantity) *
+                            Number(added.times)}
                           <div
                             className="btn btn-danger btn-sm"
                             style={style}
@@ -96,7 +99,7 @@ function DeliveryList(props, ref) {
                 )}
 
                 <CTableRow>
-                  <CTableHeaderCell colSpan={4}>TOTAL</CTableHeaderCell>
+                  <CTableHeaderCell colSpan={5}>TOTAL</CTableHeaderCell>
                   <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
                 </CTableRow>
               </CTableBody>

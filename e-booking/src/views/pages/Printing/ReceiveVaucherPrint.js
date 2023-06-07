@@ -11,14 +11,12 @@ import {
   CTableRow,
 } from '@coreui/react'
 import React from 'react'
-import { useSelector } from 'react-redux'
 import logo from '../../../assets/images/olympic_hotel_logo.png'
 import PrintFooterSignatures from './PrintFooterSignatures'
 import PrintFooterNoSignatures from './PrintFooterNoSignature'
 const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
   const { title } = props
   let { receivedItems, purchaseOrderItems } = props
-  const role = useSelector((state) => state.auth.role)
   const receiveTotal =
     receivedItems && receivedItems.length !== 0
       ? receivedItems

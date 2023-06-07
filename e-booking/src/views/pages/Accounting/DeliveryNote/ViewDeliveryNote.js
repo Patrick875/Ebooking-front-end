@@ -17,6 +17,7 @@ import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
+import { useNavigate } from 'react-router-dom'
 
 const Item = (props, ref) => {
   const { request, DeliveryNoteDetails } = props
@@ -75,20 +76,25 @@ const Item = (props, ref) => {
 
 const ViewDeliveryNote = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+  const navigate = useNavigate()
   const request = useSelector((state) => state.selection.selected)
   let DeliveryNoteDetails
   if (request && request.DeliveryNoteDetails) {
     DeliveryNoteDetails = request.DeliveryNoteDetails
-  }
-  const transferToInvoice = () => {
-    console.log('transfer to invoice trial')
   }
 
   return (
     <CCard>
       <CCardHeader className="d-flex justify-content-between">
         <BackButton />
-        <button className="btn btn-ghost-primary">Transfer to invoice</button>
+        <button
+          className="btn btn-ghost-primary"
+          onClick={() => {
+            navigate('/booking/accounting/delivery/transfer')
+          }}
+        >
+          Transfer to invoice
+        </button>
         <div className="d-flex justify-content-end">
           {DeliveryNoteDetails && DeliveryNoteDetails.length !== 0 ? (
             <ReactToPrint

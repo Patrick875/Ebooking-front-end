@@ -106,7 +106,6 @@ const Sells = () => {
     const getItems = async () => {
       await instance.get('/products/package/sells').then((res) => {
         setSells(res.data.data)
-        console.log('okay sawaw', res.data.data)
       })
     }
     const getServiceSells = async () => {

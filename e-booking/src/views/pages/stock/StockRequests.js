@@ -26,6 +26,7 @@ import {
 } from 'src/utils/functions'
 
 function AllStockRequests() {
+  let stuff = []
   const dispatch = useDispatch()
   const navigate = useNavigate()
   let [items, setItems] = useState([])
@@ -67,20 +68,6 @@ function AllStockRequests() {
         ? request
         : '',
     )
-  } else {
-    items =
-      items && items.length !== 0
-        ? items.filter((el, i) => {
-            if (currentPage === 1) {
-              return i >= 0 && i < perpage ? el : null
-            } else {
-              return i >= (currentPage - 1) * perpage &&
-                i <= perpage * currentPage - 1
-                ? el
-                : null
-            }
-          })
-        : []
   }
 
   const handleOnRowClick = async (item) => {

@@ -125,7 +125,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
           ) : null}
           <button
             className={`btn btn-ghost-success text-black ${
-              request.status === 'APPROVED' || approved || 'CANCELED'
+              request.status === 'APPROVED' || request.status === 'CANCELED'
                 ? 'disabled'
                 : null
             }`}
@@ -135,7 +135,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
           </button>
           <button
             className={`btn btn-ghost-danger text-black ${
-              request.status === 'APPROVED' || approved || 'CANCELED'
+              request.status === 'APPROVED' || request.status === 'CANCELED'
                 ? 'disabled'
                 : null
             }`}

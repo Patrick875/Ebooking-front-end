@@ -46,6 +46,7 @@ function ProformaInvoice() {
     const getAllInvoice = async () => {
       await instance.get('/proforma/all').then((res) => {
         setInvoices(res.data.data)
+        console.log('cool', res.data.data)
       })
     }
 

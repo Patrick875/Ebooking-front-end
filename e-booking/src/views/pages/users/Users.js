@@ -45,7 +45,7 @@ const ConfirmDeleteUserModel = (props) => {
             return dispatch(deleteUser(user, users))
           }}
         >
-          Delete
+          Disactivate user
         </CButton>
       </CModalFooter>
     </CModal>
@@ -142,7 +142,7 @@ const Users = () => {
                       <CTableDataCell> {user.Role.name}</CTableDataCell>
                       <CTableDataCell> {user.status}</CTableDataCell>
                       {role === 'admin' ? (
-                        <CTableDataCell>
+                        <CTableDataCell className="d-flex flex-column gap-2">
                           <Link
                             to="/booking/user/edit"
                             className={`${
@@ -164,7 +164,7 @@ const Users = () => {
                               return setVisible(!visible)
                             }}
                           >
-                            Delete
+                            Disactivate
                           </button>
                           <ConfirmDeleteUserModel
                             visible={visible}

@@ -31,15 +31,9 @@ export const deleteUser = (payloadApi, payloadLocal) => {
   }
   return async function (dispatch) {
     await instance
-      .delete(`/users/delete/${payloadApi.id}`)
+      .get(`/users/disactivate/${payloadApi.id}`)
       .then(() => {
         toast.success('user disactivated')
-        dispatch({
-          type: USER_ACTIONS.DELETE,
-          payload: {
-            payloadApi,
-          },
-        })
       })
       .catch((err) => {
         toast.error('user disactivate failed')

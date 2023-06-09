@@ -1,5 +1,5 @@
 // axiosInstance.js
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import Cookies from 'js-cookie'
 import { toast } from 'react-hot-toast'
 import NetworkError from 'src/views/pages/page404/NetworkError'
@@ -21,6 +21,7 @@ const instance = axios.create({
 axios.interceptors.response.use(
   function (response) {
     // Access the 'data' key on the response object
+    console.log(response)
     const responseData = response.data
 
     if (responseData === null || !responseData) {
@@ -40,7 +41,8 @@ axios.interceptors.response.use(
 
 let tokenPromise
 const errorInterceptor = ({ config, error }) => {
-  if (error) {
+  console.log({ config, error })
+  if (error.isAxiosError) {
     return (
       <div>
         <NetworkError />
@@ -80,31 +82,48 @@ function getTokenPromise() {
   return tokenPromise
 }
 instance.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   (error) => {
-    try {
-      if (!navigator.onLine) {
-        toast.error('No Internet connection !!!! 🚫🚫🚫')
-        return <NetworkError />
-      }
-
-      if (
-        error.response &&
-        (error.response.status === 403 || error.response.status === 401)
-      ) {
-        // Clear the token and state fields from local storage
-        localStorage.removeItem('token')
-        localStorage.removeItem('state')
-      }
-      return <NetworkError />
-    } catch (e) {
-      console.error('Error in response interceptor:', e)
+    // Check if it's an Axios error or a network error
+    if (axios.isAxiosError(error) || !error.response) {
+      return Promise.reject(NetworkError)
     }
 
+    // For other types of errors, you can handle them accordingly
     return Promise.reject(error)
   },
 )
+
+// instance.interceptors.response.use(
+//   (response) => {
+//     return response
+//   },
+//   (error) => {
+//     console.log(error.isAxiosError)
+//     if (error.isAxiosError) {
+//       return <NetworkError />
+//     }
+//     try {
+//       if (!navigator.onLine) {
+//         toast.error('No Internet connection !!!! 🚫🚫🚫')
+//         return <NetworkError />
+//       }
+
+//       if (
+//         error.response &&
+//         (error.response.status === 403 || error.response.status === 401)
+//       ) {
+//         // Clear the token and state fields from local storage
+//         localStorage.removeItem('token')
+//         localStorage.removeItem('state')
+//       }
+//       return <NetworkError />
+//     } catch (e) {
+//       console.error('Error in response interceptor:', e)
+//     }
+
+//     return Promise.reject(error)
+//   },
+// )
 
 export { instance, setToken, getTokenPromise }

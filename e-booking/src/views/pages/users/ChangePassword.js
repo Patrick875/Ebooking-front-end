@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -16,12 +15,11 @@ import { toast } from 'react-hot-toast'
 
 const ChangePassword = () => {
   const { register, handleSubmit, reset, watch } = useForm()
-  const dispatch = useDispatch()
   const newPassword = watch('newPassword')
   const newPasswordConfirm = watch('confirmPassword')
   const onSubmit = async (data) => {
     await instance
-      .post('/users/change-password', data)
+      .post('/reset', data)
       .then(() => {
         toast.success('password changed!')
       })

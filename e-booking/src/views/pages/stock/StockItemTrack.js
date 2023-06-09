@@ -86,7 +86,9 @@ function StockReportTable(props) {
                       : '0'}
                   </CTableDataCell>
                   <CTableDataCell>
-                    {i === items.length - 1 ? item.newQuantity : item.balance}
+                    {i === items.length - 1 || item.preQuantity === 0
+                      ? item.newQuantity
+                      : item.balance}
                   </CTableDataCell>
                 </CTableRow>
               ))

@@ -18,6 +18,26 @@ const instance = axios.create({
   baseURL: 'http://192.168.122.1:8080/api/v1',
 })
 
+axios.interceptors.response.use(
+  function (response) {
+    // Access the 'data' key on the response object
+    const responseData = response.data
+
+    if (responseData === null || !responseData) {
+      return (
+        <div>
+          <NetworkError />
+        </div>
+      )
+    }
+
+    return response
+  },
+  function (error) {
+    return Promise.reject(error)
+  },
+)
+
 let tokenPromise
 const errorInterceptor = ({ config, error }) => {
   if (error) {

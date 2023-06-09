@@ -164,17 +164,6 @@ function StoreView() {
                         item.StockItemValues.length !== 0
                           ? item.StockItemValues[0].price
                           : '0'}
-
-                        <div
-                          className="btn btn-primary btn-sm"
-                          style={style}
-                          onClick={() => {
-                            navigate('/booking/stock/item/history')
-                            dispatch(selectStockItem(item))
-                          }}
-                        >
-                          Track item
-                        </div>
                       </CTableDataCell>
                     </CTableRow>
                   )
@@ -186,7 +175,7 @@ function StoreView() {
         {items.length !== 0 ? (
           <Pagination
             postsPerPage={perpage}
-            totalPosts={items.length}
+            totalPosts={store.StockItemNews.length}
             paginate={paginate}
           />
         ) : null}

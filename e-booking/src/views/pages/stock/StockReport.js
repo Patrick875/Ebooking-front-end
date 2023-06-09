@@ -11,7 +11,7 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -28,6 +28,10 @@ import ReactToPrint from 'react-to-print'
 
 function StockReportTable(props) {
   const { items, currentPage, perpage } = props
+  const totalStock = (items) =>
+    items.reduce((a, b) => a + Number(b.price * b.balance), 0)
+  const total = useMemo(() => totalStock(items))
+
   return (
     <React.Fragment>
       <CTable bordered>
@@ -86,6 +90,17 @@ function StockReportTable(props) {
               </CTableDataCell>
             </CTableRow>
           )}
+          {Number(currentPage) === Math.ceil(Number(items.length / perpage)) ? (
+            <CTableRow>
+              <CTableDataCell
+                colSpan={6}
+                className=" text-uppercase fw-bolder text-center"
+              >
+                Total
+              </CTableDataCell>
+              <CTableDataCell>{total.toLocaleString()}</CTableDataCell>
+            </CTableRow>
+          ) : null}
         </CTableBody>
       </CTable>
     </React.Fragment>
@@ -133,7 +148,6 @@ const StockReport = React.forwardRef((props, ref) => {
         .then((res) => {
           toast.success('all items details retrieved')
           setItems(res.data.data)
-          console.log('res', res.data.data)
         })
         .catch((err) => {
           toast.error('item details retrieve failed')

@@ -19,7 +19,7 @@ const ClientDetailsProForma = (props) => {
           <p className="my-0">
             Number of Pax:{' '}
             {details.map((el, i, arr) =>
-              i !== arr.length - 1 ? `${el.times},` : `${el.times}`,
+              i !== arr.length - 1 ? `${el.quantity},` : `${el.times}`,
             )}
           </p>
         </div>

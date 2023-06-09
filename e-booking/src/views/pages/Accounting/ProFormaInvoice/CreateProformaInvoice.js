@@ -71,6 +71,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
     setRequestItems([...requestItems, data])
 
     reset({ name: '', quantity: '', price: '', pax: '' })
+    setService([])
   }
   const submitRequest = () => {
     let data
@@ -87,6 +88,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       details: requestItems,
       dateIn: new Date(startDate.toString()).getTime(),
       dateOut: new Date(endDate.toString()).getTime(),
+      VAT: requestItems[0].VAT,
     }
     createInvoice(data)
     reset()
@@ -288,7 +290,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         value={
                           service && service.length !== 0 ? service[0].price : 0
                         }
-                        required
                         {...register('price')}
                       />
                     </CCol>
@@ -301,10 +302,10 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         aria-label="VAT"
                         {...register('VAT', { required: true })}
                       >
-                        <option value="inclusive">Inclusive</option>
-                        <option value="exclusive" selected>
-                          Exclusive
+                        <option value="inclusive" selected>
+                          Inclusive
                         </option>
+                        <option value="exclusive">Exclusive</option>
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
@@ -314,8 +315,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       </CFormLabel>
                       <DatePicker
                         className="form-control"
-                        selected={new Date()}
                         timeFormat="p"
+                        selected={startDate}
                         minDate={new Date()}
                         dateFormat="dd/MM/yyyy"
                         popperPlacement="bottom-end"
@@ -330,7 +331,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       </CFormLabel>
                       <DatePicker
                         className="form-control"
-                        selected={new Date()}
+                        selected={endDate}
                         timeFormat="p"
                         minDate={new Date()}
                         dateFormat="dd/MM/yyyy"

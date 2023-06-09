@@ -19,7 +19,16 @@ import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
 
 const Item = (props, ref) => {
   const { request, proformaDetails } = props
+  const VATconstant = useSelector((state) =>
+    state.constants.constants.filter((constant) => constant.name === 'VAT'),
+  )[0] || { value: 0, name: 'VAT' }
+
   const orderTotal = request && request.total ? request.total : 0
+  const amountVAT = Number((orderTotal * VATconstant.value) / 100)
+  const total =
+    proformaDetails[0].VAT === 'exclusive'
+      ? Number(orderTotal - amountVAT)
+      : Number(orderTotal + amountVAT)
   return (
     <div className="m-3 p-3">
       <CCardBody className="d-flex justify-content-around">
@@ -56,10 +65,22 @@ const Item = (props, ref) => {
                   ))
                 : null}
               <CTableRow>
+                <CTableHeaderCell colSpan={5}>VALUE</CTableHeaderCell>
+                <CTableHeaderCell>
+                  {orderTotal.toLocaleString() || 0}
+                </CTableHeaderCell>
+              </CTableRow>
+              <CTableRow colSpan={5}>
+                <CTableHeaderCell colSpan={5}>VAT</CTableHeaderCell>
+                <CTableHeaderCell>
+                  {amountVAT.toLocaleString() || 0}
+                </CTableHeaderCell>
+              </CTableRow>
+              <CTableRow>
                 <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
                 <CTableHeaderCell />
                 <CTableHeaderCell>
-                  {Number(orderTotal).toLocaleString()}
+                  {Number(total).toLocaleString()}
                 </CTableHeaderCell>
               </CTableRow>
             </CTableBody>

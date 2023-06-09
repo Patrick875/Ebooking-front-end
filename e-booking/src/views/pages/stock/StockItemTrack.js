@@ -21,6 +21,7 @@ import Pagination from 'src/utils/Pagination'
 import {
   datesInRangeWithUnix,
   getUTCDateWithoutHours,
+  sortingWithDates,
 } from 'src/utils/functions'
 import InvoiceHeader from '../Printing/InvoiceHeader'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
@@ -30,22 +31,23 @@ import { useSelector } from 'react-redux'
 
 function StockReportTable(props) {
   const { items, currentPage, perpage } = props
+  console.log('oop', items[0])
   return (
     <React.Fragment>
       <CTable bordered>
         <CTableHead>
           <CTableRow>
+            <CTableHeaderCell scope="col"> # </CTableHeaderCell>
             <CTableHeaderCell scope="col"> DATE </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> ACTION </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> PREV QTY </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> BALANCE </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> U.P </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> T.P</CTableHeaderCell>
+            <CTableHeaderCell scope="col"> OPERATION </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> IN</CTableHeaderCell>
+            <CTableHeaderCell scope="col"> OUT </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> CLOSING </CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {items && items.length !== 0 ? (
-            items
+            sortingWithDates(items)
               .filter((el, i) => {
                 if (currentPage === 1) {
                   return i >= 0 && i < perpage ? el : null
@@ -59,18 +61,33 @@ function StockReportTable(props) {
               .map((item, i) => (
                 <CTableRow key={i}>
                   <CTableDataCell>
+                    {(currentPage - 1) * perpage + 1 + i}
+                  </CTableDataCell>
+                  <CTableDataCell>
                     {new Date(item.date).toLocaleDateString()}
                   </CTableDataCell>
                   <CTableDataCell>
-                    {item && item.status === 'DEFAULT'
-                      ? `ADDED WITH ${Math.abs(Number(item.newQuantity))}`
-                      : item.status + `  ${Math.abs(Number(item.newQuantity))}`}
+                    {item && item.status === 'ADDED'
+                      ? `Receiving (Moved in)  ${Math.abs(
+                          Number(item.newQuantity),
+                        )}`
+                      : `Consumption (Moved out)  ${Math.abs(
+                          Number(item.newQuantity),
+                        )}`}
                   </CTableDataCell>
-                  <CTableDataCell>{item.preQuantity}</CTableDataCell>
-                  <CTableDataCell>{item.balance}</CTableDataCell>
-                  <CTableDataCell>{item.price}</CTableDataCell>
+
                   <CTableDataCell>
-                    {Number(item.price * item.balance).toLocaleString()}
+                    {item.status === 'ADDED'
+                      ? Math.abs(Number(item.newQuantity))
+                      : '0'}
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {item.status === 'REMOVED'
+                      ? `-${Math.abs(Number(item.newQuantity))}`
+                      : '0'}
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {i === items.length - 1 ? item.newQuantity : item.balance}
                   </CTableDataCell>
                 </CTableRow>
               ))

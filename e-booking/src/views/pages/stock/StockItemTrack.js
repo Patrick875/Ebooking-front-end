@@ -75,7 +75,6 @@ function StockReportTable(props) {
                           Number(item.newQuantity),
                         )}`}
                   </CTableDataCell>
-
                   <CTableDataCell>
                     {item.status === 'ADDED'
                       ? Math.abs(Number(item.newQuantity))

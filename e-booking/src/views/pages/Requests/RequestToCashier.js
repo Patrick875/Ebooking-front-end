@@ -68,7 +68,15 @@ const RequestToCashier = React.forwardRef((props, ref) => {
       ? true
       : false
   const onAdd = (data) => {
-    data = { ...data, name: item[0].name, id: item[0].id }
+    data = {
+      ...data,
+      name: item[0].name,
+      id: item[0].id,
+      prevQ:
+        item[0].StockItemValues.length !== 0
+          ? item[0].StockItemValues[0].quantity
+          : 0,
+    }
     setRequestItems([...requestItems, data])
     reset()
   }

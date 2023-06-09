@@ -30,6 +30,7 @@ function PurchaseOrder(props, ref) {
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Item </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Prev.Qty </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Qty </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Price/unit </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
@@ -47,6 +48,9 @@ function PurchaseOrder(props, ref) {
                         <CTableDataCell>
                           {' '}
                           {added.itemName || added.name}{' '}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {added.prevQ} {added.unit}
                         </CTableDataCell>
                         <CTableDataCell>
                           {' '}

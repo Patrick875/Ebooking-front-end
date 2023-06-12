@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CRow, CCol, CWidgetStatsF } from '@coreui/react'
+import { CRow, CWidgetStatsF } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilUser, cilHome, cilHouse } from '@coreui/icons'
 import { instance } from 'src/API/AxiosInstance'

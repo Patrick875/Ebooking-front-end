@@ -160,6 +160,7 @@ const Reservation = () => {
         })
         .catch((err) => {
           toast.error(err.status)
+          throw new Error('API request failed')
         })
     }
     getReservations()

@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setFormData } from 'src/redux/MultiStepForm/formActions'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
-import { createProduct } from 'src/redux/Product/productActions'
 
 function AdminProductAdd(props) {
   const {
@@ -34,10 +33,16 @@ function AdminProductAdd(props) {
     setStep((prev) => prev - 1)
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 3) {
-      console.log('all Data', formData)
-      dispatch(createProduct(formData))
+      await instance
+        .post('/products/add', formData)
+        .then(() => {
+          toast.success('Product created')
+        })
+        .catch(() => {
+          toast.error('Product add failed')
+        })
     } else {
       setStep((prev) => prev + 1)
       dispatch(setFormData({ ...data, packages: productPackages }))

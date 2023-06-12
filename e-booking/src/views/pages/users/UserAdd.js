@@ -1,5 +1,5 @@
 //jshint esversion:9
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   CButton,
@@ -15,20 +15,15 @@ import {
 } from '@coreui/react'
 import { registerUser } from 'src/redux/Auth/authActions'
 import { getRoles } from 'src/redux/Roles/RolesActions'
-import { getUsers } from 'src/redux/User/userActions'
 import { useForm } from 'react-hook-form'
 
 const UserAdd = () => {
-  const [formData, setformData] = useState({})
-
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit, reset } = useForm()
 
   const dispatch = useDispatch()
-  const users = useSelector((state) => state.auth.users) || []
+
   const roles = useSelector((state) => state.roles.userRoles) || []
-  // const handleChange = (e) => {
-  //   setformData({ ...formData, [e.target.name]: e.target.value })
-  // }
+
   const onSubmit = (data) => {
     dispatch(registerUser(data))
     reset()
@@ -36,7 +31,7 @@ const UserAdd = () => {
 
   useEffect(() => {
     dispatch(getRoles())
-  }, [])
+  }, [dispatch])
 
   return (
     <>

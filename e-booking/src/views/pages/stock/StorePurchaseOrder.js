@@ -24,14 +24,14 @@ import { instance } from 'src/API/AxiosInstance'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 import { units } from 'src/utils/constants'
 import BackButton from 'src/components/Navigating/BackButton'
+import { useSelector } from 'react-redux'
 
-const RequestToCashier = React.forwardRef((props, ref) => {
+const StorePurchaseOrder = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const typeaheadRef = useRef()
   const { register, getValues, watch, reset } = useForm()
   const quantity = watch('quantity')
   const price = watch('price')
-  const storeId = watch('storeId')
   const [stores, setStores] = useState([])
   let [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
@@ -41,7 +41,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
-
+  const store = useSelector((state) => state.selection.selectedStore)
   const createPurchaseOrder = async (data) => {
     await instance
       .post('/purchase/order/add', data)
@@ -54,8 +54,8 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   }
 
   stockItems =
-    stockItems.length !== 0
-      ? stockItems.filter((item) => item.storeId == storeId)
+    store && stockItems.length !== 0
+      ? stockItems.filter((item) => item.storeId === store.id)
       : stockItems
   const dontAdd =
     !quantity ||
@@ -165,7 +165,12 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                       >
                         {stores && stores.length !== 0
                           ? stores.map((el) => (
-                              <option value={el.id}>{el.name}</option>
+                              <option
+                                value={el.id}
+                                selected={store ? store.id === el.id : false}
+                              >
+                                {el.name}
+                              </option>
                             ))
                           : null}
                       </CFormSelect>
@@ -279,4 +284,4 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   )
 })
 
-export default RequestToCashier
+export default StorePurchaseOrder

@@ -106,7 +106,7 @@ function StoreView() {
               <Link
                 md={4}
                 className="btn btn-primary"
-                to="/booking/requests/cashier"
+                to="/booking/store/purchase"
               >
                 <BiCartDownload className="fs-5" />
               </Link>

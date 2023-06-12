@@ -13,7 +13,7 @@ import {
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import _nav from 'src/_nav'
 
 function UserRolesAdd() {

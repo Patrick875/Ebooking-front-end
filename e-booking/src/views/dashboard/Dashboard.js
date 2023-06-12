@@ -25,7 +25,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
-//  {
-//    userRole && userRole === 'admin' ? <AdminCharts /> : null
-//  }

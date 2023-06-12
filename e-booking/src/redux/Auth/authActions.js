@@ -1,6 +1,7 @@
 import { IS_AUTH } from './AuthActionTypes'
 import { toast } from 'react-hot-toast'
 import { instance, setToken } from 'src/API/AxiosInstance'
+
 //import axios from 'axios'
 import Cookies from 'js-cookie'
 
@@ -54,7 +55,6 @@ export const login = function (payload) {
 }
 export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
-  console.log(payload)
   return async function (dispatch) {
     await instance
       .post(`users/add`, payload)
@@ -76,12 +76,15 @@ export const registerUser = function (payload) {
 }
 
 export const logout = function () {
-  toast.success('User logged out')
-  localStorage.setItem('token', null)
-  localStorage.setItem('state', null)
-  return {
-    type: IS_AUTH.LOGOUT,
-    isAuth: false,
+  return async function (dispatch) {
+    await localStorage.clear()
+    await Cookies.set('token', null)
+
+    toast.success('User logged out')
+    dispatch({
+      type: IS_AUTH.LOGOUT,
+      isAuth: false,
+    })
   }
 }
 

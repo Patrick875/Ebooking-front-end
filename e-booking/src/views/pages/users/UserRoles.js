@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { toast } from 'react-hot-toast'
-import { instance, getTokenPromise } from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 const UserRoles = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const [roles, setRoles] = useState([])

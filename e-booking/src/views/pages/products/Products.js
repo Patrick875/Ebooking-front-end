@@ -158,7 +158,6 @@ const Products = () => {
         .then((res) => {
           if (res.status === 200) {
             setProducts(res.data.data)
-            console.log('prods', res.data.data)
           }
         })
         .catch((err) => {

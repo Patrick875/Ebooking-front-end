@@ -7,9 +7,9 @@ import Cookies from 'js-cookie'
 import { logout } from './redux/Auth/authActions'
 import ConnectionCheck from './utils/ConnectionCheck'
 
-const loading = (
+const Loading = (
   <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
+    <div className="sk-spinner sk-spinner-pulse">...</div>
   </div>
 )
 
@@ -46,7 +46,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={loading}>
+      <Suspense fallback={Loading}>
         <Routes>
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route
@@ -66,6 +66,7 @@ function App() {
             name="Home"
             element={isAuth ? <DefaultLayout /> : <Login />}
           />
+          <Route path={'/error'} name="Error page" element={<NetworkError />} />
         </Routes>
       </Suspense>
       <Toaster />

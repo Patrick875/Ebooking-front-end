@@ -1,5 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CCol, CContainer, CRow } from '@coreui/react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+
+const RefreshTimer = () => {
+  const [seconds, setSeconds] = useState(5)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds((prevSeconds) => prevSeconds - 1)
+    }, 1000)
+
+    if (seconds === 0) {
+      clearInterval(timer)
+      navigate(-1)
+    }
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [seconds])
+
+  return (
+    <div>
+      <h2>Navigating back in: {seconds} seconds</h2>
+    </div>
+  )
+}
 
 const NetworkError = () => {
   return (
@@ -19,6 +48,9 @@ const NetworkError = () => {
               </p>
             </div>
           </CCol>
+          <div className="d-flex justify-content-center">
+            <RefreshTimer />
+          </div>
         </CRow>
       </CContainer>
     </div>

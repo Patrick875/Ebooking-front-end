@@ -19,6 +19,7 @@ import { IoCreateOutline } from 'react-icons/io5'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import Pagination from 'src/utils/Pagination'
+import { sortingWithDates } from 'src/utils/functions'
 
 function AllVauchers() {
   const { register, watch } = useForm()
@@ -98,7 +99,7 @@ function AllVauchers() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? items
+              ? sortingWithDates(items)
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null

@@ -32,6 +32,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   const description = watch('description')
   const [visible, setVisible] = useState(false)
   let [requestItems, setRequestItems] = useState([])
+  const [created, setCreated] = useState({})
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
@@ -39,8 +40,9 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   const createDeliveryNote = async (data) => {
     await instance
       .post('/deliveryNote/add', data)
-      .then(() => {
+      .then((res) => {
         toast.success('Delivery note created')
+        setCreated(res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -71,10 +73,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       delete requestItem.outside
       return { ...requestItem }
     })
-
     data = { ...outsideData, details: requestItems }
-
-    console.log('cools', data)
     createDeliveryNote({ ...data })
     reset()
   }
@@ -227,6 +226,11 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                 ref={ref || componentRef}
                 documentTitle={documentTitle}
               >
+                {created ? (
+                  <h2 className="text-center my-3">
+                    Delivery note N &#176; {created.deliveryNoteId}
+                  </h2>
+                ) : null}
                 <DeliveryList
                   documentTitle={documentTitle}
                   requestItems={requestItems}

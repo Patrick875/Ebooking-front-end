@@ -4,7 +4,6 @@ import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
-//import useApiCall from 'src/API/useApiCall'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
 import {
@@ -91,7 +90,6 @@ const Sells = () => {
           })
         : []
   }
-  // console.log('not cool', confirmedSells)
 
   const total =
     confirmedSells && confirmedSells.length !== 0

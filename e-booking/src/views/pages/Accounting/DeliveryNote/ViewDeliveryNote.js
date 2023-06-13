@@ -13,7 +13,6 @@ import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import BackButton from 'src/components/Navigating/BackButton'
-import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
@@ -112,7 +111,6 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
           <InvoiceHeader title="Delivery note" />
           <Item request={request} DeliveryNoteDetails={DeliveryNoteDetails} />
           <DeliveryFooter />
-          <PrintFooterNoSignatures />
         </div>
       </div>
 

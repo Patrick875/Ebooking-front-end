@@ -24,6 +24,7 @@ import BackButton from 'src/components/Navigating/BackButton'
 import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
 import ClientDetails from '../../Printing/ClientDetails'
 import DatePicker from 'react-datepicker'
+import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -38,6 +39,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   let [products, setProducts] = useState([])
   let [services, setServices] = useState([])
   let [service, setService] = useState([])
+  const [created, setCreated] = useState({})
   let request = {}
   const clearPurchaseOrder = () => {
     setRequestItems([])
@@ -46,8 +48,9 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const createInvoice = async (data) => {
     await instance
       .post('/proforma/add', data)
-      .then(() => {
+      .then((res) => {
         toast.success('Pro forma Invoice created')
+        setCreated(res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -356,11 +359,15 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
               </CCardBody>
             </CCollapse>
             <div style={{ display: 'none' }}>
-              <PrintTemplateInvoice
-                ref={ref || componentRef}
-                documentTitle={documentTitle}
-              >
-                <ClientDetails details={requestItems} />
+              <PrintTemplateInvoice ref={ref || componentRef}>
+                {created ? (
+                  <React.Fragment>
+                    <p className="text-center my-3 text-uppercase fw-bold">
+                      Pro forma Invoice N &#176;{created.proformaGenerated}
+                    </p>
+                    <ClientDetailsProForma request={created} details={[]} />
+                  </React.Fragment>
+                ) : null}
                 <InvoiceList
                   documentTitle={documentTitle}
                   requestItems={requestItems}

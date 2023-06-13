@@ -9,13 +9,7 @@ const ClientDetailsProForma = (props) => {
               {request.clientType} : {request.clientName}
             </p>
           ) : null}
-
-          <p className="my-0">
-            Function:{' '}
-            {details.map((el, i, arr) =>
-              i !== arr.length - 1 ? `${el.name},` : ` and ${el.name}`,
-            )}
-          </p>
+          <p className="my-0">Function: {request.function}</p>
           <p className="my-0">
             Number of Pax:{' '}
             {details.map((el, i, arr) =>

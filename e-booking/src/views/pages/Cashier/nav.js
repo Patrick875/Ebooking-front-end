@@ -35,6 +35,11 @@ export const CashierNav = {
     },
     {
       component: CNavItem,
+      name: 'Cash Vaucher ',
+      to: '/booking/cashier/vauchers',
+    },
+    {
+      component: CNavItem,
       name: 'Cash report ',
       to: '/booking/cashier/report',
     },

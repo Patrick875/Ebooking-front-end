@@ -3,8 +3,8 @@ const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 dayjs.extend(isSameOrBefore)
 
 function sortByDate(a, b) {
-  const date1 = new Date(a.date)
-  const date2 = new Date(b.date)
+  const date1 = a.date ? new Date(a.date) : new Date(a.createdAt)
+  const date2 = b.date ? new Date(b.date) : new Date(b.createdAt)
   return date2.getTime() - date1.getTime()
 }
 

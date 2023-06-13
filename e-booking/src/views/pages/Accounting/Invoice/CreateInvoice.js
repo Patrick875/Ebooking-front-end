@@ -22,6 +22,7 @@ import InvoiceList from './InvoiceList'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
+import ClientDetails from '../../Printing/ClientDetails'
 
 const CreateInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -31,6 +32,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const name = watch('name')
   const [visible, setVisible] = useState(false)
   let [requestItems, setRequestItems] = useState([])
+  const [created, setCreated] = useState({})
   const documentTitle = 'Invoice'
   const clearPurchaseOrder = () => {
     setRequestItems([])
@@ -39,8 +41,10 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const createInvoice = async (data) => {
     await instance
       .post('/invoices/add', data)
-      .then(() => {
+      .then((res) => {
         toast.success('Invoice created')
+        setCreated(res.data.data)
+        console.log('created', { created: res.data.data })
       })
       .catch((err) => {
         toast.error(err.message)
@@ -246,6 +250,13 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                 ref={ref || componentRef}
                 documentTitle={documentTitle}
               >
+                {' '}
+                {created ? (
+                  <ClientDetails
+                    request={created}
+                    invoiceDetails={created.InvoiceDetails}
+                  />
+                ) : null}
                 <InvoiceList
                   requestItems={requestItems}
                   setRequestItems={setRequestItems}

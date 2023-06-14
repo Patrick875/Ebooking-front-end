@@ -3,7 +3,7 @@ import React from 'react'
 function CustomerBill(props) {
   const { user, orderItems, table, results, total } = props
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%' }} className="customer-bill">
       <p className="my-0 py-0 ">MOMO Pay CODE : 005685 // OLYMPIC HOTEL </p>
       <p className="my-0 py-0 ">-------------------</p>
       <p className="my-0 py-0 ">OLYMPIC HOTEL</p>

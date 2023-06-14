@@ -32,13 +32,6 @@
 
 
   /* Show all columns in print */
-
-  .ag-theme-alpine .ag-header-cell,
-  .ag-theme-alpine .ag-cell {
-    display: block !important;
-    visibility: visible !important;
-  }
-
   .customer-bill{
     font-family: 'Times New Roman', Times, serif;
   }
@@ -52,7 +45,6 @@
      font-weight: bolder;
    }
   .printing-header{
-
     flex-direction: row !important;
   }
    .website,.email,.doneOn{

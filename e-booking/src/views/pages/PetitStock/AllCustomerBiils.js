@@ -56,7 +56,7 @@ function AllCustomerBills() {
       toast.success('bill deleted!!!!')
     })
   }
-  const perpage = 30
+  const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -66,16 +66,20 @@ function AllCustomerBills() {
         .get('/customerbill/all')
         .then((res) => {
           setItems(res.data.data)
-          console.log('bills', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
     const getAllPetitStock = async () => {
-      await instance.get('/petit-stock/all').then((res) => {
-        setPetitStock(res.data.data)
-      })
+      await instance
+        .get('/petit-stock/all')
+        .then((res) => {
+          setPetitStock(res.data.data)
+        })
+        .catch((err) => {
+          throw Error(err.statusCode)
+        })
     }
     getAllPetitStock()
     getItems()

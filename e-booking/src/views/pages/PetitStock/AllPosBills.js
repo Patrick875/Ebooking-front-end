@@ -71,9 +71,14 @@ function AllPosBills() {
         })
     }
     const getAllPetitStock = async () => {
-      await instance.get('/petit-stock/all').then((res) => {
-        setPetitStock(res.data.data)
-      })
+      await instance
+        .get('/petit-stock/all')
+        .then((res) => {
+          setPetitStock(res.data.data)
+        })
+        .catch((err) => {
+          throw Error(err.statusCode)
+        })
     }
     getAllPetitStock()
     getItems()

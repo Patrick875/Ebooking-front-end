@@ -267,7 +267,6 @@ const ProductSell = React.forwardRef((props, ref) => {
                     </button>
                   )}
                   content={() => ref || componentRef.current}
-                  pageStyle="@page { size: 2.5in 4in }"
                 />
                 <ReactToPrint
                   trigger={() => (
@@ -279,7 +278,6 @@ const ProductSell = React.forwardRef((props, ref) => {
                     </button>
                   )}
                   content={() => ref || componentRef2.current}
-                  pageStyle="@page { size: 2.5in 4in }"
                 />
                 <button
                   className="btn btn-ghost-danger"

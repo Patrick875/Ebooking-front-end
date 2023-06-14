@@ -5,7 +5,6 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import 'react-datepicker/dist/react-datepicker.css'
-import 'ag-grid-community/styles/ag-grid.css'
 
 import { Provider } from 'react-redux'
 import store from './store'

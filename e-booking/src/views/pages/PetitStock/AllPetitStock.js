@@ -14,9 +14,14 @@ function AllPetitStock(props) {
   const role = useSelector((state) => state.auth.role)
   useEffect(() => {
     const getAllPetitStock = async () => {
-      await instance.get('/petit-stock/all').then((res) => {
-        setPetitStock(res.data.data)
-      })
+      await instance
+        .get('/petit-stock/all')
+        .then((res) => {
+          setPetitStock(res.data.data)
+        })
+        .catch((err) => {
+          throw Error(err.statusCode)
+        })
     }
     getAllPetitStock()
   }, [])

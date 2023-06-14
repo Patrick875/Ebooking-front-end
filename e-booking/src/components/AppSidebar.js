@@ -26,9 +26,7 @@ const AppSidebar = () => {
   return (
     <CSidebar className="primary" position="fixed" visible={sidebarShow}>
       <CSidebarBrand className="d-none d-md-flex" to="/dashboard">
-        {/* <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} /> */}
         <CIcon className="sidebar-brand-narrow" icon={sygnet} height={40} />
-
         <a className="sidebar-brand-minimized sidebar-brand-full" href="/">
           <img src={logo} height={50} alt={newLocal} />
         </a>

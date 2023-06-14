@@ -6,6 +6,7 @@ import './scss/style.scss'
 import Cookies from 'js-cookie'
 import { logout } from './redux/Auth/authActions'
 import ConnectionCheck from './utils/ConnectionCheck'
+import 'ag-grid-community/styles/ag-grid.css'
 
 const Loading = (
   <div className="pt-3 text-center">

@@ -3,7 +3,14 @@ import React from 'react'
 function CustomerBill(props) {
   const { user, orderItems, table, results, total } = props
   return (
-    <div style={{ width: '100%', height: '100%' }} className="customer-bill">
+    <div
+      className="cool"
+      style={{
+        width: '100%',
+        height: '100%',
+        fontFamily: ' Arial, Helvetica, sans-serif',
+      }}
+    >
       <p className="my-0 py-0 ">MOMO Pay CODE : 005685 // OLYMPIC HOTEL </p>
       <p className="my-0 py-0 ">-------------------</p>
       <p className="my-0 py-0 ">OLYMPIC HOTEL</p>
@@ -11,7 +18,7 @@ function CustomerBill(props) {
       <p className="my-0 py-0 ">TEL:+250783103500</p>
       <p className="my-0 py-0 ">TIN:102556009</p>
       <p>{new Date().toLocaleString()}</p>
-      <p className="text-center my-1" style={{ fontSize: '14px' }}>
+      <p className="text-center my-1" style={{ fontSize: '10px' }}>
         {' '}
         CUSTOMER BILL{' '}
       </p>

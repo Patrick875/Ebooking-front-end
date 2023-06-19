@@ -7,13 +7,12 @@ const PrintTemplateInvoice = React.forwardRef((props, ref) => {
   const { documentTitle } = props
 
   return (
-    <CCard ref={ref}>
+    <div ref={ref}>
       <div className="m-3 p-3">
         <InvoiceHeader documentTitle={documentTitle} />
-        <CCardBody>{props.children}</CCardBody>
-        <PrintFooterNoSignatures />
+        <div>{props.children}</div>
       </div>
-    </CCard>
+    </div>
   )
 })
 

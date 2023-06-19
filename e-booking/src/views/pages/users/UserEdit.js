@@ -27,14 +27,12 @@ const UserEdit = () => {
   let role = watch('role') || selectedUser.Role.name
   const dispatch = useDispatch()
   const reactivateUser = async (id) => {
-    console.log('id', id)
     await instance
       .get(`/users/reactivate/${id}`)
       .then(() => {
         toast.success('user re-activated !!')
       })
       .catch((err) => {
-        console.log(err)
         toast.error(err.status)
       })
   }
@@ -42,7 +40,9 @@ const UserEdit = () => {
   const onSubmit = async (data) => {
     data.id = selectedUser.id ? selectedUser.id : null
     //updating users array
-    data.role = selectedUser.Role.name || role
+    data.role = selectedUser.Role.id || role
+
+    console.log('user', { ...selectedUser, ...data })
 
     await instance
       .put('/users/update', data)

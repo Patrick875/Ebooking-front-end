@@ -1,7 +1,7 @@
 const ClientDetailsProForma = (props) => {
   const { details, request } = props
   return (
-    <div className="col d-flex flex-row border border-2">
+    <div className="col d-flex flex-row border border-2 border-dark">
       <div className="col p-2 my-0">
         <div className="my-0">
           {request ? (

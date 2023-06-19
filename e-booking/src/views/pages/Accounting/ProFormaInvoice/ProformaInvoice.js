@@ -91,7 +91,7 @@ function ProformaInvoice() {
               <Link
                 md={4}
                 className="btn btn-primary"
-                to="/booking/accounting/delivery/create"
+                to="/booking/accounting/proformainvoice/create"
               >
                 <IoCreateOutline className="fs-5" />
                 Create

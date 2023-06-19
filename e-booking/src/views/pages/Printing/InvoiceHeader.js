@@ -18,11 +18,13 @@ const InvoiceHeader = (props) => {
           <p className="my-0 fw-bolder">TIN/VAT: 102556009</p>
         </div>
       </CRow>
-      <div className="col d-flex justify-content-center my-2">
-        <p className="border border-2 border-dark text-center col-6">
-          {documentTitle}{' '}
-        </p>
-      </div>
+      {documentTitle ? (
+        <div className="col d-flex justify-content-center my-2">
+          <p className="border border-2 border-dark text-center col-6">
+            {documentTitle}{' '}
+          </p>
+        </div>
+      ) : null}
     </React.Fragment>
   )
 }

@@ -24,7 +24,7 @@ export default function InvoicePaymentModal(props) {
 
   const addInvoicePayment = async (data) => {
     data = { ...data, invoiceId: invoice.id }
-    console.log('data', data)
+
     await instance
       .post('/invoices/payment', data)
       .then((res) => {

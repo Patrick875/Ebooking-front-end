@@ -30,18 +30,7 @@ function SellsPending() {
           toast.error(err.message)
         })
     }
-    const getPendingServices = async () => {
-      await instance
-        .get('/services/sells')
-        .then((res) => {
-          //setSells([...sells, ...res.data.data])
-          console.log('these are pending services', res.data.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
-    }
-    getPendingServices()
+
     getProductSells()
   }, [])
 

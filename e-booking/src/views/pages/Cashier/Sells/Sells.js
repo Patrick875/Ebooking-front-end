@@ -136,7 +136,7 @@ const Sells = () => {
         <div className="my-2">
           <div className="d-flex justify-content-between">
             <h2 className="row">
-              <strong> All sells </strong>
+              <strong> All sales </strong>
             </h2>
 
             <div>

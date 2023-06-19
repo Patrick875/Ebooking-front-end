@@ -1,71 +1,11 @@
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader } from '@coreui/react'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 import BackButton from 'src/components/Navigating/BackButton'
-
-const Request = (props, ref) => {
-  const { request, orderTotal, StockPurchaseOrderDetails } = props
-  return (
-    <div className="m-3 p-3">
-      <h2 className="text-center my-3">
-        Purchase order &#8470; {request.purchaseOrderId}
-      </h2>
-
-      <CCardBody className="d-flex justify-content-around">
-        <div className="col">
-          <CTable bordered>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">Designation</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
-                <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <CTableBody>
-              {StockPurchaseOrderDetails &&
-              StockPurchaseOrderDetails.length !== 0
-                ? StockPurchaseOrderDetails.map((order, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>{order.StockItemNew.name}</CTableDataCell>
-                      <CTableDataCell>{order.unit}</CTableDataCell>
-                      <CTableDataCell>{order.requestQuantity}</CTableDataCell>
-                      <CTableDataCell>{order.unitPrice}</CTableDataCell>
-                      <CTableDataCell>
-                        {Number(
-                          Number(order.requestQuantity) *
-                            Number(order.unitPrice),
-                        ).toLocaleString()}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
-                : null}
-              <CTableRow>
-                <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableHeaderCell>{orderTotal}</CTableHeaderCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-        </div>
-      </CCardBody>
-    </div>
-  )
-}
+import { DataGrid } from '@mui/x-data-grid'
 
 const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -81,6 +21,62 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
           0,
         ).toLocaleString()
       : 0
+  const [rows] = useState(StockPurchaseOrderDetails)
+  const columns = [
+    {
+      headerName: 'Item',
+      width: 200,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
+    },
+    {
+      field: 'unit',
+      headerName: 'Unit',
+      width: 200,
+      sortable: false,
+      editable: false,
+      hide: (params) => params.rowIndex === rows.length,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Qty',
+      width: 200,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 200,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.unitPrice || ''} `,
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 200,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.requestQuantity * params.row.unitPrice) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const total = {
+    id: 1000,
+    width: 200,
+    StockItemNew: { name: 'Total' },
+    requestQuantity: '',
+    unitPrice: '',
+    total: orderTotal,
+  }
+  const isLastRow = (params) => params.row.id === total.id
   return (
     <CCard>
       <CCardHeader className="d-flex justify-content-between">
@@ -96,21 +92,30 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
           ) : null}
         </div>
       </CCardHeader>
-      <div style={{ display: 'none' }}>
-        <PrintTemplate1 ref={ref || componentRef}>
-          <Request
-            request={request}
-            orderTotal={orderTotal}
-            StockPurchaseOrderDetails={StockPurchaseOrderDetails}
-          />
-          <PurchaseOrderFooter />
-        </PrintTemplate1>
-      </div>
-      <Request
-        request={request}
-        orderTotal={orderTotal}
-        StockPurchaseOrderDetails={StockPurchaseOrderDetails}
-      />
+
+      <PrintTemplate1 ref={ref || componentRef}>
+        <div className="m-3 p-3">
+          <p className="text-center text-uppercase my-1">
+            Purchase order &#8470; {request.purchaseOrderId}
+          </p>
+
+          <CCardBody className="d-flex justify-content-around">
+            <div className="col">
+              <DataGrid
+                rows={[...rows, total]}
+                columns={columns}
+                hideFooter={true}
+                getColumnProps={(params) => ({
+                  style: {
+                    display: isLastRow(params) ? 'none' : 'flex',
+                  },
+                })}
+              />
+            </div>
+          </CCardBody>
+        </div>
+        <PurchaseOrderFooter />
+      </PrintTemplate1>
     </CCard>
   )
 })

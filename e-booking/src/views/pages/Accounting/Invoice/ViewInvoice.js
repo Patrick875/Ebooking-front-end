@@ -1,79 +1,14 @@
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
+import { CCardBody, CCardHeader } from '@coreui/react'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-
+import { DataGrid } from '@mui/x-data-grid'
 import BackButton from 'src/components/Navigating/BackButton'
-import PrintFooterNoSignatures from '../../Printing/PrintFooterNoSignature'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import ClientDetails from '../../Printing/ClientDetails'
 import InvoicePaymentModal from './InvoicePaymentModal'
 import { RiStethoscopeLine } from 'react-icons/ri'
-
-const Item = (props, ref) => {
-  const { request, invoiceDetails } = props
-  const orderTotal = request && request.total ? request.total : 0
-  return (
-    <div className="m-3 p-3">
-      <h2 className="text-center my-3">
-        Invoice N &#176; {request.invoiceGenerated}
-      </h2>
-
-      <CCardBody className="d-flex justify-content-around">
-        <div className="col">
-          <CTable bordered>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
-                <CTableHeaderCell scope="col">times</CTableHeaderCell>
-                <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <CTableBody>
-              {invoiceDetails && invoiceDetails.length !== 0
-                ? invoiceDetails.map((el, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>{i + 1}</CTableDataCell>
-                      <CTableDataCell>{el.name}</CTableDataCell>
-                      <CTableDataCell>{el.quantity}</CTableDataCell>
-                      <CTableDataCell>{el.times}</CTableDataCell>
-                      <CTableDataCell>{el.price || 1}</CTableDataCell>
-                      <CTableDataCell>
-                        {Number(
-                          el.quantity * el.times * (el.price || 1),
-                        ).toLocaleString()}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
-                : null}
-              <CTableRow>
-                <CTableHeaderCell />
-                <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableHeaderCell>
-                  {Number(orderTotal).toLocaleString()}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-        </div>
-      </CCardBody>
-    </div>
-  )
-}
+import InvoiceFooter from '../../Printing/InvoiceFooter'
 
 const ViewInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -84,8 +19,62 @@ const ViewInvoice = React.forwardRef((props, ref) => {
     invoiceDetails = request.InvoiceDetails
   }
 
+  const orderTotal = request && request.total ? request.total : 0
+  const [rows] = useState(request.InvoiceDetails)
+  const columns = [
+    {
+      headerName: 'Description',
+      field: 'name',
+      width: 200,
+      sortable: false,
+      editable: false,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Quantity',
+      sortable: false,
+      editable: false,
+      hide: (params) => params.rowIndex === rows.length,
+      width: 200,
+    },
+    {
+      field: 'times',
+      headerName: 'times',
+      width: 200,
+      editable: false,
+      sortable: false,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 200,
+      editable: false,
+      sortable: false,
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 200,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.quantity * params.row.price * params.row.times) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const total = {
+    id: 1000,
+    name: 'Total',
+    width: 200,
+    requestQuantity: '',
+    unitPrice: '',
+    total: orderTotal,
+  }
+  const isLastRow = (params) => params.row.id === total.id
+
   return (
-    <CCard>
+    <div>
       <CCardHeader className="d-flex justify-content-between">
         <BackButton />
         <div className="d-flex justify-content-end gap-2">
@@ -135,16 +124,32 @@ const ViewInvoice = React.forwardRef((props, ref) => {
       {request.deliveryLink ? (
         <p className="fs-6">Linked to deliver note n: {request.deliveryLink}</p>
       ) : null}
-      <div style={{ display: 'none' }}>
-        <div ref={ref || componentRef}>
-          <InvoiceHeader />
-          <ClientDetails details={invoiceDetails} request={request} />
-          <Item request={request} invoiceDetails={invoiceDetails} />
-          <PrintFooterNoSignatures />
-        </div>
-      </div>
 
-      <Item request={request} invoiceDetails={invoiceDetails} />
+      <div ref={ref || componentRef}>
+        <InvoiceHeader />
+        <ClientDetails details={invoiceDetails} request={request} />
+        <div className="my-1 py-1">
+          <p className="text-center text-uppercase my-3">
+            Invoice N &#176; {request.invoiceGenerated}
+          </p>
+
+          <CCardBody className="d-flex justify-content-around">
+            <div className="col">
+              <DataGrid
+                rows={[...rows, total]}
+                columns={columns}
+                hideFooter={true}
+                getColumnProps={(params) => ({
+                  style: {
+                    display: isLastRow(params) ? 'none' : 'flex',
+                  },
+                })}
+              />
+            </div>
+          </CCardBody>
+        </div>
+        <InvoiceFooter />
+      </div>
       <InvoicePaymentModal
         maxPayment={Number(
           request.total -
@@ -154,7 +159,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
         open={open}
         setOpen={RiStethoscopeLine}
       />
-    </CCard>
+    </div>
   )
 })
 

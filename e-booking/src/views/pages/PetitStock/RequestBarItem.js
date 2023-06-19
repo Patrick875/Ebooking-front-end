@@ -69,6 +69,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
 
   const submitRequest = async () => {
     const data = { data: requestItems }
+    console.log('all data requested', data)
     await instance
       .post('/petitstock/order/add', data)
       .then(() => {

@@ -5,26 +5,16 @@ import React from 'react'
 const PrintHeader = () => {
   return (
     <React.Fragment>
-      <div className="d-flex my-3 printing-header ">
-        <p className="col doneOn">
-          Done on{' '}
-          {new Date().toLocaleDateString() +
-            ' at  ' +
-            new Date().toLocaleTimeString()}
-        </p>
-        <p className="col">eBooking</p>
-      </div>
-
-      <CRow className="col d-flex flex-row">
-        <div className="col-4">
+      <CRow className="col d-flex flex-row my-0 py-0">
+        <div className="col-3 my-0 py-0">
           <CImage src={logo} fluid alt="olympic hotel logo" />
         </div>
-        <div className="col">
-          <h3 className="fw-bolder text-capitalize">OLYMPIC HOTEL</h3>
-          <p>TEL: +250 789 677 479/ +250 783 103 500</p>
-          <p className="email">E-mail:info@olympichotel.rw</p>
-          <p className="website">Web:www.olympichotel.rw</p>
-          <p>TIN/VAT: 102556009</p>
+        <div className="col my-0 py-0">
+          <h5 className="fw-bolder text-capitalize my-0 py-0">OLYMPIC HOTEL</h5>
+          <p className="my-0 py-0">TEL: +250 789 677 479/ +250 783 103 500</p>
+          <p className="email my-0 py-0">E-mail:info@olympichotel.rw</p>
+          <p className="website my-0 py-0">Web:www.olympichotel.rw</p>
+          <p className="my-0 py-0">TIN/VAT: 102556009</p>
         </div>
       </CRow>
     </React.Fragment>

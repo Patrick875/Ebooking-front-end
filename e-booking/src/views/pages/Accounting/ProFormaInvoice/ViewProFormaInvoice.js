@@ -1,24 +1,20 @@
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import React, { useRef } from 'react'
+import { CCardBody } from '@coreui/react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import BackButton from 'src/components/Navigating/BackButton'
 import ReactToPrint from 'react-to-print'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
+import { DataGrid } from '@mui/x-data-grid'
 
-const Item = (props, ref) => {
-  const { request, proformaDetails } = props
+const ViewProFormaInvoice = React.forwardRef((props, ref) => {
+  const componentRef = useRef()
+  const request = useSelector((state) => state.selection.selected)
+  let proformaDetails
+  if (request && request.ProformaDetails) {
+    proformaDetails = request.ProformaDetails
+  }
   const VATconstant = useSelector((state) =>
     state.constants.constants.filter((constant) => constant.name === 'VAT'),
   )[0] || { value: 0, name: 'VAT' }
@@ -29,78 +25,80 @@ const Item = (props, ref) => {
     proformaDetails[0].VAT === 'exclusive'
       ? Number(orderTotal - amountVAT)
       : Number(orderTotal + amountVAT)
-  return (
-    <div className="m-3 p-3">
-      <CCardBody className="d-flex justify-content-around">
-        <div className="col">
-          <CTable bordered>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
-                <CTableHeaderCell scope="col">times</CTableHeaderCell>
-                <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
+  const [rows] = useState(request.ProformaDetails)
+  const columns = [
+    {
+      headerName: 'Description',
+      field: 'name',
+      width: 200,
+      sortable: false,
+      editable: false,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Quantity',
+      sortable: false,
+      editable: false,
+      hide: (params) => params.rowIndex === rows.length,
+      width: 200,
+    },
+    {
+      field: 'times',
+      headerName: 'times',
+      width: 200,
+      editable: false,
 
-            <CTableBody>
-              {proformaDetails && proformaDetails.length !== 0
-                ? proformaDetails.map((el, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>
-                        {new Date(request.createdAt).toLocaleDateString()}
-                      </CTableDataCell>
-                      <CTableDataCell>{el.name}</CTableDataCell>
-                      <CTableDataCell>{el.quantity}</CTableDataCell>
-                      <CTableDataCell>{el.times}</CTableDataCell>
-                      <CTableDataCell>{el.price || 1}</CTableDataCell>
-                      <CTableDataCell>
-                        {Number(
-                          el.quantity * el.times * (el.price || 1),
-                        ).toLocaleString()}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
-                : null}
-              <CTableRow>
-                <CTableHeaderCell colSpan={5}>VALUE</CTableHeaderCell>
-                <CTableHeaderCell>
-                  {orderTotal.toLocaleString() || 0}
-                </CTableHeaderCell>
-              </CTableRow>
-              <CTableRow colSpan={5}>
-                <CTableHeaderCell colSpan={5}>VAT</CTableHeaderCell>
-                <CTableHeaderCell>
-                  {amountVAT.toLocaleString() || 0}
-                </CTableHeaderCell>
-              </CTableRow>
-              <CTableRow>
-                <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableHeaderCell />
-                <CTableHeaderCell>
-                  {Number(total).toLocaleString()}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-        </div>
-      </CCardBody>
-    </div>
-  )
-}
+      sortable: false,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 200,
+      editable: false,
 
-const ViewProFormaInvoice = React.forwardRef((props, ref) => {
-  const componentRef = useRef()
-  const request = useSelector((state) => state.selection.selected)
-  let proformaDetails
-  if (request && request.ProformaDetails) {
-    proformaDetails = request.ProformaDetails
+      sortable: false,
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 200,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.quantity * params.row.price * params.row.times) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const valueRow = {
+    id: 3000,
+    name: 'VALUE',
+    width: 200,
+    requestQuantity: '',
+    unitPrice: '',
+    total: orderTotal,
   }
+  const vatRow = {
+    id: 2000,
+    name: 'VAT',
+    width: 200,
+    requestQuantity: '',
+    unitPrice: '',
+    total: amountVAT,
+  }
+  const totalRow = {
+    id: 1000,
+    name: 'Total',
+    width: 200,
+    requestQuantity: '',
+    unitPrice: '',
+    total: total,
+  }
+  const isLastRow = (params) => params.row.id === total.id
+
   return (
-    <CCard>
-      <CCardHeader className="d-flex justify-content-between">
+    <div>
+      <div className="d-flex justify-content-between">
         <BackButton />
         <div className="d-flex justify-content-end">
           {proformaDetails && proformaDetails.length !== 0 ? (
@@ -112,25 +110,35 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
             />
           ) : null}
         </div>
-      </CCardHeader>
-      <div style={{ display: 'none' }}>
-        <PrintTemplateInvoice ref={ref || componentRef}>
-          <p className="text-center my-3 text-uppercase fw-bold ">
-            Pro forma Invoice N &#176;{request.proformaGenerated}
-          </p>
-          <ClientDetailsProForma details={proformaDetails} request={request} />
-          <Item request={request} proformaDetails={proformaDetails} />
-          <p className="text-center py-1 my-1">
-            Your satisfaction is our concern
-          </p>
-          <InvoiceFooter />
-        </PrintTemplateInvoice>
       </div>
-      <p className="text-center my-3 text-uppercase fw-bold">
-        Pro forma Invoice N &#176;{request.proformaGenerated}
-      </p>
-      <Item request={request} proformaDetails={proformaDetails} />
-    </CCard>
+
+      <PrintTemplateInvoice ref={ref || componentRef}>
+        <p className="text-center my-3 text-uppercase fw-bold ">
+          Pro forma Invoice N &#176;{request.proformaGenerated}
+        </p>
+        <ClientDetailsProForma details={proformaDetails} request={request} />
+        <div className="m-3 p-3">
+          <CCardBody className="d-flex justify-content-around">
+            <div className="col">
+              <DataGrid
+                rows={[...rows, valueRow, vatRow, totalRow]}
+                columns={columns}
+                hideFooter={true}
+                getColumnProps={(params) => ({
+                  style: {
+                    display: isLastRow(params) ? 'none' : 'flex',
+                  },
+                })}
+              />
+            </div>
+          </CCardBody>
+        </div>
+        <p className="text-center py-1 my-1">
+          Your satisfaction is our concern
+        </p>
+        <InvoiceFooter />
+      </PrintTemplateInvoice>
+    </div>
   )
 })
 

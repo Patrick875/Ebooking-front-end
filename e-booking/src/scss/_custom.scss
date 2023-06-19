@@ -33,20 +33,15 @@
 
   /* Show all columns in print */
 
-  .ag-theme-alpine .ag-header-cell,
-  .ag-theme-alpine .ag-cell {
-    display: block !important;
-    visibility: visible !important;
-  }
-
- 
+ .cool{
+  font-family: Arial, Helvetica, sans-serif;
+ }
   .client-receipt{
    max-width: 200px !important;
    display:flex;
    justify-content: center;
    h3,p,th,td{
      font-size: 10px;
-     font-weight: bolder;
    }
   .printing-header{
 

@@ -39,6 +39,7 @@ const UserRoles = () => {
         .get('/roles/all')
         .then((res) => {
           setRoles(res.data.roles)
+          console.log('all roles', res.data.roles)
           toast.success('all roles available')
         })
         .catch((err) => {
@@ -77,7 +78,9 @@ const UserRoles = () => {
                       <CTableDataCell> {role.name} </CTableDataCell>
                       <CTableDataCell>
                         {' '}
-                        {role.access && Object.keys(role.access).length !== 0
+                        {role.access &&
+                        role.access !== null &&
+                        Object.keys(role.access).length !== 0
                           ? Object.keys(role.access).map((acces) => (
                               <div className="">
                                 <p className="fw-bolder text-capitalize py-1">
@@ -85,9 +88,14 @@ const UserRoles = () => {
                                 </p>
 
                                 <div className="ms-3">
-                                  {role.access[acces].map((perm) => (
-                                    <p className="text-capitalize">{perm}</p>
-                                  ))}
+                                  {role.access !== null &&
+                                  role.access[acces].length !== 0
+                                    ? role.access[acces].map((perm) => (
+                                        <p className="text-capitalize">
+                                          {perm}
+                                        </p>
+                                      ))
+                                    : null}
                                 </div>
                               </div>
                             ))
@@ -103,7 +111,6 @@ const UserRoles = () => {
                             loggedInUser === 'controller' ? 'disabled' : ''
                           } btn btn-sm btn-warning`}
                           onClick={() => {
-                            console.log('this is role', role)
                             return dispatch(selectItem(role))
                           }}
                         >

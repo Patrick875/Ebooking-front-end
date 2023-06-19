@@ -1,146 +1,19 @@
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintHeader from '../Printing/PrintHeader'
 import PrintFooterSignatures from '../Printing/PrintFooterSignatures'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import BackButton from 'src/components/Navigating/BackButton'
-import { RiCheckLine } from 'react-icons/ri'
-
-const ReceiveVaucher = (props) => {
-  const { vaucher, receiveTotal, purchaseTotal } = props
-  return (
-    <div className="m-3 p-3">
-      <h2 className="text-center my-3">
-        Receive stock vaucher of{' '}
-        {vaucher && vaucher.date
-          ? new Date(vaucher.date).toLocaleDateString()
-          : null}
-      </h2>
-
-      <CCardBody className="d-flex justify-content-around">
-        <div className="col">
-          <div className="d-flex">
-            <p className="fw-bolder">Purchase order</p>
-          </div>
-          <CTable bordered>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">Designation</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
-                <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {vaucher.StockPurchaseOrder.StockPurchaseOrderDetails !== 0
-                ? vaucher.StockPurchaseOrder['StockPurchaseOrderDetails'].map(
-                    (order, i) => (
-                      <CTableRow key={i}>
-                        <CTableDataCell>
-                          {order.StockItemNew.name}
-                        </CTableDataCell>
-                        <CTableDataCell></CTableDataCell>
-                        <CTableDataCell>{order.requestQuantity}</CTableDataCell>
-                        <CTableDataCell>{order.unitPrice}</CTableDataCell>
-                        <CTableDataCell>
-                          {Number(order.requestQuantity) *
-                            Number(order.unitPrice)}
-                        </CTableDataCell>
-                      </CTableRow>
-                    ),
-                  )
-                : null}
-
-              <CTableRow>
-                <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableDataCell>
-                  {Number(purchaseTotal).toLocaleString()}
-                </CTableDataCell>
-              </CTableRow>
-              <CTableRow>
-                <CTableHeaderCell>Balance</CTableHeaderCell>
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableDataCell />
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-        </div>
-        <div className="col">
-          <div className="d-flex">
-            <p className="fw-bolder">Received </p>
-          </div>
-
-          <CTable bordered>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">Designation</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
-                <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {vaucher && vaucher.StockReceiveVoucherDetails.length !== 0
-                ? vaucher.StockReceiveVoucherDetails.map((received, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>
-                        {received.StockItemNew.name}
-                      </CTableDataCell>
-                      <CTableDataCell></CTableDataCell>
-                      <CTableDataCell>
-                        {received.receivedQuantity}
-                      </CTableDataCell>
-                      <CTableDataCell>{received.unitPrice}</CTableDataCell>
-                      <CTableDataCell>
-                        {Number(received.receivedQuantity) *
-                          Number(received.unitPrice)}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
-                : null}
-              <CTableRow>
-                <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                <CTableHeaderCell>
-                  {Number(receiveTotal).toLocaleString()}
-                </CTableHeaderCell>
-              </CTableRow>
-              <CTableRow>
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableHeaderCell>
-                  {Number(receiveTotal - purchaseTotal).toLocaleString()}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-        </div>
-      </CCardBody>
-    </div>
-  )
-}
+import { DataGrid } from '@mui/x-data-grid'
 
 const ReceiveVaucherView = React.forwardRef((props, ref) => {
   const vaucher = useSelector((state) => state.selection.selected)
   const componentRef = useRef()
-
+  let [rowsPurchase] = useState(
+    vaucher.StockPurchaseOrder.StockPurchaseOrderDetails,
+  )
+  let [rowsReceive] = useState(vaucher.StockReceiveVoucherDetails)
   const receiveTotal =
     vaucher && vaucher.StockReceiveVoucherDetails !== 0
       ? vaucher.StockReceiveVoucherDetails.reduce(
@@ -158,9 +31,136 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
           0,
         )
       : 0
+  const Balance = purchaseTotal - receiveTotal
+  const columnsPurchase = [
+    {
+      headerName: 'Item',
+      width: 120,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
+    },
+    {
+      field: 'unit',
+      headerName: 'Unit',
+      sortable: false,
+      editable: false,
+      hide: (params) => params.rowIndex === rowsPurchase.length,
+      width: 120,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Qty',
+      width: 120,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 120,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.unitPrice || ''} `,
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 120,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.requestQuantity * params.row.unitPrice) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const columnsReceive = [
+    {
+      field: 'name',
+      headerName: 'Item',
+      width: 120,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
+    },
+    {
+      field: 'unit',
+      headerName: 'Unit',
+      sortable: false,
+      editable: false,
+      hide: (params) => params.rowIndex === rowsReceive.length,
+      width: 120,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Qty',
+      width: 120,
+      editable: false,
+      hide: (params) => params.rowIndex === rowsReceive.length,
+      sortable: false,
+      valueGetter: (params) => `${params.row.receivedQuantity || ''} `,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 120,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.unitPrice || ''} `,
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 120,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.receivedQuantity * params.row.unitPrice) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const totalPurchase = {
+    id: 1000,
+    name: 'Total',
+    requestQuantity: '',
+    unitPrice: '',
+    total: purchaseTotal,
+  }
+  const balancePurchase = {
+    id: 2000,
+    name: 'Balance',
+    requestQuantity: '',
+    unitPrice: '',
+    total: '',
+  }
+
+  const isLastRowPurchase = (params) => params.row.id === totalPurchase.id
+  const totalReceive = {
+    id: 1000,
+    name: 'Total',
+    requestQuantity: '',
+    unitPrice: '',
+    total: receiveTotal,
+  }
+  const isLastRowReceive = (params) => params.row.id === totalReceive.id
+  const balanceReceive = {
+    id: 2000,
+    StockItemNew: { name: '' },
+    requestQuantity: '',
+    unitPrice: '',
+    total: Balance,
+  }
+
   return (
-    <CCard>
-      <CCardHeader className="d-flex justify-content-between">
+    <div>
+      <div className="d-flex justify-content-between">
         <BackButton />
         <ReactToPrint
           trigger={() => (
@@ -168,26 +168,55 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
           )}
           content={() => ref || componentRef.current}
         />
-      </CCardHeader>
-      <div style={{ display: 'none' }}>
-        <div ref={ref || componentRef}>
-          <PrintHeader />
-          <ReceiveVaucher
-            vaucher={vaucher}
-            receiveTotal={receiveTotal}
-            purchaseTotal={purchaseTotal}
-          />
-          <PrintFooterSignatures />
-          <PrintFooterNoSignatures />
-        </div>
       </div>
 
-      <ReceiveVaucher
-        vaucher={vaucher}
-        receiveTotal={receiveTotal}
-        purchaseTotal={purchaseTotal}
-      />
-    </CCard>
+      <div ref={ref || componentRef}>
+        <PrintHeader />
+        <div className="m-3 p-3">
+          <p className="text-center text-uppercase my-1">
+            Receive stock vaucher of{' '}
+            {vaucher && vaucher.date
+              ? new Date(vaucher.date).toLocaleDateString()
+              : null}
+          </p>
+
+          <div className="d-flex justify-content-around">
+            <div className="col">
+              <div className="d-flex">
+                <p className="fw-normal">Purchase order</p>
+              </div>
+              <DataGrid
+                rows={[...rowsPurchase, totalPurchase, balancePurchase]}
+                columns={columnsPurchase}
+                hideFooter={true}
+                getColumnProps={(params) => ({
+                  style: {
+                    display: isLastRowPurchase(params) ? 'none' : 'flex',
+                  },
+                })}
+              />
+            </div>
+            <div className="col">
+              <div className="d-flex">
+                <p className="fw-normal">Received </p>
+              </div>
+              <DataGrid
+                rows={[...rowsReceive, totalReceive, balanceReceive]}
+                columns={columnsReceive}
+                hideFooter={true}
+                getColumnProps={(params) => ({
+                  style: {
+                    display: isLastRowReceive(params) ? 'none' : 'flex',
+                  },
+                })}
+              />
+            </div>
+          </div>
+        </div>
+        <PrintFooterSignatures />
+        <PrintFooterNoSignatures />
+      </div>
+    </div>
   )
 })
 

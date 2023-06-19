@@ -1,15 +1,4 @@
 import React, { useState, useRef } from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintHeader from '../Printing/PrintHeader'
@@ -17,69 +6,104 @@ import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import BackButton from 'src/components/Navigating/BackButton'
-
-const Request = (props, ref) => {
-  const { request, stockOrderDetails } = props
-  const orderTotal = request && request.total ? request.total : 0
-  return (
-    <div className="m-3 p-3">
-      <h2 className="text-center my-3">
-        Stock order N &#176; {request ? request.stockRequesitionId : null}
-      </h2>
-
-      <CCardBody className="d-flex justify-content-around">
-        <div className="col">
-          <CTable bordered>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">Designation</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
-                <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <CTableBody>
-              {stockOrderDetails && stockOrderDetails.length !== 0
-                ? stockOrderDetails.map((order, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>
-                        {order.StockItemValue.StockItemNew.name}
-                      </CTableDataCell>
-                      <CTableDataCell>{order.quantity}</CTableDataCell>
-                      <CTableDataCell>
-                        {order.StockItemValue.price}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {Number(
-                          Number(order.quantity) *
-                            Number(order.StockItemValue.price),
-                        ).toLocaleString()}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))
-                : null}
-              <CTableRow>
-                <CTableHeaderCell colSpan={3}>Total</CTableHeaderCell>
-                <CTableHeaderCell>
-                  {Number(orderTotal).toLocaleString()}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableBody>
-          </CTable>
-        </div>
-      </CCardBody>
-    </div>
-  )
-}
+import { DataGrid } from '@mui/x-data-grid'
 
 const StockRequestView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+  let [stockOrderDetails] = useState([])
   const request = useSelector((state) => state.selection.selected)
-  const [approved, setApproved] = useState(false)
-  let stockOrderDetails
   if (request && request.PetitStockRequesitionDetails) {
     stockOrderDetails = request.PetitStockRequesitionDetails
+  }
+  const [approved, setApproved] = useState(false)
+  let [rows, setRows] = useState(stockOrderDetails)
+  const columns = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      width: 220,
+      sortable: false,
+      valueGetter: (params) =>
+        `${params.row.StockItemValue.StockItemNew.name || ''} `,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Qty',
+      sortable: false,
+      hide: (params) => params.rowIndex === stockOrderDetails.length,
+      width: 220,
+      valueSetter: (params) => {
+        const updateRow = {
+          ...params.row,
+          quantity: params.value,
+        }
+        let newRows = rows.map((item) =>
+          item.StockItemValue.id === params.row.StockItemValue.id
+            ? { ...params.row, quantity: Number(params.value) }
+            : item,
+        )
+        setRows(newRows)
+        return updateRow
+      },
+      editable: true,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 220,
+      editable: true,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.StockItemValue.price || ''} `,
+      valueSetter: (params) => {
+        const updatedRow = {
+          ...params.row,
+          StockItemValue: {
+            ...params.row.StockItemValue,
+            price: params.value,
+          },
+        }
+        let newRows = rows.map((item) =>
+          item.StockItemValue.id === params.row.StockItemValue.id
+            ? {
+                ...params.row,
+                StockItemValue: {
+                  ...params.row.StockItemValue,
+                  price: Number(params.value),
+                },
+              }
+            : item,
+        )
+        setRows(newRows)
+        return updatedRow
+      },
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 300,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.quantity * params.row.StockItemValue.price) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const isLastRow = (params) => params.row.id === total.id
+  const total = {
+    id: 1000,
+    quantity: '',
+    total: rows.reduce((a, b) => a + b.StockItemValue.price * b.quantity, 0),
+    StockItemValue: {
+      id: 214,
+      quantity: '',
+      price: '',
+      StockItemNew: {
+        id: 494,
+        name: 'Total',
+      },
+    },
   }
 
   const updateStockOrder = async (action) => {
@@ -87,6 +111,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
       await instance
         .post('petitstock/order/approve', {
           request: request.id,
+          data: rows,
         })
         .then(() => {
           toast.success('stock order approved')
@@ -111,8 +136,8 @@ const StockRequestView = React.forwardRef((props, ref) => {
   }
 
   return (
-    <CCard>
-      <CCardHeader className="d-flex justify-content-between">
+    <div>
+      <div className="d-flex justify-content-between">
         <BackButton />
         <div className="d-flex justify-content-end">
           {stockOrderDetails && stockOrderDetails.length !== 0 ? (
@@ -144,18 +169,31 @@ const StockRequestView = React.forwardRef((props, ref) => {
             Cancel
           </button>
         </div>
-      </CCardHeader>
+      </div>
 
-      <div style={{ display: 'none' }}>
+      <div>
         <div ref={ref || componentRef}>
           <PrintHeader />
-          <Request request={request} stockOrderDetails={stockOrderDetails} />
+          <div className="m-3 p-3">
+            <h5 className="text-center my-1 text-uppercase">
+              Stock order N &#176; {request ? request.stockRequesitionId : null}
+            </h5>
+
+            <DataGrid
+              rows={[...rows, total]}
+              columns={columns}
+              hideFooter={true}
+              getColumnProps={(params) => ({
+                style: {
+                  display: isLastRow(params) ? 'none' : 'flex',
+                },
+              })}
+            />
+          </div>
           <PrintFooterNoSignatures />
         </div>
       </div>
-
-      <Request request={request} stockOrderDetails={stockOrderDetails} />
-    </CCard>
+    </div>
   )
 })
 

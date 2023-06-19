@@ -1,40 +1,199 @@
-import {
-  CCard,
-  CCardBody,
-  CImage,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import React from 'react'
+import { CImage, CRow } from '@coreui/react'
+import React, { useEffect, useState } from 'react'
 import logo from '../../../assets/images/olympic_hotel_logo.png'
 import PrintFooterSignatures from './PrintFooterSignatures'
 import PrintFooterNoSignatures from './PrintFooterNoSignature'
+import { DataGrid } from '@mui/x-data-grid'
+
 const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
   const { title } = props
-  let { receivedItems, purchaseOrderItems } = props
-  const receiveTotal =
-    receivedItems && receivedItems.length !== 0
-      ? receivedItems
-          .reduce((acc, b) => acc + Number(b.price) * Number(b.quantity), 0)
-          .toLocaleString()
+  let [rowsPurchase] = useState(props.purchaseOrderItems)
+  let [rowsReceive, setRowsReceive] = useState(props.purchaseOrderItems)
+  const totalPurchases =
+    rowsPurchase && rowsPurchase.length !== 0
+      ? rowsPurchase.reduce((a, b) => a + b.unitPrice * b.requestQuantity, 0)
       : 0
+  const totalReceiving =
+    rowsReceive && rowsReceive.length !== 0
+      ? rowsReceive.reduce((a, b) => a + b.unitPrice * b.requestQuantity, 0)
+      : 0
+  const Balance = totalPurchases - totalReceiving
+  const columnsPurchase = [
+    {
+      headerName: 'Item',
+      width: 100,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
+    },
+    {
+      field: 'unit',
+      headerName: 'Unit',
+      sortable: false,
+      editable: false,
+      hide: (params) => params.rowIndex === rowsPurchase.length,
+      width: 100,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Qty',
+      width: 100,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 100,
+      editable: false,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.unitPrice || ''} `,
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 100,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.requestQuantity * params.row.unitPrice) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const columnsReceive = [
+    {
+      field: 'name',
+      headerName: 'Item',
+      width: 100,
+      sortable: false,
+      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
+    },
+    {
+      field: 'unit',
+      headerName: 'Unit',
+      sortable: false,
+      hide: (params) => params.rowIndex === rowsReceive.length,
+      width: 100,
+      valueSetter: (params) => {
+        const updateRow = {
+          ...params.row,
+          unit: params.value,
+        }
+        let newRows = rowsReceive.map((item) =>
+          item.id === params.row.id
+            ? { ...params.row, unit: params.value }
+            : item,
+        )
+        setRowsReceive(newRows)
+        return updateRow
+      },
+      editable: true,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Qty',
+      width: 100,
+      editable: true,
+      hide: (params) => params.rowIndex === rowsReceive.length,
+      sortable: false,
+      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
+      valueSetter: (params) => {
+        const updatedRow = {
+          ...params.row,
+          requestQuantity: params.value,
+        }
+        let newRows = rowsReceive.map((item) =>
+          item.id === params.row.id
+            ? {
+                ...params.row,
+                requestQuantity: Number(params.value),
+              }
+            : item,
+        )
+        setRowsReceive(newRows)
+        return updatedRow
+      },
+    },
+    {
+      field: 'price',
+      headerName: 'P.U',
+      width: 100,
+      editable: true,
+      hide: true,
+      sortable: false,
+      valueGetter: (params) => `${params.row.unitPrice || ''} `,
+      valueSetter: (params) => {
+        console.log('row', params.row)
+        const updatedRow = {
+          ...params.row,
+          unitPrice: params.value,
+        }
+        let newRows = rowsReceive.map((item) =>
+          item.id === params.row.id
+            ? {
+                ...params.row,
+                unitPrice: Number(params.value),
+              }
+            : item,
+        )
+        setRowsReceive(newRows)
+        return updatedRow
+      },
+    },
+    {
+      field: 'total',
+      headerName: 'T.P',
+      width: 100,
+      sortable: false,
+      valueGetter: (params) =>
+        `${
+          Number(params.row.requestQuantity * params.row.unitPrice) ||
+          params.row.total
+        } `,
+    },
+  ]
+  const totalPurchase = {
+    id: 1000,
+    name: 'Total',
+    requestQuantity: '',
+    unitPrice: '',
+    total: totalPurchases,
+  }
+  const balancePurchase = {
+    id: 2000,
+    name: 'Balance',
+    requestQuantity: '',
+    unitPrice: '',
+    total: '',
+  }
 
-  const purchaseTotal =
-    purchaseOrderItems && purchaseOrderItems.length !== 0
-      ? purchaseOrderItems
-          .reduce(
-            (acc, b) => acc + Number(b.requestQuantity) * Number(b.unitPrice),
-            0,
-          )
-          .toLocaleString()
-      : 0
+  const isLastRowPurchase = (params) => params.row.id === totalPurchase.id
+  const totalReceive = {
+    id: 1000,
+    name: 'Total',
+    requestQuantity: '',
+    unitPrice: '',
+    total: totalReceiving,
+  }
+  const isLastRowReceive = (params) => params.row.id === totalReceive.id
+  const balanceReceive = {
+    id: 2000,
+    StockItemNew: { name: '' },
+    requestQuantity: '',
+    unitPrice: '',
+    total: Balance,
+  }
+
+  useEffect(() => {
+    props.setData(rowsReceive)
+  }, [rowsReceive])
+
   return (
-    <CCard ref={ref}>
+    <div ref={ref}>
       <div className="m-3 p-3">
         <div className="d-flex flex-col my-3">
           <p className="col">
@@ -51,97 +210,57 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
             <CImage src={logo} fluid alt="olympic hotel logo" />
           </div>
           <div className="col">
-            <h3 className="fw-bolder text-capitalize">OLYMPIC HOTEL</h3>
-            <p>TEL: +250 789 677 479/ +250 783 103 500</p>
-            <p>E-mail:info@olympichotel.rw</p>
-            <p>Website: www.olympichotel.rw</p>
-            <p>TIN/VAT: 102556009</p>
+            <p className="text-uppercase my-0 py-0">OLYMPIC HOTEL</p>
+            <p className="my-0 py-0">TEL: +250 789 677 479/ +250 783 103 500</p>
+            <p className="my-0 py-0">E-mail:info@olympichotel.rw</p>
+            <p className="my-0 py-0">Website: www.olympichotel.rw</p>
+            <p className="my-0 py-0">TIN/VAT: 102556009</p>
           </div>
         </CRow>
-
-        <h2 className="text-center my-3">{title}</h2>
-
-        <CCardBody className="d-flex justify-content-around">
+        <h5 className="text-center my-1 py-0 text-uppercase">{title}</h5>
+        <div className="d-flex justify-content-around">
           <div className="col">
-            <div className="d-flex">
+            <div>
               <p className="fw-bolder">Purchase order</p>
+              {props.purchaseOrderItems &&
+              props.purchaseOrderItems.length !== 0 ? (
+                <DataGrid
+                  rows={[...rowsPurchase, totalPurchase, balancePurchase]}
+                  columns={columnsPurchase}
+                  hideFooter={true}
+                  getColumnProps={(params) => ({
+                    style: {
+                      display: isLastRowPurchase(params) ? 'none' : 'flex',
+                    },
+                  })}
+                />
+              ) : null}
             </div>
-            <CTable bordered>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">Designation</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {purchaseOrderItems && purchaseOrderItems.length !== 0
-                  ? purchaseOrderItems.map((order, i) => (
-                      <CTableRow key={i}>
-                        <CTableDataCell>{order.name}</CTableDataCell>
-                        <CTableDataCell></CTableDataCell>
-                        <CTableDataCell>{order.requestQuantity}</CTableDataCell>
-                        <CTableDataCell>{order.unitPrice}</CTableDataCell>
-                        <CTableDataCell>
-                          {Number(order.requestQuantity) *
-                            Number(order.unitPrice)}
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))
-                  : null}
-                <CTableRow>
-                  <CTableHeaderCell colSpan={4}>Total</CTableHeaderCell>
-                  <CTableDataCell>{purchaseTotal}</CTableDataCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
           </div>
           <div className="col">
-            <div className="d-flex">
+            <div>
               <p className="fw-bolder">Received </p>
+              {props.purchaseOrderItems &&
+              props.purchaseOrderItems.length !== 0 ? (
+                <DataGrid
+                  rows={[...rowsReceive, totalReceive, balanceReceive]}
+                  columns={columnsReceive}
+                  hideFooter={true}
+                  getColumnProps={(params) => ({
+                    style: {
+                      display: isLastRowReceive(params) ? 'none' : 'flex',
+                    },
+                  })}
+                />
+              ) : null}
             </div>
-
-            <CTable bordered>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">Designation</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Qty</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">P.U</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">T.P</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {receivedItems && receivedItems.length !== 0
-                  ? receivedItems.map((order, i) => (
-                      <CTableRow key={i}>
-                        <CTableDataCell>{order.itemName}</CTableDataCell>
-                        <CTableDataCell></CTableDataCell>
-                        <CTableDataCell>{order.quantity}</CTableDataCell>
-                        <CTableDataCell>{order.price}</CTableDataCell>
-                        <CTableDataCell>
-                          {Number(order.quantity) * Number(order.price)}
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))
-                  : null}
-                <CTableRow>
-                  <CTableHeaderCell colSpan={3}>Total</CTableHeaderCell>
-                  <CTableHeaderCell colSpan={3}>
-                    {receiveTotal}
-                  </CTableHeaderCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
           </div>
-        </CCardBody>
+        </div>
 
         <PrintFooterSignatures />
         <PrintFooterNoSignatures />
       </div>
-    </CCard>
+    </div>
   )
 })
 

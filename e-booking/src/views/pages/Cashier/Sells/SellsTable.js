@@ -31,7 +31,9 @@ function SellsTable(props) {
                     {(currentPage - 1) * perpage + 1 + i}
                   </CTableHeaderCell>
                   <CTableDataCell>
-                    {item.petitStock ? item.petitStock.name : item.Service.name}
+                    {item.petitStock
+                      ? item.petitStock.name
+                      : item.ServiceCategory.name}
                   </CTableDataCell>
                   <CTableDataCell>
                     {item.Service

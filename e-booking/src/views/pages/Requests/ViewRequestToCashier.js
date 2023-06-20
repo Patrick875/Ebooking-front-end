@@ -112,7 +112,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      width: 230,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -126,6 +126,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     id: 1000,
     StockItemNew: { name: 'Total' },
     requestQuantity: '',
+    unit: '',
     unitPrice: '',
     total: rows.reduce((a, b) => a + b.unitPrice * b.requestQuantity, 0),
   }
@@ -166,7 +167,6 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
           </h5>
           <div
             style={{
-              width: '100%',
               overflowX: 'hidden',
               margin: 0,
               padding: 0,
@@ -178,6 +178,14 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
               rows={[...rows, total]}
               columns={columns}
               hideFooter={true}
+              sx={{
+                '& .MuiDataGrid-cell': {
+                  border: '2px solid black ',
+                },
+                '& .MuiDataGrid-columnHeader': {
+                  border: '2px solid black ',
+                },
+              }}
               getColumnProps={(params) => ({
                 style: {
                   display: isLastRow(params) ? 'none' : 'flex',

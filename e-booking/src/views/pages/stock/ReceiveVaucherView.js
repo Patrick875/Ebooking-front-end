@@ -173,7 +173,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
       <div ref={ref || componentRef}>
         <PrintHeader />
         <div className="m-3 p-3">
-          <p className="text-center text-uppercase my-1">
+          <p className="text-center text-uppercase my-1 fw-bold">
             Receive stock vaucher of{' '}
             {vaucher && vaucher.date
               ? new Date(vaucher.date).toLocaleDateString()
@@ -189,6 +189,14 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                 rows={[...rowsPurchase, totalPurchase, balancePurchase]}
                 columns={columnsPurchase}
                 hideFooter={true}
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    border: '2px solid black ',
+                  },
+                  '& .MuiDataGrid-columnHeader': {
+                    border: '2px solid black ',
+                  },
+                }}
                 getColumnProps={(params) => ({
                   style: {
                     display: isLastRowPurchase(params) ? 'none' : 'flex',
@@ -204,6 +212,14 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                 rows={[...rowsReceive, totalReceive, balanceReceive]}
                 columns={columnsReceive}
                 hideFooter={true}
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    border: '2px solid black ',
+                  },
+                  '& .MuiDataGrid-columnHeader': {
+                    border: '2px solid black ',
+                  },
+                }}
                 getColumnProps={(params) => ({
                   style: {
                     display: isLastRowReceive(params) ? 'none' : 'flex',

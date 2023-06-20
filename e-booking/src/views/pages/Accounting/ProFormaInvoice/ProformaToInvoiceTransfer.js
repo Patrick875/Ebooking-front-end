@@ -188,6 +188,14 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
             />
             <div xs={12} className="mb-4">
               <DataGrid
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    border: '2px solid black ',
+                  },
+                  '& .MuiDataGrid-columnHeader': {
+                    border: '2px solid black ',
+                  },
+                }}
                 rows={[...rows, valueRow, vatRow, totalRow]}
                 columns={columns}
                 hideFooter={true}

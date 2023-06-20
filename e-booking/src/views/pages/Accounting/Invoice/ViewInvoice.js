@@ -139,6 +139,14 @@ const ViewInvoice = React.forwardRef((props, ref) => {
                 rows={[...rows, total]}
                 columns={columns}
                 hideFooter={true}
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    border: '2px solid black ',
+                  },
+                  '& .MuiDataGrid-columnHeader': {
+                    border: '2px solid black ',
+                  },
+                }}
                 getColumnProps={(params) => ({
                   style: {
                     display: isLastRow(params) ? 'none' : 'flex',

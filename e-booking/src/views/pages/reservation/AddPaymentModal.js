@@ -17,20 +17,21 @@ import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 
 function AddPaymentModal(props) {
-  let { reservation, open, setOpen } = props
-  const { register, handleSubmit } = useForm()
-  console.log('this is clicked', reservation)
+  let { reservation, open, setOpen, setReservation } = props
+  const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     data.reservationId = reservation.id
     await instance
       .post('/reservation/pay', data)
-      .then(() => {
-        toast.success('payment added')
+      .then((res) => {
+        toast.success(res.data.message)
+        setReservation(res.data.data)
+        setOpen(false)
       })
       .catch((err) => {
         toast.error(err.message)
       })
-    // reset()
+    reset()
   }
 
   return (

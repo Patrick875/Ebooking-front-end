@@ -102,7 +102,10 @@ const CashTransaction = () => {
                   />
                 </div>
                 <div className="mb-3 col-6">
-                  <CFormLabel htmlFor="account"> Account </CFormLabel>
+                  <CFormLabel htmlFor="account">
+                    {' '}
+                    Account /Purchase number
+                  </CFormLabel>
                   <CFormInput
                     name="account"
                     type="type"

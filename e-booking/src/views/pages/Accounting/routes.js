@@ -11,6 +11,7 @@ import BaudDeCommande from './BonDeCommande/BaudDeCommande'
 import CreateBaudDeCommande from './BonDeCommande/CreateBaudDeCommande'
 import ViewBonDeCommande from './BonDeCommande/ViewBonDeCommande'
 import DeliveryToInvoiceTransfer from './DeliveryNote/DeliveryToInvoiceTransfer'
+import ProformaToInvoiceTransfer from './ProFormaInvoice/ProformaToInvoiceTransfer'
 
 export const accountingRoutes = [
   {
@@ -30,6 +31,12 @@ export const accountingRoutes = [
     exact: true,
     name: 'Create Pro forma invoice',
     element: ViewProFormaInvoice,
+  },
+  {
+    path: '/booking/accounting/proformainvoice/transfer',
+    exact: true,
+    name: 'Transfer pro forma to invoice',
+    element: ProformaToInvoiceTransfer,
   },
   {
     path: '/booking/accounting/invoice',

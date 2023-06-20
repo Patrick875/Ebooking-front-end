@@ -72,7 +72,7 @@ const CashRecords = (props) => {
                   #
                 </CTableDataCell>
                 <CTableDataCell className="fs-6" scope="col">
-                  Account
+                  Account /Purchase number
                 </CTableDataCell>
                 <CTableDataCell className="fs-6" scope="col">
                   Purpose

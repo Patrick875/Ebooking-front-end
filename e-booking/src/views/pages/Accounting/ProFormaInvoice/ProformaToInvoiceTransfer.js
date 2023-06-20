@@ -8,29 +8,23 @@ import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
+import ClientDetails from '../../Printing/ClientDetails'
 
-const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
+const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const deliveryNote = useSelector((state) => state.selection.selected)
-  const data = useSelector(
-    (state) => state.selection.selected.DeliveryNoteDetails,
-  )
+  const proforma = useSelector((state) => state.selection.selected)
+  const data = useSelector((state) => state.selection.selected.ProformaDetails)
   const [rows, setRows] = useState([...data])
-  let [requestItems] = useState([...deliveryNote.DeliveryNoteDetails])
-  const documentTitle = 'Invoice'
-
+  const documentTitle = 'Pro Forma Invoice'
   const submitRequest = async () => {
     let data
     const outsideData = {
-      clientName: deliveryNote.clientName,
-      clientType: deliveryNote.clientType,
-      function: deliveryNote.function,
-      deliveryLink: deliveryNote.id,
+      clientName: proforma.clientName,
+      clientType: proforma.clientType,
+      function: proforma.function,
     }
     const allData = rows.map((el) => ({
       ...el,
-      name: el.description,
-      price: el.unitPrice,
       VAT: 'Inclusive',
     }))
     data = { ...outsideData, details: allData }
@@ -44,14 +38,13 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
         toast.error(err.message)
       })
   }
-
   const VATconstant = useSelector((state) =>
     state.constants.constants.filter((constant) => constant.name === 'VAT'),
   )[0] || { value: 0, name: 'VAT' }
   const columns = [
     {
       headerName: 'Description',
-      field: 'description',
+      field: 'name',
       width: 200,
       sortable: false,
       editable: false,
@@ -100,21 +93,21 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       },
     },
     {
-      field: 'unitPrice',
+      field: 'price',
       headerName: 'P.U',
       width: 200,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === rows.length,
-      valueGetter: (params) => `${params.row.unitPrice}`,
+      valueGetter: (params) => `${params.row.price}`,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
-          unitPrice: params.value,
+          price: params.value,
         }
         let newRows = rows.map((item) =>
           item.id === params.row.id
-            ? { ...params.row, unitPrice: params.value }
+            ? { ...params.row, price: params.value }
             : item,
         )
         setRows([...newRows])
@@ -128,9 +121,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       sortable: false,
       valueGetter: (params) =>
         `${
-          Number(
-            params.row.quantity * params.row.unitPrice * params.row.times,
-          ) ||
+          Number(params.row.quantity * params.row.price * params.row.times) ||
           params.row.total ||
           0
         } `,
@@ -138,37 +129,37 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   ]
   const value =
     rows && rows.length !== 0
-      ? rows.reduce((a, b) => a + Number(b.unitPrice * b.quantity * b.times), 0)
+      ? rows.reduce((a, b) => a + Number(b.price * b.quantity * b.times), 0)
       : 0
-  const VAT = rows && rows.length !== 0 ? requestItems[0].VAT : 'inclusive'
+  const VAT = rows && rows.length !== 0 ? data[0].VAT : 'inclusive'
   const amountVAT = Number((value * VATconstant.value) / 100)
   const total =
     VAT === 'exclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
   const valueRow = {
     id: 3000,
-    description: 'VALUE',
+    name: 'VALUE',
     width: 200,
     quantity: '',
     times: '',
-    unitPrice: '',
+    price: '',
     total: value,
   }
   const vatRow = {
     id: 2000,
-    description: 'VAT',
+    name: 'VAT',
     width: 200,
     quantity: '',
     times: '',
-    unitPrice: '',
+    price: '',
     total: amountVAT,
   }
   const totalRow = {
     id: 1000,
-    description: 'Total',
+    name: 'Total',
     width: 200,
     quantity: '',
     times: '',
-    unitPrice: '',
+    price: '',
     total: total,
   }
   const isLastRow = (params) => params.row.id === totalRow.id
@@ -190,27 +181,22 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
             />
           </div>
 
-          <PrintTemplateInvoice
-            ref={ref || componentRef}
-            documentTitle={documentTitle}
-          >
-            <div>
-              <div xs={12}>
-                <div className="mb-4">
-                  <div>
-                    <DataGrid
-                      rows={[...rows, valueRow, vatRow, totalRow]}
-                      columns={columns}
-                      hideFooter={true}
-                      getColumnProps={(params) => ({
-                        style: {
-                          display: isLastRow(params) ? 'none' : 'flex',
-                        },
-                      })}
-                    />
-                  </div>
-                </div>
-              </div>
+          <PrintTemplateInvoice ref={ref || componentRef}>
+            <ClientDetails
+              details={proforma.ProformaDetails}
+              request={proforma}
+            />
+            <div xs={12} className="mb-4">
+              <DataGrid
+                rows={[...rows, valueRow, vatRow, totalRow]}
+                columns={columns}
+                hideFooter={true}
+                getColumnProps={(params) => ({
+                  style: {
+                    display: isLastRow(params) ? 'none' : 'flex',
+                  },
+                })}
+              />
             </div>
             <InvoiceFooter />
           </PrintTemplateInvoice>
@@ -230,4 +216,4 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   )
 })
 
-export default DeliveryToInvoiceTransfer
+export default ProformaToInvoiceTransfer

@@ -7,8 +7,10 @@ import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
 import { DataGrid } from '@mui/x-data-grid'
+import { useNavigate } from 'react-router-dom'
 
 const ViewProFormaInvoice = React.forwardRef((props, ref) => {
+  const navigate = useNavigate()
   const componentRef = useRef()
   const request = useSelector((state) => state.selection.selected)
   let proformaDetails
@@ -101,6 +103,14 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       <div className="d-flex justify-content-between">
         <BackButton />
         <div className="d-flex justify-content-end">
+          <button
+            className="btn btn-ghost-primary"
+            onClick={() => {
+              navigate('/booking/accounting/proformainvoice/transfer')
+            }}
+          >
+            Transfer to invoice
+          </button>
           {proformaDetails && proformaDetails.length !== 0 ? (
             <ReactToPrint
               trigger={() => (

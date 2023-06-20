@@ -43,9 +43,11 @@ function InvoiceList(props, ref) {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <h3>
-              <strong> {documentTitle ? documentTitle : 'Invoice'} </strong>
-            </h3>
+            {documentTitle ? (
+              <h3>
+                <strong> {documentTitle ? documentTitle : 'Invoice'} </strong>
+              </h3>
+            ) : null}
           </CCardHeader>
           <CCardBody>
             <CTable bordered>

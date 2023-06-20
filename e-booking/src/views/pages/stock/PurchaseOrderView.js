@@ -25,7 +25,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const columns = [
     {
       headerName: 'Item',
-      width: 200,
+      width: 210,
       sortable: false,
       editable: false,
       valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
@@ -33,7 +33,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'unit',
       headerName: 'Unit',
-      width: 200,
+      width: 210,
       sortable: false,
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
@@ -41,7 +41,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'quantity',
       headerName: 'Qty',
-      width: 200,
+      width: 210,
       editable: false,
       hide: true,
       sortable: false,
@@ -50,7 +50,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 200,
+      width: 210,
       editable: false,
       hide: true,
       sortable: false,
@@ -59,7 +59,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      width: 210,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -70,7 +70,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   ]
   const total = {
     id: 1000,
-    width: 200,
+    width: 210,
     StockItemNew: { name: 'Total' },
     requestQuantity: '',
     unitPrice: '',
@@ -95,16 +95,24 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
 
       <PrintTemplate1 ref={ref || componentRef}>
         <div className="m-3 p-3">
-          <p className="text-center text-uppercase my-1">
+          <p className="fw-bold text-center text-uppercase my-1">
             Purchase order &#8470; {request.purchaseOrderId}
           </p>
 
           <div className="d-flex justify-content-around">
-            <div className="col">
+            <div>
               <DataGrid
                 rows={[...rows, total]}
                 columns={columns}
                 hideFooter={true}
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    border: '2px solid black ',
+                  },
+                  '& .MuiDataGrid-columnHeader': {
+                    border: '2px solid black ',
+                  },
+                }}
                 getColumnProps={(params) => ({
                   style: {
                     display: isLastRow(params) ? 'none' : 'flex',

@@ -38,7 +38,7 @@ const Reservation = () => {
   const [open, setOpen] = useState(false)
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
-
+  const [updateReservation, setUpdateReservation] = useState()
   const { register, watch } = useForm()
   const filter_condition = watch('filter_condition') || 'All'
   const filter_condition2 = watch('filter_condition2') || 'All'
@@ -144,7 +144,7 @@ const Reservation = () => {
     await instance
       .put('/reservation/update', data)
       .then((res) => {
-        console.log(res.data)
+        setUpdateReservation(res.data.data)
         toast.success(`Reservation ${action} success`)
       })
       .catch((err) => {
@@ -157,6 +157,7 @@ const Reservation = () => {
         .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)
+          console.log('reservations', res.data.data)
         })
         .catch((err) => {
           toast.error(err.status)
@@ -165,6 +166,14 @@ const Reservation = () => {
     }
     getReservations()
   }, [])
+
+  if (updateReservation) {
+    reservations = reservations.map((reser) =>
+      reser.id === updateReservation.id
+        ? { ...reser, ...updateReservation }
+        : reser,
+    )
+  }
 
   return (
     <CRow>
@@ -365,6 +374,7 @@ const Reservation = () => {
                   open={open}
                   reservation={clicked}
                   setOpen={setOpen}
+                  setReservation={setUpdateReservation}
                 />
               </CTableBody>
             </CTable>

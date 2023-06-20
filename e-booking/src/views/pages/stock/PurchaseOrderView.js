@@ -78,8 +78,8 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   }
   const isLastRow = (params) => params.row.id === total.id
   return (
-    <CCard>
-      <CCardHeader className="d-flex justify-content-between">
+    <div>
+      <div className="d-flex justify-content-between">
         <BackButton />
         <div className="col-md-8 d-flex justify-content-end">
           {StockPurchaseOrderDetails && StockPurchaseOrderDetails !== 0 ? (
@@ -91,7 +91,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
             />
           ) : null}
         </div>
-      </CCardHeader>
+      </div>
 
       <PrintTemplate1 ref={ref || componentRef}>
         <div className="m-3 p-3">
@@ -99,7 +99,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
             Purchase order &#8470; {request.purchaseOrderId}
           </p>
 
-          <CCardBody className="d-flex justify-content-around">
+          <div className="d-flex justify-content-around">
             <div className="col">
               <DataGrid
                 rows={[...rows, total]}
@@ -112,11 +112,11 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
                 })}
               />
             </div>
-          </CCardBody>
+          </div>
         </div>
         <PurchaseOrderFooter />
       </PrintTemplate1>
-    </CCard>
+    </div>
   )
 })
 

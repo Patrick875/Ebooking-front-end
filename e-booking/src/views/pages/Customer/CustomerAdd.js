@@ -17,7 +17,7 @@ import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { countries } from 'src/utils/constants'
 
-function CustomerAdd({ reload }) {
+function CustomerAdd({ setNewCustomer, setVisible }) {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset } = useForm()
   const customerType = watch('customerType') || 'individual'
@@ -28,15 +28,16 @@ function CustomerAdd({ reload }) {
     }
     await instance
       .post('/customers/add', data)
-      .then(() => {
+      .then((res) => {
         toast.success('customer created')
+        setNewCustomer(res.data.data)
+        setVisible(false)
       })
       .catch(() => {
         toast.error('customer creation failed')
       })
     reset()
   }
-  useEffect(() => {}, reload)
 
   return (
     <CRow>

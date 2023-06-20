@@ -6,6 +6,7 @@ import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
 import { useNavigate } from 'react-router-dom'
+import ClientDetails from '../../Printing/ClientDetails'
 
 const ViewDeliveryNote = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -97,11 +98,14 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
       </div>
       <div ref={ref || componentRef}>
         <InvoiceHeader title="Delivery note" />
+        <p className="text-center my-1 text-uppercase">
+          Delivery note N &#176; {request.deliveryNoteId}
+        </p>
+        <ClientDetails
+          request={request}
+          details={request.DeliveryNoteDetails}
+        />
         <div className="m-3 p-3">
-          <p className="text-center my-1 text-uppercase">
-            Delivery note N &#176; {request.deliveryNoteId}
-          </p>
-
           <div className="d-flex justify-content-around">
             <div className="col">
               <DataGrid

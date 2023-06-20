@@ -44,7 +44,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       .then((res) => {
         toast.success('Invoice created')
         setCreated(res.data.data)
-        console.log('created', { created: res.data.data })
       })
       .catch((err) => {
         toast.error(err.message)
@@ -246,11 +245,10 @@ const CreateInvoice = React.forwardRef((props, ref) => {
               </CCardBody>
             </CCollapse>
             <div style={{ display: 'none' }}>
-              <PrintTemplateInvoice
-                ref={ref || componentRef}
-                documentTitle={documentTitle}
-              >
-                {' '}
+              <PrintTemplateInvoice ref={ref || componentRef}>
+                <p className="text-center text-uppercase my-3">
+                  Invoice N &#176; {created.invoiceGenerated}
+                </p>{' '}
                 {created ? (
                   <ClientDetails
                     request={created}
@@ -267,6 +265,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
             <InvoiceList
               requestItems={requestItems}
               setRequestItems={setRequestItems}
+              documentTitle={'Invoice'}
             />
             {requestItems && requestItems.length !== 0 ? (
               <CCol xs={12}>

@@ -12,7 +12,7 @@ import NetworkError from 'src/views/pages/page404/NetworkError'
 // http://192.168.122.1:8080/api/v1
 
 //url home
-// http://localhost:4000/api/v1
+//
 
 const instance = axios.create({
   baseURL: 'http://192.168.122.1:8080/api/v1',

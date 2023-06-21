@@ -32,7 +32,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
     {
       headerName: 'Description',
       field: 'name',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
     },
@@ -42,28 +44,34 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       sortable: false,
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
     },
     {
       field: 'times',
       headerName: 'times',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
-
       sortable: false,
     },
     {
       field: 'price',
       headerName: 'P.U',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
-
       sortable: false,
     },
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -75,7 +83,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const valueRow = {
     id: 3000,
     name: 'VALUE',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     requestQuantity: '',
     unitPrice: '',
     total: orderTotal,
@@ -83,7 +93,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const vatRow = {
     id: 2000,
     name: 'VAT',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     requestQuantity: '',
     unitPrice: '',
     total: amountVAT,
@@ -91,7 +103,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const totalRow = {
     id: 1000,
     name: 'Total',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     requestQuantity: '',
     unitPrice: '',
     total: total,
@@ -127,8 +141,8 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
           Pro forma Invoice N &#176;{request.proformaGenerated}
         </p>
         <ClientDetailsProForma details={proformaDetails} request={request} />
-        <div className="m-3 p-3">
-          <CCardBody className="d-flex justify-content-around">
+        <div className="my-3 py-3">
+          <p className="d-flex justify-content-around">
             <div className="col">
               <DataGrid
                 rows={[...rows, valueRow, vatRow, totalRow]}
@@ -149,7 +163,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                 })}
               />
             </div>
-          </CCardBody>
+          </p>
         </div>
         <p className="text-center py-1 my-1">
           Your satisfaction is our concern

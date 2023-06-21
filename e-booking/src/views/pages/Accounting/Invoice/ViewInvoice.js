@@ -20,12 +20,14 @@ const ViewInvoice = React.forwardRef((props, ref) => {
   }
 
   const orderTotal = request && request.total ? request.total : 0
-  const [rows] = useState(request.InvoiceDetails)
+  let [rows] = useState(request.InvoiceDetails)
   const columns = [
     {
       headerName: 'Description',
       field: 'name',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
     },
@@ -35,26 +37,34 @@ const ViewInvoice = React.forwardRef((props, ref) => {
       sortable: false,
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
     },
     {
       field: 'times',
       headerName: 'times',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
       sortable: false,
     },
     {
       field: 'price',
       headerName: 'P.U',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
       sortable: false,
     },
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -66,7 +76,9 @@ const ViewInvoice = React.forwardRef((props, ref) => {
   const total = {
     id: 1000,
     name: 'Total',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     requestQuantity: '',
     unitPrice: '',
     total: orderTotal,
@@ -129,7 +141,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
         <InvoiceHeader />
         <ClientDetails details={invoiceDetails} request={request} />
         <div className="my-1 py-1">
-          <p className="text-center text-uppercase my-3">
+          <p className="text-center text-uppercase my-3 fw-bold">
             Invoice N &#176; {request.invoiceGenerated}
           </p>
 
@@ -149,7 +161,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
                 }}
                 getColumnProps={(params) => ({
                   style: {
-                    display: isLastRow(params) ? 'none' : 'flex',
+                    display: params.row.id === 1000 ? 'none' : 'flex',
                   },
                 })}
               />

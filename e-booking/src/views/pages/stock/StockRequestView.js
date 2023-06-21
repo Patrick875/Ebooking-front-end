@@ -21,7 +21,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
     {
       field: 'name',
       headerName: 'Name',
-      width: 220,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${params.row.StockItemValue.StockItemNew.name || ''} `,
@@ -31,7 +33,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
       headerName: 'Qty',
       sortable: false,
       hide: (params) => params.rowIndex === stockOrderDetails.length,
-      width: 220,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -50,7 +54,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 220,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       hide: true,
       sortable: false,
@@ -81,7 +87,9 @@ const StockRequestView = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 300,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -109,16 +117,15 @@ const StockRequestView = React.forwardRef((props, ref) => {
   const updateStockOrder = async (action) => {
     if (action === 'approve') {
       await instance
-        .post('petitstock/order/approve', {
+        .post(`petitstock/order/${action}`, {
           request: request.id,
           data: rows,
         })
-        .then(() => {
-          toast.success('stock order approved')
+        .then((res) => {
           setApproved(!approved)
         })
-        .catch(() => {
-          toast.error('error approving order')
+        .catch((err) => {
+          toast.error(err.message)
         })
     } else if (action === 'cancel') {
       await instance

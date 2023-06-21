@@ -1,5 +1,4 @@
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardHeader,
@@ -13,11 +12,10 @@ import {
   CTableRow,
 } from '@coreui/react'
 import React, { useState } from 'react'
-import CIcon from '@coreui/icons-react'
-import { cilXCircle } from '@coreui/icons'
+
 function StockOrder(props, ref) {
   const { requestItems, setRequestItems } = props
-  console.log('requests', requestItems)
+
   const [style, setStyle] = useState({ display: 'none' })
 
   return (

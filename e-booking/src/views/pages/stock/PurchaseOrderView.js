@@ -25,7 +25,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const columns = [
     {
       headerName: 'Item',
-      width: 210,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
       valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
@@ -33,7 +35,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'unit',
       headerName: 'Unit',
-      width: 210,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
@@ -41,7 +45,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'quantity',
       headerName: 'Qty',
-      width: 210,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
       hide: true,
       sortable: false,
@@ -50,7 +56,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 210,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
       hide: true,
       sortable: false,
@@ -59,7 +67,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 210,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -70,7 +80,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   ]
   const total = {
     id: 1000,
-    width: 210,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     StockItemNew: { name: 'Total' },
     requestQuantity: '',
     unitPrice: '',

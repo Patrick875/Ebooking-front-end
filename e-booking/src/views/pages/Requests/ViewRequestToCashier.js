@@ -34,7 +34,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'Designation',
       headerName: 'Designation',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) => `${params.row.StockItemNew.name || ''} `,
     },
@@ -43,7 +45,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       headerName: 'Unit',
       sortable: false,
       hide: (params) => params.rowIndex === StockPurchaseOrderDetails.length,
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -62,7 +66,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'quantity',
       headerName: 'Qty',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       hide: true,
       sortable: false,
@@ -87,7 +93,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       hide: true,
       sortable: false,
@@ -112,7 +120,9 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 230,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -126,6 +136,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
     id: 1000,
     StockItemNew: { name: 'Total' },
     requestQuantity: '',
+
     unit: '',
     unitPrice: '',
     total: rows.reduce((a, b) => a + b.unitPrice * b.requestQuantity, 0),
@@ -165,15 +176,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
           <h5 className="text-center my-1 text-uppercase">
             Purchase order &#8470; {request.purchaseOrderId}
           </h5>
-          <div
-            style={{
-              overflowX: 'hidden',
-              margin: 0,
-              padding: 0,
-              dispaly: 'flex',
-              justifyContent: 'center',
-            }}
-          >
+          <div>
             <DataGrid
               rows={[...rows, total]}
               columns={columns}

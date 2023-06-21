@@ -22,7 +22,9 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
     {
       headerName: 'Description',
       field: 'description',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
     },
@@ -32,20 +34,26 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
       sortable: false,
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
     },
     {
       field: 'times',
       headerName: 'times',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
       hide: true,
       sortable: false,
     },
     {
-      field: 'price',
+      field: 'unitPrice',
       headerName: 'P.U',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: false,
       hide: true,
       sortable: false,
@@ -53,11 +61,15 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
-          Number(params.row.quantity * params.row.price * params.row.times) ||
+          Number(
+            params.row.quantity * params.row.unitPrice * params.row.times,
+          ) ||
           params.row.total ||
           0
         } `,
@@ -65,8 +77,11 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
   ]
   const total = {
     id: 1000,
-    name: 'Total',
+    description: 'Total',
     width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     requestQuantity: '',
     unitPrice: '',
     total: orderTotal,
@@ -98,14 +113,14 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
       </div>
       <div ref={ref || componentRef}>
         <InvoiceHeader title="Delivery note" />
-        <p className="text-center my-1 text-uppercase">
+        <p className="text-center my-1 text-uppercase fw-bold">
           Delivery note N &#176; {request.deliveryNoteId}
         </p>
         <ClientDetails
           request={request}
           details={request.DeliveryNoteDetails}
         />
-        <div className="m-3 p-3">
+        <div className="my-3 py-3">
           <div className="d-flex justify-content-around">
             <div className="col">
               <DataGrid

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { CButton, CCol } from '@coreui/react'
+import { CCol } from '@coreui/react'
 import { DataGrid } from '@mui/x-data-grid'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
@@ -15,7 +15,7 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const proforma = useSelector((state) => state.selection.selected)
   const data = useSelector((state) => state.selection.selected.ProformaDetails)
   const [rows, setRows] = useState([...data])
-  const documentTitle = 'Pro Forma Invoice'
+  const [created, setCreated] = useState()
   const submitRequest = async () => {
     let data
     const outsideData = {
@@ -33,6 +33,7 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       .post('/invoices/add', data)
       .then((res) => {
         toast.success('success')
+        setCreated(res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -45,7 +46,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       headerName: 'Description',
       field: 'name',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
     },
@@ -55,7 +58,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       sortable: false,
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -73,7 +78,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       field: 'times',
       headerName: 'times',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
       sortable: false,
@@ -95,7 +102,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === rows.length,
@@ -117,7 +126,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -138,7 +149,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const valueRow = {
     id: 3000,
     name: 'VALUE',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     quantity: '',
     times: '',
     price: '',
@@ -147,7 +160,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const vatRow = {
     id: 2000,
     name: 'VAT',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     quantity: '',
     times: '',
     price: '',
@@ -156,7 +171,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const totalRow = {
     id: 1000,
     name: 'Total',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
     quantity: '',
     times: '',
     price: '',
@@ -173,6 +190,15 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
             <p className="text-uppercase text-center">
               <strong> Transfer to Invoice </strong>
             </p>
+            <p
+              className="text-primary"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                submitRequest()
+              }}
+            >
+              Create invoice
+            </p>
             <ReactToPrint
               trigger={() => (
                 <button className="btn btn-ghost-primary">Print</button>
@@ -180,8 +206,10 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
               content={() => ref || componentRef.current}
             />
           </div>
-
           <PrintTemplateInvoice ref={ref || componentRef}>
+            <p className="text-center text-uppercase my-3 fw-bold">
+              Invoice N &#176; {created ? created.invoiceGenerated : null}
+            </p>
             <ClientDetails
               details={proforma.ProformaDetails}
               request={proforma}
@@ -208,16 +236,6 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
             </div>
             <InvoiceFooter />
           </PrintTemplateInvoice>
-
-          <CCol xs={12}>
-            <CButton
-              component="input"
-              value="Create invoice"
-              onClick={() => {
-                submitRequest()
-              }}
-            />
-          </CCol>
         </div>
       </CCol>
     </div>

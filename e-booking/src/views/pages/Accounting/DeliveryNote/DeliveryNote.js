@@ -14,6 +14,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 import { IoCreateOutline } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -74,9 +75,14 @@ function DeliveryNote() {
 
   useEffect(() => {
     const getAllInvoice = async () => {
-      await instance.get('/deliveryNote/all').then((res) => {
-        setInvoices(res.data.data)
-      })
+      await instance
+        .get('/deliveryNote/all')
+        .then((res) => {
+          setInvoices(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
     }
     getAllInvoice()
   }, [])

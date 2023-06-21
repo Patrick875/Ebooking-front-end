@@ -8,6 +8,7 @@ import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
+import ClientDetails from '../../Printing/ClientDetails'
 
 const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -17,7 +18,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   )
   const [rows, setRows] = useState([...data])
   let [requestItems] = useState([...deliveryNote.DeliveryNoteDetails])
-  const documentTitle = 'Invoice'
+  const [created, setCreated] = useState()
 
   const submitRequest = async () => {
     let data
@@ -39,6 +40,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       .post('/invoices/add', data)
       .then((res) => {
         toast.success('success')
+        setCreated(res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -52,7 +54,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       headerName: 'Description',
       field: 'description',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       editable: false,
     },
@@ -62,7 +66,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       sortable: false,
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -80,7 +86,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       field: 'times',
       headerName: 'times',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
       sortable: false,
@@ -102,7 +110,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       field: 'unitPrice',
       headerName: 'P.U',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === rows.length,
@@ -124,7 +134,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -182,6 +194,17 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
             <p className="text-uppercase text-center">
               <strong> Transfer to Invoice </strong>
             </p>
+
+            <p
+              className="text-primary"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                submitRequest()
+              }}
+            >
+              Create invoice
+            </p>
+
             <ReactToPrint
               trigger={() => (
                 <button className="btn btn-ghost-primary">Print</button>
@@ -190,10 +213,11 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
             />
           </div>
 
-          <PrintTemplateInvoice
-            ref={ref || componentRef}
-            documentTitle={documentTitle}
-          >
+          <PrintTemplateInvoice ref={ref || componentRef}>
+            <p className="text-center text-uppercase my-3 fw-bold">
+              Invoice N &#176; {created ? created.invoiceGenerated : null}
+            </p>
+            <ClientDetails details={rows} request={deliveryNote} />
             <div>
               <div xs={12}>
                 <div className="mb-4">
@@ -222,16 +246,6 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
             </div>
             <InvoiceFooter />
           </PrintTemplateInvoice>
-
-          <CCol xs={12}>
-            <CButton
-              component="input"
-              value="Create invoice"
-              onClick={() => {
-                submitRequest()
-              }}
-            />
-          </CCol>
         </div>
       </CCol>
     </div>

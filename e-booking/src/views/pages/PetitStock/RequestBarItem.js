@@ -50,8 +50,9 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   const dontAdd =
     !quantity ||
     quantity === '' ||
+    Number(quantity) > maxValue ||
     !item ||
-    (item.length !== 0 && maxValue && quantity > maxValue)
+    (item.length !== 0 && maxValue)
       ? true
       : false
 
@@ -191,6 +192,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         name="quantity"
                         id="quantity"
                         min={0}
+                        max={maxValue}
                         placeholder="50  "
                         {...register('quantity', {
                           min: 0,
@@ -198,8 +200,9 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         })}
                       />
 
-                      {errors.quantity && <p>{errors.quantity.message}</p>}
-                      {quantity && maxValue && quantity > maxValue ? (
+                      {quantity &&
+                      maxValue !== '' &&
+                      Number(quantity) > Number(maxValue) ? (
                         <p className="text-danger">
                           Quantity must be less than {maxValue}
                         </p>

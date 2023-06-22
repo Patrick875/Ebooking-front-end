@@ -136,6 +136,7 @@ function StockItems() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Store</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -159,6 +160,7 @@ function StockItems() {
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableHeaderCell>
                         <CTableDataCell>{`${item.name}`}</CTableDataCell>
+                        <CTableDataCell>{`${item.Store.name}`}</CTableDataCell>
                         <CTableDataCell className="d-flex ">
                           {role && role === 'admin' ? (
                             <Link

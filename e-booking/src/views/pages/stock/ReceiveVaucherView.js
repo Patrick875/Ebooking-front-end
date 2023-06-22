@@ -88,7 +88,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
       valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
     },
     {
-      field: 'unit',
+      field: 'unitPrice',
       headerName: 'Unit',
       sortable: false,
       editable: false,
@@ -128,14 +128,14 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
   ]
   const totalPurchase = {
     id: 1000,
-    name: 'Total',
+    StockItemNew: { name: 'Total' },
     requestQuantity: '',
     unitPrice: '',
     total: purchaseTotal,
   }
   const balancePurchase = {
     id: 2000,
-    name: 'Balance',
+    StockItemNew: { name: 'Balance' },
     requestQuantity: '',
     unitPrice: '',
     total: '',
@@ -183,7 +183,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
           <div className="d-flex justify-content-around">
             <div className="col">
               <div className="d-flex">
-                <p className="fw-normal">Purchase order</p>
+                <p className="fw-bold">Purchase order</p>
               </div>
               <DataGrid
                 rows={[...rowsPurchase, totalPurchase, balancePurchase]}
@@ -206,7 +206,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
             </div>
             <div className="col">
               <div className="d-flex">
-                <p className="fw-normal">Received </p>
+                <p className="fw-bold">Received </p>
               </div>
               <DataGrid
                 rows={[...rowsReceive, totalReceive, balanceReceive]}

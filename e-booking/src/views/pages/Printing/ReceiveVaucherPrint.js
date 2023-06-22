@@ -21,7 +21,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
   const columnsPurchase = [
     {
       headerName: 'Item',
-      width: 100,
+      flex: 1,
+      minWidth: 140,
+      maxWidth: 200,
       sortable: false,
       editable: false,
       valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
@@ -32,12 +34,16 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
       sortable: false,
       editable: false,
       hide: (params) => params.rowIndex === rowsPurchase.length,
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
     },
     {
       field: 'quantity',
       headerName: 'Qty',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       editable: false,
       hide: true,
       sortable: false,
@@ -46,7 +52,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       editable: false,
       hide: true,
       sortable: false,
@@ -55,7 +63,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -68,7 +78,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     {
       field: 'name',
       headerName: 'Item',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
     },
@@ -77,11 +89,13 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
       headerName: 'Unit',
       sortable: false,
       hide: (params) => params.rowIndex === rowsReceive.length,
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
-          unit: params.value,
+          unitPrice: params.value,
         }
         let newRows = rowsReceive.map((item) =>
           item.id === params.row.id
@@ -96,7 +110,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     {
       field: 'quantity',
       headerName: 'Qty',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       hide: (params) => params.rowIndex === rowsReceive.length,
       sortable: false,
@@ -121,7 +137,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     {
       field: 'price',
       headerName: 'P.U',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       hide: true,
       sortable: false,
@@ -147,7 +165,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     {
       field: 'total',
       headerName: 'T.P',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -157,6 +177,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     },
   ]
   const totalPurchase = {
+    StockItemNew: { name: 'Total' },
     id: 1000,
     name: 'Total',
     requestQuantity: '',
@@ -164,6 +185,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
     total: totalPurchases,
   }
   const balancePurchase = {
+    StockItemNew: { name: 'Balance' },
     id: 2000,
     name: 'Balance',
     requestQuantity: '',
@@ -229,6 +251,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                   columns={columnsPurchase}
                   hideFooter={true}
                   sx={{
+                    fontSize: '2.75rem',
                     '& .MuiDataGrid-cell': {
                       border: '2px solid black ',
                     },

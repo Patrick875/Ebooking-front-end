@@ -61,7 +61,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       : false
   const onAdd = (data) => {
     data.id = uuidv4()
-
+    data.date = date
     setRequestItems([...requestItems, data])
     reset({ name: '', quantity: '' })
   }
@@ -75,7 +75,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
     })
     data = { ...outsideData, details: requestItems }
     createDeliveryNote({ ...data })
-    reset()
   }
 
   const orderTotal =
@@ -87,6 +86,36 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       : 0
 
   const columns = [
+    {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
+      sortable: false,
+      editable: true,
+      type: date,
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return params.row.date.toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+      valueSetter: (params) => {
+        const updateRow = {
+          ...params.row,
+          date: params.value,
+        }
+        let newRows = requestItems.map((item) =>
+          item.id === params.row.id
+            ? { ...params.row, date: params.value }
+            : item,
+        )
+        setRequestItems([...newRows])
+        return updateRow
+      },
+    },
     {
       headerName: 'Description',
       field: 'description',
@@ -116,8 +145,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       editable: true,
       hide: (params) => params.rowIndex === requestItems.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -136,8 +165,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       sortable: false,
       valueSetter: (params) => {
@@ -158,8 +187,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       field: 'unitPrice',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === requestItems.length,
@@ -225,7 +254,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       <div className="d-flex justify-content-between">
         <BackButton />
         <h5>
-          <strong> Create Pro forma invoice </strong>
+          <strong> Create Delivery note </strong>
         </h5>
       </div>
       <CRow>
@@ -332,6 +361,19 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                       >
                         <option value="COMPANY">COMPANY</option>
                         <option value="INDIVIDUAL">INDIVIDUAL</option>
+                      </CFormSelect>
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="currency"> Currency </CFormLabel>
+                      <CFormSelect
+                        name="currency"
+                        id="currency"
+                        className="mb-3"
+                        aria-label="currency"
+                        {...register('outside.currency', { required: true })}
+                      >
+                        <option value="RWF">RWF</option>
+                        <option value="USD">USD</option>
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
@@ -466,7 +508,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                     columns={columns}
                     hideFooter={true}
                     sx={{
-                      fontSize: 24,
                       '& .MuiDataGrid-cell': {
                         border: '2px solid black ',
                       },

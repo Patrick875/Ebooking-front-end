@@ -23,6 +23,7 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       clientName: proforma.clientName,
       clientType: proforma.clientType,
       function: proforma.function,
+      currency: proforma.currency,
     }
     const allData = rows.map((el) => ({
       ...el,
@@ -45,6 +46,35 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   )[0] || { value: 0, name: 'VAT' }
   const columns = [
     {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
+      sortable: false,
+      editable: true,
+      valueSetter: (params) => {
+        const updateRow = {
+          ...params.row,
+          date: params.value,
+        }
+        let newRows = rows.map((item) =>
+          item.id === params.row.id
+            ? { ...params.row, date: params.value }
+            : item,
+        )
+        setRows([...newRows])
+        return updateRow
+      },
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return new Date(params.row.date).toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+    },
+    {
       headerName: 'Description',
       field: 'name',
       flex: 1,
@@ -60,8 +90,8 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -80,8 +110,8 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
       sortable: false,
@@ -104,8 +134,8 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       field: 'price',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === rows.length,
@@ -237,7 +267,11 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
                 />
               </div>
               <p className="text-capitalize">
-                {total ? numberToWords.toWords(total) : null} Rwandan Francs
+                <span className="fw-bold"> Total in words : </span>
+                {total ? numberToWords.toWords(total) : null}{' '}
+                {proforma.currency !== 'USD'
+                  ? ' Rwandan Francs '
+                  : ' US Dollars '}
               </p>
             </div>
 

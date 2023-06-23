@@ -19,6 +19,7 @@ import InvoiceHeader from '../../Printing/InvoiceHeader'
 import { DataGrid } from '@mui/x-data-grid'
 import { v4 as uuidv4 } from 'uuid'
 import numberToWords from 'number-to-words'
+import ReactDatePicker from 'react-datepicker'
 
 const CreateInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -28,11 +29,12 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const name = watch('name')
   const type = watch('outside.clientType') || ''
   const role = watch('outside.function') || ''
+  const currency = watch('outside.currency') || ''
   const clientName = watch('outside.clientName') || ''
   const VAT = watch('VAT') || ''
   const VATconstant = 18
   const [view, setView] = useState(false)
-
+  const [date, setDate] = useState(new Date())
   let [requestItems, setRequestItems] = useState([])
   const [created, setCreated] = useState({})
   const clearPurchaseOrder = () => {
@@ -76,6 +78,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       : false
   const onAdd = (data) => {
     data.id = uuidv4()
+    data.date = date
     setRequestItems([...requestItems, data])
     reset({ name: '', quantity: '', price: '' })
   }
@@ -93,6 +96,36 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   }
 
   const columns = [
+    {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
+      sortable: false,
+      editable: true,
+      type: date,
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return params.row.date.toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+      valueSetter: (params) => {
+        const updateRow = {
+          ...params.row,
+          date: params.value,
+        }
+        let newRows = requestItems.map((item) =>
+          item.id === params.row.id
+            ? { ...params.row, date: params.value }
+            : item,
+        )
+        setRequestItems([...newRows])
+        return updateRow
+      },
+    },
     {
       headerName: 'Description',
       field: 'name',
@@ -335,6 +368,19 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
+                      <CFormLabel htmlFor="currency"> Currency </CFormLabel>
+                      <CFormSelect
+                        name="currency"
+                        id="currency"
+                        className="mb-3"
+                        aria-label="currency"
+                        {...register('outside.currency', { required: true })}
+                      >
+                        <option value="RWF">RWF</option>
+                        <option value="USD">USD</option>
+                      </CFormSelect>
+                    </CCol>
+                    <CCol md={6}>
                       <div>
                         <CFormLabel htmlFor="function"> Function </CFormLabel>
                         <CFormInput
@@ -397,6 +443,20 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         placeholder="item price in RWF"
                         required
                         {...register('price')}
+                      />
+                    </CCol>
+
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="date"> Date</CFormLabel>
+                      <ReactDatePicker
+                        className="form-control"
+                        timeFormat="p"
+                        selected={date}
+                        minDate={new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        onChange={(date) => setDate(date)}
+                        placeholderText="Select a date other than  yesterday"
                       />
                     </CCol>
                     <CCol md={6}>
@@ -474,8 +534,9 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                     </div>
                   </div>
                   <p className="text-capitalize">
+                    <span className="fw-bold"> Total in words : </span>
                     {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
-                    Rwandan Francs
+                    {currency !== 'USD' ? 'Rwandan Francs' : 'US Dollars'}
                   </p>
                 </div>
                 <InvoiceFooter />

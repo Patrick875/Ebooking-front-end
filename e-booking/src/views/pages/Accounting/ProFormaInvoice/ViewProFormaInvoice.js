@@ -30,6 +30,22 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const [rows] = useState(request.ProformaDetails)
   const columns = [
     {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 150,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return new Date(params.row.date).toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+    },
+    {
       headerName: 'Description',
       field: 'name',
       flex: 1,
@@ -45,15 +61,15 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
     },
     {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: false,
       sortable: false,
     },
@@ -61,8 +77,8 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       field: 'price',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: false,
       sortable: false,
     },
@@ -165,7 +181,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
             </div>
           </div>
           <p className="text-capitalize">
-            {total ? numberToWords.toWords(total) : null} Rwandan Francs
+            <span className="fw-bold"> Total in words : </span>
+            {total ? numberToWords.toWords(total) : null}{' '}
+            {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
           </p>
         </div>
         <p className="text-center py-1 my-1">

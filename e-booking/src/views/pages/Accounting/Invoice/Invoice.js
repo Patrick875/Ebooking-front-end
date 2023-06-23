@@ -297,6 +297,7 @@ function Invoice() {
                         </CTableDataCell>
                         <CTableDataCell>
                           {Number(el.total).toLocaleString()}
+                          {' ' + el.currency}
                         </CTableDataCell>
                       </CTableRow>
                     ))

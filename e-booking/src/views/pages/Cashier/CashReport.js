@@ -188,7 +188,6 @@ const CashReport = React.forwardRef((props, ref) => {
     const getCashTransactions = async () => {
       await instance.get('/cashflow/all').then((res) => {
         setTransactions(res.data.data)
-        console.log('cash flow', res.data.data)
       })
     }
     getCashTransactions()

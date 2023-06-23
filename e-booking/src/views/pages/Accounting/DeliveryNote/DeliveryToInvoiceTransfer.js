@@ -28,6 +28,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       clientType: deliveryNote.clientType,
       function: deliveryNote.function,
       deliveryLink: deliveryNote.id,
+      currency: deliveryNote.currency,
     }
     const allData = rows.map((el) => ({
       ...el,
@@ -53,6 +54,22 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   )[0] || { value: 0, name: 'VAT' }
   const columns = [
     {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 150,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return new Date(params.row.date).toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+    },
+    {
       headerName: 'Description',
       field: 'description',
       flex: 1,
@@ -68,16 +85,16 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
-          quantity: params.value,
+          date: params.value,
         }
         let newRows = rows.map((item) =>
           item.id === params.row.id
-            ? { ...params.row, quantity: params.value }
+            ? { ...params.row, date: params.value }
             : item,
         )
         setRows([...newRows])
@@ -88,8 +105,8 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       hide: (params) => params.rowIndex === rows.length,
       sortable: false,
@@ -112,8 +129,8 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       field: 'unitPrice',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === rows.length,
@@ -243,7 +260,11 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                     />
                   </div>
                   <p className="text-capitalize">
-                    {total ? numberToWords.toWords(total) : null} Rwandan Francs
+                    <span className="fw-bold"> Total in words : </span>
+                    {total ? numberToWords.toWords(total) : null}{' '}
+                    {deliveryNote.currency !== 'USD'
+                      ? ' Rwandan Francs '
+                      : ' US Dollars '}
                   </p>
                 </div>
               </div>

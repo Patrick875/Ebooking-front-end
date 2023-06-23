@@ -201,7 +201,8 @@ function ProformaInvoice() {
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>
                         <CTableDataCell>
-                          {Number(el.total).toLocaleString()}
+                          {Number(el.total).toLocaleString()}{' '}
+                          {'  ' + el.currency}
                         </CTableDataCell>
                       </CTableRow>
                     ))

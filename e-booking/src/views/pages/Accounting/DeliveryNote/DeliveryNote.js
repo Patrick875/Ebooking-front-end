@@ -165,6 +165,7 @@ function DeliveryNote() {
                 <CTableHeaderCell scope="col">id</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Date</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Client</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Function</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>

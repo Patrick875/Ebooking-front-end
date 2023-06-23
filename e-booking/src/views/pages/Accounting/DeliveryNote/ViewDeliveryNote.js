@@ -20,6 +20,22 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
   const [rows] = useState(request.DeliveryNoteDetails)
   const columns = [
     {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 150,
+      sortable: false,
+      editable: false,
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return new Date(params.row.date).toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+    },
+    {
       headerName: 'Description',
       field: 'description',
       flex: 1,
@@ -35,15 +51,15 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
     },
     {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: false,
       hide: true,
       sortable: false,
@@ -52,8 +68,8 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
       field: 'unitPrice',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: false,
       hide: true,
       sortable: false,

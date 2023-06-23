@@ -39,11 +39,6 @@ function InvoiceFooter() {
           <p className="text-center">{user ? user : null}</p>
         </div>
       </div>
-
-      <p className="mt-5 text-center">
-        For confirmation the hotel requires 50% of the total amount as advance
-        on a purchase order
-      </p>
     </div>
   )
 }

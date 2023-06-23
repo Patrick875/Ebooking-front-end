@@ -30,6 +30,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const name = watch('name')
   const type = watch('outside.clientType') || ''
   const role = watch('outside.function') || ''
+  const currency = watch('outside.currency') || ''
   const clientName = watch('outside.clientName') || ''
   const VAT = watch('VAT') || ''
   const VATconstant = 18
@@ -37,6 +38,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const [endDate, setEndDate] = useState(new Date())
   let [requestItems, setRequestItems] = useState([])
   let [view, setView] = useState(false)
+  const [date, setDate] = useState(new Date())
   const [created, setCreated] = useState({})
   let request = {}
 
@@ -62,6 +64,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
 
   const onAdd = (data) => {
     data.id = uuidv4()
+    data.date = date
     setRequestItems([...requestItems, data])
     reset({ name: '', quantity: '', price: '', pax: '' })
   }
@@ -105,6 +108,36 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       : 0
   const columns = [
     {
+      headerName: 'Date',
+      field: 'date',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 200,
+      sortable: false,
+      editable: true,
+      type: date,
+      valueGetter: (params) => {
+        if (params.row.date) {
+          return params.row.date.toLocaleDateString()
+        } else {
+          return ''
+        }
+      },
+      valueSetter: (params) => {
+        const updateRow = {
+          ...params.row,
+          date: params.value,
+        }
+        let newRows = requestItems.map((item) =>
+          item.id === params.row.id
+            ? { ...params.row, date: params.value }
+            : item,
+        )
+        setRequestItems([...newRows])
+        return updateRow
+      },
+    },
+    {
       headerName: 'Description',
       field: 'name',
       flex: 1,
@@ -133,8 +166,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       editable: true,
       hide: (params) => params.rowIndex === requestItems.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -153,8 +186,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       sortable: false,
       valueSetter: (params) => {
@@ -175,8 +208,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       field: 'price',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       sortable: false,
       valueSetter: (params) => {
@@ -238,7 +271,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
     unitPrice: '',
     total: finalTotal,
   }
-
   return (
     <div>
       <div className="d-flex justify-content-between">
@@ -343,6 +375,19 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       </CFormSelect>
                     </CCol>
                     <CCol md={6}>
+                      <CFormLabel htmlFor="currency"> Currency </CFormLabel>
+                      <CFormSelect
+                        name="currency"
+                        id="currency"
+                        className="mb-3"
+                        aria-label="currency"
+                        {...register('outside.currency', { required: true })}
+                      >
+                        <option value="RWF">RWF</option>
+                        <option value="USD">USD</option>
+                      </CFormSelect>
+                    </CCol>
+                    <CCol md={6}>
                       <div>
                         <CFormLabel htmlFor="function"> Function </CFormLabel>
                         <CFormInput
@@ -405,6 +450,19 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         id="price"
                         placeholder="item price in RWF"
                         {...register('price')}
+                      />
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="date"> Date</CFormLabel>
+                      <DatePicker
+                        className="form-control"
+                        timeFormat="p"
+                        selected={date}
+                        minDate={new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        onChange={(date) => setDate(date)}
+                        placeholderText="Select a date other than  yesterday"
                       />
                     </CCol>
                     <CCol md={6}>
@@ -498,7 +556,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           </p>
                         ) : null}
                       </div>
-
                       <div className="my-0 mx-2">
                         <p className="fw-bold my-0 py-0">
                           Expected Date of Arrival :{}
@@ -541,8 +598,9 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                   </div>
 
                   <p className="text-capitalize">
+                    <span className="fw-bold"> Total in words : </span>
                     {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
-                    Rwandan Francs
+                    {currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
                   </p>
                 </div>
 

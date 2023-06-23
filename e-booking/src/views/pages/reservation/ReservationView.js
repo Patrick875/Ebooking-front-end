@@ -83,23 +83,13 @@ const ReservationReceipt = (props) => {
                     </p>
                   )}
 
-                  <div>
-                    <p className="fw-bold">Dates in</p>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: '0.1em',
-                      }}
-                    >
-                      {reservation.datesIn.length !== 0
-                        ? reservation.datesIn.map((el, i) => (
-                            <p key={i * 123}>{new Date(el).toDateString()}</p>
-                          ))
-                        : null}
-                    </div>
-                  </div>
-
+                  <p className="font-weight-bold">
+                    Check in : {new Date(reservation.checkIn).toLocaleString()}
+                  </p>
+                  <p className="font-weight-bold">
+                    Check out :{' '}
+                    {new Date(reservation.checkOut).toLocaleString()}
+                  </p>
                   <p className="font-weight-bold">
                     Total :{' '}
                     {Object.keys(reservation.amount).map((curr) => (

@@ -9,6 +9,7 @@ import ClientDetails from '../../Printing/ClientDetails'
 import InvoicePaymentModal from './InvoicePaymentModal'
 import { RiStethoscopeLine } from 'react-icons/ri'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
+import numberToWords from 'number-to-words'
 
 const ViewInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -18,8 +19,15 @@ const ViewInvoice = React.forwardRef((props, ref) => {
   if (request && request.InvoiceDetails) {
     invoiceDetails = request.InvoiceDetails
   }
-
+  const VATconstant = useSelector((state) =>
+    state.constants.constants.filter((constant) => constant.name === 'VAT'),
+  )[0] || { value: 0, name: 'VAT' }
   const orderTotal = request && request.total ? request.total : 0
+  const amountVAT = Number((orderTotal * VATconstant.value) / 100)
+  const total =
+    invoiceDetails[0].VAT === 'exclusive'
+      ? Number(orderTotal - amountVAT)
+      : Number(orderTotal + amountVAT)
   let [rows] = useState(request.InvoiceDetails)
   const columns = [
     {
@@ -73,7 +81,27 @@ const ViewInvoice = React.forwardRef((props, ref) => {
         } `,
     },
   ]
-  const total = {
+  const valueRow = {
+    id: 3000,
+    name: 'VALUE',
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
+    requestQuantity: '',
+    unitPrice: '',
+    total: orderTotal,
+  }
+  const vatRow = {
+    id: 2000,
+    name: 'VAT',
+    flex: 1,
+    minWidth: 200,
+    maxWidth: 300,
+    requestQuantity: '',
+    unitPrice: '',
+    total: amountVAT,
+  }
+  const totalRow = {
     id: 1000,
     name: 'Total',
     flex: 1,
@@ -81,7 +109,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
     maxWidth: 300,
     requestQuantity: '',
     unitPrice: '',
-    total: orderTotal,
+    total: total,
   }
   const isLastRow = (params) => params.row.id === total.id
 
@@ -139,16 +167,15 @@ const ViewInvoice = React.forwardRef((props, ref) => {
 
       <div ref={ref || componentRef}>
         <InvoiceHeader />
+        <p className="text-center text-uppercase my-3 fw-bold">
+          Invoice N &#176; {request.invoiceGenerated}
+        </p>
         <ClientDetails details={invoiceDetails} request={request} />
         <div className="my-1 py-1">
-          <p className="text-center text-uppercase my-3 fw-bold">
-            Invoice N &#176; {request.invoiceGenerated}
-          </p>
-
-          <CCardBody className="d-flex justify-content-around">
-            <div className="col">
+          <div className="d-flex justify-content-around my-0 py-0">
+            <div className="col ">
               <DataGrid
-                rows={[...rows, total]}
+                rows={[...rows, valueRow, vatRow, totalRow]}
                 columns={columns}
                 hideFooter={true}
                 sx={{
@@ -166,7 +193,10 @@ const ViewInvoice = React.forwardRef((props, ref) => {
                 })}
               />
             </div>
-          </CCardBody>
+          </div>
+          <p className="text-capitalize">
+            {total ? numberToWords.toWords(total) : null} Rwandan Francs
+          </p>
         </div>
         <InvoiceFooter />
       </div>

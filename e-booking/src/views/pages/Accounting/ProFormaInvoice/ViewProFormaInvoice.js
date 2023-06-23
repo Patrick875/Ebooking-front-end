@@ -1,4 +1,3 @@
-import { CCardBody } from '@coreui/react'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import BackButton from 'src/components/Navigating/BackButton'
@@ -8,6 +7,7 @@ import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
 import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
+import numberToWords from 'number-to-words'
 
 const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const navigate = useNavigate()
@@ -142,7 +142,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
         </p>
         <ClientDetailsProForma details={proformaDetails} request={request} />
         <div className="my-3 py-3">
-          <p className="d-flex justify-content-around">
+          <div className="d-flex justify-content-around">
             <div className="col">
               <DataGrid
                 rows={[...rows, valueRow, vatRow, totalRow]}
@@ -163,6 +163,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                 })}
               />
             </div>
+          </div>
+          <p className="text-capitalize">
+            {total ? numberToWords.toWords(total) : null} Rwandan Francs
           </p>
         </div>
         <p className="text-center py-1 my-1">

@@ -466,6 +466,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                     columns={columns}
                     hideFooter={true}
                     sx={{
+                      fontSize: 24,
                       '& .MuiDataGrid-cell': {
                         border: '2px solid black ',
                       },

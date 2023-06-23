@@ -2,7 +2,6 @@ import {
   CCardBody,
   CCardHeader,
   CFormInput,
-  CFormLabel,
   CFormSelect,
   CTable,
   CTableBody,
@@ -25,7 +24,6 @@ function AvailableStock() {
   const { register, watch } = useForm()
   const query = watch('query') || ''
   const storeId = watch('storeId') || ''
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
 

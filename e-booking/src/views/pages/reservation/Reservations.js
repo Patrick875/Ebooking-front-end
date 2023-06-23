@@ -157,7 +157,6 @@ const Reservation = () => {
         .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)
-          console.log('reservations', res.data.data)
         })
         .catch((err) => {
           toast.error(err.status)

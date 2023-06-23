@@ -48,11 +48,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   }
   const maxValue = item && item.length !== 0 ? item[0].quantity : null
   const dontAdd =
-    !quantity ||
-    quantity === '' ||
-    Number(quantity) > maxValue ||
-    !item ||
-    (item.length !== 0 && maxValue)
+    !quantity || quantity === '' || Number(quantity) > maxValue || !item
       ? true
       : false
 

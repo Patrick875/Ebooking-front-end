@@ -9,6 +9,7 @@ import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
+import numberToWords from 'number-to-words'
 
 const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -214,26 +215,32 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
               details={proforma.ProformaDetails}
               request={proforma}
             />
-            <div xs={12} className="mb-4">
-              <DataGrid
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    border: '2px solid black ',
-                  },
-                  '& .MuiDataGrid-columnHeader': {
-                    border: '2px solid black ',
-                  },
-                }}
-                rows={[...rows, valueRow, vatRow, totalRow]}
-                columns={columns}
-                hideFooter={true}
-                getColumnProps={(params) => ({
-                  style: {
-                    display: isLastRow(params) ? 'none' : 'flex',
-                  },
-                })}
-              />
+            <div>
+              <div xs={12} className="my-0 py-0">
+                <DataGrid
+                  sx={{
+                    '& .MuiDataGrid-cell': {
+                      border: '2px solid black ',
+                    },
+                    '& .MuiDataGrid-columnHeader': {
+                      border: '2px solid black ',
+                    },
+                  }}
+                  rows={[...rows, valueRow, vatRow, totalRow]}
+                  columns={columns}
+                  hideFooter={true}
+                  getColumnProps={(params) => ({
+                    style: {
+                      display: isLastRow(params) ? 'none' : 'flex',
+                    },
+                  })}
+                />
+              </div>
+              <p className="text-capitalize">
+                {total ? numberToWords.toWords(total) : null} Rwandan Francs
+              </p>
             </div>
+
             <InvoiceFooter />
           </PrintTemplateInvoice>
         </div>

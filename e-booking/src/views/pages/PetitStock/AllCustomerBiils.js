@@ -157,17 +157,16 @@ function AllCustomerBills() {
                   })
                   .map((item, i) => {
                     return (
-                      <CTableRow
-                        key={item.id}
-                        onClick={() => {
-                          dispatch(selectItem(item))
-                          navigate('/cashier/customerbills/view')
-                        }}
-                      >
+                      <CTableRow key={item.id}>
                         <CTableHeaderCell scope="row">
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableHeaderCell>
-                        <CTableDataCell>
+                        <CTableDataCell
+                          onClick={() => {
+                            dispatch(selectItem(item))
+                            navigate('/cashier/customerbills/view')
+                          }}
+                        >
                           {item.PetitStock ? item.PetitStock.name : ''}
                         </CTableDataCell>
                         <CTableDataCell>

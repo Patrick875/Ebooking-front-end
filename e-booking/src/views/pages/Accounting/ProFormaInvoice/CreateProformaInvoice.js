@@ -20,6 +20,7 @@ import BackButton from 'src/components/Navigating/BackButton'
 import DatePicker from 'react-datepicker'
 import { DataGrid } from '@mui/x-data-grid'
 import { v4 as uuidv4 } from 'uuid'
+import numberToWords from 'number-to-words'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -515,26 +516,34 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                     </div>
                   </React.Fragment>
                 ) : null}
+                <div>
+                  <div className="d-flex justify-content-around my-0 py-0">
+                    <div className="col">
+                      <DataGrid
+                        rows={[...requestItems, valueRow, vatRow, totalRow]}
+                        columns={columns}
+                        hideFooter={true}
+                        sx={{
+                          '& .MuiDataGrid-cell': {
+                            border: '2px solid black ',
+                          },
+                          '& .MuiDataGrid-columnHeader': {
+                            border: '2px solid black ',
+                          },
+                        }}
+                        getColumnProps={(params) => ({
+                          style: {
+                            display: params.row.id === 1000 ? 'none' : 'flex',
+                          },
+                        })}
+                      />
+                    </div>
+                  </div>
 
-                <div className="col">
-                  <DataGrid
-                    rows={[...requestItems, valueRow, vatRow, totalRow]}
-                    columns={columns}
-                    hideFooter={true}
-                    sx={{
-                      '& .MuiDataGrid-cell': {
-                        border: '2px solid black ',
-                      },
-                      '& .MuiDataGrid-columnHeader': {
-                        border: '2px solid black ',
-                      },
-                    }}
-                    getColumnProps={(params) => ({
-                      style: {
-                        display: params.row.id === 1000 ? 'none' : 'flex',
-                      },
-                    })}
-                  />
+                  <p className="text-capitalize">
+                    {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
+                    Rwandan Francs
+                  </p>
                 </div>
 
                 <InvoiceFooter />

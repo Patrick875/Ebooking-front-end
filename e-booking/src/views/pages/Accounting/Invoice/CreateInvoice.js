@@ -18,6 +18,7 @@ import BackButton from 'src/components/Navigating/BackButton'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import { DataGrid } from '@mui/x-data-grid'
 import { v4 as uuidv4 } from 'uuid'
+import numberToWords from 'number-to-words'
 
 const CreateInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -450,7 +451,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                   </div>
                 </div>
                 <div className="my-1 py-1">
-                  <div className="d-flex justify-content-around">
+                  <div className="d-flex justify-content-around my-0 py-0">
                     <div className="col">
                       <DataGrid
                         rows={[...requestItems, valueRow, vatRow, totalRow]}
@@ -472,6 +473,10 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                       />
                     </div>
                   </div>
+                  <p className="text-capitalize">
+                    {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
+                    Rwandan Francs
+                  </p>
                 </div>
                 <InvoiceFooter />
               </div>

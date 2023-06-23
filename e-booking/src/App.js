@@ -6,16 +6,7 @@ import './scss/style.scss'
 import Cookies from 'js-cookie'
 import { logout } from './redux/Auth/authActions'
 import ConnectionCheck from './utils/ConnectionCheck'
-import { GridLoader } from 'react-spinners'
-
-const Loading = (
-  <div
-    className="d-flex align-items-center justify-content-center"
-    style={{ height: '100vh' }}
-  >
-    <GridLoader color="#104165" />
-  </div>
-)
+import Loading from './API/Loading'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))

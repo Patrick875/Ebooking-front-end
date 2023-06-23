@@ -251,7 +251,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                   columns={columnsPurchase}
                   hideFooter={true}
                   sx={{
-                    fontSize: '2.75rem',
+                    fontSize: 24,
                     '& .MuiDataGrid-cell': {
                       border: '2px solid black ',
                     },

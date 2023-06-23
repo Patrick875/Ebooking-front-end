@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { CButton, CCol } from '@coreui/react'
+import { CCol } from '@coreui/react'
 import { DataGrid } from '@mui/x-data-grid'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
@@ -9,6 +9,7 @@ import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
+import numberToWords from 'number-to-words'
 
 const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -241,6 +242,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                       })}
                     />
                   </div>
+                  <p className="text-capitalize">
+                    {total ? numberToWords.toWords(total) : null} Rwandan Francs
+                  </p>
                 </div>
               </div>
             </div>

@@ -46,7 +46,6 @@ function AllVauchers() {
         .get('/cashvaucher/all')
         .then((res) => {
           setItems(res.data.data)
-          console.log('vauchers', res.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -117,12 +116,10 @@ function AllVauchers() {
                           {new Date(item.date).toLocaleDateString()}
                         </CTableHeaderCell>
                         <CTableDataCell>{item.doneTo}</CTableDataCell>
-                        <CTableDataCell className="d-flex ">
+                        <CTableDataCell>
                           {Number(item.amount).toLocaleString()}
                         </CTableDataCell>
-                        <CTableDataCell className="d-flex ">
-                          {item.description}
-                        </CTableDataCell>
+                        <CTableDataCell>{item.description}</CTableDataCell>
                       </CTableRow>
                     )
                   })

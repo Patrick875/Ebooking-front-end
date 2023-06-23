@@ -35,7 +35,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
       field: 'date',
       flex: 1,
       minWidth: 100,
-      maxWidth: 150,
+      maxWidth: 200,
       sortable: false,
       editable: false,
       valueGetter: (params) => {

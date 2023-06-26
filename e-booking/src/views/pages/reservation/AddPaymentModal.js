@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   CButton,
   CModal,
@@ -35,7 +36,7 @@ function AddPaymentModal(props) {
   }
 
   return (
-    <>
+    <React.Fragment>
       <CModal alignment="center" visible={open} onClose={() => setOpen(false)}>
         <CForm onSubmit={handleSubmit(onSubmit)}>
           <CModalHeader>
@@ -117,7 +118,7 @@ function AddPaymentModal(props) {
           </CModalFooter>
         </CForm>
       </CModal>
-    </>
+    </React.Fragment>
   )
 }
 

@@ -8,12 +8,13 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import BackButton from 'src/components/Navigating/BackButton'
+import UpdateReservationDates from './UpdateReservationDates'
 
 const ReservationReceipt = (props) => {
   const reservation = props.reservation
@@ -82,14 +83,19 @@ const ReservationReceipt = (props) => {
                         : 'Hall : ' + reservation.Hall.name}
                     </p>
                   )}
+                  <div className="py-2">
+                    <p className="fw-bold py-0 my-0">Dates</p>
+                    {reservation.DatesIns[
+                      reservation.DatesIns.length - 1
+                    ].datesIn.map((el, i) => {
+                      return (
+                        <li key={i * 6721}>
+                          {new Date(el).toLocaleDateString()}
+                        </li>
+                      )
+                    })}
+                  </div>
 
-                  <p className="font-weight-bold">
-                    Check in : {new Date(reservation.checkIn).toLocaleString()}
-                  </p>
-                  <p className="font-weight-bold">
-                    Check out :{' '}
-                    {new Date(reservation.checkOut).toLocaleString()}
-                  </p>
                   <p className="font-weight-bold">
                     Total :{' '}
                     {Object.keys(reservation.amount).map((curr) => (
@@ -134,7 +140,13 @@ const ReservationReceipt = (props) => {
 
 const ReservationView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const reservation = useSelector((state) => state.selection.selected)
+  let reservation = useSelector((state) => state.selection.selected)
+  const [openUpdate, setOpenUpdate] = useState(false)
+  const [updated, setUpdated] = useState(false)
+  if (updated) {
+    console.log('updated', updated)
+    reservation = { ...reservation, ...updated }
+  }
 
   return (
     <CRow>
@@ -155,6 +167,14 @@ const ReservationView = React.forwardRef((props, ref) => {
                 </strong>
               </h5>
               <div>
+                <button
+                  className="btn btn-success "
+                  onClick={() => {
+                    setOpenUpdate(true)
+                  }}
+                >
+                  Update reservation
+                </button>
                 <ReactToPrint
                   trigger={() => (
                     <button className="btn btn-ghost-primary">Print</button>
@@ -171,6 +191,12 @@ const ReservationView = React.forwardRef((props, ref) => {
           </PrintTemplate1>
         </div>
         <ReservationReceipt reservation={reservation} />
+        <UpdateReservationDates
+          openUpdate={openUpdate}
+          reservation={reservation}
+          setOpenUpdate={setOpenUpdate}
+          setUpdated={setUpdated}
+        />
       </CCol>
     </CRow>
   )

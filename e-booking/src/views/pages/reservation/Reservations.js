@@ -29,6 +29,7 @@ import {
 } from 'src/utils/functions'
 import DatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
+import ReservationUpdates from './ReservationUpdates'
 
 const Reservation = () => {
   const dispatch = useDispatch()
@@ -46,7 +47,7 @@ const Reservation = () => {
   const query = watch('query') || ''
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
-
+  const [openUpdates, setOpenUpdates] = useState(false)
   const onChange = (dates) => {
     const [start, end] = dates
     setStartDate(start)
@@ -157,6 +158,7 @@ const Reservation = () => {
         .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)
+          console.log(res.data.data)
         })
         .catch((err) => {
           toast.error(err.status)
@@ -173,7 +175,6 @@ const Reservation = () => {
         : reser,
     )
   }
-
   return (
     <CRow>
       <CCol xs={12}>
@@ -312,6 +313,18 @@ const Reservation = () => {
                                 Debt
                               </CBadge>
                             ) : null}
+                            {reserv.DatesIns.length !== 1 ? (
+                              <CBadge
+                                type="button"
+                                color="success"
+                                onClick={() => {
+                                  setOpenUpdates(true)
+                                }}
+                              >
+                                {' '}
+                                Updated{' '}
+                              </CBadge>
+                            ) : null}
                           </CTableDataCell>
 
                           <CTableDataCell>
@@ -320,19 +333,25 @@ const Reservation = () => {
                           </CTableDataCell>
                           <CTableDataCell>
                             {' '}
-                            {new Date(reserv.checkIn).toLocaleString()}
+                            {new Date(
+                              reserv.DatesIns[0].datesIn[0],
+                            ).toLocaleDateString()}
                           </CTableDataCell>
                           <CTableDataCell>
                             {' '}
-                            {new Date(reserv.checkOut).toLocaleString()}{' '}
+                            {new Date(
+                              reserv.DatesIns[0].datesIn[
+                                reserv.DatesIns[0].datesIn.length - 1
+                              ],
+                            ).toLocaleDateString()}{' '}
                           </CTableDataCell>
                           <CTableDataCell>
                             {reserv.status ? reserv.status : 'in progress'}{' '}
                           </CTableDataCell>
-                          <CTableDataCell>
+                          <CTableDataCell className="d-flex flex-row">
                             {reserv.status && reserv.status !== 'confirmed' ? (
                               <Link
-                                className="badge badge-warning text-secondary text-decoration-none"
+                                className="badge badge-warning text-secondary text-decoration-none d-block"
                                 onClick={() =>
                                   changeReservationStatus(
                                     {
@@ -350,7 +369,7 @@ const Reservation = () => {
 
                             {reserv.status && reserv.status !== 'canceled' ? (
                               <Link
-                                className="badge badge-danger text-danger text-decoration-none"
+                                className="badge badge-danger text-danger text-decoration-none d-block"
                                 onClick={() =>
                                   changeReservationStatus(
                                     {
@@ -374,6 +393,10 @@ const Reservation = () => {
                   reservation={clicked}
                   setOpen={setOpen}
                   setReservation={setUpdateReservation}
+                />
+                <ReservationUpdates
+                  setOpenUpdates={setOpenUpdates}
+                  openUpdates={openUpdates}
                 />
               </CTableBody>
             </CTable>

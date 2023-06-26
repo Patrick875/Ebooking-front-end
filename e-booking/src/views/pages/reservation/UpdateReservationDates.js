@@ -22,8 +22,11 @@ import { instance } from 'src/API/AxiosInstance'
 function UpdateReservationDates(props) {
   let { openUpdate, setOpenUpdate, setUpdated } = props
   const reservation = useSelector((state) => state.selection.selected)
+
   const [datesIn, setDatesIn] = useState([
-    ...reservation.DatesIns[reservation.DatesIns.length - 1].datesIn,
+    ...(reservation.DatesIns
+      ? reservation.DatesIns[reservation.DatesIns.length - 1].datesIn
+      : []),
   ])
   const { handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {

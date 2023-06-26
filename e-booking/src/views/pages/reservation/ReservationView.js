@@ -144,7 +144,6 @@ const ReservationView = React.forwardRef((props, ref) => {
   const [openUpdate, setOpenUpdate] = useState(false)
   const [updated, setUpdated] = useState(false)
   if (updated) {
-    console.log('updated', updated)
     reservation = { ...reservation, ...updated }
   }
 

@@ -153,6 +153,7 @@ const ReservationAdd = (props) => {
     }
     createReservation()
     reset()
+    setDatesIn([])
   }
   useEffect(() => {
     const getCurrencyRates = async () => {

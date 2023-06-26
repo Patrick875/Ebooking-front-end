@@ -18,15 +18,14 @@ import {
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { getAllRemoveDates } from 'src/utils/functions'
-import CalendarContainer from 'src/utils/CalendarContainer'
+import { getAllDates, getAllRemoveDates } from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import CustomerAdd from '../Customer/CustomerAdd'
 
 const CreateCustomerModal = (props) => {
-  const { visible, setVisible, reload } = props
+  const { visible, setVisible, setNewCustomer } = props
   return (
     <CModal
       alignment="center"
@@ -34,7 +33,7 @@ const CreateCustomerModal = (props) => {
       onClose={() => setVisible(false)}
       size="lg"
     >
-      <CustomerAdd reload={reload} />
+      <CustomerAdd setNewCustomer={setNewCustomer} />
     </CModal>
   )
 }
@@ -52,6 +51,7 @@ const ReservationAdd = (props) => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const [visible, setVisible] = useState(false)
+  const [newCustomer, setNewCustomer] = useState()
 
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   let user = useSelector((state) => state.auth.user)
@@ -63,6 +63,8 @@ const ReservationAdd = (props) => {
   const roomK = watch('roomClass') || null
   const details = watch('details') || null
   const payment = watch('payment') || 0
+
+  const [datesIn, setDatesIn] = useState([])
 
   const dontSubmit =
     !service || service.length === 0 || payment < 0 ? true : false
@@ -87,8 +89,9 @@ const ReservationAdd = (props) => {
   const days = Math.ceil(time / (1000 * 3600 * 24)) || 1
 
   let totalPrice = []
+  console.log('selected', service[0])
   const removeDates =
-    service && service.length !== 0 ? getAllRemoveDates(service[0]) : []
+    service && service.length !== 0 ? getAllDates(service[0]) : []
   const [reload, setReload] = useState()
   RoomClasses =
     RoomClasses && RoomClasses.length !== 0 && rooms && rooms.length !== 0
@@ -108,13 +111,13 @@ const ReservationAdd = (props) => {
   const onSubmit = (data) => {
     if (type === 'room' && days && !details) {
       data.roomId = service[0].id
-      data.amount = service[0].RoomClass.price * days
+      data.amount = service[0].RoomClass.price * datesIn.length
     } else if (type === 'room' && days && roomK && roomK.length !== 0) {
       data.amount = totalPrice
       delete data.roomClass
     } else if (days && !details) {
       data.hallId = service[0].id
-      data.amount = priceHall * days + additionalServicesTotal
+      data.amount = priceHall * datesIn.length + additionalServicesTotal
       delete data.children_number
       delete data.adults_number
     }
@@ -130,8 +133,10 @@ const ReservationAdd = (props) => {
       userId: user.id,
       checkIn: new Date(startDate.toString()).getTime(),
       checkOut: new Date(endDate.toString()).getTime(),
+      status: 'in progress',
+      datesIn: datesIn,
     }
-    data = { ...data, status: 'in progress' }
+
     const createReservation = async () => {
       await instance
         .post('/reservation/add', data)
@@ -207,7 +212,7 @@ const ReservationAdd = (props) => {
     getHalls()
     getHallServices()
     getCustomers()
-  }, [reload])
+  }, [newCustomer])
 
   const calculateTotal = (info) => {
     let roomKlasses = []
@@ -234,13 +239,14 @@ const ReservationAdd = (props) => {
     }
     return 0
   }
+
   totalPrice = calculateTotal(details)
   return (
     <React.Fragment>
       <CreateCustomerModal
         visible={visible}
         setVisible={setVisible}
-        reload={reload}
+        setNewCustomer={setNewCustomer}
       />
       <CRow>
         <CCol xs={12}>
@@ -332,44 +338,46 @@ const ReservationAdd = (props) => {
                       </CCol>
                     )}
 
-                    <CCol md={6} className="d-flex flex-col ">
-                      <div className="col-4 mx-2">
+                    <CCol md={6} className="d-flex">
+                      <div className="col">
                         <CFormLabel htmlFor="checkIn" className="d-block">
-                          Check-in
+                          Dates In
                         </CFormLabel>
                         <DatePicker
                           className="form-control"
-                          onChange={(date) => setStartDate(date)}
-                          selected={startDate}
-                          minDate={new Date()}
-                          portalId="root-portal"
-                          showTimeSelect
-                          timeIntervals={60}
-                          dateFormat="dd/MM/yyyy"
-                          popperPlacement="bottom-end"
-                          popperContainer={CalendarContainer}
-                          excludeDates={[...removeDates]}
-                          placeholderText="Select a date other than today or yesterday"
-                        />
-                      </div>
-                      <div className=" mx-2 col-4">
-                        <CFormLabel htmlFor="checkIn" className="d-block">
-                          Check-out
-                        </CFormLabel>
-                        <DatePicker
-                          className="form-control"
-                          selected={endDate}
-                          showTimeSelect
-                          timeFormat="p"
+                          multiple
+                          highlightDates={datesIn}
                           minDate={new Date()}
                           dateFormat="dd/MM/yyyy"
-                          timeIntervals={60}
-                          popperPlacement="bottom-end"
-                          onChange={(date) => setEndDate(date)}
+                          onChange={(date) =>
+                            setDatesIn([...datesIn, new Date(date)])
+                          }
+                          inline
                           excludeDates={[...removeDates]}
                           placeholderText="Select a date other than  yesterday"
                         />
                       </div>
+                      {datesIn.length !== 0 ? (
+                        <div>
+                          <p className=" text-center ">Reservation Dates</p>
+                          {datesIn.map((current, i) => (
+                            <div key={i * 3456}>
+                              <li>{new Date(current).toLocaleDateString()} </li>
+                              <p
+                                className="text-danger"
+                                onClick={() => {
+                                  let newDatesIn = datesIn.filter(
+                                    (el) => el !== current,
+                                  )
+                                  return setDatesIn(newDatesIn)
+                                }}
+                              >
+                                Remove
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
                     </CCol>
 
                     {type && type === 'hall' ? (
@@ -501,21 +509,21 @@ const ReservationAdd = (props) => {
                       <p className="mx-2">
                         {type === 'room' && !details
                           ? type === 'room' && service.length !== 0
-                            ? Number(priceRoom) * days +
+                            ? Number(priceRoom) * datesIn.length +
                               '  USD  /  ' +
                               Number(
                                 apicurrencies[0].filter(
                                   (el) => el.name === 'RWF',
                                 )[0].rate *
                                   Number(priceRoom) *
-                                  days,
+                                  datesIn.length,
                               ).toLocaleString() +
                               ' RWF'
                             : Number(priceRoom) + '  USD'
                           : ''}
                         {type === 'hall'
                           ? type === 'hall' && service.length !== 0
-                            ? Number(priceHall) * days +
+                            ? Number(priceHall) * datesIn.length +
                               additionalServicesTotal +
                               '  RWF'
                             : additionalServicesTotal + '  RWF'

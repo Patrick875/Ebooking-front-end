@@ -58,6 +58,7 @@ function AvailableStock() {
         .get('/stock/item/balance')
         .then((res) => {
           setItems(res.data.data)
+          console.log('available', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)

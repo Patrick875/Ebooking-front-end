@@ -1,4 +1,6 @@
 import dayjs from 'dayjs'
+import { parseISO } from 'date-fns'
+
 const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 dayjs.extend(isSameOrBefore)
 
@@ -156,4 +158,15 @@ export function getRoomStatus(room) {
       return { status: 'VACANT' }
     }
   }
+}
+
+// Output: [sequelizeDate1, sequelizeDate2, sequelizeDate3, ...]
+
+export function getAllDates(service) {
+  return service.Reservations.map((reservation) => {
+    const lastDateIns = reservation.DatesIns[reservation.DatesIns.length - 1]
+    return lastDateIns
+      ? lastDateIns.datesIn.map((dateString) => parseISO(dateString))
+      : []
+  }).flat()
 }

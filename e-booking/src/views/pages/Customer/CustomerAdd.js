@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -33,8 +33,8 @@ function CustomerAdd({ setNewCustomer, setVisible }) {
         setNewCustomer(res.data.data)
         setVisible(false)
       })
-      .catch(() => {
-        toast.error('customer creation failed')
+      .catch((err) => {
+        console.log({ err })
       })
     reset()
   }

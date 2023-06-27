@@ -28,13 +28,14 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       ? Number(orderTotal - amountVAT)
       : Number(orderTotal + amountVAT)
   const [rows] = useState(request.ProformaDetails)
+
   const columns = [
     {
       headerName: 'Date',
       field: 'date',
       flex: 1,
-      minWidth: 100,
-      maxWidth: 150,
+      minWidth: 200,
+      maxWidth: 320,
       sortable: false,
       editable: false,
       valueGetter: (params) => {
@@ -69,7 +70,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       headerName: 'times',
       flex: 1,
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 210,
       editable: false,
       sortable: false,
     },
@@ -153,12 +154,14 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       </div>
 
       <PrintTemplateInvoice ref={ref || componentRef}>
-        <p className="text-center my-3 text-uppercase fw-bold ">
-          Pro forma Invoice N &#176;{request.proformaGenerated}
-        </p>
-        <ClientDetailsProForma details={proformaDetails} request={request} />
-        <div className="my-3 py-3">
-          <div className="d-flex justify-content-around">
+        <p className="text-center my-3 text-uppercase fw-bold "></p>
+        <div className="col">
+          <p className="text-center my-3 text-uppercase fw-bold">
+            Pro forma Invoice N &#176;
+            {request.proformaGenerated}
+          </p>
+          <ClientDetailsProForma details={proformaDetails} request={request} />
+          <div className="col">
             <div className="col">
               <DataGrid
                 rows={[...rows, valueRow, vatRow, totalRow]}
@@ -171,6 +174,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                   '& .MuiDataGrid-columnHeader': {
                     border: '2px solid black ',
                   },
+                  fontSize: 18,
                 }}
                 getColumnProps={(params) => ({
                   style: {
@@ -179,13 +183,14 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                 })}
               />
             </div>
+            <p className="text-capitalize">
+              <span className="fw-bold"> Total in words : </span>
+              {total ? numberToWords.toWords(total) : null}{' '}
+              {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
+            </p>
           </div>
-          <p className="text-capitalize">
-            <span className="fw-bold"> Total in words : </span>
-            {total ? numberToWords.toWords(total) : null}{' '}
-            {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
-          </p>
         </div>
+
         <p className="text-center py-1 my-1">
           Your satisfaction is our concern
         </p>

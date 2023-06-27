@@ -1,6 +1,4 @@
-import { CCard, CCardBody } from '@coreui/react'
 import React from 'react'
-import PrintFooterNoSignatures from './PrintFooterNoSignature'
 import InvoiceHeader from './InvoiceHeader'
 
 const PrintTemplateInvoice = React.forwardRef((props, ref) => {
@@ -8,7 +6,7 @@ const PrintTemplateInvoice = React.forwardRef((props, ref) => {
 
   return (
     <div ref={ref}>
-      <div className="m-3 p-3">
+      <div className="my-3 mx-0 px-0 py-3">
         <InvoiceHeader documentTitle={documentTitle} />
         <div>{props.children}</div>
       </div>

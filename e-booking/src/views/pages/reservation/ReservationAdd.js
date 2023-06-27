@@ -66,8 +66,7 @@ const ReservationAdd = (props) => {
 
   const [datesIn, setDatesIn] = useState([])
 
-  const dontSubmit =
-    !service || service.length === 0 || payment < 0 ? true : false
+  const dontSubmit = payment < 0 ? true : false
 
   const additionalTotal =
     Object.keys(additional).length !== 0
@@ -82,6 +81,7 @@ const ReservationAdd = (props) => {
   } else if (type === 'room' && service.length !== 0 && service[0].RoomClass) {
     priceRoom = service[0].RoomClass.price
   }
+  console.log('roomK', roomK)
   const time =
     new Date(startDate).getTime() !== 0 && new Date(endDate).getTime() !== 0
       ? new Date(endDate).getTime() - new Date(startDate).getTime()
@@ -89,7 +89,7 @@ const ReservationAdd = (props) => {
   const days = Math.ceil(time / (1000 * 3600 * 24)) || 1
 
   let totalPrice = []
-  console.log('selected', service[0])
+
   const removeDates =
     service && service.length !== 0 ? getAllDates(service[0]) : []
   const [reload, setReload] = useState()
@@ -109,13 +109,13 @@ const ReservationAdd = (props) => {
   )
 
   const onSubmit = (data) => {
-    if (type === 'room' && days && !details) {
+    if (type === 'room' && datesIn && !details) {
       data.roomId = service[0].id
       data.amount = service[0].RoomClass.price * datesIn.length
-    } else if (type === 'room' && days && roomK && roomK.length !== 0) {
+    } else if (type === 'room' && datesIn && details) {
       data.amount = totalPrice
       delete data.roomClass
-    } else if (days && !details) {
+    } else if (datesIn && !details) {
       data.hallId = service[0].id
       data.amount = priceHall * datesIn.length + additionalServicesTotal
       delete data.children_number
@@ -613,9 +613,7 @@ const ReservationAdd = (props) => {
                     value="Book now"
                   />
                 </CCol>
-                {!service || service.length === 0 ? (
-                  <p className="text-danger ">Please select service</p>
-                ) : null}
+
                 {payment < 0 ? (
                   <p className="text-danger ">Paymen can not be negative</p>
                 ) : null}

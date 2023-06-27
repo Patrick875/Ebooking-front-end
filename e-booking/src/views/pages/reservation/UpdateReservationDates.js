@@ -20,14 +20,14 @@ import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
 
 function UpdateReservationDates(props) {
-  let { openUpdate, setOpenUpdate, setUpdated } = props
-  const reservation = useSelector((state) => state.selection.selected)
+  let { openUpdate, setOpenUpdate, setUpdated, reservation } = props
 
-  const [datesIn, setDatesIn] = useState([
-    ...(reservation.DatesIns
-      ? reservation.DatesIns[reservation.DatesIns.length - 1].datesIn
-      : []),
-  ])
+  let dates = []
+  if (reservation.DatesIns.length !== 0) {
+    dates = reservation.DatesIns
+  }
+  const [datesIn, setDatesIn] = useState([...dates])
+
   const { handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     let submission = {

@@ -175,6 +175,7 @@ const Reservation = () => {
         : reser,
     )
   }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -318,6 +319,7 @@ const Reservation = () => {
                                 type="button"
                                 color="success"
                                 onClick={() => {
+                                  setClicked(reserv)
                                   setOpenUpdates(true)
                                 }}
                               >
@@ -334,15 +336,17 @@ const Reservation = () => {
                           <CTableDataCell>
                             {' '}
                             {new Date(
-                              reserv.DatesIns[0].datesIn[0],
+                              reserv.DatesIns[
+                                reserv.DatesIns.length - 1
+                              ].datesIn[0],
                             ).toLocaleDateString()}
                           </CTableDataCell>
                           <CTableDataCell>
                             {' '}
                             {new Date(
-                              reserv.DatesIns[0].datesIn[
-                                reserv.DatesIns[0].datesIn.length - 1
-                              ],
+                              reserv.DatesIns[
+                                reserv.DatesIns.length - 1
+                              ].datesIn[reserv.DatesIns[0].datesIn.length - 1],
                             ).toLocaleDateString()}{' '}
                           </CTableDataCell>
                           <CTableDataCell>
@@ -394,9 +398,11 @@ const Reservation = () => {
                   setOpen={setOpen}
                   setReservation={setUpdateReservation}
                 />
+
                 <ReservationUpdates
                   setOpenUpdates={setOpenUpdates}
                   openUpdates={openUpdates}
+                  reservation={clicked}
                 />
               </CTableBody>
             </CTable>

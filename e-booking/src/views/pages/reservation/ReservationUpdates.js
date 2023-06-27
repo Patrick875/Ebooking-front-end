@@ -9,12 +9,11 @@ import {
   CForm,
 } from '@coreui/react'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
 
 function ReservationUpdates(props) {
-  let { openUpdates, setOpenUpdates } = props
-  const reservation = useSelector((state) => state.selection.selected)
-  const [datesIn, setDatesIn] = useState([...reservation.DatesIns])
+  let { openUpdates, setOpenUpdates, reservation } = props
+  const [datesIn, setDatesIn] = useState([])
+  console.log('rees', reservation)
 
   return (
     <React.Fragment>

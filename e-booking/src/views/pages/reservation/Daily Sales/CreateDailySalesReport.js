@@ -80,14 +80,12 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
 
   let totals = sumAmountsByCurrency(reportItems)
   const submitDailyReport = async () => {
-    console.log('the daily sales data', { data: reportItems, totals })
     await instance
       .post('/daily-sales/add', { data: reportItems, totals })
       .then(() => {
         toast.success('report successfuly submited')
       })
       .catch((err) => {
-        console.log('err', err)
         toast.error(err.response.message)
       })
   }
@@ -160,6 +158,19 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         </option>
                         <option value="RENTING">RENTING</option>
                       </CFormSelect>
+                    </CCol>
+                    <CCol md={6}>
+                      <div className="d-flex justify-content-between">
+                        <CFormLabel htmlFor="user">Description </CFormLabel>
+                      </div>
+                      <CFormInput
+                        type="text"
+                        name="description"
+                        id="description"
+                        placeholder="..."
+                        required
+                        {...register('description')}
+                      />
                     </CCol>
                     <CCol md={6}>
                       <div className="d-flex justify-content-between">

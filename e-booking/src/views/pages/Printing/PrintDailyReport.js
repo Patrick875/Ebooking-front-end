@@ -4,7 +4,7 @@ function PrintDailyReport() {
   return (
     <div className="my-4 d-flex justify-content-between">
       <div className="text-center">
-        <p className="fw-bolder">Receiption</p>
+        <p className="fw-bolder">Reception</p>
         <p className="fw-bolder text-uppercase">(Name and Signature)</p>
         <p className="my-2">................................</p>
       </div>

@@ -170,3 +170,22 @@ export function getAllDates(service) {
       : []
   }).flat()
 }
+
+export function groupElementsByTitle(arr) {
+  const groupedElements = {}
+
+  // Group elements by title
+  arr.forEach((element) => {
+    const title = element.title
+    if (groupedElements[title]) {
+      groupedElements[title].push(element)
+    } else {
+      groupedElements[title] = [element]
+    }
+  })
+
+  // Convert object values to arrays
+  const result = Object.values(groupedElements)
+
+  return result
+}

@@ -18,7 +18,6 @@ import UpdateReservationDates from './UpdateReservationDates'
 
 const ReservationReceipt = (props) => {
   const reservation = props.reservation
-
   return (
     <CCard>
       <CCardBody>
@@ -71,7 +70,10 @@ const ReservationReceipt = (props) => {
                       {reservation.details
                         ? Object.keys(reservation.details)?.map((e) => (
                             <p>
-                              {e} rooms : {reservation.details[e].people}
+                              {e} rooms :{' '}
+                              {reservation.details[e].people === ''
+                                ? 0
+                                : reservation.details[e].people}
                             </p>
                           ))
                         : null}

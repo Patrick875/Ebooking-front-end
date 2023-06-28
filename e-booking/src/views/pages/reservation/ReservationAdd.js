@@ -141,7 +141,7 @@ const ReservationAdd = (props) => {
       await instance
         .post('/reservation/add', data)
         .then((res) => {
-          toast.success('Reservation added')
+          toast.success('Reservation created')
           setReload(res)
         })
         .catch((err) => {

@@ -180,7 +180,8 @@ const ReservationsTable = (props) => {
             <CTableHeaderCell scope="col"> Room/Hall </CTableHeaderCell>
             <CTableHeaderCell scope="col"> Booked On </CTableHeaderCell>
             <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Price </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> Amount </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> Paid </CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
@@ -188,13 +189,13 @@ const ReservationsTable = (props) => {
             <Reservation reserv={reserv} />
           ))}
           <CTableRow>
-            <CTableHeaderCell scope="row" colSpan={6}>
+            <CTableHeaderCell scope="row" colSpan={7}>
               Total Amount (RWF)
             </CTableHeaderCell>
             <CTableHeaderCell>{totalAmount.toLocaleString()}</CTableHeaderCell>
           </CTableRow>
           <CTableRow>
-            <CTableHeaderCell scope="row" colSpan={6}>
+            <CTableHeaderCell scope="row" colSpan={7}>
               Total Paid (RWF){' '}
             </CTableHeaderCell>
             <CTableHeaderCell>

@@ -15,7 +15,7 @@ import NetworkError from 'src/views/pages/page404/NetworkError'
 //
 
 const instance = axios.create({
-  baseURL: 'http://192.168.122.1:8080/api/v1',
+  baseURL: 'http://localhost:4000/api/v1',
 })
 
 axios.interceptors.response.use(
@@ -98,6 +98,7 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
+    console.log(error)
     if (error.isAxiosError) {
       return <NetworkError />
     }

@@ -44,6 +44,13 @@ const Reservation = (props) => {
           </p>
         ))}
       </CTableDataCell>
+      <CTableDataCell>
+        {Object.keys(reserv.payment).map((am, i) => (
+          <p key={i}>
+            {Number(reserv.payment[am]).toLocaleString()} {am}
+          </p>
+        ))}
+      </CTableDataCell>
     </CTableRow>
   )
 }

@@ -90,8 +90,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       headerName: 'Date',
       field: 'date',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       editable: true,
       type: date,
@@ -121,7 +121,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       field: 'description',
       flex: 1,
       minWidth: 200,
-      maxWidth: 300,
+      maxWidth: 250,
       sortable: false,
       editable: true,
       valueSetter: (params) => {
@@ -146,7 +146,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       hide: (params) => params.rowIndex === requestItems.length,
       flex: 1,
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 120,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -166,7 +166,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       headerName: 'times',
       flex: 1,
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 120,
       editable: true,
       sortable: false,
       valueSetter: (params) => {
@@ -188,7 +188,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       headerName: 'P.U',
       flex: 1,
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 120,
       editable: true,
       sortable: false,
       hide: (params) => params.rowIndex === requestItems.length,
@@ -221,8 +221,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       field: 'total',
       headerName: 'T.P',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       valueGetter: (params) => {
         if (hidePrice) {

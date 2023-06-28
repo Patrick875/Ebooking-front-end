@@ -100,8 +100,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       headerName: 'Date',
       field: 'date',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       editable: true,
       type: date,
@@ -131,7 +131,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       field: 'name',
       flex: 1,
       minWidth: 200,
-      maxWidth: 300,
+      maxWidth: 250,
       sortable: false,
       editable: true,
       valueSetter: (params) => {
@@ -155,8 +155,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       editable: true,
       hide: (params) => params.rowIndex === requestItems.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 120,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -175,8 +175,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 120,
       editable: true,
       sortable: false,
       valueSetter: (params) => {
@@ -197,8 +197,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       field: 'price',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 120,
       editable: true,
       sortable: false,
       valueSetter: (params) => {
@@ -219,8 +219,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       field: 'total',
       headerName: 'T.P',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       valueGetter: (params) =>
         `${

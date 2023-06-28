@@ -34,7 +34,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       headerName: 'Date',
       field: 'date',
       flex: 1,
-      minWidth: 200,
+      minWidth: 100,
       maxWidth: 200,
       sortable: false,
       editable: false,
@@ -51,7 +51,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       field: 'name',
       flex: 1,
       minWidth: 200,
-      maxWidth: 300,
+      maxWidth: 250,
       sortable: false,
       editable: false,
     },
@@ -62,15 +62,15 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       editable: false,
       hide: (params) => params.rowIndex === rows.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 120,
     },
     {
       field: 'times',
       headerName: 'times',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 120,
       editable: false,
       sortable: false,
     },
@@ -78,8 +78,8 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       field: 'price',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 120,
       editable: false,
       sortable: false,
     },
@@ -87,8 +87,8 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       field: 'total',
       headerName: 'T.P',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       sortable: false,
       valueGetter: (params) =>
         `${
@@ -182,11 +182,6 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                   },
                   fontSize: 18,
                 }}
-                getColumnProps={(params) => ({
-                  style: {
-                    display: isLastRow(params) ? 'none' : 'flex',
-                  },
-                })}
               />
             </div>
             <p className="text-capitalize">

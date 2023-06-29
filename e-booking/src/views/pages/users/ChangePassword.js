@@ -19,7 +19,7 @@ const ChangePassword = () => {
   const newPasswordConfirm = watch('confirmPassword')
   const onSubmit = async (data) => {
     await instance
-      .post('/reset', data)
+      .post('/changePassword', data)
       .then(() => {
         toast.success('password changed!')
       })

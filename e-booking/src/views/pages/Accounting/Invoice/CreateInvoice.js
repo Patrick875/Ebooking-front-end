@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -103,27 +103,14 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       minWidth: 100,
       maxWidth: 200,
       sortable: false,
-      editable: true,
-      type: date,
+      editable: false,
+      type: 'date',
       valueGetter: (params) => {
         if (params.row.date) {
-          return params.row.date.toLocaleDateString()
+          return params.row.date
         } else {
           return ''
         }
-      },
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          date: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, date: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
       },
     },
     {

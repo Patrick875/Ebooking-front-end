@@ -42,8 +42,6 @@ const UserEdit = () => {
     //updating users array
     data.role = selectedUser.Role.id || role
 
-    console.log('user', { ...selectedUser, ...data })
-
     await instance
       .put('/users/update', data)
       .then(() => {

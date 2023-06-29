@@ -114,7 +114,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       minWidth: 100,
       maxWidth: 200,
       sortable: false,
-      editable: true,
+      editable: false,
       type: date,
       valueGetter: (params) => {
         if (params.row.date) {
@@ -122,19 +122,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
         } else {
           return ''
         }
-      },
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          date: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, date: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
       },
     },
     {

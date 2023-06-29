@@ -93,7 +93,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
       minWidth: 100,
       maxWidth: 200,
       sortable: false,
-      editable: true,
+      editable: false,
       type: date,
       valueGetter: (params) => {
         if (params.row.date) {

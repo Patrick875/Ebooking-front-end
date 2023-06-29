@@ -66,7 +66,6 @@ function AllDailySalesReports() {
     }
     getReports()
   }, [])
-
   reports = getReportsByDate(reports, myDates)
 
   return (
@@ -114,6 +113,7 @@ function AllDailySalesReports() {
                 <CTableRow>
                   <CTableHeaderCell scope="col"> # </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Date </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Done By </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -138,6 +138,9 @@ function AllDailySalesReports() {
                         </CTableDataCell>
                         <CTableDataCell>
                           {new Date(report.date).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {report.User.firstName + ' ' + report.User.lastName}
                         </CTableDataCell>
                         <CTableDataCell>
                           <Link

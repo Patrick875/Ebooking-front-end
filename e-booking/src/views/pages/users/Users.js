@@ -20,15 +20,26 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { deleteUser } from 'src/redux/User/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const ConfirmDeleteUserModel = (props) => {
-  const { visible, setVisible, user, users } = props
-  const dispatch = useDispatch()
+  const { visible, setVisible, userId, setUpdated } = props
+  const disactivateUser = async (userId) => {
+    await instance
+      .get(`/users/disactivate/${userId}`)
+      .then((res) => {
+        setUpdated(res.data.data)
+        toast.success('user disactivated')
+      })
+      .catch((err) => {
+        console.log('err', err)
+        toast.error('user disactivate failed')
+      })
+  }
   return (
     <CModal onClose={() => setVisible(false)} visible={visible}>
       <CModalHeader>Confirm user delete</CModalHeader>
@@ -42,7 +53,7 @@ const ConfirmDeleteUserModel = (props) => {
         <CButton
           className="btn-danger"
           onClick={() => {
-            return dispatch(deleteUser(user, users))
+            return disactivateUser(userId)
           }}
         >
           Disactivate user
@@ -56,10 +67,16 @@ const Users = () => {
   const { register, watch } = useForm()
   const query = watch('query') || ''
   let [users, setUsers] = useState([])
-
+  const [updated, setUpdated] = useState()
   let role = useSelector((state) => state.auth.user.Role.name)
   const [visible, setVisible] = useState(false)
+  const [clicked, setClicked] = useState()
   users = users ? users : []
+  if (updated) {
+    users = users.map((user) =>
+      user.id === updated.id ? { ...user, ...updated } : user,
+    )
+  }
   const searchUsers = (users, query) => {
     if (query && query !== '') {
       return users.filter((user) =>
@@ -79,7 +96,6 @@ const Users = () => {
     const getUsers = async () => {
       await instance.get(`/users/all`).then((res) => {
         setUsers(res.data.users)
-        console.log('users', res.data.users)
       })
     }
     getUsers()
@@ -149,7 +165,6 @@ const Users = () => {
                               role === 'controller' ? 'disabled' : ''
                             } btn btn-sm btn-warning`}
                             onClick={() => {
-                              console.log('this is user', user)
                               return dispatch(selectItem(user))
                             }}
                           >
@@ -161,17 +176,12 @@ const Users = () => {
                               role === 'controller' ? 'disabled' : ''
                             } btn btn-sm btn-danger`}
                             onClick={() => {
+                              setClicked(user)
                               return setVisible(!visible)
                             }}
                           >
                             Disactivate
                           </button>
-                          <ConfirmDeleteUserModel
-                            visible={visible}
-                            setVisible={setVisible}
-                            user={user}
-                            users={users}
-                          />
                         </CTableDataCell>
                       ) : null}
                     </CTableRow>
@@ -179,6 +189,13 @@ const Users = () => {
                 ) : (
                   <CTableRow></CTableRow>
                 )}
+
+                <ConfirmDeleteUserModel
+                  visible={visible && clicked ? visible : false}
+                  setVisible={setVisible}
+                  userId={clicked ? clicked.id : null}
+                  setUpdated={setUpdated}
+                />
               </CTableBody>
             </CTable>
           </CCardBody>

@@ -25,8 +25,8 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const amountVAT = Number((orderTotal * VATconstant.value) / 100)
   const total =
     proformaDetails[0].VAT === 'exclusive'
-      ? Number(orderTotal - amountVAT)
-      : Number(orderTotal + amountVAT)
+      ? Number(orderTotal + amountVAT)
+      : Number(orderTotal - amountVAT)
   const [rows] = useState(request.ProformaDetails)
 
   const columns = [

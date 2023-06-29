@@ -18,7 +18,6 @@ import { instance } from 'src/API/AxiosInstance'
 
 export default function InvoicePaymentModal(props) {
   let { open, setOpen, invoice, maxPayment } = props
-  console.log('id', invoice.id)
   const { register, handleSubmit, reset, watch } = useForm()
   const amount = watch('amount')
 
@@ -33,7 +32,7 @@ export default function InvoicePaymentModal(props) {
       })
       .catch((err) => {
         toast.error('invoice payment failed !!')
-        console.log('err', err)
+
         reset()
       })
   }

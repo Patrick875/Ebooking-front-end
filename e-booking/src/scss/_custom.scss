@@ -39,13 +39,18 @@
   }
  .cool{
   font-family: Arial, Helvetica, sans-serif;
+  color: #000 !important;
  }
   .client-receipt{
+  color: #000 !important;
    max-width: 200px !important;
    display:flex;
    justify-content: center;
+   font-size:14px;
    h3,p,th,td{
-     font-size: 10px;
+     font-size: 14px;
+     color: #000 !important;
+
    }
   .printing-header{
 
@@ -121,7 +126,8 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
     flex-direction: column;
     height:100vh;
     @media screen and (orientation : landscape) {
-    height: 100vh;}
+    height: 100vh;
+  }
   }
   
 .widgets{
@@ -129,4 +135,7 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   div{
     cursor:pointer
   }
+}
+.print_styles {
+  color: #000 !important;
 }

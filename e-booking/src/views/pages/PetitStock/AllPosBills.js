@@ -51,7 +51,8 @@ function AllPosBills() {
   }
 
   const deletePosCustomerBill = async (id) => {
-    await instance.post('/posbondecommande/delete/', { id }).then(() => {
+    await instance.post('/posbondecommande/delete/', { id }).then((res) => {
+      console.log('res', res)
       toast.success('bill deleted!!!!')
     })
   }

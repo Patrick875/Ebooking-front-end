@@ -64,8 +64,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const finalTotal =
     requestItems.length !== 0
       ? VAT === 'exclusive'
-        ? Number(orderTotal - amountVAT)
-        : Number(orderTotal + amountVAT)
+        ? Number(orderTotal + amountVAT)
+        : Number(orderTotal - amountVAT)
       : 0
   const dontAdd =
     !quantity ||

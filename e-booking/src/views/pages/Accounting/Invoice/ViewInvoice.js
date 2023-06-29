@@ -26,8 +26,8 @@ const ViewInvoice = React.forwardRef((props, ref) => {
   const amountVAT = Number((orderTotal * VATconstant.value) / 100)
   const total =
     invoiceDetails[0].VAT === 'exclusive'
-      ? Number(orderTotal - amountVAT)
-      : Number(orderTotal + amountVAT)
+      ? Number(orderTotal + amountVAT)
+      : Number(orderTotal - amountVAT)
   let [rows] = useState(request.InvoiceDetails)
   const columns = [
     {

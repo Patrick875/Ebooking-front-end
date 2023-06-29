@@ -13,7 +13,6 @@ import React, { useState } from 'react'
 function ReservationUpdates(props) {
   let { openUpdates, setOpenUpdates, reservation } = props
   const [datesIn, setDatesIn] = useState([])
-  console.log('rees', reservation)
 
   return (
     <React.Fragment>

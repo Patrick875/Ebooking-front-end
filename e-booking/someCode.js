@@ -289,3 +289,8 @@ export default function FullFeaturedCrudGrid() {
     {...register('price')}
   />
 </CCol>
+
+
+
+
+

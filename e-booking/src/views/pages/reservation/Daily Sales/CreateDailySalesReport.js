@@ -142,13 +142,17 @@ const CreateDailySalesReport = React.forwardRef((props, ref) => {
                         className="mb-3"
                         {...register('title')}
                       >
-                        <option value="MAIN-BAR[SALES]">MAIN-BAR[SALES]</option>
+                        <option value="MAIN-BAR[SALES]">POOL-BAR[SALES]</option>
+                        <option value="LOUNGE-BAR[SALES]">
+                          LOUNGE-BAR[SALES]
+                        </option>
                         <option value="ACCOMODATION[SALES]">
                           ACCOMODATION[SALES]
                         </option>
                         <option value="HEALTH CLUB SALES">
                           HEALTH CLUB SALES
                         </option>
+                        <option value="SAUNA[SALES]">SAUNA[SALES]</option>
                         <option value="RECEPTION SALES">RECEPTION SALES</option>
                         <option value="WEDDING CEREMONY">
                           WEDDING CEREMONY

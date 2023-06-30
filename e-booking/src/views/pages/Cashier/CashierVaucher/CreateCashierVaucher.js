@@ -19,13 +19,14 @@ import { instance } from 'src/API/AxiosInstance'
 
 const CreateCashierVaucher = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-  const { register, handleSubmit, watch } = useForm()
+  const { register, handleSubmit, watch, reset } = useForm()
   const type = watch('type') || 'credit'
   const creditTransaction = async (data) => {
     await instance
       .post('/cashvaucher/credit', data)
       .then(() => {
         toast.success('Cash credited !!!')
+        reset()
       })
       .catch(() => {
         toast.error('transaction failed !!!')
@@ -36,6 +37,7 @@ const CreateCashierVaucher = () => {
       .post('/cashvaucher/debit', data)
       .then((res) => {
         toast.success(res.data.message)
+        reset()
       })
       .catch(() => {
         toast.error('transaction failed !!!')

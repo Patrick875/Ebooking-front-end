@@ -1,7 +1,9 @@
 import {
+  CButton,
   CCard,
   CCardBody,
   CCardHeader,
+  CFormInput,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -21,6 +23,9 @@ import {
 import ReactDatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import InvoiceHeader from '../Printing/InvoiceHeader'
+import Pagination from 'src/utils/Pagination'
+import ViewCashTransaction from './ViewCashTransaction'
+import PrintHeader from '../Printing/PrintHeader'
 const CashRecords = (props) => {
   let { transactions, time, myDates, startDate, endDate } = props
   let debitTotal, creditTotal, balance
@@ -158,7 +163,14 @@ const CashRecords = (props) => {
 const CashReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, watch } = useForm()
+  const [newVersion, setNewVersion] = useState()
+  const [viewRecords, setViewRecords] = useState(false)
+  const [viewReport, setViewReport] = useState(false)
+  const [update, setUpdate] = useState(true)
+  const [viewTransaction, setViewTransaction] = useState(false)
+  const [transaction, setTransaction] = useState(false)
   const time = watch('time') || 'all-time'
+  const trans = watch('transaction') || ''
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const onChange = (dates) => {
@@ -183,6 +195,9 @@ const CashReport = React.forwardRef((props, ref) => {
       : 0
   let balance = debitTotal - creditTotal
   balance = balance.toLocaleString()
+  const perpage = 30
+  const [currentPage, setCurrentPage] = useState(1)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   useEffect(() => {
     const getCashTransactions = async () => {
@@ -191,10 +206,29 @@ const CashReport = React.forwardRef((props, ref) => {
       })
     }
     getCashTransactions()
-  }, [])
+  }, [newVersion])
   return (
-    <CCard>
-      <CCardHeader className="d-flex justify-content-between align-items-center">
+    <div>
+      <div className="d-flex justify-content-between">
+        <CButton
+          onClick={() => {
+            setViewRecords(true)
+            setViewReport(false)
+            setViewTransaction(false)
+          }}
+        >
+          All Transactions
+        </CButton>
+        <CButton
+          onClick={() => {
+            setViewRecords(false)
+            setViewReport(true)
+          }}
+        >
+          Report
+        </CButton>
+      </div>
+      <div className="d-flex justify-content-between align-items-center my-2">
         <div className="col-2">
           <ReactToPrint
             trigger={() => (
@@ -203,60 +237,186 @@ const CashReport = React.forwardRef((props, ref) => {
             content={() => ref || componentRef.current}
           />
         </div>
-
-        <div className=" col-md-4 d-flex justify-content-between gap-2">
-          <div className="col">
-            <label className="text-center py-1">Time</label>
-            <select
-              className="form-select form-select-sm col"
-              defaultValue={'all-time'}
-              {...register('time')}
+        {viewTransaction ? (
+          <div className="d-flex gap-2">
+            <CButton
+              className="btn-success px-4 btn-sm "
+              onClick={() => {
+                setUpdate(!update)
+              }}
             >
-              <option value="all-time">All-time</option>
-              <option value="date">Date</option>
-            </select>
+              {!update ? 'Updating' : 'Update'}
+            </CButton>
           </div>
-          {time && time === 'date' ? (
-            <div className="col d-flex align-items-end ">
-              <ReactDatePicker
-                className="form-control col px-2"
-                onChange={onChange}
-                startDate={startDate}
-                endDate={endDate}
-                dateFormat="dd/MM/yy"
-                selectsRange
-                portalId="root-portal"
-                popperPlacement="bottom-end"
-                popperContainer={CalendarContainer}
-                placeholderText="Select date range"
-              />
+        ) : null}
+        {viewRecords && !viewTransaction ? (
+          <div className="col-4">
+            <label className="text-center py-1">Search </label>
+            <CFormInput
+              placeholder="...name or id"
+              {...register('transaction')}
+              type="text"
+              name="transaction"
+            />
+          </div>
+        ) : null}
+
+        {!viewTransaction ? (
+          <div className=" col-md-4 d-flex justify-content-between gap-2">
+            <div className="col">
+              <label className="text-center py-1">Time</label>
+              <select
+                className="form-select form-select-sm col"
+                defaultValue={'all-time'}
+                {...register('time')}
+              >
+                <option value="all-time">All-time</option>
+                <option value="date">Date</option>
+              </select>
             </div>
-          ) : null}
-        </div>
-      </CCardHeader>
-      <div style={{ display: 'none' }}>
-        <div ref={ref || componentRef}>
-          <InvoiceHeader title="Cash flow" />
-          <CashRecords
-            time={time}
-            myDates={myDates}
-            transactions={transactions}
-            startDate={startDate}
-            endDate={endDate}
-          />
-          <PrintFooterNoSignatures />
-        </div>
+            {time && time === 'date' ? (
+              <div className="col d-flex align-items-end ">
+                <ReactDatePicker
+                  className="form-control col px-2"
+                  onChange={onChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  dateFormat="dd/MM/yy"
+                  selectsRange
+                  portalId="root-portal"
+                  popperPlacement="bottom-end"
+                  popperContainer={CalendarContainer}
+                  placeholderText="Select date range"
+                />
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
-      <CashRecords
-        time={time}
-        myDates={myDates}
-        transactions={transactions}
-        balance={balance}
-        startDate={startDate}
-        endDate={endDate}
-      />
-    </CCard>
+
+      <div ref={ref || componentRef}>
+        {viewRecords && !viewReport ? (
+          viewTransaction ? (
+            <div>
+              {' '}
+              <ViewCashTransaction
+                transaction={transaction}
+                update={update}
+                setNewVersion={setNewVersion}
+                setUpdate={setUpdate}
+              />{' '}
+            </div>
+          ) : (
+            <div>
+              <PrintHeader />
+              <p className="text-center fw-bold text-uppercase">
+                Cash Transactions
+              </p>
+              <div>
+                <CTable bordered>
+                  <CTableHead>
+                    <CTableRow>
+                      <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Id</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">To/From</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">By</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Type</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Reason</CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {transactions && transactions.length !== 0
+                      ? transactions
+                          .filter((el) =>
+                            el.transactionId.toLowerCase().includes(trans) ||
+                            el.doneTo.toLowerCase().includes(trans)
+                              ? el
+                              : null,
+                          )
+                          .filter((trans) => {
+                            return myDates.includes(
+                              getUTCDateWithoutHours(trans.date),
+                            )
+                              ? trans
+                              : null
+                          })
+                          .map((item, i) => {
+                            return (
+                              <CTableRow
+                                key={item.id}
+                                onClick={() => {
+                                  setTransaction(item)
+                                  setViewTransaction(true)
+                                }}
+                              >
+                                <CTableHeaderCell scope="row">
+                                  {new Date(item.date).toLocaleDateString()}
+                                </CTableHeaderCell>
+                                <CTableDataCell>
+                                  {item.transactionId}
+                                </CTableDataCell>
+                                <CTableDataCell>{item.doneTo}</CTableDataCell>
+                                <CTableDataCell>
+                                  {item.User.firstName +
+                                    ' ' +
+                                    item.User.lastName}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {item.accountType}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {Number(item.amount).toLocaleString()}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {item.description}
+                                </CTableDataCell>
+                              </CTableRow>
+                            )
+                          })
+                      : null}
+                  </CTableBody>
+                </CTable>
+                {transactions.length !== 0 ? (
+                  <Pagination
+                    postsPerPage={perpage}
+                    totalPosts={transactions.length}
+                    paginate={paginate}
+                  />
+                ) : null}
+              </div>
+            </div>
+          )
+        ) : (
+          <React.Fragment>
+            <InvoiceHeader title="Cash flow" />
+            <CashRecords
+              time={time}
+              myDates={myDates}
+              transactions={transactions}
+              balance={balance}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </React.Fragment>
+        )}
+      </div>
+    </div>
   )
 })
 
 export default CashReport
+
+// <div style={{ display: 'none' }}>
+//         <div ref={ref || componentRef}>
+//           <InvoiceHeader title="Cash flow" />
+//           <CashRecords
+//             time={time}
+//             myDates={myDates}
+//             transactions={transactions}
+//             startDate={startDate}
+//             endDate={endDate}
+//           />
+//           <PrintFooterNoSignatures />
+//         </div>
+//       // </div>

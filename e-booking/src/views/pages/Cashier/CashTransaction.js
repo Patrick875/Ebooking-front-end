@@ -22,7 +22,6 @@ const CashTransaction = () => {
   const { register, handleSubmit, watch, reset } = useForm()
   const type = watch('type') || 'credit'
   const creditTransaction = async (data) => {
-    // delete data.type
     await instance
       .post('/cashflow/credit', data)
       .then(() => {
@@ -33,7 +32,6 @@ const CashTransaction = () => {
       })
   }
   const debitTransaction = async (data) => {
-    //delete data.type
     await instance
       .post('/cashflow/debit', data)
       .then((res) => {
@@ -44,7 +42,6 @@ const CashTransaction = () => {
       })
   }
   const onSubmit = async (data) => {
-    console.log('dkasld', data)
     if (type === 'credit') {
       await creditTransaction(data)
     } else if (type === 'debit') {

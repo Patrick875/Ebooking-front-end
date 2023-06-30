@@ -46,8 +46,8 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       sortable: false,
       hide: (params) => params.rowIndex === StockPurchaseOrderDetails.length,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       valueSetter: (params) => {
         const updateRow = {
           ...params.row,
@@ -67,8 +67,8 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       field: 'quantity',
       headerName: 'Qty',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       hide: true,
       sortable: false,
@@ -94,8 +94,8 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       field: 'price',
       headerName: 'P.U',
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       editable: true,
       hide: true,
       sortable: false,
@@ -182,7 +182,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
               columns={columns}
               hideFooter={true}
               sx={{
-                fontSize: 24,
+                fontSize: 18,
                 '& .MuiDataGrid-cell': {
                   border: '2px solid black ',
                 },

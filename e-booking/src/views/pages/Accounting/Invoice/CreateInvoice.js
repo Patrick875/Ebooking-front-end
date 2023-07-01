@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import {
-  CButton,
   CCard,
   CCol,
   CForm,
@@ -16,31 +15,54 @@ import { instance } from 'src/API/AxiosInstance'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import BackButton from 'src/components/Navigating/BackButton'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
-import { DataGrid } from '@mui/x-data-grid'
 import { v4 as uuidv4 } from 'uuid'
 import numberToWords from 'number-to-words'
-import ReactDatePicker from 'react-datepicker'
+import EditableTable from 'src/components/EditableTable'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 
 const CreateInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { register, getValues, watch, reset } = useForm()
-  const quantity = watch('quantity')
-  const price = watch('price')
-  const name = watch('name')
-  const type = watch('outside.clientType') || ''
-  const role = watch('outside.function') || ''
+  const { register, watch, reset } = useForm()
   const currency = watch('outside.currency') || ''
-  const clientName = watch('outside.clientName') || ''
   const VAT = watch('VAT') || ''
   const VATconstant = 18
   const [view, setView] = useState(false)
   const [date, setDate] = useState(new Date())
-  let [requestItems, setRequestItems] = useState([])
   const [created, setCreated] = useState({})
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
-
+  const initialRows = [
+    {
+      id: uuidv4(),
+      name: '',
+      quantity: '',
+      times: '',
+      price: '',
+    },
+    {
+      id: uuidv4(),
+      name: '',
+      quantity: '',
+      times: '',
+      price: '',
+    },
+    {
+      id: uuidv4(),
+      name: '',
+      quantity: '',
+      times: '',
+      price: '',
+    },
+    {
+      id: uuidv4(),
+      name: '',
+      quantity: '',
+      times: '',
+      price: '',
+    },
+  ]
+  let [requestItems, setRequestItems] = useState([...initialRows])
   const createInvoice = async (data) => {
     await instance
       .post('/invoices/add', data)
@@ -64,189 +86,20 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const finalTotal =
     requestItems.length !== 0
       ? VAT === 'exclusive'
-        ? Number(orderTotal + amountVAT)
-        : Number(orderTotal - amountVAT)
+        ? Number(orderTotal - amountVAT)
+        : Number(orderTotal + amountVAT)
       : 0
-  const dontAdd =
-    !quantity ||
-    quantity === '' ||
-    !name ||
-    name === '' ||
-    !price ||
-    price === ''
-      ? true
-      : false
-  const onAdd = (data) => {
-    data.id = uuidv4()
-    data.date = date
-    setRequestItems([...requestItems, data])
-    reset({ name: '', quantity: '', price: '' })
-  }
+  const clientData = watch('outside')
   const submitRequest = () => {
     let data
-    const outsideData =
-      requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
-    requestItems = requestItems.map((requestItem) => {
-      requestItem.unitPrice = requestItem.price
-      delete requestItem.outside
-      return { ...requestItem }
-    })
+    const outsideData = clientData
+    requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
+    requestItems = removeObjectsWithEmptyProperties(requestItems)
+
     data = { ...outsideData, details: requestItems }
     createInvoice(data)
   }
 
-  const columns = [
-    {
-      headerName: 'Date',
-      field: 'date',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      editable: false,
-      type: 'date',
-      valueGetter: (params) => {
-        if (params.row.date) {
-          return params.row.date
-        } else {
-          return ''
-        }
-      },
-    },
-    {
-      headerName: 'Description',
-      field: 'name',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 250,
-      sortable: false,
-      editable: true,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          name: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, name: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      sortable: false,
-      editable: true,
-      hide: (params) => params.rowIndex === requestItems.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          quantity: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, quantity: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'times',
-      headerName: 'times',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: true,
-      sortable: false,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          times: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, times: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: true,
-      sortable: false,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          price: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, price: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.quantity * params.row.price * params.row.times) ||
-          params.row.total
-        } `,
-    },
-  ]
-
-  const valueRow = {
-    id: 3000,
-    name: 'VALUE',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: orderTotal,
-  }
-  const vatRow = {
-    id: 2000,
-    name: 'VAT',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: amountVAT,
-  }
-  const totalRow = {
-    id: 1000,
-    name: 'Total',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: finalTotal,
-  }
   return (
     <div>
       <div className="d-flex justify-content-between">
@@ -266,7 +119,26 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                     setView(false)
                   }}
                 >
-                  Add more items
+                  Client Details
+                </p>
+
+                <p
+                  className="text-primary"
+                  onClick={() =>
+                    setRequestItems([
+                      ...requestItems,
+                      {
+                        id: uuidv4(),
+                        date: '',
+                        name: '',
+                        quantity: '',
+                        times: '',
+                        price: '',
+                      },
+                    ])
+                  }
+                >
+                  Add row
                 </p>
                 {requestItems && requestItems.length !== 0 ? (
                   <p
@@ -382,69 +254,16 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                     </CCol>
                     <CCol md={6}>
                       <div>
-                        <CFormLabel htmlFor="pax"> Number of PAX </CFormLabel>
-                        <CFormInput
-                          type="number"
-                          min={0}
-                          name="pax"
-                          id="pax"
-                          placeholder="...pax"
-                          defaultvalue={1}
-                          required
-                          {...register('times')}
-                        />
-                      </div>
-                    </CCol>
-                    <CCol md={6}>
-                      <div>
-                        <CFormLabel htmlFor="itemName"> Item name </CFormLabel>
+                        <CFormLabel htmlFor="function"> PAX </CFormLabel>
                         <CFormInput
                           type="text"
-                          name="itemName"
-                          id="itemName"
-                          placeholder="...item "
+                          name="PAX"
+                          id="PAX"
+                          placeholder="...PAX"
                           required
-                          {...register('name')}
+                          {...register('outside.PAX')}
                         />
                       </div>
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="quantity"> Times </CFormLabel>
-                      <CFormInput
-                        type="number"
-                        min={0}
-                        name="quantity"
-                        id="quantity"
-                        placeholder="50  "
-                        required
-                        {...register('quantity')}
-                      />
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
-                      <CFormInput
-                        type="number"
-                        min={0}
-                        name="price"
-                        id="price"
-                        placeholder="item price in RWF"
-                        required
-                        {...register('price')}
-                      />
-                    </CCol>
-
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="date"> Date</CFormLabel>
-                      <ReactDatePicker
-                        className="form-control"
-                        timeFormat="p"
-                        selected={date}
-                        minDate={new Date()}
-                        dateFormat="dd/MM/yyyy"
-                        popperPlacement="bottom-end"
-                        onChange={(date) => setDate(date)}
-                        placeholderText="Select a date other than  yesterday"
-                      />
                     </CCol>
                     <CCol md={6}>
                       <CFormLabel htmlFor="unit"> VAT </CFormLabel>
@@ -462,71 +281,51 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  <CCol xs={12} className="mt-3">
-                    <CButton
-                      component="input"
-                      value="Add item"
-                      disabled={dontAdd}
-                      onClick={() => {
-                        const data = getValues()
-                        return onAdd(data)
-                      }}
-                    />
-                  </CCol>
                 </CForm>
               </CCard>
             ) : (
-              <div ref={ref || componentRef}>
-                <InvoiceHeader />
-                <p className="text-center text-uppercase my-3 fw-bold">
-                  Invoice N &#176; {created ? created.invoiceGenerated : null}
-                </p>
-                <div className="col d-flex flex-row border border-2 border-dark">
-                  <div className="col p-2 my-0">
-                    <div className="my-0">
-                      <p className="my-0">
-                        {type}: {clientName}
-                      </p>
-                      <p className="my-0">Function: {role}</p>
-                      <p className="my-0">Number of Pax: </p>
-                    </div>
+              <div>
+                <div ref={ref || componentRef} className="accounting">
+                  <InvoiceHeader />
+                  <p className="text-center text-uppercase my-3 fw-bold">
+                    Invoice N &#176; {created ? created.invoiceGenerated : null}
+                  </p>
+                  <div className="col d-flex flex-row border border-2 border-dark">
+                    <div className="col p-2 my-0">
+                      <div className="my-0">
+                        <p className="my-0">
+                          {clientData.clientType}: {clientData.clientName}
+                        </p>
+                        <p className="my-0">Function: {clientData.function}</p>
+                        <p className="my-0">Number of Pax: {clientData.PAX} </p>
+                      </div>
 
-                    <p className="col-4 my-0">
-                      <span className="fw-bold">DATE : </span>{' '}
-                      {new Date().toLocaleDateString()}
+                      <p className="col-4 my-0">
+                        <span className="fw-bold">DATE : </span>{' '}
+                        {new Date().toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="my-0 py-1 px-0 mx-0">
+                    <div className="d-flex justify-content-around my-0 py-0 mx-0 py-0">
+                      <div className="col px-0 mx-0">
+                        <EditableTable
+                          data={[...requestItems]}
+                          setData={setRequestItems}
+                          readOnly={false}
+                        />
+                      </div>
+                    </div>
+                    <p className="text-capitalize">
+                      <span className="fw-bold"> Total in words : </span>
+                      {finalTotal
+                        ? numberToWords.toWords(finalTotal)
+                        : null}{' '}
+                      {currency !== 'USD' ? 'Rwandan Francs' : 'US Dollars'}
                     </p>
                   </div>
+                  <InvoiceFooter />
                 </div>
-                <div className="my-1 py-1">
-                  <div className="d-flex justify-content-around my-0 py-0">
-                    <div className="col">
-                      <DataGrid
-                        rows={[...requestItems, valueRow, vatRow, totalRow]}
-                        columns={columns}
-                        hideFooter={true}
-                        sx={{
-                          '& .MuiDataGrid-cell': {
-                            border: '2px solid black ',
-                          },
-                          '& .MuiDataGrid-columnHeader': {
-                            border: '2px solid black ',
-                          },
-                        }}
-                        getColumnProps={(params) => ({
-                          style: {
-                            display: params.row.id === 1000 ? 'none' : 'flex',
-                          },
-                        })}
-                      />
-                    </div>
-                  </div>
-                  <p className="text-capitalize">
-                    <span className="fw-bold"> Total in words : </span>
-                    {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
-                    {currency !== 'USD' ? 'Rwandan Francs' : 'US Dollars'}
-                  </p>
-                </div>
-                <InvoiceFooter />
               </div>
             )}
           </div>

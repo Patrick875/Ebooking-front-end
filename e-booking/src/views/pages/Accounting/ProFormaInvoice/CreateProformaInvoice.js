@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import {
-  CButton,
   CCard,
   CCol,
   CForm,
@@ -18,9 +17,12 @@ import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import DatePicker from 'react-datepicker'
-import { DataGrid } from '@mui/x-data-grid'
 import { v4 as uuidv4 } from 'uuid'
+
 import numberToWords from 'number-to-words'
+import EditableTable from 'src/components/EditableTable'
+import { initialRows } from 'src/utils/constants'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -28,15 +30,15 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const quantity = watch('quantity')
   const price = watch('price')
   const name = watch('name')
-  const type = watch('outside.clientType') || ''
   const role = watch('outside.function') || ''
   const currency = watch('outside.currency') || ''
-  const clientName = watch('outside.clientName') || ''
+
+  const clientData = watch('outside')
   const VAT = watch('VAT') || ''
   const VATconstant = 18
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
-  let [requestItems, setRequestItems] = useState([])
+  let [requestItems, setRequestItems] = useState([...initialRows])
   let [view, setView] = useState(false)
   const [date, setDate] = useState(new Date())
   const [created, setCreated] = useState({})
@@ -62,22 +64,11 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
     quantity === '' ||
     Number(quantity) < 0
 
-  const onAdd = (data) => {
-    data.id = uuidv4()
-    data.date = date
-    setRequestItems([...requestItems, data])
-    reset({ name: '', quantity: '', price: '', pax: '' })
-  }
   const submitRequest = () => {
     let data
-    const outsideData =
-      requestItems && requestItems.length !== 0 ? requestItems[0].outside : {}
-    requestItems = requestItems.map((requestItem) => {
-      requestItem.unitPrice = requestItem.price
-      delete requestItem.outside
-      return { ...requestItem }
-    })
-
+    const outsideData = clientData
+    requestItems = removeObjectsWithEmptyProperties(requestItems)
+    requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
     data = {
       ...outsideData,
       details: requestItems,
@@ -106,158 +97,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
         ? Number(orderTotal + amountVAT)
         : Number(orderTotal - amountVAT)
       : 0
-  const columns = [
-    {
-      headerName: 'Date',
-      field: 'date',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      editable: false,
-      type: date,
-      valueGetter: (params) => {
-        if (params.row.date) {
-          return params.row.date.toLocaleDateString()
-        } else {
-          return ''
-        }
-      },
-    },
-    {
-      headerName: 'Description',
-      field: 'name',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 250,
-      sortable: false,
-      editable: true,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          name: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, name: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      sortable: false,
-      editable: true,
-      hide: (params) => params.rowIndex === requestItems.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          quantity: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, quantity: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'times',
-      headerName: 'times',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: true,
-      sortable: false,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          times: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, times: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: true,
-      sortable: false,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          price: params.value,
-        }
-        let newRows = requestItems.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, price: params.value }
-            : item,
-        )
-        setRequestItems([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.quantity * params.row.price * params.row.times) ||
-          params.row.total
-        } `,
-    },
-  ]
 
-  const valueRow = {
-    id: 3000,
-    name: 'VALUE',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: orderTotal,
-  }
-  const vatRow = {
-    id: 2000,
-    name: 'VAT',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: amountVAT,
-  }
-  const totalRow = {
-    id: 1000,
-    name: 'Total',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: finalTotal,
-  }
   return (
     <div>
       <div className="d-flex justify-content-between">
@@ -277,7 +117,25 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                     setView(false)
                   }}
                 >
-                  Add more items
+                  Client details
+                </p>
+                <p
+                  className="text-primary"
+                  onClick={() =>
+                    setRequestItems([
+                      ...requestItems,
+                      {
+                        id: uuidv4(),
+                        date: '',
+                        name: '',
+                        quantity: '',
+                        times: '',
+                        price: '',
+                      },
+                    ])
+                  }
+                >
+                  Add row
                 </p>
                 {requestItems && requestItems.length !== 0 ? (
                   <p
@@ -398,59 +256,9 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           id="quantity"
                           placeholder="...quantity"
                           required
-                          {...register('quantity')}
+                          {...register('outside.PAX')}
                         />
                       </div>
-                    </CCol>
-                    <CCol md={6}>
-                      <div>
-                        <CFormLabel htmlFor="itemName"> Item </CFormLabel>
-                        <CFormInput
-                          type="text"
-                          name="itemName"
-                          id="itemName"
-                          placeholder=".. "
-                          required
-                          {...register('name')}
-                        />
-                      </div>
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="times"> Times</CFormLabel>
-                      <CFormInput
-                        type="number"
-                        min={0}
-                        defaultValue={1}
-                        name="times"
-                        id="times"
-                        placeholder=".. "
-                        required
-                        {...register('times')}
-                      />
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
-                      <CFormInput
-                        type="number"
-                        min={0}
-                        name="price"
-                        id="price"
-                        placeholder="item price in RWF"
-                        {...register('price')}
-                      />
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="date"> Date</CFormLabel>
-                      <DatePicker
-                        className="form-control"
-                        timeFormat="p"
-                        selected={date}
-                        minDate={new Date()}
-                        dateFormat="dd/MM/yyyy"
-                        popperPlacement="bottom-end"
-                        onChange={(date) => setDate(date)}
-                        placeholderText="Select a date other than  yesterday"
-                      />
                     </CCol>
                     <CCol md={6}>
                       <CFormLabel htmlFor="VAT"> VAT </CFormLabel>
@@ -459,7 +267,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         id="VAT"
                         className="mb-3"
                         aria-label="VAT"
-                        {...register('VAT', { required: true })}
+                        {...register('outside.VAT', { required: true })}
                       >
                         <option value="inclusive" selected>
                           Inclusive
@@ -500,17 +308,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       />
                     </CCol>
                   </CRow>
-                  <CCol xs={12} className="mt-3">
-                    <CButton
-                      component="input"
-                      value="Add item"
-                      disabled={dontAdd}
-                      onClick={() => {
-                        const data = getValues()
-                        return onAdd(data)
-                      }}
-                    />
-                  </CCol>
                 </CForm>
               </CCard>
             ) : (
@@ -525,15 +322,13 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       <div className="col p-2 my-0">
                         <div className="my-0">
                           <p className="fw-bolder text-capitalize my-0">
-                            {type} : {clientName}
+                            {clientData.clientType} : {clientData.clientName}
                           </p>
 
                           <p className="my-0">Function:{role} </p>
                           <p className="my-0">
                             Number of Pax:
-                            {requestItems
-                              ? requestItems.map((el, i) => ` ${el.quantity}`)
-                              : null}{' '}
+                            {clientData.PAX}
                           </p>
                         </div>
                         {request ? (
@@ -563,23 +358,10 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                 <div>
                   <div className="d-flex justify-content-around my-0 py-0">
                     <div className="col">
-                      <DataGrid
-                        rows={[...requestItems, valueRow, vatRow, totalRow]}
-                        columns={columns}
-                        hideFooter={true}
-                        sx={{
-                          '& .MuiDataGrid-cell': {
-                            border: '2px solid black ',
-                          },
-                          '& .MuiDataGrid-columnHeader': {
-                            border: '2px solid black ',
-                          },
-                        }}
-                        getColumnProps={(params) => ({
-                          style: {
-                            display: params.row.id === 1000 ? 'none' : 'flex',
-                          },
-                        })}
+                      <EditableTable
+                        data={[...requestItems]}
+                        setData={setRequestItems}
+                        readOnly={false}
                       />
                     </div>
                   </div>

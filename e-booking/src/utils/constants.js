@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 export const currencies = {
   AED: 'United Arab Emirates Dirham',
   AFN: 'Afghan Afghani',
@@ -465,4 +467,43 @@ export const units = [
   { name: 'box', symbol: 'Box' },
   { name: 'boite', symbol: 'Boite' },
   { name: 'bun', symbol: 'Bun' },
+]
+
+export const initialRows = [
+  {
+    id: uuidv4(),
+    name: '',
+    description: '',
+    unitPrice: '',
+    quantity: '',
+    times: '',
+    price: '',
+  },
+  {
+    id: uuidv4(),
+    name: '',
+    quantity: '',
+    times: '',
+    description: '',
+    unitPrice: '',
+    price: '',
+  },
+  {
+    id: uuidv4(),
+    name: '',
+    quantity: '',
+    times: '',
+    description: '',
+    unitPrice: '',
+    price: '',
+  },
+  {
+    id: uuidv4(),
+    name: '',
+    quantity: '',
+    times: '',
+    description: '',
+    unitPrice: '',
+    price: '',
+  },
 ]

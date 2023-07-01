@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 import { CCol } from '@coreui/react'
-import { DataGrid } from '@mui/x-data-grid'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
@@ -10,6 +9,7 @@ import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
 import numberToWords from 'number-to-words'
+import EditableTable from 'src/components/EditableTable'
 
 const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -43,6 +43,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       .then((res) => {
         toast.success('success')
         setCreated(res.data.data)
+        console.log('rese', res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -52,120 +53,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const VATconstant = useSelector((state) =>
     state.constants.constants.filter((constant) => constant.name === 'VAT'),
   )[0] || { value: 0, name: 'VAT' }
-  const columns = [
-    {
-      headerName: 'Date',
-      field: 'date',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 150,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) => {
-        if (params.row.date) {
-          return new Date(params.row.date).toLocaleDateString()
-        } else {
-          return ''
-        }
-      },
-    },
-    {
-      headerName: 'Description',
-      field: 'description',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      editable: false,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      sortable: false,
-      editable: true,
-      hide: (params) => params.rowIndex === rows.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          date: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, date: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'times',
-      headerName: 'times',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: true,
-      hide: (params) => params.rowIndex === rows.length,
-      sortable: false,
-      valueGetter: (params) => `${params.row.times}`,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          times: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, times: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'unitPrice',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: true,
-      sortable: false,
-      hide: (params) => params.rowIndex === rows.length,
-      valueGetter: (params) => `${params.row.unitPrice}`,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          unitPrice: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, unitPrice: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(
-            params.row.quantity * params.row.unitPrice * params.row.times,
-          ) ||
-          params.row.total ||
-          0
-        } `,
-    },
-  ]
+
   const value =
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.unitPrice * b.quantity * b.times), 0)
@@ -240,23 +128,10 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
               <div xs={12}>
                 <div className="mb-4">
                   <div>
-                    <DataGrid
-                      rows={[...rows, valueRow, vatRow, totalRow]}
-                      columns={columns}
-                      hideFooter={true}
-                      sx={{
-                        '& .MuiDataGrid-cell': {
-                          border: '2px solid black ',
-                        },
-                        '& .MuiDataGrid-columnHeader': {
-                          border: '2px solid black ',
-                        },
-                      }}
-                      getColumnProps={(params) => ({
-                        style: {
-                          display: isLastRow(params) ? 'none' : 'flex',
-                        },
-                      })}
+                    <EditableTable
+                      data={rows}
+                      setData={setRows}
+                      readOnly={false}
                     />
                   </div>
                   <p className="text-capitalize">

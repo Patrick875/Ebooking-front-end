@@ -10,12 +10,15 @@ import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
 import numberToWords from 'number-to-words'
+import EditableTable from 'src/components/EditableTable'
+import { initialRows } from 'src/utils/constants'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 
 const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const proforma = useSelector((state) => state.selection.selected)
   const data = useSelector((state) => state.selection.selected.ProformaDetails)
-  const [rows, setRows] = useState([...data])
+  const [rows, setRows] = useState([...data, ...initialRows])
   const [created, setCreated] = useState()
   const submitRequest = async () => {
     let data
@@ -25,10 +28,11 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       function: proforma.function,
       currency: proforma.currency,
     }
-    const allData = rows.map((el) => ({
+    let allData = rows.map((el) => ({
       ...el,
       VAT: 'Inclusive',
     }))
+    allData = removeObjectsWithEmptyProperties(allData)
     data = { ...outsideData, details: allData }
 
     await instance
@@ -44,131 +48,6 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const VATconstant = useSelector((state) =>
     state.constants.constants.filter((constant) => constant.name === 'VAT'),
   )[0] || { value: 0, name: 'VAT' }
-  const columns = [
-    {
-      headerName: 'Date',
-      field: 'date',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      editable: true,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          date: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, date: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-      valueGetter: (params) => {
-        if (params.row.date) {
-          return new Date(params.row.date).toLocaleDateString()
-        } else {
-          return ''
-        }
-      },
-    },
-    {
-      headerName: 'Description',
-      field: 'name',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      editable: false,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      sortable: false,
-      editable: true,
-      hide: (params) => params.rowIndex === rows.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          quantity: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, quantity: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'times',
-      headerName: 'times',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: true,
-      hide: (params) => params.rowIndex === rows.length,
-      sortable: false,
-      valueGetter: (params) => `${params.row.times}`,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          times: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, times: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: true,
-      sortable: false,
-      hide: (params) => params.rowIndex === rows.length,
-      valueGetter: (params) => `${params.row.price}`,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          price: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, price: params.value }
-            : item,
-        )
-        setRows([...newRows])
-        return updateRow
-      },
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.quantity * params.row.price * params.row.times) ||
-          params.row.total ||
-          0
-        } `,
-    },
-  ]
   const value =
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.price * b.quantity * b.times), 0)
@@ -177,40 +56,6 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const amountVAT = Number((value * VATconstant.value) / 100)
   const total =
     VAT === 'exclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
-  const valueRow = {
-    id: 3000,
-    name: 'VALUE',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    quantity: '',
-    times: '',
-    price: '',
-    total: value,
-  }
-  const vatRow = {
-    id: 2000,
-    name: 'VAT',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    quantity: '',
-    times: '',
-    price: '',
-    total: amountVAT,
-  }
-  const totalRow = {
-    id: 1000,
-    name: 'Total',
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    quantity: '',
-    times: '',
-    price: '',
-    total: total,
-  }
-  const isLastRow = (params) => params.row.id === totalRow.id
 
   return (
     <div>
@@ -237,46 +82,31 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
               content={() => ref || componentRef.current}
             />
           </div>
-          <PrintTemplateInvoice ref={ref || componentRef}>
-            <p className="text-center text-uppercase my-3 fw-bold">
-              Invoice N &#176; {created ? created.invoiceGenerated : null}
-            </p>
-            <ClientDetails
-              details={proforma.ProformaDetails}
-              request={proforma}
-            />
-            <div>
-              <div xs={12} className="my-0 py-0">
-                <DataGrid
-                  sx={{
-                    '& .MuiDataGrid-cell': {
-                      border: '2px solid black ',
-                    },
-                    '& .MuiDataGrid-columnHeader': {
-                      border: '2px solid black ',
-                    },
-                  }}
-                  rows={[...rows, valueRow, vatRow, totalRow]}
-                  columns={columns}
-                  hideFooter={true}
-                  getColumnProps={(params) => ({
-                    style: {
-                      display: isLastRow(params) ? 'none' : 'flex',
-                    },
-                  })}
-                />
-              </div>
-              <p className="text-capitalize">
-                <span className="fw-bold"> Total in words : </span>
-                {total ? numberToWords.toWords(total) : null}{' '}
-                {proforma.currency !== 'USD'
-                  ? ' Rwandan Francs '
-                  : ' US Dollars '}
+          <div className="px-0 mx-0 my-0 mx-0 accounting">
+            <PrintTemplateInvoice ref={ref || componentRef}>
+              <p className="text-center text-uppercase my-3 fw-bold">
+                Invoice N &#176; {created ? created.invoiceGenerated : null}
               </p>
-            </div>
+              <ClientDetails
+                details={proforma.ProformaDetails}
+                request={proforma}
+              />
+              <div>
+                <div xs={12} className="my-0 py-0">
+                  <EditableTable data={rows} setData={setRows} />
+                </div>
+                <p className="text-capitalize">
+                  <span className="fw-bold"> Total in words : </span>
+                  {total ? numberToWords.toWords(total) : null}{' '}
+                  {proforma.currency !== 'USD'
+                    ? ' Rwandan Francs '
+                    : ' US Dollars '}
+                </p>
+              </div>
 
-            <InvoiceFooter />
-          </PrintTemplateInvoice>
+              <InvoiceFooter />
+            </PrintTemplateInvoice>
+          </div>
         </div>
       </CCol>
     </div>

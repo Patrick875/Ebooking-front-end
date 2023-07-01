@@ -1,96 +1,28 @@
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { DataGrid } from '@mui/x-data-grid'
 import BackButton from 'src/components/Navigating/BackButton'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
 import { useNavigate } from 'react-router-dom'
 import ClientDetails from '../../Printing/ClientDetails'
+import EditableTable from 'src/components/EditableTable'
+import { initialRows } from 'src/utils/constants'
 
 const ViewDeliveryNote = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const navigate = useNavigate()
   const request = useSelector((state) => state.selection.selected)
+  console.log('requets', request)
   let DeliveryNoteDetails
   if (request && request.DeliveryNoteDetails) {
     DeliveryNoteDetails = request.DeliveryNoteDetails
   }
   const orderTotal = request && request.total ? request.total : 0
-  const [rows] = useState(request.DeliveryNoteDetails)
-  const columns = [
-    {
-      headerName: 'Date',
-      field: 'date',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) => {
-        if (params.row.date) {
-          return new Date(params.row.date).toLocaleDateString()
-        } else {
-          return ''
-        }
-      },
-    },
-    {
-      headerName: 'Description',
-      field: 'description',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 250,
-      sortable: false,
-      editable: false,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      sortable: false,
-      editable: false,
-      hide: (params) => params.rowIndex === rows.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-    },
-    {
-      field: 'times',
-      headerName: 'times',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: false,
-      hide: true,
-      sortable: false,
-    },
-    {
-      field: 'unitPrice',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: false,
-      hide: true,
-      sortable: false,
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(
-            params.row.quantity * params.row.unitPrice * params.row.times,
-          ) ||
-          params.row.total ||
-          0
-        } `,
-    },
-  ]
+  const [rows, setRows] = useState([
+    ...request.DeliveryNoteDetails,
+    ...initialRows,
+  ])
   const total = {
     id: 1000,
     description: 'Total',
@@ -102,7 +34,6 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
     unitPrice: '',
     total: orderTotal,
   }
-  const isLastRow = (params) => params.row.id === total.id
 
   return (
     <div>
@@ -139,24 +70,7 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
         <div className="my-3 py-3">
           <div className="d-flex justify-content-around">
             <div className="col">
-              <DataGrid
-                rows={[...rows, total]}
-                columns={columns}
-                hideFooter={true}
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    border: '2px solid black ',
-                  },
-                  '& .MuiDataGrid-columnHeader': {
-                    border: '2px solid black ',
-                  },
-                }}
-                getColumnProps={(params) => ({
-                  style: {
-                    display: isLastRow(params) ? 'none' : 'flex',
-                  },
-                })}
-              />
+              <EditableTable data={rows} setRows={setRows} readOnly={true} />
             </div>
           </div>
         </div>

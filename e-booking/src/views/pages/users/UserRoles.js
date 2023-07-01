@@ -39,7 +39,6 @@ const UserRoles = () => {
         .get('/roles/all')
         .then((res) => {
           setRoles(res.data.roles)
-          console.log('all roles', res.data.roles)
           toast.success('all roles available')
         })
         .catch((err) => {

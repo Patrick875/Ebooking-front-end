@@ -8,6 +8,8 @@ import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
 import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import numberToWords from 'number-to-words'
+import EditableTable from 'src/components/EditableTable'
+import { initialRows } from 'src/utils/constants'
 
 const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const navigate = useNavigate()
@@ -23,117 +25,9 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
 
   const orderTotal = request && request.total ? request.total : 0
   const amountVAT = Number((orderTotal * VATconstant.value) / 100)
-  const total =
-    proformaDetails[0].VAT === 'exclusive'
-      ? Number(orderTotal + amountVAT)
-      : Number(orderTotal - amountVAT)
-  const [rows] = useState(request.ProformaDetails)
-
-  const columns = [
-    {
-      headerName: 'Date',
-      field: 'date',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) => {
-        if (params.row.date) {
-          return new Date(params.row.date).toLocaleDateString()
-        } else {
-          return ''
-        }
-      },
-    },
-    {
-      headerName: 'Description',
-      field: 'name',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 250,
-      sortable: false,
-      editable: false,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      sortable: false,
-      editable: false,
-      hide: (params) => params.rowIndex === rows.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-    },
-    {
-      field: 'times',
-      headerName: 'times',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: false,
-      sortable: false,
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 120,
-      editable: false,
-      sortable: false,
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.quantity * params.row.price * params.row.times) ||
-          params.row.total
-        } `,
-    },
-  ]
-  const valueRow = {
-    id: 3000,
-    name: 'VALUE',
-    flex: 1,
-    minWidth: 150,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    times: '',
-    date: '',
-    total: orderTotal,
-  }
-  const vatRow = {
-    id: 2000,
-    name: 'VAT',
-    flex: 1,
-    minWidth: 150,
-    maxWidth: 300,
-    requestQuantity: '',
-    times: '',
-    date: '',
-    unitPrice: '',
-    total: amountVAT,
-  }
-  const totalRow = {
-    id: 1000,
-    name: 'Total',
-    flex: 1,
-    minWidth: 150,
-    maxWidth: 300,
-    times: '',
-    date: '',
-    requestQuantity: '',
-    unitPrice: '',
-    total: total,
-  }
-  const isLastRow = (params) => params.row.id === total.id
+  const total = Number(orderTotal + amountVAT)
+  console.log('total', { total, amountVAT, orderTotal, request })
+  const [rows, setRows] = useState([...request.ProformaDetails, ...initialRows])
 
   return (
     <div>
@@ -169,20 +63,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
           <ClientDetailsProForma details={proformaDetails} request={request} />
           <div className="col">
             <div className="col">
-              <DataGrid
-                rows={[...rows, valueRow, vatRow, totalRow]}
-                columns={columns}
-                hideFooter={true}
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    border: '2px solid black ',
-                  },
-                  '& .MuiDataGrid-columnHeader': {
-                    border: '2px solid black ',
-                  },
-                  fontSize: 18,
-                }}
-              />
+              <EditableTable data={rows} setData={setRows} readOnly={true} />
             </div>
             <p className="text-capitalize">
               <span className="fw-bold"> Total in words : </span>

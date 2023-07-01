@@ -189,3 +189,19 @@ export function groupElementsByTitle(arr) {
 
   return result
 }
+
+export function removeObjectsWithEmptyProperties(array) {
+  return array.filter(
+    (obj) => !Object.values(obj).some((value) => value === ''),
+  )
+}
+
+export function processObjects(array) {
+  for (let obj of array) {
+    const { name, price } = obj
+    obj.description = name
+    obj.unitPrice = price
+  }
+
+  return array
+}

@@ -27,14 +27,11 @@ import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, getValues, watch, reset } = useForm()
-  const quantity = watch('quantity')
-  const price = watch('price')
-  const name = watch('name')
+
   const role = watch('outside.function') || ''
   const currency = watch('outside.currency') || ''
-
   const clientData = watch('outside')
-  const VAT = watch('VAT') || ''
+  const VAT = clientData ? clientData.VAT : 'inclusive'
   const VATconstant = 18
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
@@ -45,6 +42,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   let request = {}
 
   const createInvoice = async (data) => {
+    console.log('submission', data)
     await instance
       .post('/proforma/add', data)
       .then((res) => {
@@ -56,14 +54,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       })
   }
 
-  const dontAdd =
-    Number(price) < 0 ||
-    !name ||
-    name === '' ||
-    !quantity ||
-    quantity === '' ||
-    Number(quantity) < 0
-
   const submitRequest = () => {
     let data
     const outsideData = clientData
@@ -74,7 +64,9 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       details: requestItems,
       dateIn: new Date(startDate.toString()).getTime(),
       dateOut: new Date(endDate.toString()).getTime(),
-      VAT: requestItems[0].VAT,
+      pax: outsideData.pax,
+      total: orderTotal,
+      vatTotal: finalTotal,
     }
     createInvoice(data)
   }
@@ -94,8 +86,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const finalTotal =
     requestItems.length !== 0
       ? VAT === 'exclusive'
-        ? Number(orderTotal + amountVAT)
-        : Number(orderTotal - amountVAT)
+        ? Number(orderTotal - amountVAT)
+        : Number(orderTotal + amountVAT)
       : 0
 
   return (
@@ -256,7 +248,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           id="quantity"
                           placeholder="...quantity"
                           required
-                          {...register('outside.PAX')}
+                          {...register('outside.pax')}
                         />
                       </div>
                     </CCol>
@@ -328,7 +320,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                           <p className="my-0">Function:{role} </p>
                           <p className="my-0">
                             Number of Pax:
-                            {clientData.PAX}
+                            {clientData.pax}
                           </p>
                         </div>
                         {request ? (

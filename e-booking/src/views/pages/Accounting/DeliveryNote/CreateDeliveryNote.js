@@ -50,6 +50,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
     let data
 
     const outsideData = clientData
+    outsideData.total = orderTotal
     requestItems = processObjects(requestItems)
     requestItems = removeObjectsWithEmptyProperties(requestItems)
     requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
@@ -65,17 +66,6 @@ const DeliveryNote = React.forwardRef((props, ref) => {
           0,
         )
       : 0
-
-  const total = {
-    id: 1000,
-    description: 'Total',
-    flex: 1,
-    unitPrice: '',
-    quantity: '',
-    minWidth: 200,
-    maxWidth: 300,
-    total: orderTotal,
-  }
 
   return (
     <div>
@@ -230,7 +220,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                           placeholder="...pax"
                           defaultValue={1}
                           required
-                          {...register('outside.Pax')}
+                          {...register('outside.pax')}
                         />
                       </div>
                     </CCol>
@@ -273,7 +263,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                         <p className="my-0">Function:{clientData.function} </p>
                         <p className="my-0">
                           Number of Pax:
-                          {clientData.Pax}
+                          {clientData.pax}
                         </p>
                       </div>
 

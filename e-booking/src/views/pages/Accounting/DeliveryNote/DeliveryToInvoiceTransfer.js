@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
 import numberToWords from 'number-to-words'
 import EditableTable from 'src/components/EditableTable'
+import { initialRowsDelivery } from 'src/utils/constants'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 
 const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -17,7 +19,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const data = useSelector(
     (state) => state.selection.selected.DeliveryNoteDetails,
   )
-  const [rows, setRows] = useState([...data])
+  const [rows, setRows] = useState([...data, ...initialRowsDelivery])
   let [requestItems] = useState([...deliveryNote.DeliveryNoteDetails])
   const [created, setCreated] = useState()
 
@@ -29,6 +31,9 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       function: deliveryNote.function,
       deliveryLink: deliveryNote.id,
       currency: deliveryNote.currency,
+      pax: deliveryNote.pax,
+      total: value,
+      vatTotal: total,
     }
     const allData = rows.map((el) => ({
       ...el,
@@ -36,20 +41,20 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       price: el.unitPrice,
       VAT: 'Inclusive',
     }))
-    data = { ...outsideData, details: allData }
-
+    const details = removeObjectsWithEmptyProperties(allData)
+    data = { ...outsideData, details }
     await instance
-      .post('/invoices/add', data)
+      .post('/invoices/add', { ...data })
       .then((res) => {
+        console.log('res', res)
         toast.success('success')
         setCreated(res.data.data)
-        console.log('rese', res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
+        console.log('err', err)
       })
   }
-
   const VATconstant = useSelector((state) =>
     state.constants.constants.filter((constant) => constant.name === 'VAT'),
   )[0] || { value: 0, name: 'VAT' }
@@ -58,39 +63,8 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.unitPrice * b.quantity * b.times), 0)
       : 0
-  const VAT = rows && rows.length !== 0 ? requestItems[0].VAT : 'inclusive'
-  const amountVAT = Number((value * VATconstant.value) / 100)
-  const total =
-    VAT === 'exclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
-  const valueRow = {
-    id: 3000,
-    description: 'VALUE',
-    width: 200,
-    quantity: '',
-    times: '',
-    unitPrice: '',
-    total: value,
-  }
-  const vatRow = {
-    id: 2000,
-    description: 'VAT',
-    width: 200,
-    quantity: '',
-    times: '',
-    unitPrice: '',
-    total: amountVAT,
-  }
-  const totalRow = {
-    id: 1000,
-    description: 'Total',
-    width: 200,
-    quantity: '',
-    times: '',
-    unitPrice: '',
-    total: total,
-  }
-  const isLastRow = (params) => params.row.id === totalRow.id
-
+  const amountVAT = Number((value * 18) / 100)
+  const total = Number(value + amountVAT)
   return (
     <div>
       <BackButton />
@@ -132,6 +106,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                       data={rows}
                       setData={setRows}
                       readOnly={false}
+                      type="delivery"
                     />
                   </div>
                   <p className="text-capitalize">

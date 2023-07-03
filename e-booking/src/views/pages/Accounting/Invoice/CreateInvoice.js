@@ -19,12 +19,14 @@ import { v4 as uuidv4 } from 'uuid'
 import numberToWords from 'number-to-words'
 import EditableTable from 'src/components/EditableTable'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import { initialRows } from 'src/utils/constants'
 
 const CreateInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, watch, reset } = useForm()
   const currency = watch('outside.currency') || ''
   const VAT = watch('VAT') || ''
+  const clientData = watch('outside')
   const VATconstant = 18
   const [view, setView] = useState(false)
   const [date, setDate] = useState(new Date())
@@ -32,36 +34,6 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
-  const initialRows = [
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-  ]
   let [requestItems, setRequestItems] = useState([...initialRows])
   const createInvoice = async (data) => {
     await instance
@@ -89,14 +61,19 @@ const CreateInvoice = React.forwardRef((props, ref) => {
         ? Number(orderTotal - amountVAT)
         : Number(orderTotal + amountVAT)
       : 0
-  const clientData = watch('outside')
+
   const submitRequest = () => {
     let data
     const outsideData = clientData
     requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
     requestItems = removeObjectsWithEmptyProperties(requestItems)
 
-    data = { ...outsideData, details: requestItems }
+    data = {
+      ...outsideData,
+      details: requestItems,
+      total: orderTotal,
+      vatTotal: finalTotal,
+    }
     createInvoice(data)
   }
 
@@ -261,7 +238,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           id="PAX"
                           placeholder="...PAX"
                           required
-                          {...register('outside.PAX')}
+                          {...register('outside.pax')}
                         />
                       </div>
                     </CCol>
@@ -297,7 +274,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                           {clientData.clientType}: {clientData.clientName}
                         </p>
                         <p className="my-0">Function: {clientData.function}</p>
-                        <p className="my-0">Number of Pax: {clientData.PAX} </p>
+                        <p className="my-0">Number of Pax: {clientData.pax} </p>
                       </div>
 
                       <p className="col-4 my-0">

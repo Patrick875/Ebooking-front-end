@@ -1,5 +1,5 @@
 const ClientDetailsProForma = (props) => {
-  const { details, request } = props
+  const { request } = props
   return (
     <div className="col d-flex flex-row border border-2 border-dark">
       <div className="col p-2 my-0">
@@ -10,12 +10,7 @@ const ClientDetailsProForma = (props) => {
             </p>
           ) : null}
           <p className="my-0">Function: {request.function}</p>
-          <p className="my-0">
-            Number of Pax:{' '}
-            {details.map((el, i, arr) =>
-              i !== arr.length - 1 ? `${el.quantity},` : `${el.times}`,
-            )}
-          </p>
+          <p className="my-0">Number of Pax:{request.pax}</p>
         </div>
         {request ? (
           <p className="col-4 my-0">

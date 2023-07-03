@@ -5,40 +5,84 @@ import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
 import { useNavigate } from 'react-router-dom'
-import ClientDetails from '../../Printing/ClientDetails'
 import EditableTable from 'src/components/EditableTable'
-import { initialRows } from 'src/utils/constants'
+import { initialRowsDelivery } from 'src/utils/constants'
+import { useForm } from 'react-hook-form'
+import { instance } from 'src/API/AxiosInstance'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import { toast } from 'react-hot-toast'
 
 const ViewDeliveryNote = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const navigate = useNavigate()
   const request = useSelector((state) => state.selection.selected)
-  console.log('requets', request)
+  const role = useSelector((state) => state.auth.user.Role.name)
+  const [readOnly, setReadOnly] = useState(true)
+  const { register, watch } = useForm({
+    defaultValues: {
+      clientDetails: {
+        clientName: request.clientName,
+        pax: request.pax,
+        function: request.function,
+        clientType: request.clientType,
+      },
+    },
+  })
+  const clientDetails = watch('clientDetails')
   let DeliveryNoteDetails
   if (request && request.DeliveryNoteDetails) {
     DeliveryNoteDetails = request.DeliveryNoteDetails
   }
-  const orderTotal = request && request.total ? request.total : 0
+
   const [rows, setRows] = useState([
     ...request.DeliveryNoteDetails,
-    ...initialRows,
+    ...initialRowsDelivery,
   ])
-  const total = {
-    id: 1000,
-    description: 'Total',
-    width: 200,
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    requestQuantity: '',
-    unitPrice: '',
-    total: orderTotal,
-  }
 
+  const updateInvoice = async () => {
+    const filtereDetails = removeObjectsWithEmptyProperties(rows)
+    await instance
+      .put('/deliveryNote/update', {
+        id: request.id,
+        clientDetails,
+        details: filtereDetails,
+      })
+      .then(() => {
+        setReadOnly(!readOnly)
+        toast.success('Delivery note updated successfuly')
+      })
+      .catch((err) => {
+        setReadOnly(!readOnly)
+        console.log('err', err)
+      })
+  }
   return (
     <div>
       <div className="d-flex justify-content-between">
         <BackButton />
+        {role === 'admin' || role === 'General Accountant' ? (
+          <div className="d-flex gap-2">
+            {!readOnly ? (
+              <button
+                className="btn btn-success"
+                onClick={() => {
+                  updateInvoice()
+                }}
+              >
+                Submit Update
+              </button>
+            ) : null}
+
+            <button
+              className="btn btn-ghost-dark"
+              onClick={() => {
+                setReadOnly(!readOnly)
+              }}
+            >
+              Update
+            </button>
+          </div>
+        ) : null}
         <button
           className="btn btn-ghost-primary"
           onClick={() => {
@@ -63,14 +107,78 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
         <p className="text-center my-1 text-uppercase fw-bold">
           Delivery note N &#176; {request.deliveryNoteId}
         </p>
-        <ClientDetails
-          request={request}
-          details={request.DeliveryNoteDetails}
-        />
+        <div className="col d-flex flex-row border border-2 border-dark">
+          <div className="col p-2 my-0">
+            <div className="my-0">
+              {request ? (
+                <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
+                  {request.clientType} :{' '}
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.clientName}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.clientName')}
+                      readOnly={readOnly}
+                      type="text"
+                    />
+                  </p>
+                </p>
+              ) : null}
+
+              <p className="my-0 d-flex gap-2">
+                Function:{' '}
+                <p className="py-0 my-0">
+                  <input
+                    defaultValue={request.function}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      width: '100%',
+                    }}
+                    {...register('clientDetails.function')}
+                    readOnly={readOnly}
+                    type="text"
+                  />
+                </p>
+              </p>
+              <p className="my-0 d-flex gap-2 ">
+                Number of Pax:
+                <p className="py-0 my-0">
+                  <input
+                    defaultValue={request.pax}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      width: '100%',
+                    }}
+                    {...register('clientDetails.pax')}
+                    readOnly={readOnly}
+                    type="number"
+                  />
+                </p>
+              </p>
+            </div>
+            {request ? (
+              <p className="col-4 my-0">
+                <span className="fw-bold">DATE : </span>{' '}
+                {new Date(request.createdAt).toLocaleDateString()}
+              </p>
+            ) : null}
+          </div>
+        </div>
         <div className="my-3 py-3">
           <div className="d-flex justify-content-around">
             <div className="col">
-              <EditableTable data={rows} setRows={setRows} readOnly={true} />
+              <EditableTable
+                data={rows}
+                setData={setRows}
+                readOnly={readOnly}
+                type="delivery"
+              />
             </div>
           </div>
         </div>

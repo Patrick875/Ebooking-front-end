@@ -130,6 +130,7 @@ function Invoice() {
       await instance
         .get('/invoices/all')
         .then((res) => {
+          console.log('invoices', res.data.data)
           setInvoices(res.data.data)
         })
         .catch((err) => {

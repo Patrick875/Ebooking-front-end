@@ -1,6 +1,7 @@
+import ReactDatePicker from 'react-datepicker'
 import '../scss/_editableTable.scss'
 
-const EditableTable = (props) => {
+const EditableTableWithDates = (props) => {
   let { data, setData, readOnly, hidePrice, type } = props
   const priceHiden = hidePrice || false
   const onChangeInput = (e, id) => {
@@ -83,6 +84,8 @@ const EditableTable = (props) => {
           {[...data].map(
             ({ id, name, description, quantity, times, price, unitPrice }) => (
               <tr key={id}>
+                <td>
+                 <ReactDatePicker/>
                 <td>
                   <input
                     name="name"
@@ -183,4 +186,4 @@ const EditableTable = (props) => {
   )
 }
 
-export default EditableTable
+export default EditableTableWithDates

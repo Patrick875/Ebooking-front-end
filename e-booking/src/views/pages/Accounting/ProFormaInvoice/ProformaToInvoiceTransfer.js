@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 import { CCol } from '@coreui/react'
-import { DataGrid } from '@mui/x-data-grid'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
@@ -13,6 +12,7 @@ import numberToWords from 'number-to-words'
 import EditableTable from 'src/components/EditableTable'
 import { initialRows } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -93,7 +93,7 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
               />
               <div>
                 <div xs={12} className="my-0 py-0">
-                  <EditableTable data={rows} setData={setRows} />
+                  <EditableTableWithDates data={rows} setData={setRows} />
                 </div>
                 <p className="text-capitalize">
                   <span className="fw-bold"> Total in words : </span>

@@ -13,6 +13,7 @@ import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import { instance } from 'src/API/AxiosInstance'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const navigate = useNavigate()
@@ -198,7 +199,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
           </div>
           <div className="col">
             <div className="col">
-              <EditableTable
+              <EditableTableWithDates
                 data={rows}
                 setData={setRows}
                 readOnly={readOnly}

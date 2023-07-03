@@ -3,6 +3,7 @@ import {
   CCol,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CRow,
   CTable,
   CTableBody,
@@ -16,7 +17,9 @@ import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { IoCreateOutline } from 'react-icons/io5'
+import { RiCheckLine } from 'react-icons/ri'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { Link, useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
@@ -29,41 +32,33 @@ import {
 } from 'src/utils/functions'
 import DeleteItemModel from '../DeleteItemModel'
 
-function ProformaInvoice() {
+function PurchaseOrderAcc() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { register, watch } = useForm()
   const query = watch('query') || ''
   const time = watch('time') || ''
-  let [clicked, setClicked] = useState()
-  let [visible, setVisible] = useState()
-  const [style, setStyle] = useState({ display: 'none' })
-  const [deleted, setDeleted] = useState()
-  let role = useSelector((state) => state.auth.user.Role.name)
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
+  const status = watch('status') || ''
   const onChange = (dates) => {
     const [start, end] = dates
     setStartDate(start)
     setEndDate(end)
   }
-  let myDates = datesInRangeWithUnix(startDate, endDate)
-
+  let stuff = []
   let [invoices, setInvoices] = useState([])
-
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
-  const handleOnRowClick = async (item) => {
-    dispatch(selectItem(item))
-    navigate('/booking/accounting/proformainvoice/view')
-  }
-  if (query && query !== '') {
-    invoices = invoices.filter((invoice) =>
-      invoice.proformaGenerated.toLowerCase().includes(query.toLowerCase()),
-    )
-  }
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  let [clicked, setClicked] = useState()
+  let [visible, setVisible] = useState()
+  const [style, setStyle] = useState({ display: 'none' })
+  const [deleted, setDeleted] = useState()
+  let role = useSelector((state) => state.auth.user.Role.name)
+  let myDates = datesInRangeWithUnix(startDate, endDate)
+
   if (
     invoices &&
     invoices.length !== 0 &&
@@ -76,20 +71,52 @@ function ProformaInvoice() {
         ? invoice
         : '',
     )
+  } else {
+    stuff =
+      invoices && invoices.length !== 0
+        ? invoices.filter((el, i) => {
+            if (currentPage === 1) {
+              return i >= 0 && i < perpage ? el : null
+            } else {
+              return i >= (currentPage - 1) * perpage &&
+                i <= perpage * currentPage - 1
+                ? el
+                : null
+            }
+          })
+        : []
   }
+
+  const handleOnRowClick = async (item) => {
+    dispatch(selectItem(item))
+    navigate('/booking/accounting/purchaseorder/view')
+  }
+  if (query && query !== '') {
+    invoices = invoices.filter(
+      (invoice) =>
+        invoice.POGenerated.toLowerCase().includes(query.toLowerCase()) ||
+        invoice.clientName.toLowerCase().includes(query.toLowerCase()),
+    )
+  }
+  invoices =
+    invoices && invoices.length !== 0 && status !== ''
+      ? invoices.filter((invoice) =>
+          invoice.status.toLowerCase().includes(status.toLowerCase()),
+        )
+      : invoices
 
   useEffect(() => {
     const getAllInvoice = async () => {
       await instance
-        .get('/proforma/all')
+        .get('/accounting/purchase/order/all')
         .then((res) => {
+          console.log('invoices', res.data.data)
           setInvoices(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
-
     getAllInvoice()
   }, [deleted])
 
@@ -102,7 +129,7 @@ function ProformaInvoice() {
               <Link
                 md={4}
                 className="btn btn-primary"
-                to="/booking/accounting/proformainvoice/create"
+                to="/booking/accounting/purchaseorder/create"
               >
                 <IoCreateOutline className="fs-5" />
                 Create
@@ -162,7 +189,7 @@ function ProformaInvoice() {
             </div>
           </CRow>
           <p className="text-center fs-4">
-            <strong> All Pro forma invoices </strong>
+            <strong> All invoices </strong>
           </p>
           <CTable bordered hover={true}>
             <CTableHead>
@@ -170,6 +197,7 @@ function ProformaInvoice() {
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">id</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Created by</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Client </CTableHeaderCell>
                 <CTableHeaderCell scope="col">Function</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Total</CTableHeaderCell>
@@ -199,10 +227,13 @@ function ProformaInvoice() {
                             handleOnRowClick(el)
                           }}
                         >
-                          {el.proformaGenerated}
+                          {el.POGenerated}
                         </CTableDataCell>
                         <CTableDataCell>
                           {new Date(el.createdAt).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {el.User.firstName + ' ' + el.User.lastName}
                         </CTableDataCell>
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>
@@ -215,8 +246,8 @@ function ProformaInvoice() {
                             setStyle({ display: 'none' })
                           }}
                         >
-                          {Number(el.total).toLocaleString()}{' '}
-                          {'  ' + el.currency}
+                          {Number(el.vatTotal).toLocaleString()}
+
                           {role &&
                           (role === 'admin' ||
                             role === 'General Accountant') ? (
@@ -242,7 +273,7 @@ function ProformaInvoice() {
               visible={visible && clicked ? visible : false}
               setVisible={setVisible}
               itemId={clicked ? clicked.id : null}
-              itemType="proforma"
+              itemType="purchaseOrder"
               setDeleted={setDeleted}
               item={clicked.deliveryNoteId}
             />
@@ -258,4 +289,4 @@ function ProformaInvoice() {
   )
 }
 
-export default ProformaInvoice
+export default PurchaseOrderAcc

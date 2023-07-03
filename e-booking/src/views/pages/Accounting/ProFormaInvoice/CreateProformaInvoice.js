@@ -23,6 +23,7 @@ import numberToWords from 'number-to-words'
 import EditableTable from 'src/components/EditableTable'
 import { initialRows } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -58,7 +59,10 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
     let data
     const outsideData = clientData
     requestItems = removeObjectsWithEmptyProperties(requestItems)
-    requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
+    requestItems = requestItems.map((el) => ({
+      ...el,
+      date: new Date(el.date.toString()).getTime(),
+    }))
     data = {
       ...outsideData,
       details: requestItems,
@@ -148,7 +152,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                       return submitRequest()
                     }}
                   >
-                    Submit invoice
+                    Submit
                   </p>
                 ) : null}
               </div>
@@ -350,7 +354,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                 <div>
                   <div className="d-flex justify-content-around my-0 py-0">
                     <div className="col">
-                      <EditableTable
+                      <EditableTableWithDates
                         data={[...requestItems]}
                         setData={setRequestItems}
                         readOnly={false}

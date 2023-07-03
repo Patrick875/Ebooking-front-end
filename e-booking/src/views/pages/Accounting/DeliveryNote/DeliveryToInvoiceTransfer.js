@@ -12,6 +12,7 @@ import numberToWords from 'number-to-words'
 import EditableTable from 'src/components/EditableTable'
 import { initialRowsDelivery } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -102,7 +103,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
               <div xs={12}>
                 <div className="mb-4">
                   <div>
-                    <EditableTable
+                    <EditableTableWithDates
                       data={rows}
                       setData={setRows}
                       readOnly={false}

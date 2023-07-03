@@ -191,9 +191,14 @@ export function groupElementsByTitle(arr) {
 }
 
 export function removeObjectsWithEmptyProperties(array) {
-  return array.filter(
-    (obj) => !Object.values(obj).some((value) => value === ''),
-  )
+  return array.filter((obj) => {
+    for (const key in obj) {
+      if (key !== 'date' && obj.hasOwnProperty(key) && obj[key] === '') {
+        return false
+      }
+    }
+    return true
+  })
 }
 
 export function processObjects(array) {

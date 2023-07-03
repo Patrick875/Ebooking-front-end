@@ -23,6 +23,7 @@ import {
   processObjects,
   removeObjectsWithEmptyProperties,
 } from 'src/utils/functions'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const DeliveryNote = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -274,7 +275,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                     </div>
                   </div>
                   <div className="col">
-                    <EditableTable
+                    <EditableTableWithDates
                       data={[...requestItems]}
                       setData={setRequestItems}
                       hidePrice={hidePrice}

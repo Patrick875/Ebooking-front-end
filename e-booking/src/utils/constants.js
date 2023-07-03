@@ -507,6 +507,7 @@ export const initialRows = [
     quantity: 0,
     times: 0,
     price: 0,
+    date: '',
   },
   {
     id: uuidv4(),
@@ -514,6 +515,7 @@ export const initialRows = [
     quantity: 0,
     times: 0,
     price: 0,
+    date: '',
   },
   {
     id: uuidv4(),
@@ -521,6 +523,7 @@ export const initialRows = [
     quantity: 0,
     times: 0,
     price: 0,
+    date: '',
   },
   {
     id: uuidv4(),
@@ -528,5 +531,6 @@ export const initialRows = [
     quantity: 0,
     times: 0,
     price: 0,
+    date: '',
   },
 ]

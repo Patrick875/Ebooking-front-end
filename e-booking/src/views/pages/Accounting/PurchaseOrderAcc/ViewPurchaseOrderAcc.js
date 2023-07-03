@@ -1,21 +1,21 @@
+import { CCardHeader } from '@coreui/react'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import BackButton from 'src/components/Navigating/BackButton'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
-import DeliveryFooter from '../../Printing/DeliveryFooter'
-import { useNavigate } from 'react-router-dom'
-import EditableTable from 'src/components/EditableTable'
-import { initialRowsDelivery } from 'src/utils/constants'
+import InvoiceFooter from '../../Printing/InvoiceFooter'
+import numberToWords from 'number-to-words'
+import { initialRows } from 'src/utils/constants'
 import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
-const ViewDeliveryNote = React.forwardRef((props, ref) => {
+const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const navigate = useNavigate()
+
   const request = useSelector((state) => state.selection.selected)
   const role = useSelector((state) => state.auth.user.Role.name)
   const [readOnly, setReadOnly] = useState(true)
@@ -30,70 +30,69 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
     },
   })
   const clientDetails = watch('clientDetails')
-  let DeliveryNoteDetails
-  if (request && request.DeliveryNoteDetails) {
-    DeliveryNoteDetails = request.DeliveryNoteDetails
+  let poDetails
+  if (request && request.InvoiceDetails) {
+    poDetails = request.PurchaseOrderAccountantDetails
   }
-
   const [rows, setRows] = useState([
-    ...request.DeliveryNoteDetails,
-    ...initialRowsDelivery,
+    ...request.PurchaseOrderAccountantDetails,
+    ...initialRows,
   ])
 
   const updateInvoice = async () => {
     const filtereDetails = removeObjectsWithEmptyProperties(rows)
     await instance
-      .put('/deliveryNote/update', {
+      .put('/accounting/purchase/order/update', {
         id: request.id,
         clientDetails,
         details: filtereDetails,
       })
       .then(() => {
         setReadOnly(!readOnly)
-        toast.success('Delivery note updated successfuly')
+        toast.success('Purchase order updated successfuly')
       })
       .catch((err) => {
         setReadOnly(!readOnly)
-        console.log('err', err)
       })
   }
+  console.log('req', request)
+  const orderTotal =
+    rows && rows.length !== 0
+      ? rows.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
+      : 0
+  const amountVAT = Number((orderTotal * 18) / 100)
+  const finalTotal = Number(orderTotal + amountVAT)
+
   return (
     <div>
-      <div className="d-flex justify-content-between">
+      <CCardHeader className="d-flex justify-content-between">
         <BackButton />
-        {role === 'admin' || role === 'General Accountant' ? (
-          <div className="d-flex gap-2">
-            {!readOnly ? (
+        <div className="d-flex justify-content-end gap-2">
+          {role === 'admin' || role === 'General Accountant' ? (
+            <div className="d-flex gap-2">
+              {!readOnly ? (
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    updateInvoice()
+                  }}
+                >
+                  Submit Update
+                </button>
+              ) : null}
+
               <button
-                className="btn btn-success"
+                className="btn btn-ghost-dark"
                 onClick={() => {
-                  updateInvoice()
+                  setReadOnly(!readOnly)
                 }}
               >
-                Submit Update
+                Update
               </button>
-            ) : null}
+            </div>
+          ) : null}
 
-            <button
-              className="btn btn-ghost-dark"
-              onClick={() => {
-                setReadOnly(!readOnly)
-              }}
-            >
-              Update
-            </button>
-          </div>
-        ) : null}
-        <button
-          className="btn btn-ghost-primary"
-          onClick={() => {
-            navigate('/booking/accounting/delivery/transfer')
-          }}
-        >
-          Transfer to invoice
-        </button>
-        <div className="d-flex justify-content-end">
-          {DeliveryNoteDetails && DeliveryNoteDetails.length !== 0 ? (
+          {poDetails && poDetails.length !== 0 ? (
             <ReactToPrint
               trigger={() => (
                 <button className="btn btn-ghost-primary">Print</button>
@@ -102,11 +101,12 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
             />
           ) : null}
         </div>
-      </div>
-      <div ref={ref || componentRef}>
-        <InvoiceHeader title="Delivery note" />
-        <p className="text-center my-1 text-uppercase fw-bold">
-          Delivery note N &#176; {request.deliveryNoteId}
+      </CCardHeader>
+
+      <div ref={ref || componentRef} className="accounting">
+        <InvoiceHeader />
+        <p className="text-center text-uppercase my-3 fw-bold">
+          Purchase order N &#176; {request.POGenerated}
         </p>
         <div className="col d-flex flex-row border border-2 border-dark">
           <div className="col p-2 my-0">
@@ -171,22 +171,26 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
             ) : null}
           </div>
         </div>
-        <div className="my-3 py-3">
-          <div className="d-flex justify-content-around">
-            <div className="col">
+        <div className="my-1 py-1">
+          <div className="d-flex justify-content-around my-0 py-0">
+            <div className="col ">
               <EditableTableWithDates
                 data={rows}
                 setData={setRows}
                 readOnly={readOnly}
-                type="delivery"
               />
             </div>
           </div>
+          <p className="text-capitalize">
+            <span className="fw-bold"> Total in words :</span>
+            {finalTotal ? numberToWords.toWords(finalTotal) : null}
+            {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
+          </p>
         </div>
-        <DeliveryFooter />
+        <InvoiceFooter />
       </div>
     </div>
   )
 })
 
-export default ViewDeliveryNote
+export default ViewPurchaseOrderAcc

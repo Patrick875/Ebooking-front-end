@@ -21,7 +21,7 @@ import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import { initialRows } from 'src/utils/constants'
 import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
-const CreateInvoice = React.forwardRef((props, ref) => {
+const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, watch, reset } = useForm()
   const currency = watch('outside.currency') || ''
@@ -35,12 +35,11 @@ const CreateInvoice = React.forwardRef((props, ref) => {
     setRequestItems([])
   }
   let [requestItems, setRequestItems] = useState([...initialRows])
-  const createInvoice = async (data) => {
+  const createPurchaseOrder = async (data) => {
     await instance
-      .post('/invoices/add', data)
+      .post('/accounting/purchase/order/add', data)
       .then((res) => {
         toast.success('Invoice created')
-        console.log(res)
         setCreated(res.data.data)
       })
       .catch((err) => {
@@ -76,7 +75,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       total: orderTotal,
       vatTotal: finalTotal,
     }
-    createInvoice(data)
+    createPurchaseOrder(data)
   }
 
   return (
@@ -84,7 +83,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       <div className="d-flex justify-content-between">
         <BackButton />
         <h5>
-          <strong> Create Invoice </strong>
+          <strong> Create Purchase order </strong>
         </h5>
       </div>
       <CRow>
@@ -138,7 +137,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                       return submitRequest()
                     }}
                   >
-                    Submit invoice
+                    Submit P.O
                   </p>
                 ) : null}
               </div>
@@ -267,7 +266,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                 <div ref={ref || componentRef} className="accounting">
                   <InvoiceHeader />
                   <p className="text-center text-uppercase my-3 fw-bold">
-                    Invoice N &#176; {created ? created.invoiceGenerated : null}
+                    Purchase order N &#176;{' '}
+                    {created ? created.POGenerated : null}
                   </p>
                   <div className="col d-flex flex-row border border-2 border-dark">
                     <div className="col p-2 my-0">
@@ -316,4 +316,4 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   )
 })
 
-export default CreateInvoice
+export default CreatePurchaseOrderAcc

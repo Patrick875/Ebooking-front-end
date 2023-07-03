@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { IoCreateOutline } from 'react-icons/io5'
 import { RiCheckLine } from 'react-icons/ri'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
@@ -30,6 +30,7 @@ import {
   getUTCDateWithoutHours,
   sortingWithDates,
 } from 'src/utils/functions'
+import DeleteItemModel from '../DeleteItemModel'
 
 function Invoice() {
   let stuff = []
@@ -52,6 +53,11 @@ function Invoice() {
 
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
+  let [clicked, setClicked] = useState()
+  let [visible, setVisible] = useState()
+  const [style, setStyle] = useState({ display: 'none' })
+  const [deleted, setDeleted] = useState()
+  let role = useSelector((state) => state.auth.user.Role.name)
 
   let myDates = datesInRangeWithUnix(startDate, endDate)
 
@@ -130,6 +136,7 @@ function Invoice() {
       await instance
         .get('/invoices/all')
         .then((res) => {
+          console.log('invoices', res.data.data)
           setInvoices(res.data.data)
         })
         .catch((err) => {
@@ -137,7 +144,7 @@ function Invoice() {
         })
     }
     getAllInvoice()
-  }, [])
+  }, [deleted])
 
   return (
     <div>
@@ -261,17 +268,18 @@ function Invoice() {
                       }
                     })
                     .map((el, i) => (
-                      <CTableRow
-                        key={i}
-                        onClick={() => {
-                          handleOnRowClick(el)
-                        }}
-                      >
+                      <CTableRow key={i}>
                         <CTableDataCell>
                           {' '}
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
-                        <CTableDataCell>{el.invoiceGenerated}</CTableDataCell>
+                        <CTableDataCell
+                          onClick={() => {
+                            handleOnRowClick(el)
+                          }}
+                        >
+                          {el.invoiceGenerated}
+                        </CTableDataCell>
                         <CTableDataCell>
                           {new Date(el.createdAt).toLocaleDateString()}
                         </CTableDataCell>
@@ -295,15 +303,48 @@ function Invoice() {
                             </p>
                           )}
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {Number(el.total).toLocaleString()}
+                        <CTableDataCell
+                          className="d-flex gap-2"
+                          onMouseEnter={(e) => {
+                            setStyle({ display: 'block' })
+                          }}
+                          onMouseLeave={(e) => {
+                            setStyle({ display: 'none' })
+                          }}
+                        >
+                          {Number(el.vatTotal).toLocaleString()}
                           {' ' + el.currency}
+
+                          {role &&
+                          (role === 'admin' ||
+                            role === 'General Accountant') ? (
+                            <Link
+                              style={style}
+                              className={` btn btn-sm btn-danger`}
+                              onClick={() => {
+                                setClicked(el)
+                                return setVisible(!visible)
+                              }}
+                            >
+                              Delete
+                            </Link>
+                          ) : null}
                         </CTableDataCell>
                       </CTableRow>
                     ))
                 : ''}
             </CTableBody>
           </CTable>
+          {clicked ? (
+            <DeleteItemModel
+              visible={visible && clicked ? visible : false}
+              setVisible={setVisible}
+              itemId={clicked ? clicked.id : null}
+              itemType="invoice"
+              setDeleted={setDeleted}
+              item={clicked.deliveryNoteId}
+            />
+          ) : null}
           <Pagination
             postsPerPage={perpage}
             totalPosts={invoices.length}

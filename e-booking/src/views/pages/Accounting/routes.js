@@ -7,11 +7,11 @@ import ViewInvoice from './Invoice/ViewInvoice'
 import DeliveryNote from './DeliveryNote/DeliveryNote'
 import CreateDeliveryNote from './DeliveryNote/CreateDeliveryNote'
 import ViewDeliveryNote from './DeliveryNote/ViewDeliveryNote'
-import BaudDeCommande from './BonDeCommande/BaudDeCommande'
-import CreateBaudDeCommande from './BonDeCommande/CreateBaudDeCommande'
-import ViewBonDeCommande from './BonDeCommande/ViewBonDeCommande'
 import DeliveryToInvoiceTransfer from './DeliveryNote/DeliveryToInvoiceTransfer'
 import ProformaToInvoiceTransfer from './ProFormaInvoice/ProformaToInvoiceTransfer'
+import PurchaseOrderAcc from './PurchaseOrderAcc/PurchaseOrderAcc'
+import CreatePurchaseOrderAcc from './PurchaseOrderAcc/CreatePurchaseOrderAcc'
+import ViewPurchaseOrderAcc from './PurchaseOrderAcc/ViewPurchaseOrderAcc'
 
 export const accountingRoutes = [
   {
@@ -81,21 +81,21 @@ export const accountingRoutes = [
     element: DeliveryToInvoiceTransfer,
   },
   {
-    path: '/booking/accounting/bon-de-commande',
+    path: '/booking/accounting/purchaseorder',
     exact: true,
-    name: 'Bon de commande',
-    element: BaudDeCommande,
+    name: 'Purchase Order',
+    element: PurchaseOrderAcc,
   },
   {
-    path: '/booking/accounting/bon-de-commande/create',
+    path: '/booking/accounting/purchaseorder/create',
     exact: true,
-    name: 'Create baud de commancde',
-    element: CreateBaudDeCommande,
+    name: 'Create purchase order',
+    element: CreatePurchaseOrderAcc,
   },
   {
-    path: '/booking/accounting/bon-de-commande/view',
+    path: '/booking/accounting/purchaseorder/view',
     exact: true,
-    name: 'Create baud de commancde',
-    element: ViewBonDeCommande,
+    name: 'view purchase order',
+    element: ViewPurchaseOrderAcc,
   },
 ]

@@ -1,76 +1,102 @@
 import { CCardHeader } from '@coreui/react'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { v4 as uuidv4 } from 'uuid'
-
 import BackButton from 'src/components/Navigating/BackButton'
 import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
-import ClientDetails from '../../Printing/ClientDetails'
 import InvoicePaymentModal from './InvoicePaymentModal'
 import { RiStethoscopeLine } from 'react-icons/ri'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import numberToWords from 'number-to-words'
-import EditableTable from 'src/components/EditableTable'
+import { initialRows } from 'src/utils/constants'
+import { useForm } from 'react-hook-form'
+import { instance } from 'src/API/AxiosInstance'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import { toast } from 'react-hot-toast'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const ViewInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
+
   const request = useSelector((state) => state.selection.selected)
+  const role = useSelector((state) => state.auth.user.Role.name)
   const [open, setOpen] = useState(false)
+  const [readOnly, setReadOnly] = useState(true)
+  const { register, watch } = useForm({
+    defaultValues: {
+      clientDetails: {
+        clientName: request.clientName,
+        pax: request.pax,
+        function: request.function,
+        clientType: request.clientType,
+      },
+    },
+  })
+  const clientDetails = watch('clientDetails')
   let invoiceDetails
   if (request && request.InvoiceDetails) {
     invoiceDetails = request.InvoiceDetails
   }
-  const VATconstant = useSelector((state) =>
-    state.constants.constants.filter((constant) => constant.name === 'VAT'),
-  )[0] || { value: 0, name: 'VAT' }
-  const initialRows = [
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-    {
-      id: uuidv4(),
-      name: '',
-      quantity: '',
-      times: '',
-      price: '',
-    },
-  ]
-  const orderTotal = request && request.total ? request.total : 0
-  const amountVAT = Number((orderTotal * VATconstant.value) / 100)
-  const total =
-    invoiceDetails[0].VAT === 'exclusive'
-      ? Number(orderTotal + amountVAT)
-      : Number(orderTotal - amountVAT)
+  const [rows, setRows] = useState([...request.InvoiceDetails, ...initialRows])
+
+  const updateInvoice = async () => {
+    const filtereDetails = removeObjectsWithEmptyProperties(rows)
+    await instance
+      .put('/invoices/update', {
+        id: request.id,
+        clientDetails,
+        details: filtereDetails,
+      })
+      .then(() => {
+        setReadOnly(!readOnly)
+        toast.success('invoice updated successfuly')
+      })
+      .catch((err) => {
+        setReadOnly(!readOnly)
+        console.log('err', err)
+      })
+  }
+
+  const orderTotal =
+    rows && rows.length !== 0
+      ? rows.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
+      : 0
+  const amountVAT = Number((orderTotal * 18) / 100)
+  const finalTotal = Number(orderTotal + amountVAT)
 
   return (
     <div>
       <CCardHeader className="d-flex justify-content-between">
         <BackButton />
         <div className="d-flex justify-content-end gap-2">
+          {role === 'admin' || role === 'General Accountant' ? (
+            <div className="d-flex gap-2">
+              {!readOnly ? (
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    updateInvoice()
+                  }}
+                >
+                  Submit Update
+                </button>
+              ) : null}
+
+              <button
+                className="btn btn-ghost-dark"
+                onClick={() => {
+                  setReadOnly(!readOnly)
+                }}
+              >
+                Update
+              </button>
+            </div>
+          ) : null}
           <button
-            className="btn btn-primary"
+            className="btn btn-ghost-primary"
             disabled={
               Number(
-                request.total -
+                request.vatTotal -
                   request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
               ) === 0
                 ? true
@@ -102,7 +128,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
               ) +
               ' paid  ' +
               Number(
-                request.total -
+                request.vatTotal -
                   request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
               ) +
               ' remaining'
@@ -118,19 +144,82 @@ const ViewInvoice = React.forwardRef((props, ref) => {
         <p className="text-center text-uppercase my-3 fw-bold">
           Invoice N &#176; {request.invoiceGenerated}
         </p>
-        <ClientDetails details={invoiceDetails} request={request} />
+        <div className="col d-flex flex-row border border-2 border-dark">
+          <div className="col p-2 my-0">
+            <div className="my-0">
+              {request ? (
+                <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
+                  {request.clientType} :{' '}
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.clientName}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.clientName')}
+                      readOnly={readOnly}
+                      type="text"
+                    />
+                  </p>
+                </p>
+              ) : null}
+
+              <p className="my-0 d-flex gap-2">
+                Function:{' '}
+                <p className="py-0 my-0">
+                  <input
+                    defaultValue={request.function}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      width: '100%',
+                    }}
+                    {...register('clientDetails.function')}
+                    readOnly={readOnly}
+                    type="text"
+                  />
+                </p>
+              </p>
+              <p className="my-0 d-flex gap-2 ">
+                Number of Pax:
+                <p className="py-0 my-0">
+                  <input
+                    defaultValue={request.pax}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      width: '100%',
+                    }}
+                    {...register('clientDetails.pax')}
+                    readOnly={readOnly}
+                    type="number"
+                  />
+                </p>
+              </p>
+            </div>
+            {request ? (
+              <p className="col-4 my-0">
+                <span className="fw-bold">DATE : </span>{' '}
+                {new Date(request.createdAt).toLocaleDateString()}
+              </p>
+            ) : null}
+          </div>
+        </div>
         <div className="my-1 py-1">
           <div className="d-flex justify-content-around my-0 py-0">
             <div className="col ">
-              <EditableTable
-                data={[...invoiceDetails, ...initialRows]}
-                readOnly={true}
+              <EditableTableWithDates
+                data={rows}
+                setData={setRows}
+                readOnly={readOnly}
               />
             </div>
           </div>
           <p className="text-capitalize">
             <span className="fw-bold"> Total in words :</span>
-            {total ? numberToWords.toWords(total) : null}
+            {finalTotal ? numberToWords.toWords(finalTotal) : null}
             {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
           </p>
         </div>
@@ -138,7 +227,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
       </div>
       <InvoicePaymentModal
         maxPayment={Number(
-          request.total -
+          request.vatTotal -
             request.InvoicePayments.reduce((acc, b) => acc + b.amount, 0),
         )}
         invoice={request}

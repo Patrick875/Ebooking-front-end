@@ -35,10 +35,6 @@ function App() {
     }
   }, [])
 
-  if (navigator.onLine === false) {
-    return <NetworkError />
-  }
-
   return (
     <BrowserRouter>
       <Suspense fallback={Loading}>

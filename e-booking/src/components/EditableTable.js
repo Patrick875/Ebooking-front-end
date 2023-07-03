@@ -1,7 +1,7 @@
 import '../scss/_editableTable.scss'
 
 const EditableTable = (props) => {
-  const { data, setData, readOnly, hidePrice } = props
+  let { data, setData, readOnly, hidePrice, type } = props
   const priceHiden = hidePrice || false
   const onChangeInput = (e, id) => {
     const { name, value } = e.target
@@ -18,15 +18,21 @@ const EditableTable = (props) => {
   }
   const orderTotal =
     data && data.length !== 0
-      ? data.reduce(
-          (a, b) =>
-            a +
-            Number(b.quantity * b.times * (b.price ? b.price : b.unitPrice)),
-          0,
-        )
+      ? data.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
       : 0
-  const amountVAT = Number((orderTotal * 18) / 100)
-  const finalTotal = Number(orderTotal + amountVAT)
+
+  const orderTotalDelivery =
+    data && data.length !== 0
+      ? data.reduce((a, b) => a + Number(b.quantity * b.times * b.unitPrice), 0)
+      : 0
+  const amountVAT =
+    type !== 'delivery'
+      ? Number((orderTotal * 18) / 100)
+      : Number((orderTotalDelivery * 18) / 100)
+  const finalTotal =
+    type !== 'delivery'
+      ? Number(orderTotal + amountVAT)
+      : Number(orderTotalDelivery + amountVAT)
 
   const totalRows = [
     {
@@ -37,7 +43,7 @@ const EditableTable = (props) => {
       maxWidth: 300,
       requestQuantity: '',
       unitPrice: '',
-      total: orderTotal,
+      total: type !== 'delivery' ? orderTotal : orderTotalDelivery,
     },
     {
       id: 2000,
@@ -80,7 +86,7 @@ const EditableTable = (props) => {
                 <td>
                   <input
                     name="name"
-                    value={name || description}
+                    value={type !== 'delivery' ? name : description}
                     readOnly={readOnly}
                     type="text"
                     onChange={(e) => onChangeInput(e, id)}
@@ -90,7 +96,7 @@ const EditableTable = (props) => {
                 <td>
                   <input
                     name="quantity"
-                    value={quantity}
+                    value={quantity === 0 ? '' : quantity}
                     readOnly={readOnly}
                     type="text"
                     onChange={(e) => onChangeInput(e, id)}
@@ -101,7 +107,7 @@ const EditableTable = (props) => {
                   <input
                     name="times"
                     type="text"
-                    value={times}
+                    value={times === 0 ? ' ' : times}
                     readOnly={readOnly}
                     onChange={(e) => onChangeInput(e, id)}
                     placeholder=""
@@ -109,11 +115,13 @@ const EditableTable = (props) => {
                 </td>
                 <td>
                   <input
-                    name="price"
+                    name={type !== 'delivery' ? 'price' : 'unitPrice'}
                     type="text"
                     value={
                       priceHiden && (price || unitPrice)
                         ? 0
+                        : (price || unitPrice) === 0
+                        ? ''
                         : price || unitPrice
                     }
                     readOnly={readOnly}
@@ -132,6 +140,8 @@ const EditableTable = (props) => {
                         ? ''
                         : price
                         ? Number(price * quantity * times)
+                        : Number(unitPrice * quantity * times) === 0
+                        ? ''
                         : Number(unitPrice * quantity * times)
                     }
                     onChange={(e) => onChangeInput(e, id)}
@@ -142,7 +152,7 @@ const EditableTable = (props) => {
               </tr>
             ),
           )}
-          {totalRows.map(({ id, name, quantity, times, price, total }) => (
+          {totalRows.map(({ id, name, total }) => (
             <tr key={id} className="lastRows">
               <td colSpan={4}>
                 {

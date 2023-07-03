@@ -20,6 +20,11 @@ export const AccountingNav = {
     },
     {
       component: CNavItem,
+      name: 'Purchase order',
+      to: '/booking/accounting/purchaseorder',
+    },
+    {
+      component: CNavItem,
       name: 'Delivery note ',
       to: '/booking/accounting/delivery',
     },

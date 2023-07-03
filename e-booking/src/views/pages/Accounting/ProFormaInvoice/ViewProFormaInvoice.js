@@ -5,35 +5,92 @@ import ReactToPrint from 'react-to-print'
 import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import ClientDetailsProForma from '../../Printing/ClientDetailsProForma'
-import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import numberToWords from 'number-to-words'
 import EditableTable from 'src/components/EditableTable'
 import { initialRows } from 'src/utils/constants'
+import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
+import { instance } from 'src/API/AxiosInstance'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const ViewProFormaInvoice = React.forwardRef((props, ref) => {
   const navigate = useNavigate()
   const componentRef = useRef()
+  const role = useSelector((state) => state.auth.user.Role.name)
   const request = useSelector((state) => state.selection.selected)
+  const { register, watch } = useForm({
+    defaultValues: {
+      clientDetails: {
+        clientName: request.clientName,
+        pax: request.pax,
+        function: request.function,
+        clientType: request.clientType,
+      },
+    },
+  })
+  const clientDetails = watch('clientDetails')
+  const [readOnly, setReadOnly] = useState(true)
+
   let proformaDetails
   if (request && request.ProformaDetails) {
     proformaDetails = request.ProformaDetails
   }
-  const VATconstant = useSelector((state) =>
-    state.constants.constants.filter((constant) => constant.name === 'VAT'),
-  )[0] || { value: 0, name: 'VAT' }
 
-  const orderTotal = request && request.total ? request.total : 0
-  const amountVAT = Number((orderTotal * VATconstant.value) / 100)
-  const total = Number(orderTotal + amountVAT)
-  console.log('total', { total, amountVAT, orderTotal, request })
   const [rows, setRows] = useState([...request.ProformaDetails, ...initialRows])
+  const orderTotal =
+    rows && rows.length !== 0
+      ? rows.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
+      : 0
+  const amountVAT = Number((orderTotal * 18) / 100)
+  const finalTotal = Number(orderTotal + amountVAT)
 
+  const updateInvoice = async () => {
+    const filtereDetails = removeObjectsWithEmptyProperties(rows)
+    await instance
+      .put('/proforma/update', {
+        id: request.id,
+        clientDetails,
+        details: filtereDetails,
+      })
+      .then(() => {
+        setReadOnly(!readOnly)
+        toast.success('invoice updated successfuly')
+      })
+      .catch((err) => {
+        setReadOnly(!readOnly)
+        console.log('err', err)
+      })
+  }
   return (
     <div>
       <div className="d-flex justify-content-between">
         <BackButton />
         <div className="d-flex justify-content-end">
+          {role === 'admin' || role === 'General Accountant' ? (
+            <div className="d-flex gap-2">
+              {!readOnly ? (
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    updateInvoice()
+                  }}
+                >
+                  Submit Update
+                </button>
+              ) : null}
+
+              <button
+                className="btn btn-ghost-dark"
+                onClick={() => {
+                  setReadOnly(!readOnly)
+                }}
+              >
+                Update
+              </button>
+            </div>
+          ) : null}
           <button
             className="btn btn-ghost-primary"
             onClick={() => {
@@ -60,14 +117,97 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
             Pro forma Invoice N &#176;
             {request.proformaGenerated}
           </p>
-          <ClientDetailsProForma details={proformaDetails} request={request} />
+          <div className="col d-flex flex-row border border-2 border-dark">
+            <div className="col p-2 my-0">
+              <div className="my-0">
+                <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
+                  {request.clientType} :{' '}
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.clientName}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.clientName')}
+                      readOnly={readOnly}
+                      type="text"
+                    />
+                  </p>
+                </p>
+
+                <p className="my-0 d-flex gap-2">
+                  Function:{' '}
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.function}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.function')}
+                      readOnly={readOnly}
+                      type="text"
+                    />
+                  </p>
+                </p>
+                <p className="my-0 d-flex gap-2 ">
+                  Number of Pax:
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.pax}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.pax')}
+                      readOnly={readOnly}
+                      type="number"
+                    />
+                  </p>
+                </p>
+              </div>
+              {request ? (
+                <p className="col-4 my-0">
+                  <span className="fw-bold">DATE : </span>{' '}
+                  {new Date(request.createdAt).toLocaleDateString()}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="my-0 mx-2">
+              <p className="fw-bold my-0 py-0">
+                Expected Date of Arrival :{' '}
+                <span className="fw-normal">
+                  {request.dateIn
+                    ? new Date(request.dateIn).toLocaleDateString()
+                    : null}
+                </span>
+              </p>
+              <p className="fw-bold my-0 py-0">
+                Expected Date of Departure :{' '}
+                <span className="fw-normal">
+                  {request.dateOut
+                    ? new Date(request.dateOut).toLocaleDateString()
+                    : null}
+                </span>
+              </p>
+            </div>
+          </div>
           <div className="col">
             <div className="col">
-              <EditableTable data={rows} setData={setRows} readOnly={true} />
+              <EditableTableWithDates
+                data={rows}
+                setData={setRows}
+                readOnly={readOnly}
+              />
             </div>
             <p className="text-capitalize">
-              <span className="fw-bold"> Total in words : </span>
-              {total ? numberToWords.toWords(total) : null}{' '}
+              <span className="fw-bold"> Total in words :</span>
+              {finalTotal ? numberToWords.toWords(finalTotal) : null}
               {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
             </p>
           </div>

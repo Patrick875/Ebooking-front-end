@@ -25,7 +25,6 @@ function AddPaymentModal(props) {
     await instance
       .post('/reservation/pay', data)
       .then((res) => {
-        console.log(res)
         toast.success(res.data.message)
         setReservation(res.data.data)
         setOpen(false)

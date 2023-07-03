@@ -100,27 +100,30 @@ export default function InvoicePaymentModal(props) {
               </CCol>
             </CRow>
           </CModalBody>
-          <CModalFooter>
-            <button
-              className="btn btn-primary"
-              type="submit"
-              disabled={
-                amount &&
-                Number(amount) &&
-                (Number(amount) > maxPayment || Number(amount) < 0)
-                  ? true
-                  : false
-              }
-            >
-              Add payment
-            </button>
+          <CModalFooter className="row">
+            <div className="d-flex justify-content-center">
+              <button
+                className="btn btn-primary"
+                type="submit"
+                disabled={
+                  amount &&
+                  Number(amount) &&
+                  (Number(amount) > maxPayment || Number(amount) < 0)
+                    ? true
+                    : false
+                }
+              >
+                Add payment
+              </button>
+            </div>
+
             {amount && Number(amount) ? (
               Number(amount > maxPayment) ? (
-                <p className="m-1 text-danger fs-5 fw-bold border border-1 border-danger">
-                  Can't not more than the required amount
+                <p className="m-1 text-danger text-center ">
+                  Can't pay not more than the required amount
                 </p>
               ) : Number(amount < 0) ? (
-                <p className="m-1 text-danger fs-5 fw-bold border border-1 border-danger">
+                <p className="m-1 text-danger d-block">
                   Amount must be greater than 0
                 </p>
               ) : null

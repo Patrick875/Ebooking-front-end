@@ -279,9 +279,10 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         <p className="my-0">Number of Pax: {clientData.pax} </p>
                       </div>
 
-                      <p className="col-4 my-0">
-                        <span className="fw-bold">DATE : </span>{' '}
-                        {new Date().toLocaleDateString()}
+                      <p className="col my-0 d-flex justify-content-end ">
+                        <span className="fw-bold border border-2 border-dark p-1">
+                          DATE :{new Date().toLocaleDateString()}{' '}
+                        </span>{' '}
                       </p>
                     </div>
                   </div>

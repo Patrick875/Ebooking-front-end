@@ -200,9 +200,10 @@ const ViewInvoice = React.forwardRef((props, ref) => {
               </p>
             </div>
             {request ? (
-              <p className="col-4 my-0">
-                <span className="fw-bold">DATE : </span>{' '}
-                {new Date(request.createdAt).toLocaleDateString()}
+              <p className="col my-0 d-flex justify-content-end ">
+                <span className="fw-bold border border-2 border-dark p-1">
+                  DATE :{new Date(request.createdAt).toLocaleDateString()}{' '}
+                </span>{' '}
               </p>
             ) : null}
           </div>

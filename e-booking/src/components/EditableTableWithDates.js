@@ -2,7 +2,7 @@ import ReactDatePicker from 'react-datepicker'
 import '../scss/_editableTable.scss'
 
 const EditableTableWithDates = (props) => {
-  let { data, setData, dates, setDates, readOnly, hidePrice, type } = props
+  let { data, setData, readOnly, hidePrice, type } = props
   const priceHiden = hidePrice || false
   const onChangeInput = (e, id) => {
     const { name, value } = e.target
@@ -73,8 +73,6 @@ const EditableTableWithDates = (props) => {
       total: finalTotal,
     },
   ]
-
-  console.log('data', data)
   return (
     <div className="editableTable">
       <table>

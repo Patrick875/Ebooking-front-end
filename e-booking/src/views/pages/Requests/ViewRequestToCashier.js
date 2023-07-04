@@ -4,7 +4,6 @@ import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 import BackButton from 'src/components/Navigating/BackButton'
-import { DataGrid } from '@mui/x-data-grid'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
@@ -12,134 +11,51 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const [approved, setApproved] = useState(false)
   const request = useSelector((state) => state.selection.selected)
+  const readOnly = request && request.status === 'APPROVED' ? true : false
   let StockPurchaseOrderDetails
   if (request && request.StockPurchaseOrderDetails) {
     StockPurchaseOrderDetails = request.StockPurchaseOrderDetails
   }
-  let [rows, setRows] = useState(StockPurchaseOrderDetails)
+  let [rows, setRows] = useState([...StockPurchaseOrderDetails])
   const approvePurchaseOrder = async () => {
     await instance
       .post('/purchase/order/approve', { orderId: request.id, data: [...rows] })
       .then((res) => {
         toast.success('purchase order approved !!')
         setApproved(!approved)
-        console.log(res.data.data)
       })
       .catch(() => {
         toast.error('purchase order approval failed !!!')
       })
   }
+  const orderTotal =
+    rows && rows !== 0
+      ? rows
+          .reduce(
+            (acc, b) => acc + Number(b.requestQuantity) * Number(b.unitPrice),
+            0,
+          )
+          .toLocaleString()
+      : 0
 
-  const columns = [
-    {
-      field: 'Designation',
-      headerName: 'Designation',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) => `${params.row.StockItemNew.name || ''} `,
-    },
-    {
-      field: 'unit',
-      headerName: 'Unit',
-      sortable: false,
-      hide: (params) => params.rowIndex === StockPurchaseOrderDetails.length,
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          unit: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? { ...params.row, unit: params.value }
-            : item,
-        )
-        setRows(newRows)
-        return updateRow
-      },
-      editable: true,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Qty',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: true,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
-      valueSetter: (params) => {
-        const updatedRow = {
-          ...params.row,
-          requestQuantity: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? {
-                ...params.row,
-                requestQuantity: Number(params.value),
-              }
-            : item,
-        )
-        setRows(newRows)
-        return updatedRow
-      },
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: true,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.unitPrice || ''} `,
-      valueSetter: (params) => {
-        const updatedRow = {
-          ...params.row,
-          unitPrice: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.id === params.row.id
-            ? {
-                ...params.row,
-                unitPrice: Number(params.value),
-              }
-            : item,
-        )
-        setRows(newRows)
-        return updatedRow
-      },
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.requestQuantity * params.row.unitPrice) ||
-          params.row.total
-        } `,
-    },
-  ]
-  const isLastRow = (params) => params.row.id === total.id
-  const total = {
-    id: 1000,
-    StockItemNew: { name: 'Total' },
-    requestQuantity: '',
+  const onChangeInput = (e, id) => {
+    const { name, value } = e.target
 
-    unit: '',
-    unitPrice: '',
-    total: rows.reduce((a, b) => a + b.unitPrice * b.requestQuantity, 0),
+    const editData = rows.map((item) =>
+      item.id === id && name
+        ? name === 'name'
+          ? {
+              ...item,
+              StockItemNew: {
+                ...item.StockItemValue.StockItemNew,
+                name: value,
+              },
+            }
+          : { ...item, [name]: value }
+        : item,
+    )
+
+    setRows(editData)
   }
 
   return (
@@ -173,29 +89,90 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       </div>
       <PrintTemplate1 ref={ref || componentRef}>
         <div className="mx-0 my-0  py-0 px-0 ">
-          <h5 className="text-center my-1 text-uppercase">
+          <h6 className="text-center my-1 text-uppercase">
             Purchase order &#8470; {request.purchaseOrderId}
-          </h5>
-          <div>
-            <DataGrid
-              rows={[...rows, total]}
-              columns={columns}
-              hideFooter={true}
-              sx={{
-                fontSize: 18,
-                '& .MuiDataGrid-cell': {
-                  border: '2px solid black ',
-                },
-                '& .MuiDataGrid-columnHeader': {
-                  border: '2px solid black ',
-                },
-              }}
-              getColumnProps={(params) => ({
-                style: {
-                  display: isLastRow(params) ? 'none' : 'flex',
-                },
-              })}
-            />
+          </h6>
+          <div className="editableTable">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>unit</th>
+                  <th>Quantity</th>
+                  <th>U.P</th>
+                  <th>T.P</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...rows].map(
+                  ({ id, unit, unitPrice, StockItemNew, requestQuantity }) => (
+                    <tr key={id}>
+                      <td>
+                        <input
+                          name="name"
+                          value={StockItemNew.name}
+                          readOnly={readOnly}
+                          type="text"
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="unit"
+                          value={unit}
+                          readOnly={readOnly}
+                          type="text"
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="requestQuantity"
+                          value={requestQuantity === 0 ? '' : requestQuantity}
+                          readOnly={readOnly}
+                          type="text"
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name={'unitPrice'}
+                          type="text"
+                          value={unitPrice === 0 ? ' ' : unitPrice}
+                          readOnly={readOnly}
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="total"
+                          type="text"
+                          value={
+                            Number(unitPrice * requestQuantity) === 0
+                              ? ''
+                              : Number(unitPrice * requestQuantity)
+                          }
+                          onChange={(e) => onChangeInput(e, id)}
+                          readOnly={readOnly}
+                          placeholder=""
+                        />
+                      </td>
+                    </tr>
+                  ),
+                )}
+                <tr key={1000} className="lastRows">
+                  <td className="px-2 fw-bold">Total</td>
+                  <td className="px-2" />
+                  <td className="px-2" />
+                  <td className="px-2" />
+                  <td className="text-end px-2 fw-bold">{orderTotal}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <PurchaseOrderFooter />

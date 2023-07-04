@@ -295,6 +295,36 @@ export default function FullFeaturedCrudGrid() {
 
 
 
+<style>
+  table {
+    border-collapse: collapse;
+  }
+  
+  td {
+    border-bottom: 1px solid black;
+  }
+  
+  .no-border-bottom {
+    border-bottom: none;
+  }
+</style>
+
+<table>
+  <tr>
+    <td>Cell 1</td>
+    <td class="no-border-bottom">Cell 2 (No Bottom Border)</td>
+    <td>Cell 3</td>
+  </tr>
+  <tr>
+    <td>Cell 4</td>
+    <td>Cell 5</td>
+    <td>Cell 6</td>
+  </tr>
+</table>
+
+
+
+
 
 
 

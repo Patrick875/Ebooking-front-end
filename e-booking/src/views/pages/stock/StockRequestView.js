@@ -6,8 +6,8 @@ import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import BackButton from 'src/components/Navigating/BackButton'
-import { DataGrid } from '@mui/x-data-grid'
-
+import '../../../scss/_editableTable.scss'
+import { initialRowsStockOrder } from 'src/utils/constants'
 const StockRequestView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let [stockOrderDetails] = useState([])
@@ -16,7 +16,10 @@ const StockRequestView = React.forwardRef((props, ref) => {
     stockOrderDetails = request.PetitStockRequesitionDetails
   }
   const [approved, setApproved] = useState(false)
-  let [rows, setRows] = useState(stockOrderDetails)
+  let [rows, setRows] = useState([
+    ...stockOrderDetails,
+    ...initialRowsStockOrder,
+  ])
   const columns = [
     {
       field: 'name',
@@ -99,21 +102,38 @@ const StockRequestView = React.forwardRef((props, ref) => {
     },
   ]
   const isLastRow = (params) => params.row.id === total.id
-  const total = {
-    id: 1000,
-    quantity: '',
-    total: rows.reduce((a, b) => a + b.StockItemValue.price * b.quantity, 0),
-    StockItemValue: {
-      id: 214,
-      quantity: '',
-      price: '',
-      StockItemNew: {
-        id: 494,
-        name: 'Total',
-      },
-    },
-  }
+  const total = rows.reduce(
+    (a, b) => a + b.StockItemValue.price * b.quantity,
+    0,
+  )
 
+  const onChangeInput = (e, id) => {
+    const { name, value } = e.target
+
+    const editData = rows.map((item) =>
+      item.id === id && name
+        ? name === 'name'
+          ? {
+              ...item,
+              StockItemValue: {
+                ...item.StockItemValue,
+                StockItemNew: {
+                  ...item.StockItemValue.StockItemNew,
+                  name: value,
+                },
+              },
+            }
+          : name === 'price'
+          ? {
+              ...item,
+              StockItemValue: { ...item.StockItemValue, price: value },
+            }
+          : { ...item, [name]: value }
+        : item,
+    )
+
+    setRows(editData)
+  }
   const updateStockOrder = async (action) => {
     if (action === 'approve') {
       await instance
@@ -182,29 +202,81 @@ const StockRequestView = React.forwardRef((props, ref) => {
         <div ref={ref || componentRef}>
           <PrintHeader />
           <div className="m-3 p-3">
-            <h5 className="text-center my-1 text-uppercase">
+            <p className="text-center my-1 text-uppercase fw-bold">
               Stock order N &#176; {request ? request.stockRequesitionId : null}
-            </h5>
-
-            <DataGrid
-              rows={[...rows, total]}
-              columns={columns}
-              hideFooter={true}
-              sx={{
-                fontSize: 24,
-                '& .MuiDataGrid-cell': {
-                  border: '2px solid black ',
-                },
-                '& .MuiDataGrid-columnHeader': {
-                  border: '2px solid black ',
-                },
-              }}
-              getColumnProps={(params) => ({
-                style: {
-                  display: isLastRow(params) ? 'none' : 'flex',
-                },
-              })}
-            />
+            </p>
+            <div className="editableTable">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>U.P</th>
+                    <th>T.P</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...rows].map(({ id, name, StockItemValue, quantity }) => (
+                    <tr key={id}>
+                      <td>
+                        <input
+                          name="name"
+                          value={StockItemValue.StockItemNew.name}
+                          readOnly={false}
+                          type="text"
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="quantity"
+                          value={quantity === 0 ? '' : quantity}
+                          readOnly={false}
+                          type="text"
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name={'price'}
+                          type="text"
+                          value={
+                            StockItemValue.price === 0
+                              ? ' '
+                              : StockItemValue.price
+                          }
+                          readOnly={false}
+                          onChange={(e) => onChangeInput(e, id)}
+                          placeholder=""
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="total"
+                          type="text"
+                          value={
+                            Number(StockItemValue.price * quantity) === 0
+                              ? ''
+                              : Number(StockItemValue.price * quantity)
+                          }
+                          onChange={(e) => onChangeInput(e, id)}
+                          readOnly={false}
+                          placeholder=""
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                  <tr key={1000} className="lastRows">
+                    <td className="px-2 fw-bold">Total</td>
+                    <td className="px-2" />
+                    <td className="px-2" />
+                    <td className="text-end px-2 fw-bold">{total}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <PrintFooterNoSignatures />
         </div>

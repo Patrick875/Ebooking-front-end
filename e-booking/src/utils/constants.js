@@ -534,3 +534,25 @@ export const initialRows = [
     date: '',
   },
 ]
+export const initialRowsStockOrder = [
+  {
+    id: uuidv4(),
+    StockItemValue: { StockItemNew: { name: '' }, price: 0 },
+    quantity: 0,
+  },
+  {
+    id: uuidv4(),
+    StockItemValue: { StockItemNew: { name: '' }, price: 0 },
+    quantity: 0,
+  },
+  {
+    id: uuidv4(),
+    StockItemValue: { StockItemNew: { name: '' }, price: 0 },
+    quantity: 0,
+  },
+  {
+    id: uuidv4(),
+    StockItemValue: { StockItemNew: { name: '' }, price: 0 },
+    quantity: 0,
+  },
+]

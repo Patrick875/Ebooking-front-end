@@ -89,12 +89,11 @@ const EditableTableWithDates = (props) => {
         <tbody>
           {[...data].map((el, i) => (
             <tr key={el.id}>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <ReactDatePicker
-                  isClearable={!readOnly}
                   selected={
                     el.date &&
-                    new Date(el.date).toLocaleDateString() !== 'Invalid Date'
+                    new Date(el.date).toLocaleDateString() !== 'Invalid date'
                       ? new Date(el.date)
                       : ''
                   }
@@ -103,7 +102,7 @@ const EditableTableWithDates = (props) => {
                   onChange={(date) => onChangeInputDate(date, el.id)}
                 />
               </td>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <input
                   name="name"
                   value={type !== 'delivery' ? el.name : el.description}
@@ -113,7 +112,7 @@ const EditableTableWithDates = (props) => {
                   placeholder=""
                 />
               </td>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <input
                   name="quantity"
                   value={el.quantity === 0 ? '' : el.quantity}
@@ -123,7 +122,7 @@ const EditableTableWithDates = (props) => {
                   placeholder=""
                 />
               </td>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <input
                   name="times"
                   type="text"
@@ -133,7 +132,7 @@ const EditableTableWithDates = (props) => {
                   placeholder=""
                 />
               </td>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <input
                   name={type !== 'delivery' ? 'price' : 'unitPrice'}
                   type="text"
@@ -149,7 +148,7 @@ const EditableTableWithDates = (props) => {
                   placeholder=""
                 />
               </td>
-              <td>
+              <td style={{ borderBottom: 'none' }}>
                 <input
                   name="total"
                   type="text"
@@ -171,11 +170,19 @@ const EditableTableWithDates = (props) => {
               </td>
             </tr>
           ))}
-          {totalRows.map(({ id, name, total }) => (
+          {totalRows.map(({ id, name, total }, index) => (
             <tr key={id} className="lastRows">
-              <td colSpan={5}>
+              <td
+                colSpan={5}
+                className={`${
+                  index === totalRows.length - 1 ? 'fw-bold' : ''
+                } `}
+              >
                 {
                   <input
+                    className={`${
+                      index === totalRows.length - 1 ? 'fw-bold' : ''
+                    } `}
                     name="name"
                     value={name}
                     type="text"
@@ -184,10 +191,13 @@ const EditableTableWithDates = (props) => {
                 }
               </td>
 
-              <td>
+              <td colSpan={5}>
                 <input
                   name="total"
                   type="text"
+                  className={`${
+                    index === totalRows.length - 1 ? 'fw-bold' : ''
+                  } `}
                   value={hidePrice ? 0 : Number(total)}
                   onChange={(e) => onChangeInput(e, id)}
                   placeholder=""

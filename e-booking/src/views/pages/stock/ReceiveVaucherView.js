@@ -13,7 +13,9 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
   let [rowsPurchase] = useState(
     vaucher.StockPurchaseOrder.StockPurchaseOrderDetails,
   )
-  let [rowsReceive] = useState(vaucher.StockReceiveVoucherDetails)
+  let [rowsReceive, setRowsReceive] = useState(
+    vaucher.StockReceiveVoucherDetails,
+  )
   const receiveTotal =
     vaucher && vaucher.StockReceiveVoucherDetails !== 0
       ? vaucher.StockReceiveVoucherDetails.reduce(
@@ -32,130 +34,24 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
         )
       : 0
   const Balance = purchaseTotal - receiveTotal
-  const columnsPurchase = [
-    {
-      headerName: 'Item',
-      width: 120,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
-    },
-    {
-      field: 'unit',
-      headerName: 'Unit',
-      sortable: false,
-      editable: false,
-      hide: (params) => params.rowIndex === rowsPurchase.length,
-      width: 120,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Qty',
-      width: 120,
-      editable: false,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      width: 120,
-      editable: false,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.unitPrice || ''} `,
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      width: 120,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.requestQuantity * params.row.unitPrice) ||
-          params.row.total
-        } `,
-    },
-  ]
-  const columnsReceive = [
-    {
-      field: 'name',
-      headerName: 'Item',
-      width: 120,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
-    },
-    {
-      field: 'unitPrice',
-      headerName: 'Unit',
-      sortable: false,
-      editable: false,
-      hide: (params) => params.rowIndex === rowsReceive.length,
-      width: 120,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Qty',
-      width: 120,
-      editable: false,
-      hide: (params) => params.rowIndex === rowsReceive.length,
-      sortable: false,
-      valueGetter: (params) => `${params.row.receivedQuantity || ''} `,
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      width: 120,
-      editable: false,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.unitPrice || ''} `,
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      width: 120,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.receivedQuantity * params.row.unitPrice) ||
-          params.row.total
-        } `,
-    },
-  ]
-  const totalPurchase = {
-    id: 1000,
-    StockItemNew: { name: 'Total' },
-    requestQuantity: '',
-    unitPrice: '',
-    total: purchaseTotal,
-  }
-  const balancePurchase = {
-    id: 2000,
-    StockItemNew: { name: 'Balance' },
-    requestQuantity: '',
-    unitPrice: '',
-    total: '',
-  }
 
-  const isLastRowPurchase = (params) => params.row.id === totalPurchase.id
-  const totalReceive = {
-    id: 1000,
-    name: 'Total',
-    requestQuantity: '',
-    unitPrice: '',
-    total: receiveTotal,
-  }
-  const isLastRowReceive = (params) => params.row.id === totalReceive.id
-  const balanceReceive = {
-    id: 2000,
-    StockItemNew: { name: '' },
-    requestQuantity: '',
-    unitPrice: '',
-    total: Balance,
+  const onChangeInput = (e, id) => {
+    const { name, value } = e.target
+    const editData = rowsReceive.map((item) =>
+      item.id === id && name
+        ? name === 'name'
+          ? {
+              ...item,
+              StockItemNew: {
+                ...item.StockItemValue.StockItemNew,
+                name: value,
+              },
+            }
+          : { ...item, [name]: value }
+        : item,
+    )
+
+    setRowsReceive(editData)
   }
 
   return (
@@ -181,51 +77,192 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
           </p>
 
           <div className="d-flex justify-content-around">
-            <div className="col">
-              <div className="d-flex">
-                <p className="fw-bold">Purchase order</p>
-              </div>
-              <DataGrid
-                rows={[...rowsPurchase, totalPurchase, balancePurchase]}
-                columns={columnsPurchase}
-                hideFooter={true}
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    border: '2px solid black ',
-                  },
-                  '& .MuiDataGrid-columnHeader': {
-                    border: '2px solid black ',
-                  },
-                }}
-                getColumnProps={(params) => ({
-                  style: {
-                    display: isLastRowPurchase(params) ? 'none' : 'flex',
-                  },
-                })}
-              />
+            <div className="editableTable">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>unit</th>
+                    <th>Quantity</th>
+                    <th>U.P</th>
+                    <th>T.P</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...rowsPurchase].map(
+                    ({
+                      id,
+                      unit,
+                      unitPrice,
+                      StockItemNew,
+                      requestQuantity,
+                    }) => (
+                      <tr key={id}>
+                        <td>
+                          <input
+                            name="name"
+                            value={StockItemNew.name}
+                            readOnly={true}
+                            type="text"
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name="unit"
+                            value={unit}
+                            readOnly={true}
+                            type="text"
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name="requestQuantity"
+                            value={requestQuantity === 0 ? '' : requestQuantity}
+                            readOnly={true}
+                            type="text"
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name={'unitPrice'}
+                            type="text"
+                            value={unitPrice === 0 ? ' ' : unitPrice}
+                            readOnly={true}
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name="total"
+                            type="text"
+                            value={
+                              Number(unitPrice * requestQuantity) === 0
+                                ? ''
+                                : Number(unitPrice * requestQuantity)
+                            }
+                            onChange={(e) => onChangeInput(e, id)}
+                            readOnly={true}
+                            placeholder=""
+                          />
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                  <tr key={1000} className="lastRows">
+                    <td className="px-2 fw-bold">Total</td>
+                    <td className="px-2" />
+                    <td className="px-2" />
+                    <td className="px-2" />
+                    <td className="text-end px-2 fw-bold">{purchaseTotal}</td>
+                  </tr>
+                  <tr key={1000} className="lastRows">
+                    <td className="px-2 fw-bold" colSpan={5}>
+                      Balance
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div className="col">
-              <div className="d-flex">
-                <p className="fw-bold">Received </p>
-              </div>
-              <DataGrid
-                rows={[...rowsReceive, totalReceive, balanceReceive]}
-                columns={columnsReceive}
-                hideFooter={true}
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    border: '2px solid black ',
-                  },
-                  '& .MuiDataGrid-columnHeader': {
-                    border: '2px solid black ',
-                  },
-                }}
-                getColumnProps={(params) => ({
-                  style: {
-                    display: isLastRowReceive(params) ? 'none' : 'flex',
-                  },
-                })}
-              />
+            <div className="editableTable" style={{ borderBlockStart: 'none' }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>unit</th>
+                    <th>Quantity</th>
+                    <th>U.P</th>
+                    <th>T.P</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...rowsReceive].map(
+                    (
+                      { id, unit, unitPrice, StockItemNew, receivedQuantity },
+                      index,
+                    ) => (
+                      <tr key={id}>
+                        <td>
+                          <input
+                            name="name"
+                            value={StockItemNew.name}
+                            readOnly={true}
+                            type="text"
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name="unit"
+                            value={unit}
+                            readOnly={true}
+                            type="text"
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name="requestQuantity"
+                            defaultValue={receivedQuantity}
+                            readOnly={true}
+                            type="text"
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name={'unitPrice'}
+                            type="text"
+                            defaultValue={
+                              rowsPurchase[index].unitPrice === 0
+                                ? ' '
+                                : rowsPurchase[index].unitPrice
+                            }
+                            readOnly={true}
+                            onChange={(e) => onChangeInput(e, id)}
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            name="total"
+                            type="text"
+                            value={
+                              Number(unitPrice * receivedQuantity) === 0
+                                ? ''
+                                : Number(unitPrice * receivedQuantity)
+                            }
+                            onChange={(e) => onChangeInput(e, id)}
+                            readOnly={true}
+                            placeholder=""
+                          />
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                  <tr key={1000} className="lastRows">
+                    <td className="px-2 fw-bold">Total</td>
+                    <td className="px-2" />
+                    <td className="px-2" />
+                    <td className="px-2" />
+                    <td className="text-end px-2 fw-bold">{receiveTotal}</td>
+                  </tr>
+                  <tr key={1000} className="lastRows">
+                    <td className="px-2 fw-bold" colSpan={4} />
+
+                    <td className="text-end px-2 fw-bold">{Balance}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

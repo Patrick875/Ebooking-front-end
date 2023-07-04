@@ -1,11 +1,9 @@
-import { CCard, CCardBody, CCardHeader } from '@coreui/react'
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrderFooter from '../Printing/PurchaseOrderFooter'
 import BackButton from 'src/components/Navigating/BackButton'
-import { DataGrid } from '@mui/x-data-grid'
 
 const ViewRequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -14,81 +12,37 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
   if (request && request.StockPurchaseOrderDetails) {
     StockPurchaseOrderDetails = request.StockPurchaseOrderDetails
   }
+  const [rows, setRows] = useState([...StockPurchaseOrderDetails])
+
   const orderTotal =
-    StockPurchaseOrderDetails && StockPurchaseOrderDetails !== 0
-      ? StockPurchaseOrderDetails.reduce(
-          (acc, b) => acc + Number(b.requestQuantity) * Number(b.unitPrice),
-          0,
-        ).toLocaleString()
+    rows && rows !== 0
+      ? rows
+          .reduce(
+            (acc, b) => acc + Number(b.requestQuantity) * Number(b.unitPrice),
+            0,
+          )
+          .toLocaleString()
       : 0
-  const [rows] = useState(StockPurchaseOrderDetails)
-  const columns = [
-    {
-      headerName: 'Item',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      editable: false,
-      valueGetter: (params) => `${params.row.StockItemNew?.name || ''} `,
-    },
-    {
-      field: 'unit',
-      headerName: 'Unit',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      sortable: false,
-      editable: false,
-      hide: (params) => params.rowIndex === rows.length,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Qty',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: false,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.requestQuantity || ''} `,
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 200,
-      editable: false,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.unitPrice || ''} `,
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.requestQuantity * params.row.unitPrice) ||
-          params.row.total
-        } `,
-    },
-  ]
-  const total = {
-    id: 1000,
-    flex: 1,
-    minWidth: 200,
-    maxWidth: 300,
-    StockItemNew: { name: 'Total' },
-    requestQuantity: '',
-    unitPrice: '',
-    total: orderTotal,
+  const onChangeInput = (e, id) => {
+    const { name, value } = e.target
+
+    const editData = rows.map((item) =>
+      item.id === id && name
+        ? name === 'name'
+          ? {
+              ...item,
+              StockItemNew: {
+                ...item.StockItemValue.StockItemNew,
+                name: value,
+              },
+            }
+          : { ...item, [name]: value }
+        : item,
+    )
+
+    setRows(editData)
   }
-  const isLastRow = (params) => params.row.id === total.id
+
   return (
     <div>
       <div className="d-flex justify-content-between">
@@ -113,25 +67,96 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
 
           <div className="d-flex justify-content-around">
             <div>
-              <DataGrid
-                rows={[...rows, total]}
-                columns={columns}
-                hideFooter={true}
-                sx={{
-                  fontSize: 18,
-                  '& .MuiDataGrid-cell': {
-                    border: '2px solid black ',
-                  },
-                  '& .MuiDataGrid-columnHeader': {
-                    border: '2px solid black ',
-                  },
-                }}
-                getColumnProps={(params) => ({
-                  style: {
-                    display: isLastRow(params) ? 'none' : 'flex',
-                  },
-                })}
-              />
+              <div className="editableTable">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>unit</th>
+                      <th>Quantity</th>
+                      <th>U.P</th>
+                      <th>T.P</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...rows].map(
+                      ({
+                        id,
+                        unit,
+                        unitPrice,
+                        StockItemNew,
+                        requestQuantity,
+                      }) => (
+                        <tr key={id}>
+                          <td>
+                            <input
+                              name="name"
+                              value={StockItemNew.name}
+                              readOnly={true}
+                              type="text"
+                              onChange={(e) => onChangeInput(e, id)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name="unit"
+                              value={unit}
+                              readOnly={true}
+                              type="text"
+                              onChange={(e) => onChangeInput(e, id)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name="requestQuantity"
+                              value={
+                                requestQuantity === 0 ? '' : requestQuantity
+                              }
+                              readOnly={true}
+                              type="text"
+                              onChange={(e) => onChangeInput(e, id)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name={'unitPrice'}
+                              type="text"
+                              value={unitPrice === 0 ? ' ' : unitPrice}
+                              readOnly={true}
+                              onChange={(e) => onChangeInput(e, id)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name="total"
+                              type="text"
+                              value={
+                                Number(unitPrice * requestQuantity) === 0
+                                  ? ''
+                                  : Number(unitPrice * requestQuantity)
+                              }
+                              onChange={(e) => onChangeInput(e, id)}
+                              readOnly={true}
+                              placeholder=""
+                            />
+                          </td>
+                        </tr>
+                      ),
+                    )}
+                    <tr key={1000} className="lastRows">
+                      <td className="px-2 fw-bold">Total</td>
+                      <td className="px-2" />
+                      <td className="px-2" />
+                      <td className="px-2" />
+                      <td className="text-end px-2 fw-bold">{orderTotal}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

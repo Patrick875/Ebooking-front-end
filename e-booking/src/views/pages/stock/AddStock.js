@@ -15,6 +15,7 @@ import { instance } from 'src/API/AxiosInstance'
 import { sortingWithDates } from 'src/utils/functions'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const AddStock = React.forwardRef((props, ref) => {
   let [item2] = useState([])
@@ -84,7 +85,8 @@ const AddStock = React.forwardRef((props, ref) => {
   return (
     <div className="my-0 py-0">
       <CRow className="my-0 py-0">
-        <div className="d-flex justify-content-end my-0 py-0">
+        <div className="d-flex justify-content-between my-0 py-0">
+          <BackButton />
           <ReactToPrint
             trigger={() => (
               <button className="btn btn-ghost-primary">Print</button>

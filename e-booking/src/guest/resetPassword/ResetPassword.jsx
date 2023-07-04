@@ -29,17 +29,22 @@ function ResetPassword() {
       <div className="App-container">
         <Navigation />
 
-        <div className="Login">
-          <div className="Login__guides">
-            <h1 className="heading"> Olympic Hotel </h1>
-            <p>Customer management system</p>
-            <p>Hotel resources management </p>
-            <p>E-booking system</p>
-          </div>
-          <div className="Login__form">
-            <form onSubmit={handleSubmit(resetPassword)}>
-              <p className="form__heading fs-5"> Reset Password </p>
+        <h1
+          className="text-center heading my-0 py-2"
+          style={{ color: 'rgb(232,170,0)' }}
+        >
+          {' '}
+          Olympic Hotel{' '}
+        </h1>
+        <div className="d-flex justify-content-center">
+          <div
+            className="col-md-4 rounded-2 bg-white shadow shadow-sm my-3"
+            style={{ color: 'black' }}
+          >
+            <form onSubmit={handleSubmit(resetPassword)} className="p-4">
+              <p className="form__heading fs-5 text-center"> Reset Password </p>
               <div className="Form__row block">
+                <label htmlFor="email">Email</label>
                 <input
                   type="text"
                   name="email"
@@ -59,19 +64,19 @@ function ResetPassword() {
                 </p>
               )}{' '}
               {/* Display error message */}
+              <CButton
+                type="submit"
+                color="info"
+                className="my-3 py-2"
+                shape="rounded-0"
+              >
+                Reset password
+              </CButton>
               <div className="Form__row block">
                 <Link className="login__reset__option" to="/login">
                   Login
                 </Link>
               </div>
-              <CButton
-                type="submit"
-                color="info"
-                className="custom-btn"
-                shape="rounded-0"
-              >
-                Reset password
-              </CButton>
             </form>
           </div>
         </div>

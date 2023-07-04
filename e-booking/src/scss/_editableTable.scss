@@ -14,26 +14,26 @@ table {
   width: 100%;
 }
 
-tr th {
+th {
   font-size: 18px;
   padding: 1px;
-  border: 2px solid #000000;
-  text-align: left;
-}
-
-tr {
   border-left: 2px solid #000000;
-}
-
-tr {
-  border-right: 2px solid #000000;
-}
-
-tr td {
-  border: 2px solid #000000;
   text-align: left;
 }
 
+thead > tr {
+  border: 2px solid #000000; 
+}
+
+tbody > tr td {
+  border: 2px 2px 0px 2px solid #000000;
+  text-align: left;
+}
+
+tr td{
+  border-left: 2px solid #000000 !important;
+  border-right: 2px solid #000000 !important;
+}
 .lastRows td {
   border: 2px solid #000000;
   text-align: left;

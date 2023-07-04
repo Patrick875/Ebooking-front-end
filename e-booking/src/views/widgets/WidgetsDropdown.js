@@ -5,14 +5,22 @@ import { cilUser, cilHome, cilHouse } from '@coreui/icons'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { BsCalendarEvent } from 'react-icons/bs'
 
 const WidgetsDropdown = () => {
+  const role = useSelector((state) => state.auth.user.Role.name)
   const navigate = useNavigate()
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [users, setUsers] = useState([])
-  const [reservations, setReservations] = useState([])
   let [customers, setCustomers] = useState([])
+  const managerRoles = [
+    'admin',
+    'general accountant',
+    'manager',
+    'general manager',
+  ]
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -46,17 +54,6 @@ const WidgetsDropdown = () => {
           toast.error(err.message)
         })
     }
-    const getReservations = async () => {
-      await instance
-        .get('/reservation/all')
-        .then((res) => {
-          setReservations(res.data.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
-    }
-
     const getUsers = async () => {
       await instance
         .get(`/users/all`)
@@ -69,7 +66,6 @@ const WidgetsDropdown = () => {
     }
 
     getUsers()
-    getReservations()
     getHalls()
     getRooms()
     getCustomers()
@@ -77,6 +73,22 @@ const WidgetsDropdown = () => {
 
   return (
     <CRow className="widgets ">
+      <div
+        className="col-md-6 col-sm-12 col"
+        xs={12}
+        sm={6}
+        lg={3}
+        onClick={() => {
+          navigate('/booking/events')
+        }}
+      >
+        <CWidgetStatsF
+          className="mb-3 py-2"
+          icon={<BsCalendarEvent width={64} />}
+          title="Events"
+          color="danger"
+        />
+      </div>
       <div
         className="col-md-6 col-sm-12 col"
         onClick={() => {
@@ -122,23 +134,25 @@ const WidgetsDropdown = () => {
           color="info"
         />
       </div>
-      <div
-        className="col-md-6 col-sm-12 col"
-        xs={12}
-        sm={6}
-        lg={3}
-        onClick={() => {
-          navigate('/booking/users')
-        }}
-      >
-        <CWidgetStatsF
-          className="mb-3"
-          icon={<CIcon width={48} icon={cilUser} size="xl" />}
-          title="System User"
-          value={users.length}
-          color="danger"
-        />
-      </div>
+      {!managerRoles.includes(role.toLowerCase()) ? (
+        <div
+          className="col-md-6 col-sm-12 col"
+          xs={12}
+          sm={6}
+          lg={3}
+          onClick={() => {
+            navigate('/booking/users')
+          }}
+        >
+          <CWidgetStatsF
+            className="mb-3"
+            icon={<CIcon width={48} icon={cilUser} size="xl" />}
+            title="System User"
+            value={users.length}
+            color="danger"
+          />
+        </div>
+      ) : null}
     </CRow>
   )
 }

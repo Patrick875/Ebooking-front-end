@@ -16,10 +16,13 @@ import {
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
+import ReactDatePicker from 'react-datepicker'
+import { useState } from 'react'
 
 const CashTransaction = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset } = useForm()
+  const [date, setDate] = useState(new Date())
   const type = watch('type') || 'credit'
   const creditTransaction = async (data) => {
     await instance
@@ -42,10 +45,17 @@ const CashTransaction = () => {
       })
   }
   const onSubmit = async (data) => {
+    console.log('data', date)
     if (type === 'credit') {
-      await creditTransaction(data)
+      await creditTransaction({
+        ...data,
+        date: new Date(date.toString()).getTime(),
+      })
     } else if (type === 'debit') {
-      await debitTransaction(data)
+      await debitTransaction({
+        ...data,
+        date: new Date(date.toString()).getTime(),
+      })
     }
   }
 
@@ -131,6 +141,22 @@ const CashTransaction = () => {
                       <option value="Cheque">Cheque</option>
                     </CFormSelect>
                   </div>
+                </CCol>
+
+                <CCol md={6}>
+                  <CFormLabel htmlFor="date of arrival">
+                    {' '}
+                    Expected date of Arrival{' '}
+                  </CFormLabel>
+                  <ReactDatePicker
+                    className="form-control"
+                    timeFormat="p"
+                    selected={date}
+                    dateFormat="dd/MM/yyyy"
+                    popperPlacement="bottom-end"
+                    onChange={(date) => setDate(date)}
+                    placeholderText="Select a date other than  yesterday"
+                  />
                 </CCol>
                 <CCol md={6} className="mb-3">
                   <CFormLabel htmlFor="description">

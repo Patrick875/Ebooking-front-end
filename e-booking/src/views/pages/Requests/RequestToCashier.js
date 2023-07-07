@@ -198,6 +198,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
                         min={0}
                         name="quantity"
                         id="quantity"
+                        step={'any'}
                         placeholder="50  "
                         required
                         {...register('quantity')}

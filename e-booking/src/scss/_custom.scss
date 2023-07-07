@@ -142,6 +142,13 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   color: #000 !important;
 }
 
+.services{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto ;
+  grid-column-gap:1.75em;
+  grid-row-gap:1.75em;
+}
 /* CSS */
 .button-add {
   appearance: button;

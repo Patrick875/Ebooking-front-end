@@ -15,9 +15,10 @@ import React, { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import { selectItem } from 'src/redux/Select/selectionActions'
 import Pagination from 'src/utils/Pagination'
 
 function StockItems() {
@@ -26,6 +27,7 @@ function StockItems() {
   const storeId = watch('storeId') || null
   let [items, setItems] = useState([])
   let [stores, setStores] = useState([])
+  const dispatch = useDispatch()
 
   const searchItems = (items, query) => {
     if (!query || query === '') {
@@ -143,6 +145,9 @@ function StockItems() {
           <CTableBody>
             {items && items.length !== 0
               ? items
+                  .sort((a, b) =>
+                    a.name > b.name ? 1 : a.name < b.name ? -1 : 0,
+                  )
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null
@@ -161,16 +166,27 @@ function StockItems() {
                         </CTableHeaderCell>
                         <CTableDataCell>{`${item.name}`}</CTableDataCell>
                         <CTableDataCell>{`${item.Store.name}`}</CTableDataCell>
-                        <CTableDataCell className="d-flex ">
+                        <CTableDataCell className="d-flex gap-2 ">
                           {role && role === 'admin' ? (
-                            <Link
-                              className={` btn btn-sm btn-danger`}
-                              onClick={() => {
-                                return deleteStockItem(item.id)
-                              }}
-                            >
-                              Delete
-                            </Link>
+                            <React.Fragment>
+                              <Link
+                                className={` btn btn-sm btn-primary`}
+                                onClick={() => {
+                                  dispatch(selectItem(item))
+                                }}
+                                to="/booking/stock/items/update"
+                              >
+                                Update
+                              </Link>
+                              <Link
+                                className={` btn btn-sm btn-danger`}
+                                onClick={() => {
+                                  return deleteStockItem(item.id)
+                                }}
+                              >
+                                Delete
+                              </Link>
+                            </React.Fragment>
                           ) : null}
                         </CTableDataCell>
                       </CTableRow>

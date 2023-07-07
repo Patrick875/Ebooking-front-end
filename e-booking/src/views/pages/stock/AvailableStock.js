@@ -58,7 +58,6 @@ function AvailableStock() {
         .get('/stock/item/balance')
         .then((res) => {
           setItems(res.data.data)
-          console.log('available', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -131,6 +130,13 @@ function AvailableStock() {
           <CTableBody>
             {items && items.length !== 0
               ? items
+                  .sort((a, b) =>
+                    a.StockItemNew.name > b.StockItemNew.name
+                      ? 1
+                      : a.StockItemNew.name < b.StockItemNew.name
+                      ? -1
+                      : 0,
+                  )
                   .filter((el, i) => {
                     if (currentPage === 1) {
                       return i >= 0 && i < perpage ? el : null

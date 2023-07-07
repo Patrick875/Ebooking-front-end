@@ -67,6 +67,67 @@ input:focus {
 
 
 }
+.editableTableReturn{
+
+table {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+th {
+  font-size: 18px;
+  padding: 1px;
+  border-left: 2px solid #000000;
+  text-align: left;
+}
+
+thead > tr {
+  border: 2px solid #000000; 
+}
+
+tbody > tr td {
+  border:  2px solid #000000;
+  text-align: left;
+}
+
+tr td{
+  border: 2px solid #000000 !important;
+ 
+}
+.lastRows td {
+  border: 2px solid #000000;
+  text-align: left;
+}
+
+input,select,option {
+  font-size: 16px;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  padding: 6px 12px;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+input[type="date"]::placeholder {
+  visibility: hidden;
+  display: none;
+  color: red
+}
+
+
+input:hover {
+  background-color: #fffaf3;
+}
+
+input:focus {
+  outline: 1px solid #ccc;
+  border: 1px solid #ccc;
+}
+
+
+}
 
 
 

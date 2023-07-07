@@ -1,5 +1,6 @@
 import StockItemAdd from './StockItemAdd'
 import StockItems from './StockItems'
+import UpdateStockItem from './UpdateStockItem'
 
 export const stockItemRoutes = [
   {
@@ -14,5 +15,11 @@ export const stockItemRoutes = [
     exact: true,
     name: 'Stock Items',
     element: StockItems,
+  },
+  {
+    path: '/booking/stock/items/update',
+    exact: true,
+    name: 'Stock Items',
+    element: UpdateStockItem,
   },
 ]

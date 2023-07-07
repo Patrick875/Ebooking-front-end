@@ -201,6 +201,53 @@ export function removeObjectsWithEmptyProperties(array) {
   })
 }
 
+export function multiplyCommonValues(obj1, obj2) {
+  const result = {}
+
+  for (const key in obj1) {
+    if (
+      obj1.hasOwnProperty(key) &&
+      obj2.hasOwnProperty(key) &&
+      obj1[key] &&
+      obj2[key]
+    ) {
+      result[key] = Number(obj1[key] * obj2[key])
+    }
+  }
+
+  return result
+}
+
+export function sumObjectValues(obj) {
+  let sum = 0
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (typeof obj[key] === 'number') {
+        sum += obj[key]
+      }
+    }
+  }
+  return sum
+}
+export function mergeObjects(obj1, obj2) {
+  const commonKeys = Object.keys(obj1).filter(
+    (key) => obj2.hasOwnProperty(key) && obj1[key] && obj2[key],
+  )
+  const mergedObject = {}
+
+  commonKeys.forEach((key) => {
+    const value1 = Number(obj1[key])
+    const value2 = Number(obj2[key])
+
+    const price = value1 > value2 ? value1 : value2
+    const number = value1 < value2 ? value1 : value2
+
+    mergedObject[key] = { price, number }
+  })
+
+  return mergedObject
+}
+
 export function processObjects(array) {
   for (let obj of array) {
     const { name, price } = obj

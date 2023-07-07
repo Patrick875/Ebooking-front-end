@@ -466,7 +466,7 @@ export const units = [
   { name: 'portion', symbol: 'Portion' },
   { name: 'sac', symbol: 'Sac' },
   { name: 'paquet', symbol: 'Paquet' },
-  { name: 'box', symbol: 'Box' },
+  { name: 'box/carton', symbol: 'Box/Carton' },
   { name: 'boite', symbol: 'Boite' },
   { name: 'bun', symbol: 'Bun' },
 ]

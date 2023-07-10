@@ -98,6 +98,18 @@ const Users = () => {
         setUsers(res.data.users)
       })
     }
+    const getAllRoles = async () => {
+      await instance
+        .get('/roles/all')
+        .then((res) => {
+          console.log('cool', res.data.roles)
+          toast.success('all roles available')
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getAllRoles()
     getUsers()
   }, [])
   return (

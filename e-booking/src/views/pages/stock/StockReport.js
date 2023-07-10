@@ -115,6 +115,7 @@ const StockReport = React.forwardRef((props, ref) => {
     new Date(new Date().getFullYear(), 0, 1),
   )
   const [endDate, setEndDate] = useState(new Date())
+
   const onChange = (dates) => {
     const [start, end] = dates
     setStartDate(start)

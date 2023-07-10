@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectStockItem } from 'src/redux/Select/selectStockItem'
@@ -26,6 +26,7 @@ function AvailableStock() {
   const storeId = watch('storeId') || ''
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.role)
 
   const searchItems = (items, query) => {
     if (!query || query === '') {
@@ -48,7 +49,7 @@ function AvailableStock() {
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
-  const [style, setStyle] = useState({ display: 'none' })
+
   items = searchItems(items, query)
   items = filterItems(items, storeId)
 
@@ -125,6 +126,7 @@ function AvailableStock() {
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
               <CTableHeaderCell scope="col">Unit price</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -157,20 +159,10 @@ function AvailableStock() {
                           {item.StockItemNew ? item.StockItemNew.name : ''}
                         </CTableDataCell>
                         <CTableDataCell>{item.quantity}</CTableDataCell>
-                        <CTableDataCell
-                          onMouseEnter={(e) => {
-                            setStyle({ display: 'block' })
-                          }}
-                          onMouseLeave={(e) => {
-                            setStyle({ display: 'none' })
-                          }}
-                          className="d-flex  gap-2"
-                        >
-                          {item.price}
-
+                        <CTableDataCell> {item.price}</CTableDataCell>
+                        <CTableDataCell className="d-flex  gap-2">
                           <div
                             className="btn btn-primary btn-sm"
-                            style={style}
                             onClick={() => {
                               navigate('/booking/stock/item/history')
                               dispatch(selectStockItem(item))
@@ -178,6 +170,22 @@ function AvailableStock() {
                           >
                             Track item
                           </div>
+                          {![
+                            'admin',
+                            'Controller',
+                            'Cost - Controller ',
+                            'General Manager - Olympic',
+                          ].includes(role) ? null : (
+                            <div
+                              className="btn btn-primary btn-sm"
+                              onClick={() => {
+                                navigate('/booking/stock/items/value-update')
+                                dispatch(selectStockItem(item))
+                              }}
+                            >
+                              Update Item value
+                            </div>
+                          )}
                         </CTableDataCell>
                       </CTableRow>
                     )

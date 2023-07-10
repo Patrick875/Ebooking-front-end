@@ -82,7 +82,7 @@ function UserRolesEdit() {
       <CCard className="mb-4">
         <CCardHeader>
           <h2>
-            <strong> Add Role </strong>
+            <strong>Role Edit </strong>
           </h2>
         </CCardHeader>
         <CCardBody>

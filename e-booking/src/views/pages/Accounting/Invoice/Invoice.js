@@ -140,7 +140,7 @@ function Invoice() {
           setInvoices(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getAllInvoice()

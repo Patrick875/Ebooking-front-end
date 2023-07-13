@@ -304,4 +304,3 @@ const obj2 = { a: 3, b: 5, c: true, d: 2 };
 // console.log(multipliedValues);
 
 
-

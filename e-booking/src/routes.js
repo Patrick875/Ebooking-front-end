@@ -18,7 +18,7 @@ import { serviceRoutes } from './views/pages/services/routes'
 import { userRoutes } from './views/pages/users/routes'
 import { storeRoutes } from './views/pages/store/routes'
 import { currencyRoutes } from './views/pages/Currencies/routes'
-//import { contractRoutes } from './views/pages/Contracts/routes'
+import { hotelEventRoutes } from './views/pages/HotelEvents/routes'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -42,6 +42,7 @@ const routes = [
   ...userRoutes,
   ...storeRoutes,
   ...currencyRoutes,
+  ...hotelEventRoutes,
   //...contractRoutes,
 ]
 

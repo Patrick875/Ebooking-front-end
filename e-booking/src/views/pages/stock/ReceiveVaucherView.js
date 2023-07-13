@@ -5,7 +5,6 @@ import PrintHeader from '../Printing/PrintHeader'
 import PrintFooterSignatures from '../Printing/PrintFooterSignatures'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import BackButton from 'src/components/Navigating/BackButton'
-import { DataGrid } from '@mui/x-data-grid'
 
 const ReceiveVaucherView = React.forwardRef((props, ref) => {
   const vaucher = useSelector((state) => state.selection.selected)

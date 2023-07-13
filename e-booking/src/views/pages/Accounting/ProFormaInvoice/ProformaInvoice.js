@@ -86,9 +86,6 @@ function ProformaInvoice() {
           setInvoices(res.data.data)
         })
         .catch((err) => {
-          if (err.message) {
-            toast.error(err.message)
-          }
           console.log('err', err)
         })
     }

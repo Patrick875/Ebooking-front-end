@@ -47,35 +47,29 @@ export const getUTCDateWithoutHours = function (date) {
   const utcDateWithoutTime = newDate.toISOString().slice(0, 10)
   return utcDateWithoutTime
 }
-export const getAllRemoveDates = function (service) {
-  const allDates = service.Reservations.map((e) => {
+export const getEventDates = function (events) {
+  const allDates = events.map((e) => {
     if (e.status !== 'canceled') {
       return {
-        dateIn: new Date(e.checkIn).toString(),
-        dateOut: new Date(e.checkOut).toString(),
+        ...e,
+        dateIn: new Date(e.startDate).toString(),
+        dateOut: new Date(e.endDate).toString(),
       }
     }
     return []
   })
 
-  const nowDates = []
   const removeDates =
     allDates.length !== 0
       ? allDates.map((date) => {
-          return datesInRange(date.dateIn, date.dateOut)
+          return {
+            ...date,
+            dates: datesInRange(date.dateIn, date.dateOut),
+          }
         })
       : allDates
 
-  if (removeDates.length !== 0) {
-    let justDates = removeDates.map((e) => e.map((ele) => nowDates.push(ele)))
-
-    const uniqueDates = nowDates.filter(
-      (value, index, array) => array.indexOf(value) === index,
-    )
-
-    return uniqueDates
-  }
-  return []
+  return removeDates
 }
 
 export const sortingWithDates = function (data) {
@@ -193,7 +187,12 @@ export function groupElementsByTitle(arr) {
 export function removeObjectsWithEmptyProperties(array) {
   return array.filter((obj) => {
     for (const key in obj) {
-      if (key !== 'date' && obj.hasOwnProperty(key) && obj[key] === '') {
+      if (
+        key !== 'date' &&
+        key !== 'comment' &&
+        obj.hasOwnProperty(key) &&
+        obj[key] === ''
+      ) {
         return false
       }
     }

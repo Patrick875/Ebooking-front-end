@@ -18,7 +18,7 @@ import {
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { getAllDates, getAllRemoveDates } from 'src/utils/functions'
+import { getAllDates } from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
@@ -81,7 +81,6 @@ const ReservationAdd = (props) => {
   } else if (type === 'room' && service.length !== 0 && service[0].RoomClass) {
     priceRoom = service[0].RoomClass.price
   }
-  console.log('roomK', roomK)
   const time =
     new Date(startDate).getTime() !== 0 && new Date(endDate).getTime() !== 0
       ? new Date(endDate).getTime() - new Date(startDate).getTime()

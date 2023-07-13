@@ -463,8 +463,10 @@ export const units = [
   { name: 'militter', symbol: 'mL' },
   { name: 'piece', symbol: 'Piece' },
   { name: 'whole', symbol: 'Whole' },
+  { name: 'portion', symbol: 'Portion' },
+  { name: 'sac', symbol: 'Sac' },
   { name: 'paquet', symbol: 'Paquet' },
-  { name: 'box', symbol: 'Box' },
+  { name: 'box/carton', symbol: 'Box/Carton' },
   { name: 'boite', symbol: 'Boite' },
   { name: 'bun', symbol: 'Bun' },
 ]
@@ -554,5 +556,40 @@ export const initialRowsStockOrder = [
     id: uuidv4(),
     StockItemValue: { StockItemNew: { name: '' }, price: 0 },
     quantity: 0,
+  },
+]
+
+export const initialRowsReturning = [
+  {
+    id: uuidv4(),
+
+    item_id: '',
+    quantity: 0,
+    storeId: '',
+    price: 0,
+  },
+  {
+    id: uuidv4(),
+
+    item_id: '',
+    quantity: 0,
+    storeId: '',
+    price: 0,
+  },
+  {
+    id: uuidv4(),
+
+    item_id: '',
+    quantity: 0,
+    storeId: '',
+    price: 0,
+  },
+  {
+    id: uuidv4(),
+
+    item_id: '',
+    quantity: 0,
+    storeId: '',
+    price: 0,
   },
 ]

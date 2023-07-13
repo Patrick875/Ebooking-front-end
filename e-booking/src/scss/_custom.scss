@@ -142,14 +142,12 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   color: #000 !important;
 }
 
-.locations{
-  
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-grid-template-rows: repeat(4, 1fr);
-grid-column-gap: .25em;
-grid-row-gap: .25em;
-
+.services{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto ;
+  grid-column-gap:1.75em;
+  grid-row-gap:1.75em;
 }
 /* CSS */
 .button-add {
@@ -192,3 +190,6 @@ grid-row-gap: .25em;
   background-color: #0039D7;
   border-color: #0039D7;
 }
+
+
+

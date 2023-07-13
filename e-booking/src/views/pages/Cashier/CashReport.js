@@ -13,7 +13,6 @@ import {
 } from '@coreui/react'
 import React, { useRef, useEffect, useState } from 'react'
 import ReactToPrint from 'react-to-print'
-import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import { instance } from 'src/API/AxiosInstance'
 import { useForm } from 'react-hook-form'
 import {
@@ -28,6 +27,7 @@ import ViewCashTransaction from './ViewCashTransaction'
 import PrintHeader from '../Printing/PrintHeader'
 const CashRecords = (props) => {
   let { transactions, time, myDates, startDate, endDate } = props
+  console.log('transactions', transactions)
   let debitTotal, creditTotal, balance
 
   if (time && time === 'all-time') {

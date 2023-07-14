@@ -167,7 +167,12 @@ function StockItems() {
                         <CTableDataCell>{`${item.name}`}</CTableDataCell>
                         <CTableDataCell>{`${item.Store.name}`}</CTableDataCell>
                         <CTableDataCell className="d-flex gap-2 ">
-                          {role && role === 'admin' ? (
+                          {role &&
+                          role ===
+                            ('admin' ||
+                              'Storekeeper' ||
+                              'Controller' ||
+                              'Cost - Controller') ? (
                             <React.Fragment>
                               <Link
                                 className={` btn btn-sm btn-primary`}

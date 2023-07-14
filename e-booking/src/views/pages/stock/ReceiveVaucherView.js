@@ -80,9 +80,9 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>Item name</th>
                     <th>unit</th>
-                    <th>Quantity</th>
+                    <th>Qty</th>
                     <th>U.P</th>
                     <th>T.P</th>
                   </tr>
@@ -97,7 +97,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                       requestQuantity,
                     }) => (
                       <tr key={id}>
-                        <td>
+                        <td style={{ minWidth: '214px' }}>
                           <input
                             name="name"
                             value={StockItemNew.name}
@@ -173,9 +173,9 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>Item name</th>
                     <th>unit</th>
-                    <th>Quantity</th>
+                    <th>Qty</th>
                     <th>U.P</th>
                     <th>T.P</th>
                   </tr>
@@ -187,7 +187,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                       index,
                     ) => (
                       <tr key={id}>
-                        <td>
+                        <td style={{ minWidth: '214px' }}>
                           <input
                             name="name"
                             value={StockItemNew.name}

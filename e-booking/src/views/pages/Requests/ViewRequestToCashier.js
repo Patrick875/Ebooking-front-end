@@ -107,7 +107,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
                 {[...rows].map(
                   ({ id, unit, unitPrice, StockItemNew, requestQuantity }) => (
                     <tr key={id}>
-                      <td>
+                      <td style={{ minWidth: '212px' }}>
                         <input
                           name="name"
                           value={StockItemNew.name}

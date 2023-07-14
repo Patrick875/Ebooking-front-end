@@ -253,12 +253,16 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                     <td className="px-2" />
                     <td className="px-2" />
                     <td className="px-2" />
-                    <td className="text-end px-2 fw-bold">{receiveTotal}</td>
+                    <td className="text-end px-2 fw-bold">
+                      {Math.round(receiveTotal)}
+                    </td>
                   </tr>
                   <tr key={1000} className="lastRows">
                     <td className="px-2 fw-bold" colSpan={4} />
 
-                    <td className="text-end px-2 fw-bold">{Balance}</td>
+                    <td className="text-end px-2 fw-bold">
+                      {Math.round(Balance)}
+                    </td>
                   </tr>
                 </tbody>
               </table>

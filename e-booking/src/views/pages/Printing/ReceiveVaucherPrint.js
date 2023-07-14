@@ -77,7 +77,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                     <tr>
                       <th>Name</th>
                       <th>unit</th>
-                      <th>Quantity</th>
+                      <th>Qty</th>
                       <th>U.P</th>
                       <th>T.P</th>
                     </tr>
@@ -92,21 +92,20 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                         requestQuantity,
                       }) => (
                         <tr key={id}>
-                          <td>
+                          <td style={{ minWidth: '220px' }}>
                             <input
                               name="name"
                               value={StockItemNew.name}
                               readOnly={true}
-                              style={{ width: 'auto-size' }}
                               type="text"
                               placeholder=""
                             />
                           </td>
                           <td>
                             <input
+                              style={{ maxWidth: '270px' }}
                               name="unit"
                               value={unit}
-                              style={{ width: 'auto-size' }}
                               readOnly={true}
                               type="text"
                               placeholder=""
@@ -115,7 +114,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                           <td>
                             <input
                               name="requestQuantity"
-                              style={{ width: 'auto-size' }}
+                              style={{ maxWidth: '90px' }}
                               value={
                                 requestQuantity === 0 ? '' : requestQuantity
                               }
@@ -128,7 +127,6 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                             <input
                               name={'unitPrice'}
                               type="text"
-                              style={{ width: 'auto-size' }}
                               value={unitPrice === 0 ? ' ' : unitPrice}
                               readOnly={true}
                               placeholder=""
@@ -138,11 +136,15 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                             <input
                               name="total"
                               type="text"
-                              style={{ width: 'auto-size' }}
+                              style={{ maxWidth: '180px' }}
                               value={
-                                Number(unitPrice * requestQuantity) === 0
+                                Number(unitPrice * requestQuantity).toFixed(
+                                  2,
+                                ) === 0
                                   ? ''
-                                  : Number(unitPrice * requestQuantity)
+                                  : Number(unitPrice * requestQuantity).toFixed(
+                                      2,
+                                    )
                               }
                               readOnly={true}
                               placeholder=""
@@ -180,9 +182,9 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                     <tr>
                       <th>Name</th>
                       <th>unit</th>
-                      <th>Quantity</th>
+                      <th>Qty</th>
                       <th>U.P</th>
-                      <th>T.P</th>
+                      <th style={{ maxWidth: '180px' }}>T.P</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -197,7 +199,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                               name="name"
                               value={StockItemNew.name}
                               readOnly={false}
-                              style={{ width: 'auto-size' }}
+                              style={{ minWidth: '220px' }}
                               type="text"
                               onChange={(e) => onChangeInput(e, id)}
                               placeholder=""
@@ -208,7 +210,6 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                               name="unit"
                               value={unit}
                               readOnly={false}
-                              style={{ width: 'auto-size' }}
                               type="text"
                               onChange={(e) => onChangeInput(e, id)}
                               placeholder=""
@@ -218,7 +219,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                             <input
                               name="requestQuantity"
                               defaultValue={requestQuantity}
-                              style={{ width: 'auto-size' }}
+                              style={{ maxWidth: '90px' }}
                               readOnly={false}
                               type="text"
                               onChange={(e) => onChangeInput(e, id)}
@@ -240,15 +241,19 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                               placeholder=""
                             />
                           </td>
-                          <td>
+                          <td style={{ maxWidth: '180px' }}>
                             <input
                               name="total"
                               type="text"
-                              style={{ width: 'auto-size' }}
+                              style={{ maxWidth: '180px' }}
                               value={
-                                Number(unitPrice * requestQuantity) === 0
+                                Number(unitPrice * requestQuantity).toFixed(
+                                  2,
+                                ) === 0
                                   ? ''
-                                  : Number(unitPrice * requestQuantity)
+                                  : Number(unitPrice * requestQuantity).toFixed(
+                                      2,
+                                    )
                               }
                               onChange={(e) => onChangeInput(e, id)}
                               readOnly={false}

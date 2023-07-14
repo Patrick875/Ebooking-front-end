@@ -137,7 +137,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                             placeholder=""
                           />
                         </td>
-                        <td>
+                        <td style={{ maxWidth: '180px' }}>
                           <input
                             name="total"
                             type="text"

@@ -78,6 +78,7 @@ const UpdateStockItemValue = () => {
                       type="number"
                       name="quantity"
                       id="quantity"
+                      step="any"
                       defaultValue={
                         itemData ? itemData.quantity : item.quantity
                       }
@@ -89,6 +90,7 @@ const UpdateStockItemValue = () => {
                     <CFormInput
                       type="number"
                       name="price"
+                      step="any"
                       id="price"
                       defaultValue={itemData ? itemData.price : item.price}
                       {...register('price', { required: true })}

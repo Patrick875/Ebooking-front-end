@@ -173,6 +173,7 @@ function AvailableStock() {
                           {![
                             'admin',
                             'Controller',
+                            'Storekeeper',
                             'Cost - Controller ',
                             'General Manager - Olympic',
                           ].includes(role) ? null : (

@@ -45,7 +45,6 @@ const CashTransaction = () => {
       })
   }
   const onSubmit = async (data) => {
-    console.log('data', date)
     if (type === 'credit') {
       await creditTransaction({
         ...data,

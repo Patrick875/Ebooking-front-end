@@ -319,7 +319,7 @@ const CashReport = React.forwardRef((props, ref) => {
                       <CTableHeaderCell scope="col">Date</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Id</CTableHeaderCell>
                       <CTableHeaderCell scope="col">To/From</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">By</CTableHeaderCell>
+
                       <CTableHeaderCell scope="col">Type</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Reason</CTableHeaderCell>
@@ -357,11 +357,7 @@ const CashReport = React.forwardRef((props, ref) => {
                                   {item.transactionId}
                                 </CTableDataCell>
                                 <CTableDataCell>{item.doneTo}</CTableDataCell>
-                                <CTableDataCell>
-                                  {item.User.firstName +
-                                    ' ' +
-                                    item.User.lastName}
-                                </CTableDataCell>
+
                                 <CTableDataCell>
                                   {item.accountType}
                                 </CTableDataCell>

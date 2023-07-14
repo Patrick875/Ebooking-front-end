@@ -92,7 +92,7 @@ function AllStockRequests() {
           setPetitStock(res.data.data)
         })
         .catch((err) => {
-          throw Error(err.statusCode)
+          console.log(err.statusCode)
         })
     }
     getAllPetitStock()

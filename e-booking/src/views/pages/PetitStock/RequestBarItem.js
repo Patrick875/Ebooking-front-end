@@ -26,14 +26,9 @@ import { units } from 'src/utils/constants'
 
 const RequestBarItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const {
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    formState: { errors },
-    reset,
-  } = useForm({ mode: 'onChange' })
+  const { register, handleSubmit, watch, getValues, reset } = useForm({
+    mode: 'onChange',
+  })
   let quantity = watch('quantity')
 
   let [stockItems, setStockItems] = useState([])

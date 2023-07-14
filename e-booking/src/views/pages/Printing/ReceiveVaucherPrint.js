@@ -114,7 +114,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                           <td>
                             <input
                               name="requestQuantity"
-                              style={{ maxWidth: '90px' }}
+                              style={{ maxWidth: '110px' }}
                               value={
                                 requestQuantity === 0 ? '' : requestQuantity
                               }
@@ -219,7 +219,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                             <input
                               name="requestQuantity"
                               defaultValue={requestQuantity}
-                              style={{ maxWidth: '90px' }}
+                              style={{ maxWidth: '110px' }}
                               readOnly={false}
                               type="text"
                               onChange={(e) => onChangeInput(e, id)}
@@ -268,12 +268,16 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
                       <td className="px-2" />
                       <td className="px-2" />
                       <td className="px-2" />
-                      <td className="text-end  fw-bold">{totalReceiving}</td>
+                      <td className="text-end  fw-bold">
+                        {Math.round(totalReceiving)}
+                      </td>
                     </tr>
                     <tr key={1000} className="lastRows">
                       <td className="px-2 fw-bold" colSpan={4} />
 
-                      <td className="text-end px-2 fw-bold">{Balance}</td>
+                      <td className="text-end px-2 fw-bold">
+                        {Math.round(Balance)}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

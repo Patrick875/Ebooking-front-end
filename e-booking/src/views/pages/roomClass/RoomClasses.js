@@ -105,32 +105,11 @@ const RoomClasses = () => {
                                   .map((room, i, arr) => {
                                     if (i === arr.length - 1) {
                                       return (
-                                        <span key={room.id}>
-                                          <Link
-                                            to="/booking/reservations/add"
-                                            className="nav-link d-inline"
-                                            onClick={() => {
-                                              dispatch(selectRoom(room))
-                                            }}
-                                          >
-                                            {room.name}
-                                          </Link>
-                                        </span>
+                                        <span key={room.id}>{room.name}</span>
                                       )
                                     }
                                     return (
-                                      <span key={room.id}>
-                                        <Link
-                                          to="/booking/reservations/add"
-                                          className="nav-link d-inline"
-                                          onClick={() => {
-                                            return dispatch(deselectRoom())
-                                          }}
-                                        >
-                                          {room.name}
-                                        </Link>{' '}
-                                        /{' '}
-                                      </span>
+                                      <span key={room.id}>{room.name} / </span>
                                     )
                                   })}
                               </p>

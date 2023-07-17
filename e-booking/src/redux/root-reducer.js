@@ -10,6 +10,7 @@ import categoryReducer from './Categories/categroiesReducer'
 import selectionReducer from './Select/selectionReducer'
 import formReducer from './MultiStepForm/formReducer'
 import constantsReducer from './Constants/constantsReducer'
+import reservationsReducer from './reservation/reservationsReducer'
 
 export default combineReducers({
   sidebarShow: UIReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
   selection: selectionReducer,
   constants: constantsReducer,
   multiStepForm: formReducer,
+  reservation: reservationsReducer,
 })

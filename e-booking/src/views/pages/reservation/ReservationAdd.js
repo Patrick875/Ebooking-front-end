@@ -40,8 +40,14 @@ const CreateCustomerModal = (props) => {
 
 const ReservationAdd = (props) => {
   const { register, handleSubmit, watch, reset } = useForm()
+  const roomFromRoomClass = useSelector(
+    (state) => state.reservation.selectedRoom,
+  )
   const [customer, setCustomer] = useState([])
-  const [service, setService] = useState([])
+  let [service, setService] = useState([])
+  if (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0) {
+    service[0] = roomFromRoomClass
+  }
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [hallServices, setHallServices] = useState([])
@@ -58,7 +64,12 @@ const ReservationAdd = (props) => {
   let priceHall = 0
   let priceRoom = 0
 
-  const type = watch('booking_type') || 'room'
+  const type =
+    watch('booking_type') ||
+    'room' ||
+    (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0)
+      ? 'room'
+      : null
   const additional = watch('additionalServices') || {}
   const roomK = watch('roomClass') || null
   const details = watch('details') || null
@@ -114,7 +125,7 @@ const ReservationAdd = (props) => {
     } else if (type === 'room' && datesIn && details) {
       data.amount = totalPrice
       delete data.roomClass
-    } else if (datesIn && !details) {
+    } else if ((datesIn && !details) || (datesIn && details)) {
       data.hallId = service[0].id
       data.amount = priceHall * datesIn.length + additionalServicesTotal
       delete data.children_number
@@ -137,13 +148,19 @@ const ReservationAdd = (props) => {
     }
 
     const createReservation = async () => {
+      console.log('stuff and good stuff', data)
       await instance
         .post('/reservation/add', data)
         .then((res) => {
-          toast.success('Reservation created')
+          if (res.data.data) {
+            toast.success('Reservation created')
+          } else {
+            toast.error('Rerservation creation failed')
+          }
           setReload(res)
         })
         .catch((err) => {
+          console.log('err', err)
           toast.error('Rerservation add failed')
         })
 
@@ -157,7 +174,7 @@ const ReservationAdd = (props) => {
   useEffect(() => {
     const getCurrencyRates = async () => {
       await instance.get('/currency/rate').then((res) => {
-        setApiCurrencies([...apicurrencies, res.data.data])
+        setApiCurrencies([...apicurrencies, ...res.data.data])
       })
     }
     const getCustomers = async () => {
@@ -175,9 +192,11 @@ const ReservationAdd = (props) => {
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
+          console.log('res', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
+          console.log(err)
         })
     }
     const getHallServices = async () => {
@@ -512,7 +531,7 @@ const ReservationAdd = (props) => {
                             ? Number(priceRoom) * datesIn.length +
                               '  USD  /  ' +
                               Number(
-                                apicurrencies[0].filter(
+                                apicurrencies.filter(
                                   (el) => el.name === 'RWF',
                                 )[0].rate *
                                   Number(priceRoom) *
@@ -535,7 +554,7 @@ const ReservationAdd = (props) => {
                           {totalPrice.toLocaleString()} USD RWF /{'  '}
                           {apicurrencies && apicurrencies.length !== 0
                             ? Number(
-                                apicurrencies[0].filter(
+                                apicurrencies.filter(
                                   (el) => el.name === 'RWF',
                                 )[0].rate * totalPrice,
                               ).toLocaleString()
@@ -605,7 +624,7 @@ const ReservationAdd = (props) => {
                       loggedInUser === 'controller' ||
                       customer.length === 0 ||
                       dontSubmit ||
-                      service === 0
+                      service.length === 0
                         ? 'disabled'
                         : ''
                     } `}

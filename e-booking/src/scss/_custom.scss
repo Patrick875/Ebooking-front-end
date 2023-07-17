@@ -34,8 +34,8 @@
   /* Show all columns in print */
 
   html,body{
-    margin: 4em;
-    zoom:80%
+    margin: 1em;
+    zoom:90%
   }
 
  
@@ -168,20 +168,27 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   
 }
 
+
+
+
+
+
 /* CSS */
+
+
+// Define base button styles
 .button-add {
   appearance: button;
-  background-color: #1652F0;
-  border: 1px solid #1652F0;
+  border: 1px solid;
   border-radius: 4px;
   box-sizing: border-box;
   color: #FFFFFF;
   cursor: pointer;
-  font-family: Graphik,-apple-system,system-ui,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
-  font-size: 14px;
+  font-family: Graphik, -apple-system, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 18px;
   line-height: 1.15;
   overflow: visible;
-  padding: 12px 16px;
+  padding: 14px 20px;
   position: relative;
   text-align: center;
   text-transform: none;
@@ -193,7 +200,7 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
 }
 
 .button-add:disabled {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .button-add:focus {
@@ -208,4 +215,22 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
 .button-add:active {
   background-color: #0039D7;
   border-color: #0039D7;
+}
+
+// Define button variations
+.button-check-in {
+  @extend .button-add;
+  background-color: #1652F0;
+  border-color: #1652F0;
+}
+
+.button-check-out {
+  @extend .button-add;
+  background-color: #245D34;
+  border-color: #245D34;
+}
+.button-reserv-check-in {
+  @extend .button-add;
+  background-color: #2f80ed;
+ 
 }

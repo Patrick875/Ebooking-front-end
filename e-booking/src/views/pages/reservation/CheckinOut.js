@@ -14,11 +14,12 @@ import {
   CRow,
   CFormCheck,
   CModal,
+  CCardTitle,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { filterDateDuplicates, getAllDates } from 'src/utils/functions'
+import { getAllDates } from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
@@ -37,17 +38,10 @@ const CreateCustomerModal = (props) => {
     </CModal>
   )
 }
-
-const ReservationAdd = (props) => {
+const CheckIn = (props) => {
   const { register, handleSubmit, watch, reset } = useForm()
-  const roomFromRoomClass = useSelector(
-    (state) => state.reservation.selectedRoom,
-  )
   const [customer, setCustomer] = useState([])
-  let [service, setService] = useState([])
-  if (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0) {
-    service[0] = roomFromRoomClass
-  }
+  const [service, setService] = useState([])
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [hallServices, setHallServices] = useState([])
@@ -64,14 +58,9 @@ const ReservationAdd = (props) => {
   let priceHall = 0
   let priceRoom = 0
 
-  const type =
-    watch('booking_type') ||
-    'room' ||
-    (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0)
-      ? 'room'
-      : null
+  const type = watch('booking_type') || 'room'
   const additional = watch('additionalServices') || {}
-  const roomK = watch('roomClass') || null
+  const [checkinType, setCheckInType] = useState('new')
   const details = watch('details') || null
   const payment = watch('payment') || 0
 
@@ -123,9 +112,9 @@ const ReservationAdd = (props) => {
       data.roomId = service[0].id
       data.amount = service[0].RoomClass.price * datesIn.length
     } else if (type === 'room' && datesIn && details) {
-      data.amount = totalPrice * datesIn.length
+      data.amount = totalPrice
       delete data.roomClass
-    } else if ((datesIn && !details) || (datesIn && details)) {
+    } else if (datesIn && !details) {
       data.hallId = service[0].id
       data.amount = priceHall * datesIn.length + additionalServicesTotal
       delete data.children_number
@@ -148,19 +137,13 @@ const ReservationAdd = (props) => {
     }
 
     const createReservation = async () => {
-      console.log('stuff and good stuff', data)
       await instance
         .post('/reservation/add', data)
         .then((res) => {
-          if (res.data.data) {
-            toast.success('Reservation created')
-          } else {
-            toast.error('Rerservation creation failed')
-          }
+          toast.success('Reservation created')
           setReload(res)
         })
         .catch((err) => {
-          console.log('err', err)
           toast.error('Rerservation add failed')
         })
 
@@ -174,7 +157,7 @@ const ReservationAdd = (props) => {
   useEffect(() => {
     const getCurrencyRates = async () => {
       await instance.get('/currency/rate').then((res) => {
-        setApiCurrencies([...apicurrencies, ...res.data.data])
+        setApiCurrencies([...apicurrencies, res.data.data])
       })
     }
     const getCustomers = async () => {
@@ -192,11 +175,9 @@ const ReservationAdd = (props) => {
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
-          console.log('res', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
-          console.log(err)
         })
     }
     const getHallServices = async () => {
@@ -270,10 +251,23 @@ const ReservationAdd = (props) => {
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
-            <CCardHeader>
+            <CCardHeader className="d-flex justify-content-between">
               <h5>
-                <strong> Create reservation </strong>
+                <strong> Check In/{checkinType} </strong>
               </h5>
+              <div className="d-flex gap-3">
+                <button
+                  className="button-new-check-in"
+                  onClick={() => {
+                    setCheckInType('new')
+                  }}
+                >
+                  New{' '}
+                </button>
+                <button onClick={() => setCheckInType('by-reservation')}>
+                  By reservation
+                </button>
+              </div>
             </CCardHeader>
             <CCardBody>
               <CForm
@@ -368,11 +362,9 @@ const ReservationAdd = (props) => {
                           highlightDates={datesIn}
                           minDate={new Date()}
                           dateFormat="dd/MM/yyyy"
-                          onChange={(date) => {
-                            let newDates = [...datesIn, new Date(date)]
-                            newDates = filterDateDuplicates(newDates)
-                            setDatesIn([...newDates])
-                          }}
+                          onChange={(date) =>
+                            setDatesIn([...datesIn, new Date(date)])
+                          }
                           inline
                           excludeDates={[...removeDates]}
                           placeholderText="Select a date other than  yesterday"
@@ -533,7 +525,7 @@ const ReservationAdd = (props) => {
                             ? Number(priceRoom) * datesIn.length +
                               '  USD  /  ' +
                               Number(
-                                apicurrencies.filter(
+                                apicurrencies[0].filter(
                                   (el) => el.name === 'RWF',
                                 )[0].rate *
                                   Number(priceRoom) *
@@ -553,15 +545,12 @@ const ReservationAdd = (props) => {
                       {details && type === 'room' ? (
                         <p>
                           {' '}
-                          {Number(
-                            datesIn.length * totalPrice,
-                          ).toLocaleString()}{' '}
-                          USD RWF /{'  '}
+                          {totalPrice.toLocaleString()} USD RWF /{'  '}
                           {apicurrencies && apicurrencies.length !== 0
                             ? Number(
-                                apicurrencies.filter(
+                                apicurrencies[0].filter(
                                   (el) => el.name === 'RWF',
-                                )[0].rate * Number(datesIn.length * totalPrice),
+                                )[0].rate * totalPrice,
                               ).toLocaleString()
                             : null}{' '}
                           RWF
@@ -629,7 +618,7 @@ const ReservationAdd = (props) => {
                       loggedInUser === 'controller' ||
                       customer.length === 0 ||
                       dontSubmit ||
-                      (!service && service.length === 0)
+                      service === 0
                         ? 'disabled'
                         : ''
                     } `}
@@ -649,4 +638,54 @@ const ReservationAdd = (props) => {
   )
 }
 
-export default ReservationAdd
+const CheckinOut = () => {
+  const [action, setAction] = useState('')
+  return (
+    <div>
+      {action === '' ? (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplate: '1fr 1fr 1fr',
+            gridTemplateColumns: '1fr 1fr 1fr',
+          }}
+        >
+          <CCard>
+            <CCardBody>
+              <div className=" col d-flex justify-content-center">
+                <button
+                  className="button-check-in"
+                  onClick={() => {
+                    setAction('check-in')
+                  }}
+                >
+                  Check-in{' '}
+                </button>
+              </div>
+            </CCardBody>
+          </CCard>
+          <CCard>
+            <CCardBody>
+              <div className=" col d-flex justify-content-center">
+                <button
+                  className="button-check-out"
+                  onClick={() => {
+                    setAction('check-out')
+                  }}
+                >
+                  Check-Out{' '}
+                </button>
+              </div>
+            </CCardBody>
+          </CCard>
+        </div>
+      ) : action === 'check-in' ? (
+        <CheckIn />
+      ) : (
+        <p>Checkout</p>
+      )}
+    </div>
+  )
+}
+
+export default CheckinOut

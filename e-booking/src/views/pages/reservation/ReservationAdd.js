@@ -123,7 +123,7 @@ const ReservationAdd = (props) => {
       data.roomId = service[0].id
       data.amount = service[0].RoomClass.price * datesIn.length
     } else if (type === 'room' && datesIn && details) {
-      data.amount = totalPrice
+      data.amount = totalPrice * datesIn.length
       delete data.roomClass
     } else if ((datesIn && !details) || (datesIn && details)) {
       data.hallId = service[0].id

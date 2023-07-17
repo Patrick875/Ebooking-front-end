@@ -629,7 +629,7 @@ const ReservationAdd = (props) => {
                       loggedInUser === 'controller' ||
                       customer.length === 0 ||
                       dontSubmit ||
-                      service.length === 0
+                      (!service && service.length === 0)
                         ? 'disabled'
                         : ''
                     } `}

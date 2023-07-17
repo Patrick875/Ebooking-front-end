@@ -256,3 +256,19 @@ export function processObjects(array) {
 
   return array
 }
+
+export function filterDateDuplicates(dates) {
+  // Get the date part of each date object.
+  const dateOnly = dates.map((date) => date.toDateString())
+
+  // Create a set of unique date strings.
+  const uniqueDateStrings = new Set(dateOnly)
+
+  // Create a new array of unique dates.
+  const uniqueDates = []
+  for (const dateString of uniqueDateStrings) {
+    uniqueDates.push(new Date(dateString))
+  }
+
+  return uniqueDates
+}

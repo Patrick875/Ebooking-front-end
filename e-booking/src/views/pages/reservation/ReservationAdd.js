@@ -18,7 +18,7 @@ import {
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { getAllDates } from 'src/utils/functions'
+import { filterDateDuplicates, getAllDates } from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
@@ -368,9 +368,11 @@ const ReservationAdd = (props) => {
                           highlightDates={datesIn}
                           minDate={new Date()}
                           dateFormat="dd/MM/yyyy"
-                          onChange={(date) =>
-                            setDatesIn([...datesIn, new Date(date)])
-                          }
+                          onChange={(date) => {
+                            let newDates = [...datesIn, new Date(date)]
+                            newDates = filterDateDuplicates(newDates)
+                            setDatesIn([...newDates])
+                          }}
                           inline
                           excludeDates={[...removeDates]}
                           placeholderText="Select a date other than  yesterday"
@@ -551,12 +553,15 @@ const ReservationAdd = (props) => {
                       {details && type === 'room' ? (
                         <p>
                           {' '}
-                          {totalPrice.toLocaleString()} USD RWF /{'  '}
+                          {Number(
+                            datesIn.length * totalPrice,
+                          ).toLocaleString()}{' '}
+                          USD RWF /{'  '}
                           {apicurrencies && apicurrencies.length !== 0
                             ? Number(
                                 apicurrencies.filter(
                                   (el) => el.name === 'RWF',
-                                )[0].rate * totalPrice,
+                                )[0].rate * Number(datesIn.length * totalPrice),
                               ).toLocaleString()
                             : null}{' '}
                           RWF

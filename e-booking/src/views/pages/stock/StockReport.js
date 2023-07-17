@@ -39,9 +39,10 @@ function StockReportTable(props) {
           <CTableRow>
             <CTableHeaderCell scope="col"> # </CTableHeaderCell>
             <CTableHeaderCell scope="col"> ITEM NAME </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> ACTION </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> PREV QTY </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> BALANCE</CTableHeaderCell>
+            <CTableHeaderCell scope="col"> OPENING </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> NEW STOCK </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> QTY OUT </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> CLOSING</CTableHeaderCell>
             <CTableHeaderCell scope="col"> U.P </CTableHeaderCell>
             <CTableHeaderCell scope="col"> T.P</CTableHeaderCell>
           </CTableRow>
@@ -66,12 +67,31 @@ function StockReportTable(props) {
                     {(currentPage - 1) * perpage + 1 + i}
                   </CTableDataCell>
                   <CTableDataCell>{item.StockItemNew.name}</CTableDataCell>
-                  <CTableDataCell>
-                    {item && item.status === 'DEFAULT'
-                      ? `ADDED ${item.newQuantity}`
-                      : item.status + `  ${item.newQuantity}`}
-                  </CTableDataCell>
                   <CTableDataCell>{item.preQuantity}</CTableDataCell>
+                  <CTableDataCell>
+                    {items
+                      .filter((el) => el.stockItem === item.stockItem)
+                      .filter((el) => el.status === 'ADDED')
+                      .reduce((a, b) => a + Number(b.newQuantity), 0)}
+                  </CTableDataCell>
+
+                  <CTableDataCell>
+                    {items
+                      .filter((el) => el.stockItem === item.stockItem)
+                      .filter(
+                        (el) =>
+                          el.status === 'DEFAULT' || el.status === 'REMOVED',
+                      ).length !== 0
+                      ? items
+                          .filter((el) => el.stockItem === item.stockItem)
+                          .filter(
+                            (el) =>
+                              el.status === 'DEFAULT' ||
+                              el.status === 'REMOVED',
+                          )
+                          .reduce((a, b) => a + Number(b.newQuantity),0)
+                      : 0}
+                  </CTableDataCell>
                   <CTableDataCell>{item.balance}</CTableDataCell>
                   <CTableDataCell>{item.price}</CTableDataCell>
                   <CTableDataCell>
@@ -149,6 +169,7 @@ const StockReport = React.forwardRef((props, ref) => {
         .then((res) => {
           toast.success('all items details retrieved')
           setItems(res.data.data)
+          console.log('all items', res.data.data)
         })
         .catch((err) => {
           toast.error('item details retrieve failed')

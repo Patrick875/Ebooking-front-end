@@ -73,7 +73,9 @@ function StockReportTable(props) {
                   </CTableDataCell>
                   <CTableDataCell>{item.preQuantity}</CTableDataCell>
                   <CTableDataCell>{item.balance}</CTableDataCell>
-                  <CTableDataCell>{item.price}</CTableDataCell>
+                  <CTableDataCell>
+                    {Number(item.price).toFixed(2)}
+                  </CTableDataCell>
                   <CTableDataCell>
                     {Number(item.price * item.balance).toLocaleString()}
                   </CTableDataCell>

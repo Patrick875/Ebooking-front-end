@@ -4,6 +4,7 @@ import Reservations from './Reservations'
 import CreateDailySalesReport from './Daily Sales/CreateDailySalesReport'
 import AllDailySalesReports from './Daily Sales/AllDailySalesReports'
 import DailySalesReportView from './Daily Sales/DailySalesReportView'
+import CheckinOut from './CheckinOut'
 
 export const reservationRoutes = [
   {
@@ -11,6 +12,12 @@ export const reservationRoutes = [
     exact: true,
     name: 'Book new room',
     element: ReservationAdd,
+  },
+  {
+    path: '/booking/reservations/check-in',
+    exact: true,
+    name: 'Book new room',
+    element: CheckinOut,
   },
   {
     path: '/booking/reservations/info',

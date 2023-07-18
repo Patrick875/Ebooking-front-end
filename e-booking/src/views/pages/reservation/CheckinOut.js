@@ -18,11 +18,12 @@ import {
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { filterDateDuplicates, getAllDates } from 'src/utils/functions'
+import { getAllDates, isRoomOccupied } from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import CustomerAdd from '../Customer/CustomerAdd'
+import AddPaymentModal from './AddPaymentModal'
 
 const CreateCustomerModal = (props) => {
   const { visible, setVisible, setNewCustomer } = props
@@ -38,14 +39,213 @@ const CreateCustomerModal = (props) => {
   )
 }
 
-const ReservationAdd = (props) => {
-  const { register, handleSubmit, watch, reset } = useForm()
-  const roomFromRoomClass = {}
-  const [customer, setCustomer] = useState([])
-  let [service, setService] = useState([])
-  if (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0) {
-    service[0] = roomFromRoomClass
+const Checkout = (props) => {
+  const { rooms } = props
+  const [open, setOpen] = useState(false)
+  const { register, watch } = useForm()
+  const roomId = watch('room')
+  const selectedRoom = rooms
+    ? rooms.filter((room) => room.id == roomId)[0]
+    : null
+  let roomReservation = selectedRoom ? isRoomOccupied(selectedRoom) : {}
+  const [reservation, setReservation] = useState()
+  const checkout = async () => {
+    await instance
+      .post('/reservation/checkout', { id: roomReservation.reservation.id })
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('client checked out')
+        }
+      })
+      .catch((er) => {
+        console.log('err', er)
+      })
   }
+  if (reservation) {
+    checkout()
+    roomReservation.reservation = reservation
+  }
+  return (
+    <div>
+      <CCardBody className="row">
+        <CCol className="d-flex justify-content-between">
+          <p className="fw-bold fs-4 ">Checkout Customer</p>
+
+          <CCol md={4} className="">
+            <CCol className="d-flex gap-3">
+              <CFormSelect {...register('room')}>
+                {rooms.map((el, i) => (
+                  <option value={el.id} selected={rooms[0].id}>
+                    {el.name}
+                  </option>
+                ))}
+              </CFormSelect>
+            </CCol>
+          </CCol>
+        </CCol>
+
+        <div>
+          {Object.keys(roomReservation).length === 0 ? (
+            <p>This room is not currently occupied</p>
+          ) : (
+            <CCard>
+              <div className="d-flex gap-3">
+                <CCol md={6} className="p-2 m-2">
+                  <CFormLabel className="fw-bolder">
+                    {' '}
+                    Customer details
+                  </CFormLabel>
+                  <div>
+                    <CFormLabel> Names</CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="title"
+                      id="title"
+                      required
+                      value={roomReservation.reservation.Customer.names}
+                    />
+                    <CFormLabel>Phone</CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="title"
+                      id="title"
+                      required
+                      value={roomReservation.reservation.Customer.phone}
+                    />
+                    <CFormLabel>ID/Passport</CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="title"
+                      id="title"
+                      required
+                      value={
+                        roomReservation.reservation.Customer.identification
+                      }
+                    />
+                  </div>
+
+                  <div className="checkout-final mt-3">
+                    {Number(
+                      Math.round(
+                        Number(roomReservation.reservation.amount['RWF']) -
+                          Number(roomReservation.reservation.payment['RWF']),
+                      ),
+                    ) > 0 ? (
+                      <React.Fragment>
+                        <button
+                          onClick={() => {
+                            return checkout()
+                          }}
+                        >
+                          Checkout with debt
+                        </button>
+                        <button
+                          onClick={() => {
+                            setOpen(true)
+                          }}
+                        >
+                          Clear debt and Checkout{' '}
+                        </button>
+                      </React.Fragment>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          return checkout()
+                        }}
+                      >
+                        Checkout
+                      </button>
+                    )}
+                  </div>
+                </CCol>
+                <CCol md={6} className="p-2 m-2">
+                  <CFormLabel className="fw-bolder">
+                    Reservation details
+                  </CFormLabel>
+                  <div>
+                    <p>
+                      <span className="fw-bold">Room </span>:{' '}
+                      {selectedRoom.name}
+                    </p>
+                    <div className="py-2">
+                      <p className="fw-bold py-0 my-0">Dates</p>
+                      {roomReservation.reservation.DatesIns[
+                        roomReservation.reservation.DatesIns.length - 1
+                      ].datesIn.map((el, i) => {
+                        return (
+                          <li key={i * 6721}>
+                            {new Date(el).toLocaleDateString()}
+                          </li>
+                        )
+                      })}
+                    </div>
+
+                    <p className="font-weight-bold">
+                      Total :{' '}
+                      {Object.keys(roomReservation.reservation.amount).map(
+                        (curr) => (
+                          <p>
+                            {curr} :{' '}
+                            {Number(
+                              Math.round(
+                                roomReservation.reservation.amount[curr],
+                              ),
+                            ).toLocaleString()}
+                          </p>
+                        ),
+                      )}
+                    </p>
+                    <p className="font-weight-bold">
+                      Paid :{' '}
+                      {Object.keys(roomReservation.reservation.payment).map(
+                        (curr) => (
+                          <p>
+                            {curr} :{' '}
+                            {Number(
+                              Math.round(
+                                Number(
+                                  roomReservation.reservation.payment[curr],
+                                ),
+                              ),
+                            ).toLocaleString()}
+                          </p>
+                        ),
+                      )}
+                    </p>
+                    <p className="font-weight-bold">
+                      Debt :{' '}
+                      {Number(
+                        Math.round(
+                          Number(roomReservation.reservation.amount['RWF']) -
+                            Number(roomReservation.reservation.payment['RWF']),
+                        ),
+                      ).toLocaleString()}{' '}
+                      RWF
+                    </p>
+                  </div>
+                </CCol>
+              </div>
+            </CCard>
+          )}
+        </div>
+        <AddPaymentModal
+          reservation={roomReservation.reservation}
+          open={open}
+          setOpen={setOpen}
+          setReservation={setReservation}
+        />
+      </CCardBody>
+    </div>
+  )
+}
+
+const CheckIn = (props) => {
+  const { register, handleSubmit, watch, reset } = useForm()
+  const [customer, setCustomer] = useState([])
+  const [service, setService] = useState([])
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [hallServices, setHallServices] = useState([])
@@ -62,14 +262,9 @@ const ReservationAdd = (props) => {
   let priceHall = 0
   let priceRoom = 0
 
-  const type =
-    watch('booking_type') ||
-    'room' ||
-    (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0)
-      ? 'room'
-      : null
+  const type = watch('booking_type') || 'room'
   const additional = watch('additionalServices') || {}
-  const roomK = watch('roomClass') || null
+  const [checkinType, setCheckInType] = useState('new')
   const details = watch('details') || null
   const payment = watch('payment') || 0
 
@@ -121,9 +316,9 @@ const ReservationAdd = (props) => {
       data.roomId = service[0].id
       data.amount = service[0].RoomClass.price * datesIn.length
     } else if (type === 'room' && datesIn && details) {
-      data.amount = totalPrice * datesIn.length
+      data.amount = totalPrice
       delete data.roomClass
-    } else if ((datesIn && !details) || (datesIn && details)) {
+    } else if (datesIn && !details) {
       data.hallId = service[0].id
       data.amount = priceHall * datesIn.length + additionalServicesTotal
       delete data.children_number
@@ -147,18 +342,13 @@ const ReservationAdd = (props) => {
 
     const createReservation = async () => {
       await instance
-        .post('/reservation/add', data)
+        .post('/reservation/checkin', data)
         .then((res) => {
-          if (res.data.data) {
-            toast.success('Reservation created')
-          } else {
-            toast.error('Rerservation creation failed')
-          }
+          toast.success('Client checked-in')
           setReload(res)
         })
         .catch((err) => {
-          console.log('err', err)
-          toast.error('Rerservation add failed')
+          toast.error('Client in failed')
         })
 
       setCustomer([])
@@ -168,22 +358,12 @@ const ReservationAdd = (props) => {
     reset()
     setDatesIn([])
   }
-  const [localExchangeRate, setLocalExchangeRate] = useState(0)
-
-  const getCurrencyRates = async () => {
-    await instance.get('/currency/rate').then((res) => {
-      setApiCurrencies([...res.data.data])
-      if (apicurrencies.length !== 0) {
-        setLocalExchangeRate(
-          apicurrencies.filter((el) => el.name === 'RWF')[0].rate,
-        )
-      }
-    })
-  }
-  if (apicurrencies.length === 0) {
-    getCurrencyRates()
-  }
   useEffect(() => {
+    const getCurrencyRates = async () => {
+      await instance.get('/currency/rate').then((res) => {
+        setApiCurrencies([...apicurrencies, res.data.data])
+      })
+    }
     const getCustomers = async () => {
       await instance
         .get('/customers/all')
@@ -199,11 +379,9 @@ const ReservationAdd = (props) => {
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
-          console.log('res', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
-          console.log(err)
         })
     }
     const getHallServices = async () => {
@@ -277,9 +455,9 @@ const ReservationAdd = (props) => {
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
-            <CCardHeader>
+            <CCardHeader className="d-flex justify-content-between">
               <h5>
-                <strong> Create reservation </strong>
+                <strong> Check In/{checkinType} </strong>
               </h5>
             </CCardHeader>
             <CCardBody>
@@ -375,11 +553,9 @@ const ReservationAdd = (props) => {
                           highlightDates={datesIn}
                           minDate={new Date()}
                           dateFormat="dd/MM/yyyy"
-                          onChange={(date) => {
-                            let newDates = [...datesIn, new Date(date)]
-                            newDates = filterDateDuplicates(newDates)
-                            setDatesIn([...newDates])
-                          }}
+                          onChange={(date) =>
+                            setDatesIn([...datesIn, new Date(date)])
+                          }
                           inline
                           excludeDates={[...removeDates]}
                           placeholderText="Select a date other than  yesterday"
@@ -540,7 +716,9 @@ const ReservationAdd = (props) => {
                             ? Number(priceRoom) * datesIn.length +
                               '  USD  /  ' +
                               Number(
-                                localExchangeRate *
+                                apicurrencies[0].filter(
+                                  (el) => el.name === 'RWF',
+                                )[0].rate *
                                   Number(priceRoom) *
                                   datesIn.length,
                               ).toLocaleString() +
@@ -558,14 +736,12 @@ const ReservationAdd = (props) => {
                       {details && type === 'room' ? (
                         <p>
                           {' '}
-                          {Number(
-                            datesIn.length * totalPrice,
-                          ).toLocaleString()}{' '}
-                          USD RWF /{'  '}
+                          {totalPrice.toLocaleString()} USD RWF /{'  '}
                           {apicurrencies && apicurrencies.length !== 0
                             ? Number(
-                                localExchangeRate *
-                                  Number(datesIn.length * totalPrice),
+                                apicurrencies[0].filter(
+                                  (el) => el.name === 'RWF',
+                                )[0].rate * totalPrice,
                               ).toLocaleString()
                             : null}{' '}
                           RWF
@@ -633,11 +809,11 @@ const ReservationAdd = (props) => {
                       loggedInUser === 'controller' ||
                       customer.length === 0 ||
                       dontSubmit ||
-                      (!service && service.length === 0)
+                      service === 0
                         ? 'disabled'
                         : ''
                     } `}
-                    value="Book now"
+                    value="Check in"
                   />
                 </CCol>
 
@@ -653,4 +829,68 @@ const ReservationAdd = (props) => {
   )
 }
 
-export default ReservationAdd
+const CheckinOut = () => {
+  const [action, setAction] = useState('')
+  const [rooms, setRooms] = useState([])
+  useEffect(() => {
+    const getRooms = async () => {
+      await instance
+        .get('/room/all')
+        .then((res) => {
+          setRooms(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getRooms()
+  }, [])
+  return (
+    <div>
+      {action === '' ? (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplate: '1fr 1fr 1fr',
+            gridTemplateColumns: '1fr 1fr 1fr',
+          }}
+        >
+          <CCard>
+            <CCardBody>
+              <div className=" col d-flex justify-content-center">
+                <button
+                  className="button-check-in"
+                  onClick={() => {
+                    setAction('check-in')
+                  }}
+                >
+                  Check-in{' '}
+                </button>
+              </div>
+            </CCardBody>
+          </CCard>
+          <CCard>
+            <CCardBody>
+              <div className=" col d-flex justify-content-center">
+                <button
+                  className="button-check-out"
+                  onClick={() => {
+                    setAction('check-out')
+                  }}
+                >
+                  Check-Out{' '}
+                </button>
+              </div>
+            </CCardBody>
+          </CCard>
+        </div>
+      ) : action === 'check-in' ? (
+        <CheckIn />
+      ) : (
+        <Checkout rooms={rooms} />
+      )}
+    </div>
+  )
+}
+
+export default CheckinOut

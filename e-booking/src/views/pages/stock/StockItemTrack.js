@@ -71,6 +71,8 @@ function StockReportTable(props) {
                       ? `Receiving (Moved in)  ${Math.abs(
                           Number(item.newQuantity),
                         )}`
+                      : item && item.status === 'QUANTITY UPDATE'
+                      ? item.status
                       : `Consumption (Moved out)  ${Math.abs(
                           Number(item.newQuantity),
                         )}`}

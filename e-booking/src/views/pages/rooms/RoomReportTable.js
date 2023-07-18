@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
-import { getRoomStatus } from 'src/utils/functions'
+import { getRoomStatus, isRoomOccupied } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
   const role = useSelector((state) => state.auth.role)
@@ -56,21 +56,43 @@ function RoomReportTable(props) {
                     {rooms
                       .filter((room) => room.RoomClass.id === roomClass.id)
                       .map((room) => {
-                        const cool = getRoomStatus(room)
+                        const isOccupied = isRoomOccupied(room)
+                        console.log('studad', isOccupied)
                         return (
                           <CTableRow key={room.id}>
                             <CTableHeaderCell className="d-flex  gap-2">
                               {`#${room.name}`}
                             </CTableHeaderCell>
-                            <CTableDataCell></CTableDataCell>
                             <CTableDataCell>
-                              {cool.status === 'OCCUPIED'
-                                ? new Date(cool.checkIn).toLocaleDateString()
+                              {isOccupied && isOccupied.reservation
+                                ? isOccupied.reservation.Customer.names
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>
-                              {cool.status === 'OCCUPIED'
-                                ? new Date(cool.checkOut).toLocaleDateString()
+                              {isOccupied && isOccupied.reservation
+                                ? new Date(
+                                    isOccupied.reservation.DatesIns[
+                                      isOccupied.reservation.DatesIns.length - 1
+                                    ].datesIn.sort(
+                                      (a, b) => new Date(a) - new Date(b),
+                                    )[0],
+                                  ).toLocaleDateString()
+                                : ''}
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              {isOccupied && isOccupied.reservation
+                                ? new Date(
+                                    isOccupied.reservation.DatesIns[
+                                      isOccupied.reservation.DatesIns.length - 1
+                                    ].datesIn.sort(
+                                      (a, b) => new Date(a) - new Date(b),
+                                    )[
+                                      isOccupied.reservation.DatesIns[
+                                        isOccupied.reservation.DatesIns.length -
+                                          1
+                                      ].datesIn.length - 1
+                                    ],
+                                  ).toLocaleDateString()
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>
@@ -84,7 +106,15 @@ function RoomReportTable(props) {
                                 setStyle({ display: 'none' })
                               }}
                             >
-                              {cool.status}
+                              {Object.keys(isOccupied).length !== 0 &&
+                              isOccupied.reservation.roomStatus !==
+                                'checked-out'
+                                ? 'OCCUPIED'
+                                : Object.keys(isOccupied).length !== 0 &&
+                                  isOccupied.reservation.roomStatus ===
+                                    'checked-out'
+                                ? 'Checkout today'
+                                : 'VACANT'}
 
                               {role === 'admin' ? (
                                 <div style={style}>

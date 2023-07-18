@@ -56,7 +56,11 @@ function AddPaymentModal(props) {
                 Debt :{' '}
                 <span className="fw-bold ">
                   {Number(
-                    reservation.amount['RWF'] - reservation.payment['RWF'],
+                    Math.round(
+                      Number(
+                        reservation.amount['RWF'] - reservation.payment['RWF'],
+                      ),
+                    ),
                   ).toLocaleString()}{' '}
                   Rwf
                 </span>{' '}

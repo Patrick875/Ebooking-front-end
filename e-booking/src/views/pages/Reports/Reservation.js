@@ -2,7 +2,7 @@ const { CTableRow, CTableHeaderCell, CTableDataCell } = require('@coreui/react')
 
 const Reservation = (props) => {
   const { reserv } = props
-  console.log('single reserv', reserv)
+
   return (
     <CTableRow key={reserv.id}>
       <CTableHeaderCell scope="row">{reserv.Customer.names}</CTableHeaderCell>

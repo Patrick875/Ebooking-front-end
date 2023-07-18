@@ -272,3 +272,32 @@ export function filterDateDuplicates(dates) {
 
   return uniqueDates
 }
+export function isRoomOccupied(room) {
+  const initialArray = []
+
+  for (const reservation of room.Reservations) {
+    for (const date of reservation.DatesIns) {
+      for (const el of date.datesIn) {
+        initialArray.push(new Date(el).toLocaleDateString())
+      }
+    }
+  }
+
+  const uniqueDates = [...new Set(initialArray)]
+
+  if (uniqueDates.includes(new Date().toLocaleDateString())) {
+    const occupiedReservation = room.Reservations.find((reservation) => {
+      const datesInArray = reservation.DatesIns.flatMap((date) =>
+        date.datesIn.map((el) => new Date(el).toLocaleDateString()),
+      )
+
+      return datesInArray.includes(new Date().toLocaleDateString())
+    })
+
+    return {
+      reservation: occupiedReservation,
+    }
+  } else {
+    return {}
+  }
+}

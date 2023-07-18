@@ -229,8 +229,21 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   background-color: #245D34;
   border-color: #245D34;
 }
+.button-check-out :hover{
+  background-color: #0a2f15;
+  border-color: #235130;
+}
 .button-reserv-check-in {
   @extend .button-add;
   background-color: #2f80ed;
  
+}
+
+
+.checkout-final{
+  display:flex;
+  justify-content: space-between;
+  button{
+    padding:.75rem
+  }
 }

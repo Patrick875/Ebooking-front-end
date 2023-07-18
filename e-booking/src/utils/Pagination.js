@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 const Pagination = ({ totalPosts, paginate, postsPerPage }) => {
   const totalPages = Math.ceil(totalPosts / postsPerPage)
-  console.log('pages', totalPages)
   const [currentPage, setCurrentPage] = useState(1)
 
   const handleClick = (pageNumber) => {

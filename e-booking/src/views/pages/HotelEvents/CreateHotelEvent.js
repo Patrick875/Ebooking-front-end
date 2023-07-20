@@ -35,11 +35,12 @@ const CreateHotelEvent = (props) => {
       .then((res) => {
         if (res.data.data) {
           toast.success('Event created')
+          setCreated(res.data.data)
         }
-        setCreated(res.data.data)
       })
       .catch((err) => {
         toast.error(err.message)
+        console.log('err', err)
       })
   }
 

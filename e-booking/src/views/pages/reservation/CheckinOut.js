@@ -399,7 +399,6 @@ const CheckIn = (props) => {
         setHalls(res.data.data)
       })
     }
-
     const getRoomClasses = async () => {
       await instance
         .get('/roomclass/all')

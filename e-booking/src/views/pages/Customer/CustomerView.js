@@ -24,6 +24,7 @@ const CustomerView = React.forwardRef((props, ref) => {
   const selectedCustomer =
     useSelector((state) => state.selection.selected) || {}
 
+  console.log('customer', selectedCustomer)
   const reservations = selectedCustomer.Reservations
     ? selectedCustomer.Reservations
     : []
@@ -140,7 +141,13 @@ const CustomerView = React.forwardRef((props, ref) => {
                                     <CTableDataCell>{`${
                                       reservation.Hall
                                         ? reservation.Hall.name
-                                        : reservation.Room.name
+                                          ? reservation.Hall.name
+                                          : ''
+                                        : reservation.Room
+                                        ? reservation.Room.name
+                                          ? reservation.Room.name
+                                          : ''
+                                        : ''
                                     }`}</CTableDataCell>
                                   )}
                                   <CTableDataCell>
@@ -278,21 +285,41 @@ const CustomerView = React.forwardRef((props, ref) => {
                                     : reservation.Hall.name}
                                 </CTableDataCell>
                               ) : (
-                                <CTableDataCell>{`${
-                                  reservation.Hall
-                                    ? reservation.Hall.name
-                                    : reservation.Room.name
-                                }`}</CTableDataCell>
+                                <CTableDataCell>
+                                  {`${
+                                    reservation.Hall
+                                      ? reservation.Hall.name
+                                        ? reservation.Hall.name
+                                        : ''
+                                      : reservation.Room
+                                      ? reservation.Room.name
+                                        ? reservation.Room.name
+                                        : ''
+                                      : ''
+                                  }`}
+                                </CTableDataCell>
                               )}
                               <CTableDataCell>
                                 {`${
                                   reservation
                                     ? new Date(
-                                        reservation.checkIn,
+                                        reservation.DatesIns[
+                                          reservation.DatesIns.length - 1
+                                        ].datesIn.sort(
+                                          (a, b) => new Date(a) - new Date(b),
+                                        )[0],
                                       ).toLocaleDateString() +
                                       ' to ' +
                                       new Date(
-                                        reservation.checkOut,
+                                        reservation.DatesIns[
+                                          reservation.DatesIns.length - 1
+                                        ].datesIn.sort(
+                                          (a, b) => new Date(a) - new Date(b),
+                                        )[
+                                          reservation.DatesIns[
+                                            reservation.DatesIns.length - 1
+                                          ].datesIn.length - 1
+                                        ],
                                       ).toLocaleDateString()
                                     : 'not set'
                                 }`}

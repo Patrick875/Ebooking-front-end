@@ -247,3 +247,25 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
     padding:.75rem
   }
 }
+
+
+
+
+
+.typeahead-token {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  padding: 5px 8px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+.typeahead-remove-button {
+  border: none;
+  background: none;
+  color: #000000;
+  cursor: pointer;
+  padding:5px;
+  margin-left: 5px;
+}

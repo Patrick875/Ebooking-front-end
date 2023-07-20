@@ -20,88 +20,6 @@ const StockRequestView = React.forwardRef((props, ref) => {
     ...stockOrderDetails,
     ...initialRowsStockOrder,
   ])
-  const columns = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) =>
-        `${params.row.StockItemValue.StockItemNew.name || ''} `,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Qty',
-      sortable: false,
-      hide: (params) => params.rowIndex === stockOrderDetails.length,
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      valueSetter: (params) => {
-        const updateRow = {
-          ...params.row,
-          quantity: params.value,
-        }
-        let newRows = rows.map((item) =>
-          item.StockItemValue.id === params.row.StockItemValue.id
-            ? { ...params.row, quantity: Number(params.value) }
-            : item,
-        )
-        setRows(newRows)
-        return updateRow
-      },
-      editable: true,
-    },
-    {
-      field: 'price',
-      headerName: 'P.U',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      editable: true,
-      hide: true,
-      sortable: false,
-      valueGetter: (params) => `${params.row.StockItemValue.price || ''} `,
-      valueSetter: (params) => {
-        const updatedRow = {
-          ...params.row,
-          StockItemValue: {
-            ...params.row.StockItemValue,
-            price: params.value,
-          },
-        }
-        let newRows = rows.map((item) =>
-          item.StockItemValue.id === params.row.StockItemValue.id
-            ? {
-                ...params.row,
-                StockItemValue: {
-                  ...params.row.StockItemValue,
-                  price: Number(params.value),
-                },
-              }
-            : item,
-        )
-        setRows(newRows)
-        return updatedRow
-      },
-    },
-    {
-      field: 'total',
-      headerName: 'T.P',
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      sortable: false,
-      valueGetter: (params) =>
-        `${
-          Number(params.row.quantity * params.row.StockItemValue.price) ||
-          params.row.total
-        } `,
-    },
-  ]
-  const isLastRow = (params) => params.row.id === total.id
   const total = rows.reduce(
     (a, b) => a + b.StockItemValue.price * b.quantity,
     0,
@@ -135,11 +53,12 @@ const StockRequestView = React.forwardRef((props, ref) => {
     setRows(editData)
   }
   const updateStockOrder = async (action) => {
+    let data = rows.filter((row) => row.quantity !== 0)
     if (action === 'approve') {
       await instance
         .post(`petitstock/order/${action}`, {
           request: request.id,
-          data: rows,
+          data,
         })
         .then((res) => {
           setApproved(!approved)

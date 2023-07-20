@@ -301,3 +301,37 @@ export function isRoomOccupied(room) {
     return {}
   }
 }
+
+export function checkAvailability(room, datesToCheck) {
+  const initialArray = []
+
+  for (const reservation of room.Reservations) {
+    for (const date of reservation.DatesIns) {
+      for (const el of date.datesIn) {
+        initialArray.push(new Date(el).toLocaleDateString())
+      }
+    }
+  }
+
+  const uniqueDates = [...new Set(initialArray)]
+
+  for (const dateToCheck of datesToCheck) {
+    if (uniqueDates.includes(new Date(dateToCheck).toLocaleDateString())) {
+      return null
+    }
+  }
+
+  return {
+    room: room,
+  }
+}
+
+export function availableRooms(rooms) {
+  let availableRooms = []
+
+  for (const room in rooms) {
+    availableRooms.push(checkAvailability(room))
+  }
+
+  return availableRooms.filter((value) => value !== null)
+}

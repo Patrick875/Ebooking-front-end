@@ -10,11 +10,12 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
-import { getRoomStatus, isRoomOccupied } from 'src/utils/functions'
+import { isRoomOccupied } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
   const role = useSelector((state) => state.auth.role)
   const [style, setStyle] = useState({ display: 'none' })
+  console.log('rooms', rooms)
   const deleteRoom = async (id) => {
     await instance
       .delete(`/room/${id}`)
@@ -57,7 +58,7 @@ function RoomReportTable(props) {
                       .filter((room) => room.RoomClass.id === roomClass.id)
                       .map((room) => {
                         const isOccupied = isRoomOccupied(room)
-                        console.log('studad', isOccupied)
+
                         return (
                           <CTableRow key={room.id}>
                             <CTableHeaderCell className="d-flex  gap-2">

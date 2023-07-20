@@ -25,7 +25,9 @@ const Reservation = (props) => {
           <p className="font-weight-bold">
             {reserv.Room
               ? 'Room : ' + reserv.Room.name
-              : 'Hall : ' + reserv.Hall.name}
+              : reserv.Hall
+              ? 'Hall : ' + reserv.Hall.name
+              : ''}
           </p>
         )}
       </CTableDataCell>

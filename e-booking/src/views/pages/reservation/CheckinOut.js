@@ -740,7 +740,9 @@ const CheckIn = (props) => {
                             ? Number(
                                 apicurrencies[0].filter(
                                   (el) => el.name === 'RWF',
-                                )[0].rate * totalPrice,
+                                )[0].rate *
+                                  totalPrice *
+                                  datesIn.length,
                               ).toLocaleString()
                             : null}{' '}
                           RWF

@@ -431,7 +431,8 @@ const CheckIn = (props) => {
         cals = RoomClasses.filter((el) => roomKlasses[0].includes(el.name))
         if (cals.length !== 0) {
           totalPrice = cals.reduce(
-            (acc, b) => acc + Number(b.price * info[b.name].people * days),
+            (acc, b) =>
+              acc + Number(b.price * info[b.name].people * datesIn.length),
             0,
           )
           return totalPrice
@@ -740,9 +741,7 @@ const CheckIn = (props) => {
                             ? Number(
                                 apicurrencies[0].filter(
                                   (el) => el.name === 'RWF',
-                                )[0].rate *
-                                  totalPrice *
-                                  datesIn.length,
+                                )[0].rate * totalPrice,
                               ).toLocaleString()
                             : null}{' '}
                           RWF

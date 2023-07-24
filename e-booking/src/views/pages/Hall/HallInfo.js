@@ -16,11 +16,6 @@ import { useSelector } from 'react-redux'
 
 function HallInfo() {
   const selectedHall = useSelector((state) => state.selection.selected) || {}
-  const onSubmit = (data) => {
-    console.log(data)
-
-    //roomClass.push(formData);
-  }
 
   useEffect(() => {}, [])
   return (
@@ -50,7 +45,7 @@ function HallInfo() {
                 />
               </CCol>
               <CCol md={6}>
-                <CFormLabel htmlFor="name"> Price in USD</CFormLabel>
+                <CFormLabel htmlFor="name"> Price in RWF</CFormLabel>
                 <CFormInput
                   className="mb-1"
                   type="text"

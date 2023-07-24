@@ -12,6 +12,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let [stockOrderDetails] = useState([])
   const request = useSelector((state) => state.selection.selected)
+  const role = useSelector((state) => state.auth.role)
   if (request && request.PetitStockRequesitionDetails) {
     stockOrderDetails = request.PetitStockRequesitionDetails
   }
@@ -96,16 +97,26 @@ const StockRequestView = React.forwardRef((props, ref) => {
               content={() => ref || componentRef.current}
             />
           ) : null}
-          <button
-            className={`btn btn-ghost-success text-black ${
-              request.status === 'APPROVED' || request.status === 'CANCELED'
-                ? 'disabled'
-                : null
-            }`}
-            onClick={() => updateStockOrder('approve')}
-          >
-            Approve
-          </button>
+
+          {[
+            'General Manager - Olympic',
+            'admin',
+            'Controller',
+            'Cost - Controller ',
+            'Storekeeper',
+          ].includes(role) ? (
+            <button
+              className={`btn btn-ghost-success text-black ${
+                request.status === 'APPROVED' || request.status === 'CANCELED'
+                  ? 'disabled'
+                  : null
+              }`}
+              onClick={() => updateStockOrder('approve')}
+            >
+              Approve
+            </button>
+          ) : null}
+
           <button
             className={`btn btn-ghost-danger text-black ${
               request.status === 'APPROVED' || request.status === 'CANCELED'

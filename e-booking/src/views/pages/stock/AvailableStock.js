@@ -166,6 +166,7 @@ function AvailableStock() {
                         </CTableDataCell>
                         <CTableDataCell className="d-flex  gap-2">
                           <div
+                            style={{ display: 'none' }}
                             className="btn btn-primary btn-sm"
                             onClick={() => {
                               navigate('/booking/stock/item/history')

@@ -31,7 +31,6 @@ import { useSelector } from 'react-redux'
 
 function StockReportTable(props) {
   const { items, currentPage, perpage } = props
-  console.log('oop', items[0])
   return (
     <React.Fragment>
       <CTable bordered>
@@ -39,6 +38,7 @@ function StockReportTable(props) {
           <CTableRow>
             <CTableHeaderCell scope="col"> # </CTableHeaderCell>
             <CTableHeaderCell scope="col"> DATE </CTableHeaderCell>
+            <CTableHeaderCell scope="col"> PRICE </CTableHeaderCell>
             <CTableHeaderCell scope="col"> OPERATION </CTableHeaderCell>
             <CTableHeaderCell scope="col"> IN</CTableHeaderCell>
             <CTableHeaderCell scope="col"> OUT </CTableHeaderCell>
@@ -66,6 +66,7 @@ function StockReportTable(props) {
                   <CTableDataCell>
                     {new Date(item.date).toLocaleDateString()}
                   </CTableDataCell>
+                  <CTableDataCell>{item.price}</CTableDataCell>
                   <CTableDataCell>
                     {item && item.status === 'ADDED'
                       ? `Receiving (Moved in)  ${Math.abs(
@@ -147,7 +148,8 @@ const StockItemTrack = React.forwardRef((props, ref) => {
         await instance
           .get(`/stock/track/item`, {
             params: {
-              item: item.StockItemNew.id,
+              item: item.id,
+              itemValue: item.id,
               date_from: startDate,
               date_to: endDate,
             },
@@ -159,6 +161,7 @@ const StockItemTrack = React.forwardRef((props, ref) => {
           })
           .catch((err) => {
             toast.error('item details retrieve failed')
+            console.log('err', err)
           })
       }
 

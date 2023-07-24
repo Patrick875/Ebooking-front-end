@@ -148,8 +148,7 @@ const StockItemTrack = React.forwardRef((props, ref) => {
         await instance
           .get(`/stock/track/item`, {
             params: {
-              item: item.id,
-              itemValue: item.id,
+              item: item.StockItemNew.id,
               date_from: startDate,
               date_to: endDate,
             },

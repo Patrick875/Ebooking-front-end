@@ -52,6 +52,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
 
     setRows(editData)
   }
+
   const updateStockOrder = async (action) => {
     let data = rows.filter((row) => row.quantity !== 0)
     if (action === 'approve') {
@@ -62,6 +63,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
         })
         .then((res) => {
           setApproved(!approved)
+          toast.success('Approved!!!')
         })
         .catch((err) => {
           toast.error(err.message)

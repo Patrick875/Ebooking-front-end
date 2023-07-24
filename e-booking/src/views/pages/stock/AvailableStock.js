@@ -72,6 +72,7 @@ function AvailableStock() {
         })
         .catch((err) => {
           toast.error(err.message)
+          console.log('err', err)
         })
     }
     getItems()
@@ -159,7 +160,10 @@ function AvailableStock() {
                           {item.StockItemNew ? item.StockItemNew.name : ''}
                         </CTableDataCell>
                         <CTableDataCell>{item.quantity}</CTableDataCell>
-                        <CTableDataCell> {item.price}</CTableDataCell>
+                        <CTableDataCell>
+                          {' '}
+                          {Number(item.price).toFixed(2)}
+                        </CTableDataCell>
                         <CTableDataCell className="d-flex  gap-2">
                           <div
                             className="btn btn-primary btn-sm"

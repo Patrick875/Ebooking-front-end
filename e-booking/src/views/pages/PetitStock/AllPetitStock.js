@@ -121,7 +121,48 @@ function AllPetitStock(props) {
             )
           })
       ) : (
-        <p>...loading</p>
+        petitStock
+          .filter((el) => el.selling === 'selling')
+          .map((item, i) => {
+            return item.status === 'DISACTIVE' && role !== 'admin' ? null : (
+              <CCard
+                key={i}
+                className={`col-2 text-center p-2 flex-grow-2 petit-card ${
+                  item.status === 'DISACTIVE' ? 'bg-danger' : ''
+                }`}
+              >
+                <div className="m-2">
+                  <FcIcons8Cup size="sm" />
+                </div>
+                <p className="mt-2 text-capitalize ">{item.name}</p>
+                {selling ? (
+                  item.status === 'DISACTIVE' && role !== 'admin' ? null : (
+                    <div className="overlay">
+                      <Link
+                        className="btn btn-sm btn-outline-danger "
+                        onClick={() => {
+                          setStock(item.name)
+                        }}
+                      >
+                        Sell
+                      </Link>
+                    </div>
+                  )
+                ) : (
+                  <div className="overlay">
+                    <Link
+                      to="/booking/petitstock/items/all"
+                      className="btn btn-sm btn-outline-primary"
+                      disabled={item.status === 'DISACTIVE' ? true : false}
+                      onClick={() => dispatch(selectPetitStock(item))}
+                    >
+                      View
+                    </Link>
+                  </div>
+                )}
+              </CCard>
+            )
+          })
       )}
     </div>
   )

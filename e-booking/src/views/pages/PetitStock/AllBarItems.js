@@ -1,4 +1,5 @@
 import {
+  CButton,
   CCardBody,
   CRow,
   CTable,
@@ -10,15 +11,17 @@ import {
 } from '@coreui/react'
 import { BiCartDownload } from 'react-icons/bi'
 import { BsFiles } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import BackButton from 'src/components/Navigating/BackButton'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
+import { selectStockItem } from 'src/redux/Select/selectStockItem'
 
 function AllBarItems() {
   const petitStock =
     useSelector((state) => state.selection.selectedPetitStock) || {}
+
   const role = useSelector((state) => state.auth.role)
   const disactivePetitStock = async (id) => {
     await instance
@@ -30,6 +33,8 @@ function AllBarItems() {
         toast.error('error disactivating petit stock')
       })
   }
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const activatePetitStock = async (id) => {
     await instance
       .get(`/petit-stock/activate/${id}`)
@@ -102,6 +107,7 @@ function AllBarItems() {
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Action</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -114,6 +120,16 @@ function AllBarItems() {
                         <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                         <CTableDataCell>{`${item.StockItemNew.name}`}</CTableDataCell>
                         <CTableDataCell>{`${item.quantinty}`}</CTableDataCell>
+                        <CTableDataCell>
+                          <CButton
+                            onClick={() => {
+                              navigate('/booking/petitstock/items/update')
+                              dispatch(selectStockItem(item))
+                            }}
+                          >
+                            Update quantity
+                          </CButton>
+                        </CTableDataCell>
                       </CTableRow>
                     )
                   })

@@ -40,7 +40,9 @@ const ReservationReport = React.forwardRef((props, ref) => {
       await instance
         .get('/reservation/all')
         .then((res) => {
-          setReservations(res.data.data)
+          if (res && res.data && res.data.data) {
+            setReservations(res.data.data)
+          }
         })
         .catch((err) => {
           toast.error(err.message)

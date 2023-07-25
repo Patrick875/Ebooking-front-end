@@ -157,12 +157,12 @@ const Reservation = () => {
       await instance
         .get('/reservation/all')
         .then((res) => {
-          setReservations(res.data.data)
-          console.log(res.data.data)
+          if (res && res.data && res.data.data) {
+            setReservations(res.data.data)
+          }
         })
         .catch((err) => {
           toast.error(err.status)
-          throw new Error('API request failed')
         })
     }
     getReservations()

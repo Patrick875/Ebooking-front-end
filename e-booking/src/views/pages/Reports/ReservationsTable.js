@@ -185,9 +185,11 @@ const ReservationsTable = (props) => {
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {reservations.map((reserv) => (
-            <Reservation reserv={reserv} />
-          ))}
+          {reservations && reservations.length !== 0 ? (
+            reservations.map((reserv) => <Reservation reserv={reserv} />)
+          ) : (
+            <p></p>
+          )}
           <CTableRow>
             <CTableHeaderCell scope="row" colSpan={7}>
               Total Amount (RWF)

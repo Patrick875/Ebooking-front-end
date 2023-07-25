@@ -30,7 +30,9 @@ function Customers() {
       await instance
         .get('/customers/all')
         .then((res) => {
-          setCustomers(res.data.data)
+          if (res && res.data && res.data.data) {
+            setCustomers(res.data.data)
+          }
         })
         .catch((err) => {
           toast.error(err.message)

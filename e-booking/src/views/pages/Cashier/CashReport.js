@@ -27,7 +27,7 @@ import ViewCashTransaction from './ViewCashTransaction'
 import PrintHeader from '../Printing/PrintHeader'
 const CashRecords = (props) => {
   let { transactions, time, myDates, startDate, endDate } = props
-  console.log('transactions', transactions)
+
   let debitTotal, creditTotal, balance
 
   if (time && time === 'all-time') {
@@ -202,7 +202,9 @@ const CashReport = React.forwardRef((props, ref) => {
   useEffect(() => {
     const getCashTransactions = async () => {
       await instance.get('/cashflow/all').then((res) => {
-        setTransactions(res.data.data)
+        if (res && res.data && res.data.data) {
+          setTransactions(res.data.data)
+        }
       })
     }
     getCashTransactions()

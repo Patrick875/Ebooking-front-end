@@ -17,7 +17,6 @@ import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { IoCreateOutline } from 'react-icons/io5'
-import { RiCheckLine } from 'react-icons/ri'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Link, useNavigate } from 'react-router-dom'
@@ -110,8 +109,9 @@ function PurchaseOrderAcc() {
       await instance
         .get('/accounting/purchase/order/all')
         .then((res) => {
-          console.log('invoices', res.data.data)
-          setInvoices(res.data.data)
+          if (res && res.data && res.data.data) {
+            setInvoices(res.data.data)
+          }
         })
         .catch((err) => {
           toast.error(err.message)
@@ -189,7 +189,7 @@ function PurchaseOrderAcc() {
             </div>
           </CRow>
           <p className="text-center fs-4">
-            <strong> All invoices </strong>
+            <strong> All Purchase orders </strong>
           </p>
           <CTable bordered hover={true}>
             <CTableHead>

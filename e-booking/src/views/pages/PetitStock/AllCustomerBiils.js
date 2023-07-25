@@ -31,7 +31,7 @@ function AllCustomerBills() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const role = useSelector((state) => state.auth.role)
-
+  const [deleted, setDeleted] = useState()
   const searchWaiters = (items, query) => {
     if (!query || query === '') {
       return items
@@ -52,7 +52,8 @@ function AllCustomerBills() {
   }
 
   const deleteCustomerBill = async (id) => {
-    await instance.post('/customerbill/delete/', { id }).then(() => {
+    await instance.post('/customerbill/delete/', { id }).then((res) => {
+      setDeleted(res)
       toast.success('bill deleted!!!!')
     })
   }
@@ -83,7 +84,7 @@ function AllCustomerBills() {
     }
     getAllPetitStock()
     getItems()
-  }, [])
+  }, [deleted])
 
   items = searchWaiters(items, query)
   items = filterBills(items, stockId)

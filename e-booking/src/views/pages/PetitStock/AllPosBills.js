@@ -30,7 +30,7 @@ function AllPosBills() {
   const role = useSelector((state) => state.auth.role)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  const [deleted, setDeleted] = useState()
   const searchWaiters = (items, query) => {
     if (!query || query === '') {
       return items
@@ -52,8 +52,8 @@ function AllPosBills() {
 
   const deletePosCustomerBill = async (id) => {
     await instance.post('/posbondecommande/delete/', { id }).then((res) => {
-      console.log('res', res)
-      toast.success('bill deleted!!!!')
+      setDeleted(res)
+      toast.success('Bon de commande deleted!!!!')
     })
   }
   const perpage = 30
@@ -65,7 +65,6 @@ function AllPosBills() {
         .get('/posbondecommande/all')
         .then((res) => {
           setItems(res.data.data)
-          console.log('cool', res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -83,7 +82,7 @@ function AllPosBills() {
     }
     getAllPetitStock()
     getItems()
-  }, [])
+  }, [deleted])
 
   items = searchWaiters(items, query)
   items = filterBills(items, stockId)

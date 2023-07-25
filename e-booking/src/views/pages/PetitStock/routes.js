@@ -4,6 +4,7 @@ import AllBarItems from './AllBarItems'
 import RequestBarItem from './RequestBarItem'
 import AllBarRequest from './AllBarRequest'
 import BarSells from './BarSells'
+import UpdateStockQuantity from './UpdateStockQuantity'
 
 export const petitStockRoutes = [
   {
@@ -23,6 +24,12 @@ export const petitStockRoutes = [
     exact: true,
     name: 'All Petit stock items',
     element: AllBarItems,
+  },
+  {
+    path: '/booking/petitstock/items/update',
+    exact: true,
+    name: 'Update Stock quantity',
+    element: UpdateStockQuantity,
   },
   {
     path: '/booking/petitstock/request',

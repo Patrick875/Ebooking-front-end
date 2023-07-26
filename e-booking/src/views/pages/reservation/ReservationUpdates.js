@@ -40,7 +40,9 @@ function ReservationUpdates(props) {
           <CModalBody>
             <CCol>
               <p className=" text-center fw-bold ">Reservation Dates</p>
-              {reservation && reservation.DatesIns.length !== 0 ? (
+              {reservation &&
+              Object.keys(reservation).length !== 0 &&
+              reservation.DatesIns.length !== 0 ? (
                 <div>
                   {reservation.DatesIns.map((el, i) => (
                     <div key={i * 3456} className="d-flex gap-2">

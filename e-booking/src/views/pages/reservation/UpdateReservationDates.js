@@ -22,8 +22,9 @@ function UpdateReservationDates(props) {
 
   let dates = []
   if (reservation.DatesIns.length !== 0) {
-    dates = reservation.DatesIns
+    dates = reservation.DatesIns[reservation.DatesIns.length - 1].datesIn
   }
+
   const [datesIn, setDatesIn] = useState([...dates])
 
   const { handleSubmit, reset } = useForm()

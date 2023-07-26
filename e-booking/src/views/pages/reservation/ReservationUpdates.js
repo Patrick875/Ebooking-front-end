@@ -12,8 +12,7 @@ import React, { useState } from 'react'
 
 function ReservationUpdates(props) {
   let { openUpdates, setOpenUpdates, reservation } = props
-  const [datesIn, setDatesIn] = useState([])
-
+  const [datesIn] = useState([...reservation.DatesIns])
   return (
     <React.Fragment>
       <CModal

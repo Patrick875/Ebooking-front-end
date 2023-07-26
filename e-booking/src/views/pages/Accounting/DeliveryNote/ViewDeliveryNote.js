@@ -5,7 +5,6 @@ import ReactToPrint from 'react-to-print'
 import InvoiceHeader from '../../Printing/InvoiceHeader'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
 import { useNavigate } from 'react-router-dom'
-import EditableTable from 'src/components/EditableTable'
 import { initialRowsDelivery } from 'src/utils/constants'
 import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
@@ -41,7 +40,11 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
   ])
 
   const updateInvoice = async () => {
-    const filtereDetails = removeObjectsWithEmptyProperties(rows)
+    let filtereDetails = removeObjectsWithEmptyProperties(rows)
+    filtereDetails = filtereDetails.map((detail) => ({
+      ...detail,
+      name: detail.description,
+    }))
     await instance
       .put('/deliveryNote/update', {
         id: request.id,

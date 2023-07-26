@@ -65,7 +65,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
 
   const submitRequest = () => {
     let data
-    console.log('data', data)
+
     const outsideData = clientData
     requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
     requestItems = removeObjectsWithEmptyProperties(requestItems)
@@ -76,6 +76,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
       total: orderTotal,
       vatTotal: finalTotal,
     }
+    console.log('data', data)
     createInvoice(data)
   }
 
@@ -281,7 +282,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
 
                       <p className="col my-0 d-flex justify-content-end ">
                         <span className="fw-bold border border-2 border-dark p-1">
-                          DATE :{new Date().toLocaleDateString()}{' '}
+                          DATE :{new Date().toLocaleDateString('fr-FR')}{' '}
                         </span>{' '}
                       </p>
                     </div>

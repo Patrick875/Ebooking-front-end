@@ -15,7 +15,7 @@ const ClientDetailsProForma = (props) => {
         {request ? (
           <p className="col-4 my-0">
             <span className="fw-bold">DATE : </span>{' '}
-            {new Date(request.createdAt).toLocaleDateString()}
+            {new Date(request.createdAt).toLocaleDateString('fr-FR')}
           </p>
         ) : null}
       </div>
@@ -25,7 +25,7 @@ const ClientDetailsProForma = (props) => {
           Expected Date of Arrival :{' '}
           <span className="fw-normal">
             {request.dateIn
-              ? new Date(request.dateIn).toLocaleDateString()
+              ? new Date(request.dateIn).toLocaleDateString('fr-FR')
               : null}
           </span>
         </p>
@@ -33,7 +33,7 @@ const ClientDetailsProForma = (props) => {
           Expected Date of Departure :{' '}
           <span className="fw-normal">
             {request.dateOut
-              ? new Date(request.dateOut).toLocaleDateString()
+              ? new Date(request.dateOut).toLocaleDateString('fr-FR')
               : null}
           </span>
         </p>

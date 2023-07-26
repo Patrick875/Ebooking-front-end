@@ -137,7 +137,7 @@ function AllDailySalesReports() {
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {new Date(report.date).toLocaleDateString()}
+                          {new Date(report.date).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
                         <CTableDataCell>
                           {report.User.firstName + ' ' + report.User.lastName}

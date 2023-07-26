@@ -61,84 +61,74 @@ const CreateCashierVaucher = () => {
             </h2>
           </CCardHeader>
           <CCardBody>
-            <CForm name="cash-receive-form" onSubmit={handleSubmit(onSubmit)}>
-              <div className="row">
-                <div className="mb-3 col-6">
-                  <CFormLabel htmlFor="Account"> Transaction </CFormLabel>
-                  <CFormSelect
-                    type="text"
-                    name="type"
-                    id="type"
-                    {...register('type')}
-                  >
-                    <option value="credit">Cash out</option>
-                    <option value="debit">Cash in </option>
-                  </CFormSelect>
-                </div>
-                <div className="mb-3 col-6">
-                  <CFormLabel htmlFor="Account">
-                    {' '}
-                    {type && type === 'credit' ? 'To' : 'From'} (name){' '}
-                  </CFormLabel>
-                  <CFormInput
-                    type="text"
-                    name="To"
-                    id="To"
-                    placeholder=".....receiver name"
-                    {...register('doneTo')}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="mb-3 col-6">
-                  <CFormLabel htmlFor="amount"> Amount </CFormLabel>
-                  <CFormInput
-                    name="amount"
-                    type="number"
-                    min={0}
-                    id="amount"
-                    {...register('amount')}
-                  />
-                </div>
-                <div className="mb-3 col-6">
-                  <CFormLabel htmlFor="account"> Account </CFormLabel>
-                  <CFormInput
-                    name="account"
-                    type="type"
-                    id="amount"
-                    {...register('account')}
-                  ></CFormInput>
-                </div>
+            <CForm
+              className="col row d-flex  "
+              name="cash-receive-form"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <CCol md={6}>
+                <CFormLabel htmlFor="Account"> Transaction </CFormLabel>
+                <CFormSelect
+                  type="text"
+                  name="type"
+                  id="type"
+                  {...register('type')}
+                >
+                  <option value="credit">Cash out</option>
+                  <option value="debit">Cash in </option>
+                </CFormSelect>
+              </CCol>
+              <div className="mb-3 col-6">
+                <CFormLabel htmlFor="Account">
+                  {' '}
+                  {type && type === 'credit' ? 'To' : 'From'} (name){' '}
+                </CFormLabel>
+                <CFormInput
+                  type="text"
+                  name="To"
+                  id="To"
+                  placeholder=".....receiver name"
+                  {...register('doneTo')}
+                />
               </div>
 
-              <div className="row">
-                <CCol md={6} className="d-flex gap-2">
-                  <div className="col">
-                    <CFormLabel htmlFor="paymentMethod">
-                      Payment method
-                    </CFormLabel>
-                    <CFormSelect
-                      name="paymentMethod"
-                      id="paymentMethod"
-                      className="mb-3"
-                      {...register('paymentMethod')}
-                    >
-                      <option value="Cash">Cash</option>
-                    </CFormSelect>
-                  </div>
-                </CCol>
-                <CCol md={6} className="mb-3">
-                  <CFormLabel htmlFor="description">
-                    {' '}
-                    Description/Reason{' '}
-                  </CFormLabel>
-                  <CFormTextarea
-                    name="description"
-                    id="description"
-                    {...register('description')}
-                  ></CFormTextarea>
-                </CCol>
+              <div className="mb-3 col-6">
+                <CFormLabel htmlFor="amount"> Amount </CFormLabel>
+                <CFormInput
+                  name="amount"
+                  type="number"
+                  min={0}
+                  id="amount"
+                  {...register('amount')}
+                />
               </div>
+
+              <CCol md={6} className="d-flex gap-2">
+                <div className="col">
+                  <CFormLabel htmlFor="paymentMethod">
+                    Payment method
+                  </CFormLabel>
+                  <CFormSelect
+                    name="paymentMethod"
+                    id="paymentMethod"
+                    className="mb-3"
+                    {...register('paymentMethod')}
+                  >
+                    <option value="Cash">Cash</option>
+                  </CFormSelect>
+                </div>
+              </CCol>
+              <CCol md={6} className="mb-3">
+                <CFormLabel htmlFor="description">
+                  {' '}
+                  Description/Reason{' '}
+                </CFormLabel>
+                <CFormTextarea
+                  name="description"
+                  id="description"
+                  {...register('description')}
+                ></CFormTextarea>
+              </CCol>
 
               <CCol xs={12}>
                 <CButton

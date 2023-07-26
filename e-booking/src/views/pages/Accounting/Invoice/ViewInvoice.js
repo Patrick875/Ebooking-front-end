@@ -136,7 +136,9 @@ const ViewInvoice = React.forwardRef((props, ref) => {
         </span>{' '}
       </p>
       {request.deliveryLink ? (
-        <p className="fs-6">Linked to deliver note n: {request.deliveryLink}</p>
+        <p className="fs-6">
+          Linked to delivery note n: {request.deliveryLink}
+        </p>
       ) : null}
 
       <div ref={ref || componentRef} className="accounting">
@@ -225,7 +227,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
             {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
           </p>
         </div>
-        <InvoiceFooter />
+        <InvoiceFooter request={request} />
       </div>
       <InvoicePaymentModal
         maxPayment={Number(

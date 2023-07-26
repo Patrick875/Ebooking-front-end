@@ -200,7 +200,7 @@ function DeliveryNote() {
                           {el.deliveryNoteId}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {new Date(el.createdAt).toLocaleDateString()}
+                          {new Date(el.createdAt).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell

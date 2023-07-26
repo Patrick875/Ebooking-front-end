@@ -20,7 +20,7 @@ function HotelEvents() {
   const allEventDates =
     getEventDates(events).length !== 0
       ? getEventDates(events).map((el) => {
-          let dates = el.dates.map((dt) => dt.toLocaleDateString())
+          let dates = el.dates.map((dt) => dt.toLocaleDateString('fr-FR'))
           return { ...el, dates: dates }
         })
       : []
@@ -39,7 +39,7 @@ function HotelEvents() {
     </p>
   )
   const daysEvents = allEventDates.filter((evnt) =>
-    evnt.dates.includes(date.toLocaleDateString()),
+    evnt.dates.includes(date.toLocaleDateString('fr-FR')),
   )
 
   const [todayEvents, setTodayEvents] = useState(daysEvents)
@@ -76,7 +76,7 @@ function HotelEvents() {
                     ev.location.trim().toLowerCase() ===
                     el.name.trim().toLowerCase(),
                 )[0].startDate,
-              ).toLocaleDateString() +
+              ).toLocaleDateString('fr-FR') +
               ' to ' +
               new Date(
                 daysEvents.filter(
@@ -84,7 +84,7 @@ function HotelEvents() {
                     ev.location.trim().toLowerCase() ===
                     el.name.trim().toLowerCase(),
                 )[0].endDate,
-              ).toLocaleDateString()
+              ).toLocaleDateString('fr-FR')
             : ''}
         </p>
       </div>

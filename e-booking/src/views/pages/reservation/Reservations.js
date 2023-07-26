@@ -339,7 +339,7 @@ const Reservation = () => {
                               reserv.DatesIns[
                                 reserv.DatesIns.length - 1
                               ].datesIn[0],
-                            ).toLocaleDateString()}
+                            ).toLocaleDateString('fr-FR')}
                           </CTableDataCell>
                           <CTableDataCell>
                             {' '}
@@ -347,7 +347,7 @@ const Reservation = () => {
                               reserv.DatesIns[
                                 reserv.DatesIns.length - 1
                               ].datesIn[reserv.DatesIns[0].datesIn.length - 1],
-                            ).toLocaleDateString()}{' '}
+                            ).toLocaleDateString('fr-FR')}{' '}
                           </CTableDataCell>
                           <CTableDataCell>
                             {reserv.status ? reserv.status : 'in progress'}{' '}

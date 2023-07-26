@@ -48,14 +48,14 @@ function ReservationUpdates(props) {
                       <p>
                         As of{' '}
                         <span className="fw-bold">
-                          {new Date(el.date).toLocaleDateString()}
+                          {new Date(el.date).toLocaleDateString('fr-FR')}
                         </span>{' '}
                         :{' '}
                       </p>
                       {el.datesIn.length !== 0 ? (
                         el.datesIn.map((curr, i) => (
                           <li key={i * 234}>
-                            {new Date(curr).toLocaleDateString()}{' '}
+                            {new Date(curr).toLocaleDateString('fr-FR')}{' '}
                           </li>
                         ))
                       ) : (

@@ -144,7 +144,8 @@ const AddBarItem = React.forwardRef((props, ref) => {
       <Highlighter search={text}>{option.uuid}</Highlighter>,
       <div>
         <small>
-          Purchase order of : {new Date(option.createdAt).toLocaleDateString()}
+          Purchase order of :{' '}
+          {new Date(option.createdAt).toLocaleDateString('fr-FR')}
         </small>
       </div>
     </div>

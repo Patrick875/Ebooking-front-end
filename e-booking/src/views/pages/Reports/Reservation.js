@@ -7,10 +7,10 @@ const Reservation = (props) => {
     <CTableRow key={reserv.id}>
       <CTableHeaderCell scope="row">{reserv.Customer.names}</CTableHeaderCell>
       <CTableDataCell>
-        {new Date(reserv.checkIn).toLocaleDateString()}
+        {new Date(reserv.checkIn).toLocaleDateString('fr-FR')}
       </CTableDataCell>
       <CTableDataCell>
-        {new Date(reserv.checkOut).toLocaleDateString()}
+        {new Date(reserv.checkOut).toLocaleDateString('fr-FR')}
       </CTableDataCell>
       <CTableDataCell>
         {reserv.details ? (
@@ -32,7 +32,7 @@ const Reservation = (props) => {
         )}
       </CTableDataCell>
       <CTableDataCell>
-        {new Date(reserv.createdAt).toLocaleDateString()}
+        {new Date(reserv.createdAt).toLocaleDateString('fr-FR')}
       </CTableDataCell>
       <CTableDataCell>
         {' '}

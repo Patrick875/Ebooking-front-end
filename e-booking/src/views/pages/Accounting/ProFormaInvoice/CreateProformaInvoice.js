@@ -330,7 +330,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         {request ? (
                           <p className="col-4 my-0">
                             <span className="fw-bold">DATE : </span>{' '}
-                            {new Date().toLocaleDateString()}
+                            {new Date().toLocaleDateString('fr-FR')}
                           </p>
                         ) : null}
                       </div>
@@ -338,13 +338,13 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                         <p className="fw-bold my-0 py-0">
                           Expected Date of Arrival :{}
                           <span className="fw-normal">
-                            {new Date(startDate).toLocaleDateString()}
+                            {new Date(startDate).toLocaleDateString('fr-FR')}
                           </span>
                         </p>
                         <p className="fw-bold my-0 py-0">
                           Expected Date of Departure :{' '}
                           <span className="fw-normal">
-                            {new Date(endDate).toLocaleDateString()}
+                            {new Date(endDate).toLocaleDateString('fr-FR')}
                           </span>
                         </p>
                       </div>

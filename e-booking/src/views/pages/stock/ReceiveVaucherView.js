@@ -71,7 +71,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
           <p className="text-center text-uppercase my-1 fw-bold">
             Receive stock vaucher of{' '}
             {vaucher && vaucher.date
-              ? new Date(vaucher.date).toLocaleDateString()
+              ? new Date(vaucher.date).toLocaleDateString('fr-FR')
               : null}
           </p>
 

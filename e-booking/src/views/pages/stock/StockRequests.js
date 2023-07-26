@@ -197,7 +197,7 @@ function AllStockRequests() {
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableHeaderCell>
                         <CTableDataCell>
-                          {new Date(item.date).toLocaleDateString()}
+                          {new Date(item.date).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
                         <CTableDataCell>
                           {item.User.firstName + ' ' + item.User.lastName}

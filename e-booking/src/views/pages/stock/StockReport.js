@@ -174,8 +174,10 @@ const StockReport = React.forwardRef((props, ref) => {
                 <strong>
                   {' '}
                   Stock report from{' '}
-                  {startDate ? startDate.toLocaleDateString() : ''} to{' '}
-                  {endDate ? endDate.toLocaleDateString() : ''}{' '}
+                  {startDate
+                    ? startDate.toLocaleDateString('fr-FR')
+                    : ''} to{' '}
+                  {endDate ? endDate.toLocaleDateString('fr-FR') : ''}{' '}
                 </strong>
               )}
             </h2>
@@ -226,8 +228,10 @@ const StockReport = React.forwardRef((props, ref) => {
                     time === 'all-time'
                       ? 'STOCK REPORT FOR ALL TIME'
                       : `STOCK REPORT FROM ${
-                          startDate ? startDate.toLocaleDateString() : ''
-                        } to ${endDate ? endDate.toLocaleDateString() : ''}`
+                          startDate ? startDate.toLocaleDateString('fr-FR') : ''
+                        } to ${
+                          endDate ? endDate.toLocaleDateString('fr-FR') : ''
+                        }`
                   }
                 />
                 <StockReportTable

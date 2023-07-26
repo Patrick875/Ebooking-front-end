@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast'
 
 const ViewCashTransaction = (props) => {
   const { transaction, update, setUpdate, setNewVersion } = props
+
   const { register, getValues } = useForm()
   const updateTransaction = async (data) => {
     await instance
@@ -96,21 +97,21 @@ const ViewCashTransaction = (props) => {
                     className="mb-1"
                     type="text"
                     name="doneBy"
-                    id="doneBy"
-                    readOnly
-                    required
-                    defaultValue={
+                    value={
                       transaction.User.firstName +
                       ' ' +
                       transaction.User.lastName
                     }
+                    id="doneBy"
+                    readOnly
+                    required
                   />
                 </div>
               </div>
             </div>
             <p className="pt-2 px-4">
               <span className="fw-bold">Done on </span> :{' '}
-              {new Date(transaction.date).toLocaleDateString()}
+              {new Date(transaction.date).toLocaleDateString('fr-FR')}
             </p>
           </div>
           {!update ? (

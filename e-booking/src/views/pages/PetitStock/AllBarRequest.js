@@ -83,7 +83,7 @@ function AllBarRequest() {
                     >
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
                       <CTableDataCell>
-                        {new Date(item.date).toLocaleDateString()}
+                        {new Date(item.date).toLocaleDateString('fr-FR')}
                       </CTableDataCell>
                       <CTableDataCell className="d-flex">
                         {item && item.status === 'APPROVED' ? (

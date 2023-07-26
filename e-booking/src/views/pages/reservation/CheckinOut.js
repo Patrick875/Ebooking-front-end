@@ -177,7 +177,7 @@ const Checkout = (props) => {
                       ].datesIn.map((el, i) => {
                         return (
                           <li key={i * 6721}>
-                            {new Date(el).toLocaleDateString()}
+                            {new Date(el).toLocaleDateString('fr-FR')}
                           </li>
                         )
                       })}
@@ -566,7 +566,9 @@ const CheckIn = (props) => {
                           <p className=" text-center ">Reservation Dates</p>
                           {datesIn.map((current, i) => (
                             <div key={i * 3456}>
-                              <li>{new Date(current).toLocaleDateString()} </li>
+                              <li>
+                                {new Date(current).toLocaleDateString('fr-FR')}{' '}
+                              </li>
                               <p
                                 className="text-danger"
                                 onClick={() => {

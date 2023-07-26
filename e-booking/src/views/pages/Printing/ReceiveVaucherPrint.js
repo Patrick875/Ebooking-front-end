@@ -47,7 +47,7 @@ const ReceiveVaucherPrint = React.forwardRef((props, ref) => {
         <div className="d-flex flex-col my-3">
           <p className="col">
             Done on{' '}
-            {new Date().toLocaleDateString() +
+            {new Date().toLocaleDateString('fr-FR') +
               ' at  ' +
               new Date().toLocaleTimeString()}
           </p>

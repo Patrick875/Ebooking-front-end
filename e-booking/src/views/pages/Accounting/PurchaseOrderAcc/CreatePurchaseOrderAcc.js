@@ -281,7 +281,7 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
 
                       <p className="col-4 my-0">
                         <span className="fw-bold">DATE : </span>{' '}
-                        {new Date().toLocaleDateString()}
+                        {new Date().toLocaleDateString('fr-FR')}
                       </p>
                     </div>
                   </div>

@@ -155,11 +155,11 @@ const CustomerView = React.forwardRef((props, ref) => {
                                       reservation
                                         ? new Date(
                                             reservation.checkIn,
-                                          ).toLocaleDateString() +
+                                          ).toLocaleDateString('fr-FR') +
                                           ' to ' +
                                           new Date(
                                             reservation.checkOut,
-                                          ).toLocaleDateString()
+                                          ).toLocaleDateString('fr-FR')
                                         : 'not set'
                                     }`}
                                   </CTableDataCell>
@@ -308,7 +308,7 @@ const CustomerView = React.forwardRef((props, ref) => {
                                         ].datesIn.sort(
                                           (a, b) => new Date(a) - new Date(b),
                                         )[0],
-                                      ).toLocaleDateString() +
+                                      ).toLocaleDateString('fr-FR') +
                                       ' to ' +
                                       new Date(
                                         reservation.DatesIns[
@@ -320,7 +320,7 @@ const CustomerView = React.forwardRef((props, ref) => {
                                             reservation.DatesIns.length - 1
                                           ].datesIn.length - 1
                                         ],
-                                      ).toLocaleDateString()
+                                      ).toLocaleDateString('fr-FR')
                                     : 'not set'
                                 }`}
                               </CTableDataCell>

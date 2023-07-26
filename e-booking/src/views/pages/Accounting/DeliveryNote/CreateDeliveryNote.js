@@ -270,7 +270,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
 
                       <p className="col-4 my-0">
                         <span className="fw-bold">DATE : </span>{' '}
-                        {new Date(date).toLocaleDateString()}
+                        {new Date(date).toLocaleDateString('fr-FR')}
                       </p>
                     </div>
                   </div>

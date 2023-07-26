@@ -49,7 +49,7 @@ function PetitStockBaudDeCommande(props) {
       <p className="text-center my-0">*** ENJOY ! ***</p>
       <p className="text-center  my-0">MURAKOZE</p>
       <p className="text-center  my-0">
-        ORDER DATE : {new Date().toLocaleDateString()}
+        ORDER DATE : {new Date().toLocaleDateString('fr-FR')}
       </p>
     </div>
   )

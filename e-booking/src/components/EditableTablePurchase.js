@@ -9,7 +9,7 @@ const EditableTablePurchase = (props) => {
     const editData = data.map((item) =>
       item.id === id && name
         ? name === 'date'
-          ? { ...item, [name]: new Date(value).toLocaleDateString() }
+          ? { ...item, [name]: new Date(value).toLocaleDateString('fr-FR') }
           : { ...item, [name]: value }
         : item,
     )

@@ -278,20 +278,20 @@ export function isRoomOccupied(room) {
   for (const reservation of room.Reservations) {
     for (const date of reservation.DatesIns) {
       for (const el of date.datesIn) {
-        initialArray.push(new Date(el).toLocaleDateString())
+        initialArray.push(new Date(el).toLocaleDateString('fr-FR'))
       }
     }
   }
 
   const uniqueDates = [...new Set(initialArray)]
 
-  if (uniqueDates.includes(new Date().toLocaleDateString())) {
+  if (uniqueDates.includes(new Date().toLocaleDateString('fr-FR'))) {
     const occupiedReservation = room.Reservations.find((reservation) => {
       const datesInArray = reservation.DatesIns.flatMap((date) =>
-        date.datesIn.map((el) => new Date(el).toLocaleDateString()),
+        date.datesIn.map((el) => new Date(el).toLocaleDateString('fr-FR')),
       )
 
-      return datesInArray.includes(new Date().toLocaleDateString())
+      return datesInArray.includes(new Date().toLocaleDateString('fr-FR'))
     })
 
     return {
@@ -308,7 +308,7 @@ export function checkAvailability(room, datesToCheck) {
   for (const reservation of room.Reservations) {
     for (const date of reservation.DatesIns) {
       for (const el of date.datesIn) {
-        initialArray.push(new Date(el).toLocaleDateString())
+        initialArray.push(new Date(el).toLocaleDateString('fr-FR'))
       }
     }
   }
@@ -316,7 +316,9 @@ export function checkAvailability(room, datesToCheck) {
   const uniqueDates = [...new Set(initialArray)]
 
   for (const dateToCheck of datesToCheck) {
-    if (uniqueDates.includes(new Date(dateToCheck).toLocaleDateString())) {
+    if (
+      uniqueDates.includes(new Date(dateToCheck).toLocaleDateString('fr-FR'))
+    ) {
       return null
     }
   }

@@ -138,7 +138,7 @@ function WaiterSells() {
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {new Date(sale.date).toLocaleDateString()}
+                          {new Date(sale.date).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
                         <CTableDataCell>{sale.status}</CTableDataCell>
                         <CTableDataCell>{sale.petitStock.name}</CTableDataCell>

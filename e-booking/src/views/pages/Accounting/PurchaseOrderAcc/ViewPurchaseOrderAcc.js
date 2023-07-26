@@ -166,7 +166,7 @@ const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
             {request ? (
               <p className="col-4 my-0">
                 <span className="fw-bold">DATE : </span>{' '}
-                {new Date(request.createdAt).toLocaleDateString()}
+                {new Date(request.createdAt).toLocaleDateString('fr-FR')}
               </p>
             ) : null}
           </div>

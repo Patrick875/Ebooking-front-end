@@ -73,7 +73,7 @@ const PosBillView = (props) => {
         <p>Location :{table ? table : ''} </p>
         <p>*** ENJOY ! ***</p>
         <p>MURAKOZE</p>
-        <p>ORDER DATE : {new Date(created).toLocaleDateString()}</p>
+        <p>ORDER DATE : {new Date(created).toLocaleDateString('fr-FR')}</p>
       </div>
     </div>
   )

@@ -77,7 +77,7 @@ function RoomReportTable(props) {
                                     ].datesIn.sort(
                                       (a, b) => new Date(a) - new Date(b),
                                     )[0],
-                                  ).toLocaleDateString()
+                                  ).toLocaleDateString('fr-FR')
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>
@@ -93,7 +93,7 @@ function RoomReportTable(props) {
                                           1
                                       ].datesIn.length - 1
                                     ],
-                                  ).toLocaleDateString()
+                                  ).toLocaleDateString('fr-FR')
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>

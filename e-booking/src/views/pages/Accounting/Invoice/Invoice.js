@@ -281,7 +281,7 @@ function Invoice() {
                           {el.invoiceGenerated}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {new Date(el.createdAt).toLocaleDateString()}
+                          {new Date(el.createdAt).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
                         <CTableDataCell>
                           {el.User.firstName + ' ' + el.User.lastName}

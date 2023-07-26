@@ -108,7 +108,9 @@ const ViewCashierVaucher = React.forwardRef((props, ref) => {
                 <p className="fw-bold">.....................</p>
               </div>
             </div>
-            <p>Done on : {new Date(vaucher.date).toLocaleDateString()}</p>
+            <p>
+              Done on : {new Date(vaucher.date).toLocaleDateString('fr-FR')}
+            </p>
           </div>
         </div>
       </div>

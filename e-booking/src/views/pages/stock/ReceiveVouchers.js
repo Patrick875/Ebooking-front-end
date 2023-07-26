@@ -149,7 +149,7 @@ function ReceiveVouchers() {
                           {(currentPage - 1) * perpage + 1 + i}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {new Date(vaucher.date).toLocaleDateString()}
+                          {new Date(vaucher.date).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
 
                         <CTableDataCell>

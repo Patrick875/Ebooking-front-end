@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -11,6 +11,7 @@ import {
   CFormLabel,
   CFormSelect,
   CFormTextarea,
+  CModal,
   CRow,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
@@ -18,46 +19,102 @@ import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import ReactDatePicker from 'react-datepicker'
 import { useState } from 'react'
+import CreateAccount from './CreateAccount'
+import { Link } from 'react-router-dom'
+
+const CreateAccountModal = (props) => {
+  const { visible, setVisible, setNewAccount } = props
+  return (
+    <CModal
+      alignment="center"
+      visible={visible}
+      onClose={() => setVisible(false)}
+      size="lg"
+    >
+      <CreateAccount setNewAccount={setNewAccount} setVisible={setVisible} />
+    </CModal>
+  )
+}
 
 const CashTransaction = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset } = useForm()
   const [date, setDate] = useState(new Date())
+  const [visible, setVisible] = useState(false)
+  const [newAccount, setNewAccount] = useState()
+  const [accounts, setAccounts] = useState([])
   const type = watch('type') || 'credit'
+  const account = watch('account')
+  const accountId =
+    account === ''
+      ? 1
+      : accounts && accounts.length !== 0
+      ? accounts.filter((el) => el.name === account)[0].id
+      : 1
   const creditTransaction = async (data) => {
+    console.log('data', data)
     await instance
       .post('/cashflow/credit', data)
-      .then(() => {
+      .then((res) => {
+        console.log('res', res)
         toast.success('Cash credited !!!')
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log('err', err)
         toast.error('transaction failed !!!')
       })
   }
   const debitTransaction = async (data) => {
+    console.log('data', data)
+    if (data.account === '') {
+      data.account = 'CASH'
+    }
+
     await instance
       .post('/cashflow/debit', data)
       .then((res) => {
+        console.log('res', res)
         toast.success(res.data.message)
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log('err', err)
         toast.error('transaction failed !!!')
       })
   }
   const onSubmit = async (data) => {
+    console.log('data', data)
+
+    data = {
+      ...data,
+      accountId: accountId,
+      date: new Date(date.toString()).getTime(),
+    }
     if (type === 'credit') {
       await creditTransaction({
         ...data,
-        date: new Date(date.toString()).getTime(),
       })
     } else if (type === 'debit') {
       await debitTransaction({
         ...data,
-        date: new Date(date.toString()).getTime(),
       })
     }
   }
-
+  useEffect(() => {
+    const getAccounts = async () => {
+      await instance
+        .get('/cashflow/account/all')
+        .then((res) => {
+          if (res.data.data) {
+            setAccounts(res.data.data)
+            console.log('accounts', res.data.data)
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    }
+    getAccounts()
+  }, [newAccount])
   return (
     <CRow>
       <CCol xs={12}>
@@ -108,16 +165,33 @@ const CashTransaction = () => {
                   />
                 </div>
                 <div className="mb-3 col-6">
-                  <CFormLabel htmlFor="account">
-                    {' '}
-                    Account /Purchase number
-                  </CFormLabel>
-                  <CFormInput
+                  <div className=" col d-flex flex-row justify-content-between">
+                    <CFormLabel htmlFor="customer" className="d-block">
+                      {' '}
+                      Account{' '}
+                    </CFormLabel>
+
+                    <Link
+                      className="d-block text-decoration-none"
+                      onClick={() => setVisible(!visible)}
+                    >
+                      Create account
+                    </Link>
+                  </div>
+                  <CFormSelect
                     name="account"
-                    type="type"
                     id="amount"
                     {...register('account')}
-                  ></CFormInput>
+                  >
+                    <option selected value=""></option>
+                    {accounts && accounts.length !== 0
+                      ? accounts.map((el) => (
+                          <option key={el.id} value={el.name}>
+                            {el.name}
+                          </option>
+                        ))
+                      : null}
+                  </CFormSelect>
                 </div>
               </div>
 
@@ -143,10 +217,7 @@ const CashTransaction = () => {
                 </CCol>
 
                 <CCol md={6}>
-                  <CFormLabel htmlFor="date of arrival">
-                    {' '}
-                    Expected date of Arrival{' '}
-                  </CFormLabel>
+                  <CFormLabel htmlFor="date of transa"> Date </CFormLabel>
                   <ReactDatePicker
                     className="form-control"
                     timeFormat="p"
@@ -177,11 +248,16 @@ const CashTransaction = () => {
                     loggedInUser === 'controller' ? 'disabled' : ''
                   }`}
                   type="submit"
-                  value="Confirm"
+                  value="Submit"
                 />
               </CCol>
             </CForm>
           </CCardBody>
+          <CreateAccountModal
+            visible={visible}
+            setVisible={setVisible}
+            setNewAccount={setNewAccount}
+          />
         </CCard>
       </CCol>
     </CRow>

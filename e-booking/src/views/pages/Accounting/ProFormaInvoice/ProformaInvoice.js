@@ -202,7 +202,7 @@ function ProformaInvoice() {
                           {el.proformaGenerated}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {new Date(el.createdAt).toLocaleDateString()}
+                          {new Date(el.createdAt).toLocaleDateString('fr-FR')}
                         </CTableDataCell>
                         <CTableDataCell>{el.clientName}</CTableDataCell>
                         <CTableDataCell>{el.function}</CTableDataCell>

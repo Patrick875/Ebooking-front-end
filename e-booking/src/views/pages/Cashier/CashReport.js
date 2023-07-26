@@ -26,7 +26,7 @@ import Pagination from 'src/utils/Pagination'
 import ViewCashTransaction from './ViewCashTransaction'
 import PrintHeader from '../Printing/PrintHeader'
 const CashRecords = (props) => {
-  let { transactions, time, myDates, startDate, endDate } = props
+  let { accounts, transactions, time, myDates, startDate, endDate } = props
 
   let debitTotal, creditTotal, balance
 
@@ -55,14 +55,14 @@ const CashRecords = (props) => {
   return (
     <div className="m-3 p-3">
       <h2 className="text-center my-3 text-uppercase fs-5 border border-2">
-        Cash BOX REPORT{' '}
+        CASH BOX REPORT{' '}
         {`${
           myDates.length === 1 && time !== 'all-time'
-            ? ' on ' + new Date(myDates[0]).toLocaleDateString()
+            ? ' on ' + new Date(myDates[0]).toLocaleDateString('fr-FR')
             : ' for ' +
-              new Date(startDate).toLocaleDateString() +
+              new Date(startDate).toLocaleDateString('fr-FR') +
               ' - ' +
-              new Date(endDate).toLocaleDateString()
+              new Date(endDate).toLocaleDateString('fr-FR')
         }`}
       </h2>
       <CCardBody className="d-flex justify-content-around">
@@ -76,9 +76,7 @@ const CashRecords = (props) => {
                 <CTableDataCell className="fs-6" scope="col">
                   #
                 </CTableDataCell>
-                <CTableDataCell className="fs-6" scope="col">
-                  Account /Purchase number
-                </CTableDataCell>
+
                 <CTableDataCell className="fs-6" scope="col">
                   Purpose
                 </CTableDataCell>
@@ -101,45 +99,67 @@ const CashRecords = (props) => {
               {transactions && transactions.length !== 0 ? (
                 <React.Fragment>
                   <CTableRow>
+                    <CTableDataCell colSpan={2}>Initial Balance</CTableDataCell>
                     <CTableDataCell colSpan={3}></CTableDataCell>
-                    <CTableDataCell colSpan={3}>Initial Balance</CTableDataCell>
                     <CTableDataCell>
                       {transactions[0].prevBalance}
                     </CTableDataCell>
                   </CTableRow>
-                  {transactions.map((order, i) => (
-                    <CTableRow key={i}>
-                      <CTableDataCell>
-                        {new Date(order['date']).toLocaleDateString()}
-                      </CTableDataCell>
-                      <CTableDataCell>{i + 1}</CTableDataCell>
-                      <CTableDataCell>{order['account']}</CTableDataCell>
-                      <CTableDataCell>
-                        {order['description'].substring(0, 28)}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {order['accountType'] === 'DEBIT'
-                          ? order['amount'].toLocaleString()
-                          : 0}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {order['accountType'] === 'CREDIT'
-                          ? order['amount'].toLocaleString()
-                          : 0}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {order['newBalance'].toLocaleString()}
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
+
+                  {accounts &&
+                    accounts.length !== 0 &&
+                    accounts
+                      .sort((a, b) => a.id - b.id)
+                      .map((acc, i) => (
+                        <React.Fragment>
+                          <CTableRow key={i * 78}>
+                            <CTableHeaderCell colSpan={6}>
+                              {acc.name}
+                            </CTableHeaderCell>
+                          </CTableRow>
+                          {transactions
+                            .filter((order) => order.account === acc.id)
+                            .map((order, i) => (
+                              <CTableRow key={i}>
+                                <CTableDataCell>
+                                  {new Date(order['date']).toLocaleDateString(
+                                    'fr-FR',
+                                  )}
+                                </CTableDataCell>
+                                <CTableDataCell>{i + 1}</CTableDataCell>
+                                <CTableDataCell>
+                                  {order['description'].substring(0, 28)}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {order['accountType'] === 'DEBIT'
+                                    ? order['amount'].toLocaleString()
+                                    : 0}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {order['accountType'] === 'CREDIT'
+                                    ? order['amount'].toLocaleString()
+                                    : 0}
+                                </CTableDataCell>
+                                <CTableDataCell />
+                              </CTableRow>
+                            ))}
+                          <CTableRow>
+                            <CTableHeaderCell colSpan={2}>
+                              Total
+                            </CTableHeaderCell>
+                            <CTableDataCell colSpan={3} />
+                            <CTableDataCell>
+                              {Number(acc.balance).toLocaleString()}
+                            </CTableDataCell>
+                          </CTableRow>
+                        </React.Fragment>
+                      ))}
                 </React.Fragment>
               ) : null}
 
               <CTableRow>
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableHeaderCell />
-                <CTableHeaderCell>Closing Balance</CTableHeaderCell>
+                <CTableHeaderCell colSpan={2}>Closing Balance</CTableHeaderCell>
+                <CTableHeaderCell></CTableHeaderCell>
                 <CTableHeaderCell>
                   {Number(debitTotal).toLocaleString()}
                 </CTableHeaderCell>
@@ -164,6 +184,7 @@ const CashReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, watch } = useForm()
   const [newVersion, setNewVersion] = useState()
+  const [accounts, setAccounts] = useState([])
   const [viewRecords, setViewRecords] = useState(false)
   const [viewReport, setViewReport] = useState(false)
   const [update, setUpdate] = useState(true)
@@ -204,9 +225,19 @@ const CashReport = React.forwardRef((props, ref) => {
       await instance.get('/cashflow/all').then((res) => {
         if (res && res.data && res.data.data) {
           setTransactions(res.data.data)
+          console.log('transactions', res.data.data)
         }
       })
     }
+    const getAccounts = async () => {
+      await instance.get('/cashflow/account/all').then((res) => {
+        if (res && res.data && res.data.data) {
+          setAccounts(res.data.data)
+          console.log('accounts', res.data.data)
+        }
+      })
+    }
+    getAccounts()
     getCashTransactions()
   }, [newVersion])
   return (
@@ -329,49 +360,37 @@ const CashReport = React.forwardRef((props, ref) => {
                   </CTableHead>
                   <CTableBody>
                     {transactions && transactions.length !== 0
-                      ? transactions
-                          .filter((el) =>
-                            el.transactionId.toLowerCase().includes(trans) ||
-                            el.doneTo.toLowerCase().includes(trans)
-                              ? el
-                              : null,
-                          )
-                          .filter((trans) => {
-                            return myDates.includes(
-                              getUTCDateWithoutHours(trans.date),
-                            )
-                              ? trans
-                              : null
-                          })
-                          .map((item, i) => {
-                            return (
-                              <CTableRow
-                                key={item.id}
-                                onClick={() => {
-                                  setTransaction(item)
-                                  setViewTransaction(true)
-                                }}
-                              >
-                                <CTableHeaderCell scope="row">
-                                  {new Date(item.date).toLocaleDateString()}
-                                </CTableHeaderCell>
-                                <CTableDataCell>
-                                  {item.transactionId}
-                                </CTableDataCell>
-                                <CTableDataCell>{item.doneTo}</CTableDataCell>
+                      ? transactions.map((item, i) => {
+                          return (
+                            <CTableRow
+                              key={item.id}
+                              onClick={() => {
+                                setTransaction(item)
+                                setViewTransaction(true)
+                              }}
+                            >
+                              <CTableHeaderCell scope="row">
+                                {new Date(item.date).toLocaleDateString(
+                                  'fr-FR',
+                                )}
+                              </CTableHeaderCell>
+                              <CTableDataCell>
+                                {item.transactionId}
+                              </CTableDataCell>
+                              <CTableDataCell>{item.doneTo}</CTableDataCell>
 
-                                <CTableDataCell>
-                                  {item.accountType}
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {Number(item.amount).toLocaleString()}
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {item.description}
-                                </CTableDataCell>
-                              </CTableRow>
-                            )
-                          })
+                              <CTableDataCell>
+                                {item.accountType}
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {Number(item.amount).toLocaleString()}
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {item.description}
+                              </CTableDataCell>
+                            </CTableRow>
+                          )
+                        })
                       : null}
                   </CTableBody>
                 </CTable>
@@ -387,7 +406,6 @@ const CashReport = React.forwardRef((props, ref) => {
           )
         ) : (
           <React.Fragment>
-            <InvoiceHeader title="Cash flow" />
             <CashRecords
               time={time}
               myDates={myDates}
@@ -395,6 +413,7 @@ const CashReport = React.forwardRef((props, ref) => {
               balance={balance}
               startDate={startDate}
               endDate={endDate}
+              accounts={accounts}
             />
           </React.Fragment>
         )}
@@ -418,3 +437,5 @@ export default CashReport
 //           <PrintFooterNoSignatures />
 //         </div>
 //       // </div>
+
+//  <InvoiceHeader title="Cash flow" />

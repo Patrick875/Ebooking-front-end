@@ -23,6 +23,7 @@ import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import CustomerAdd from '../Customer/CustomerAdd'
+import { AiOutlineCloseCircle } from 'react-icons/ai'
 
 const CreateCustomerModal = (props) => {
   const { visible, setVisible, setNewCustomer } = props
@@ -390,7 +391,9 @@ const ReservationAdd = (props) => {
                           <p className=" text-center ">Reservation Dates</p>
                           {datesIn.map((current, i) => (
                             <div key={i * 3456}>
-                              <li>{new Date(current).toLocaleDateString()} </li>
+                              <li>
+                                {new Date(current).toLocaleDateString('fr-FR')}{' '}
+                              </li>
                               <p
                                 className="text-danger"
                                 onClick={() => {

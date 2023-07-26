@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-function InvoiceFooter() {
+function InvoiceFooter(props) {
+  const { request } = props
   const user = useSelector(
     (state) => state.auth.user.firstName + ' ' + state.auth.user.lastName,
   )
@@ -35,7 +36,12 @@ function InvoiceFooter() {
           </div>
         </div>
         <div className="my-4">
-          <p>Done at GASABO-KICUKIRO, {new Date().toLocaleDateString()}</p>
+          <p>
+            Done at GASABO-KICUKIRO,{' '}
+            {request
+              ? new Date(request.createdAt).toLocaleDateString('fr-FR')
+              : new Date().toLocaleDateString('fr-FR')}
+          </p>
           <p className="text-center">{user ? user : null}</p>
         </div>
       </div>

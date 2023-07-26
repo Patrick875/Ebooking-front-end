@@ -9,7 +9,7 @@ const EditableTableEvents = (props) => {
     const editData = data.map((item) =>
       item.id === id && name
         ? name === 'date'
-          ? { ...item, [name]: new Date(value).toLocaleDateString() }
+          ? { ...item, [name]: new Date(value).toLocaleDateString('fr-FR') }
           : { ...item, [name]: value }
         : item,
     )
@@ -48,7 +48,8 @@ const EditableTableEvents = (props) => {
                 <ReactDatePicker
                   selected={
                     el.date &&
-                    new Date(el.date).toLocaleDateString() !== 'Invalid date'
+                    new Date(el.date).toLocaleDateString('fr-FR') !==
+                      'Invalid date'
                       ? new Date(el.date)
                       : ''
                   }

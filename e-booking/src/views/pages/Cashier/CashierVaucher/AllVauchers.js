@@ -97,7 +97,6 @@ function AllVauchers() {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Id</CTableHeaderCell>
                   <CTableHeaderCell scope="col">To/From</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Reason</CTableHeaderCell>
@@ -126,9 +125,8 @@ function AllVauchers() {
                             }}
                           >
                             <CTableHeaderCell scope="row">
-                              {new Date(item.date).toLocaleDateString()}
+                              {new Date(item.date).toLocaleDateString('fr-FR')}
                             </CTableHeaderCell>
-                            <CTableDataCell>{item.vaucherId}</CTableDataCell>
                             <CTableDataCell>{item.doneTo}</CTableDataCell>
                             <CTableDataCell>
                               {Number(item.amount).toLocaleString()}

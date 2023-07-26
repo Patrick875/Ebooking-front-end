@@ -92,7 +92,7 @@ const ReservationReceipt = (props) => {
                     ].datesIn.map((el, i) => {
                       return (
                         <li key={i * 6721}>
-                          {new Date(el).toLocaleDateString()}
+                          {new Date(el).toLocaleDateString('fr-FR')}
                         </li>
                       )
                     })}

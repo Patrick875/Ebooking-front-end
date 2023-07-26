@@ -44,7 +44,9 @@ const Room = React.forwardRef((props, ref) => {
             <h4>
               <strong className="text-uppercase">
                 {' '}
-                Room status report on {new Date().toLocaleDateString()}{' '}
+                Room status report on {new Date().toLocaleDateString(
+                  'fr-FR',
+                )}{' '}
               </strong>
             </h4>
             <div className="col-2">
@@ -63,7 +65,8 @@ const Room = React.forwardRef((props, ref) => {
                 <div className="col mx-4">
                   <p className="text-uppercase  text-center fw-bold border border-2">
                     {' '}
-                    Room status report on {new Date().toLocaleDateString()}{' '}
+                    Room status report on{' '}
+                    {new Date().toLocaleDateString('fr-FR')}{' '}
                   </p>
                 </div>
 

@@ -91,7 +91,7 @@ function UpdateReservationDates(props) {
                   <p className=" text-center ">Reservation Dates</p>
                   {datesIn.map((current, i) => (
                     <div key={i * 3456} className="d-flex gap-2">
-                      <li>{new Date(current).toLocaleDateString()} </li>
+                      <li>{new Date(current).toLocaleDateString('fr-FR')} </li>
                       <p
                         className="text-danger"
                         onClick={() => {

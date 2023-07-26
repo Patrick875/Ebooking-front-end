@@ -64,7 +64,7 @@ function StockReportTable(props) {
                     {(currentPage - 1) * perpage + 1 + i}
                   </CTableDataCell>
                   <CTableDataCell>
-                    {new Date(item.date).toLocaleDateString()}
+                    {new Date(item.date).toLocaleDateString('fr-FR')}
                   </CTableDataCell>
                   <CTableDataCell>{item.price}</CTableDataCell>
                   <CTableDataCell>
@@ -186,8 +186,8 @@ const StockItemTrack = React.forwardRef((props, ref) => {
                 <strong>
                   {' '}
                   Stock report of {item ? item.StockItemNew.name : ''} from{' '}
-                  {startDate ? startDate.toLocaleDateString() : ''} to{' '}
-                  {endDate ? endDate.toLocaleDateString() : ''}{' '}
+                  {startDate ? startDate.toLocaleDateString('fr-FR') : ''} to{' '}
+                  {endDate ? endDate.toLocaleDateString('fr-FR') : ''}{' '}
                 </strong>
               )}
             </h2>
@@ -242,8 +242,10 @@ const StockItemTrack = React.forwardRef((props, ref) => {
                       : `STOCK REPORT OF ${
                           item && item.StockItemNew.name
                         } FROM ${
-                          startDate ? startDate.toLocaleDateString() : ''
-                        } to ${endDate ? endDate.toLocaleDateString() : ''}`
+                          startDate ? startDate.toLocaleDateString('fr-FR') : ''
+                        } to ${
+                          endDate ? endDate.toLocaleDateString('fr-FR') : ''
+                        }`
                   }
                 />
                 <StockReportTable

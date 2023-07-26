@@ -33,9 +33,8 @@ const DailySalesReportView = React.forwardRef((props, ref) => {
           <PrintHeader />
           <p className="fs-4 fw-bolder text-center my-1">
             {' '}
-            Daily sales report of {new Date(
-              reportDate,
-            ).toLocaleDateString()}{' '}
+            Daily sales report of{' '}
+            {new Date(reportDate).toLocaleDateString('fr-FR')}{' '}
           </p>
 
           <AddElementToReport

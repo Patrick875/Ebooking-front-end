@@ -172,7 +172,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
               {request ? (
                 <p className="col-4 my-0">
                   <span className="fw-bold">DATE : </span>{' '}
-                  {new Date(request.createdAt).toLocaleDateString()}
+                  {new Date(request.createdAt).toLocaleDateString('fr-FR')}
                 </p>
               ) : null}
             </div>
@@ -182,7 +182,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                 Expected Date of Arrival :{' '}
                 <span className="fw-normal">
                   {request.dateIn
-                    ? new Date(request.dateIn).toLocaleDateString()
+                    ? new Date(request.dateIn).toLocaleDateString('fr-FR')
                     : null}
                 </span>
               </p>
@@ -190,7 +190,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                 Expected Date of Departure :{' '}
                 <span className="fw-normal">
                   {request.dateOut
-                    ? new Date(request.dateOut).toLocaleDateString()
+                    ? new Date(request.dateOut).toLocaleDateString('fr-FR')
                     : null}
                 </span>
               </p>
@@ -215,7 +215,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
         <p className="text-center py-1 my-1">
           Your satisfaction is our concern
         </p>
-        <InvoiceFooter />
+        <InvoiceFooter request={request} />
       </PrintTemplateInvoice>
     </div>
   )

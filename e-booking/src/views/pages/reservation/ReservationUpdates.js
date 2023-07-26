@@ -8,7 +8,7 @@ import {
   CCol,
   CForm,
 } from '@coreui/react'
-import React, { useState } from 'react'
+import React from 'react'
 
 function ReservationUpdates(props) {
   let { openUpdates, setOpenUpdates, reservation } = props
@@ -42,27 +42,26 @@ function ReservationUpdates(props) {
               <p className=" text-center fw-bold ">Reservation Dates</p>
               {reservation && reservation.DatesIns.length !== 0 ? (
                 <div>
-                  {reservation &&
-                    reservation.DatesIns.map((el, i) => (
-                      <div key={i * 3456} className="d-flex gap-2">
-                        <p>
-                          As of{' '}
-                          <span className="fw-bold">
-                            {new Date(el.date).toLocaleDateString('fr-FR')}
-                          </span>{' '}
-                          :{' '}
-                        </p>
-                        {el.datesIn.length !== 0 ? (
-                          el.datesIn.map((curr, i) => (
-                            <li key={i * 234}>
-                              {new Date(curr).toLocaleDateString('fr-FR')}{' '}
-                            </li>
-                          ))
-                        ) : (
-                          <p>No dates</p>
-                        )}
-                      </div>
-                    ))}
+                  {reservation.DatesIns.map((el, i) => (
+                    <div key={i * 3456} className="d-flex gap-2">
+                      <p>
+                        As of{' '}
+                        <span className="fw-bold">
+                          {new Date(el.date).toLocaleDateString('fr-FR')}
+                        </span>{' '}
+                        :{' '}
+                      </p>
+                      {el.datesIn.length !== 0 ? (
+                        el.datesIn.map((curr, i) => (
+                          <li key={i * 234}>
+                            {new Date(curr).toLocaleDateString('fr-FR')}{' '}
+                          </li>
+                        ))
+                      ) : (
+                        <p>No dates</p>
+                      )}
+                    </div>
+                  ))}
                 </div>
               ) : null}
             </CCol>

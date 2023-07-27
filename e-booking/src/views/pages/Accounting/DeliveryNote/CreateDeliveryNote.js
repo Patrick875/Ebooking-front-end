@@ -55,7 +55,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
     requestItems = processObjects(requestItems)
     requestItems = removeObjectsWithEmptyProperties(requestItems)
     requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
-    data = { ...outsideData, details: requestItems }
+    data = { ...outsideData, details: requestItems, date }
 
     createDeliveryNote({ ...data })
   }
@@ -87,7 +87,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                     setView(false)
                   }}
                 >
-                  Add more items
+                  Client details
                 </p>
                 {requestItems && requestItems.length !== 0 ? (
                   <div className="d-flex gap-2 ">
@@ -118,7 +118,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                         return submitRequest()
                       }}
                     >
-                      Submit invoice
+                      Submit
                     </p>
                   </div>
                 ) : null}
@@ -268,9 +268,10 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                         </p>
                       </div>
 
-                      <p className="col-4 my-0">
-                        <span className="fw-bold">DATE : </span>{' '}
-                        {new Date(date).toLocaleDateString('fr-FR')}
+                      <p className="col my-0 d-flex justify-content-end ">
+                        <span className="fw-bold border border-2 border-dark p-1">
+                          DATE :{date ? date.toLocaleDateString('fr-FR') : null}{' '}
+                        </span>{' '}
                       </p>
                     </div>
                   </div>

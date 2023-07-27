@@ -20,6 +20,7 @@ import numberToWords from 'number-to-words'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import { initialRows } from 'src/utils/constants'
 import EditableTableWithDates from 'src/components/EditableTableWithDates'
+import ReactDatePicker from 'react-datepicker'
 
 const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -30,6 +31,7 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
   const VATconstant = 18
   const [view, setView] = useState(false)
   const [dates, setDates] = useState([])
+  const [date, setDate] = useState(new Date())
   const [created, setCreated] = useState({})
   const clearPurchaseOrder = () => {
     setRequestItems([])
@@ -64,9 +66,9 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
 
   const submitRequest = () => {
     let data
-    console.log('data', data)
+
     const outsideData = clientData
-    requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
+    requestItems = requestItems.map((el) => ({ ...el }))
     requestItems = removeObjectsWithEmptyProperties(requestItems)
 
     data = {
@@ -74,6 +76,7 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
       details: requestItems,
       total: orderTotal,
       vatTotal: finalTotal,
+      date: date,
     }
     createPurchaseOrder(data)
   }
@@ -244,19 +247,16 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
                       </div>
                     </CCol>
                     <CCol md={6}>
-                      <CFormLabel htmlFor="unit"> VAT </CFormLabel>
-                      <CFormSelect
-                        name="VAT"
-                        id="VAT"
-                        className="mb-3"
-                        aria-label="VAT"
-                        {...register('VAT', { required: true })}
-                      >
-                        <option value="inclusive" selected>
-                          Inclusive
-                        </option>
-                        <option value="exclusive">Exclusive</option>
-                      </CFormSelect>
+                      <CFormLabel htmlFor="date"> Date </CFormLabel>
+                      <ReactDatePicker
+                        className="form-control"
+                        timeFormat="p"
+                        selected={date}
+                        dateFormat="dd/MM/yyyy"
+                        popperPlacement="bottom-end"
+                        onChange={(date) => setDate(date)}
+                        placeholderText="Select a date "
+                      />
                     </CCol>
                   </CRow>
                 </CForm>
@@ -279,9 +279,10 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
                         <p className="my-0">Number of Pax: {clientData.pax} </p>
                       </div>
 
-                      <p className="col-4 my-0">
-                        <span className="fw-bold">DATE : </span>{' '}
-                        {new Date().toLocaleDateString('fr-FR')}
+                      <p className="col my-0 d-flex justify-content-end ">
+                        <span className="fw-bold border border-2 border-dark p-1">
+                          DATE :{date ? date.toLocaleDateString('fr-FR') : null}{' '}
+                        </span>{' '}
                       </p>
                     </div>
                   </div>

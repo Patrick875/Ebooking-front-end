@@ -169,12 +169,6 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
                   </p>
                 </p>
               </div>
-              {request ? (
-                <p className="col-4 my-0">
-                  <span className="fw-bold">DATE : </span>{' '}
-                  {new Date(request.createdAt).toLocaleDateString('fr-FR')}
-                </p>
-              ) : null}
             </div>
 
             <div className="my-0 mx-2">

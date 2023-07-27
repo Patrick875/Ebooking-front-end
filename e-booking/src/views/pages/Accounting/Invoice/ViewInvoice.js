@@ -229,7 +229,11 @@ const ViewInvoice = React.forwardRef((props, ref) => {
             </div>
             <p className="text-capitalize">
               <span className="fw-bold"> Total in words :</span>
-              {finalTotal ? numberToWords.toWords(finalTotal) : null}
+              <span style={{ color: 'black' }}>
+                {' '}
+                {finalTotal ? numberToWords.toWords(finalTotal) : null}
+              </span>
+
               {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
             </p>
           </div>

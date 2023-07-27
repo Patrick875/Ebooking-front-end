@@ -144,10 +144,14 @@ const EditableTableWithDates = (props) => {
                       : Number(el.price * el.quantity * el.times) === 0
                       ? ''
                       : el.price
-                      ? Number(el.price * el.quantity * el.times)
+                      ? Number(
+                          el.price * el.quantity * el.times,
+                        ).toLocaleString()
                       : Number(el.unitPrice * el.quantity * el.times) === 0
                       ? ''
-                      : Number(el.unitPrice * el.quantity * el.times)
+                      : Number(
+                          el.unitPrice * el.quantity * el.times,
+                        ).toLocaleString()
                   }
                   onChange={(e) => onChangeInput(e, el.id)}
                   readOnly={readOnly}
@@ -184,7 +188,7 @@ const EditableTableWithDates = (props) => {
                   className={`${
                     index === totalRows.length - 1 ? 'fw-bold' : ''
                   } `}
-                  value={hidePrice ? 0 : Number(total)}
+                  value={hidePrice ? 0 : Number(total).toLocaleString()}
                   onChange={(e) => onChangeInput(e, id)}
                   placeholder=""
                   readOnly={readOnly}

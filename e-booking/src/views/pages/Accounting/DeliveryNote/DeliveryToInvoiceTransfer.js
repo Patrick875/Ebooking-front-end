@@ -95,32 +95,34 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
           </div>
 
           <PrintTemplateInvoice ref={ref || componentRef}>
-            <p className="text-center text-uppercase my-3 fw-bold">
-              Invoice N &#176; {created ? created.invoiceGenerated : null}
-            </p>
-            <ClientDetails details={rows} request={deliveryNote} />
-            <div>
-              <div xs={12}>
-                <div className="mb-4">
-                  <div>
-                    <EditableTableWithDates
-                      data={rows}
-                      setData={setRows}
-                      readOnly={false}
-                      type="delivery"
-                    />
+            <div className="mx-4">
+              <p className="text-center text-uppercase my-3 fw-bold">
+                Invoice N &#176; {created ? created.invoiceGenerated : null}
+              </p>
+              <ClientDetails details={rows} request={deliveryNote} />
+              <div>
+                <div xs={12}>
+                  <div className="mb-4">
+                    <div>
+                      <EditableTableWithDates
+                        data={rows}
+                        setData={setRows}
+                        readOnly={false}
+                        type="delivery"
+                      />
+                    </div>
+                    <p className="text-capitalize">
+                      <span className="fw-bold"> Total in words : </span>
+                      {total ? numberToWords.toWords(total) : null}{' '}
+                      {deliveryNote.currency !== 'USD'
+                        ? ' Rwandan Francs '
+                        : ' US Dollars '}
+                    </p>
                   </div>
-                  <p className="text-capitalize">
-                    <span className="fw-bold"> Total in words : </span>
-                    {total ? numberToWords.toWords(total) : null}{' '}
-                    {deliveryNote.currency !== 'USD'
-                      ? ' Rwandan Francs '
-                      : ' US Dollars '}
-                  </p>
                 </div>
               </div>
+              <InvoiceFooter />
             </div>
-            <InvoiceFooter />
           </PrintTemplateInvoice>
         </div>
       </CCol>

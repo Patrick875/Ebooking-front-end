@@ -264,49 +264,56 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
             ) : (
               <div>
                 <div ref={ref || componentRef} className="accounting">
-                  <InvoiceHeader />
-                  <p className="text-center text-uppercase my-3 fw-bold">
-                    Purchase order N &#176;{' '}
-                    {created ? created.POGenerated : null}
-                  </p>
-                  <div className="col d-flex flex-row border border-2 border-dark">
-                    <div className="col p-2 my-0">
-                      <div className="my-0">
-                        <p className="my-0">
-                          {clientData.clientType}: {clientData.clientName}
-                        </p>
-                        <p className="my-0">Function: {clientData.function}</p>
-                        <p className="my-0">Number of Pax: {clientData.pax} </p>
-                      </div>
+                  <div className="mx-4">
+                    <InvoiceHeader />
+                    <p className="text-center text-uppercase my-3 fw-bold">
+                      Purchase order N &#176;{' '}
+                      {created ? created.POGenerated : null}
+                    </p>
+                    <div className="col d-flex flex-row border border-2 border-dark">
+                      <div className="col p-2 my-0">
+                        <div className="my-0">
+                          <p className="my-0">
+                            {clientData.clientType}: {clientData.clientName}
+                          </p>
+                          <p className="my-0">
+                            Function: {clientData.function}
+                          </p>
+                          <p className="my-0">
+                            Number of Pax: {clientData.pax}{' '}
+                          </p>
+                        </div>
 
-                      <p className="col my-0 d-flex justify-content-end ">
-                        <span className="fw-bold border border-2 border-dark p-1">
-                          DATE :{date ? date.toLocaleDateString('fr-FR') : null}{' '}
-                        </span>{' '}
+                        <p className="col my-0 d-flex justify-content-end ">
+                          <span className="fw-bold border border-2 border-dark p-1">
+                            DATE :
+                            {date ? date.toLocaleDateString('fr-FR') : null}{' '}
+                          </span>{' '}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="my-0 py-1 px-0 mx-0">
+                      <div className="d-flex justify-content-around my-0 py-0 mx-0 py-0">
+                        <div className="col px-0 mx-0">
+                          <EditableTableWithDates
+                            data={[...requestItems]}
+                            setData={setRequestItems}
+                            readOnly={false}
+                            setDates={setDates}
+                            dates={dates}
+                          />
+                        </div>
+                      </div>
+                      <p className="text-capitalize">
+                        <span className="fw-bold"> Total in words : </span>
+                        {finalTotal
+                          ? numberToWords.toWords(finalTotal)
+                          : null}{' '}
+                        {currency !== 'USD' ? 'Rwandan Francs' : 'US Dollars'}
                       </p>
                     </div>
+                    <InvoiceFooter />
                   </div>
-                  <div className="my-0 py-1 px-0 mx-0">
-                    <div className="d-flex justify-content-around my-0 py-0 mx-0 py-0">
-                      <div className="col px-0 mx-0">
-                        <EditableTableWithDates
-                          data={[...requestItems]}
-                          setData={setRequestItems}
-                          readOnly={false}
-                          setDates={setDates}
-                          dates={dates}
-                        />
-                      </div>
-                    </div>
-                    <p className="text-capitalize">
-                      <span className="fw-bold"> Total in words : </span>
-                      {finalTotal
-                        ? numberToWords.toWords(finalTotal)
-                        : null}{' '}
-                      {currency !== 'USD' ? 'Rwandan Francs' : 'US Dollars'}
-                    </p>
-                  </div>
-                  <InvoiceFooter />
                 </div>
               </div>
             )}

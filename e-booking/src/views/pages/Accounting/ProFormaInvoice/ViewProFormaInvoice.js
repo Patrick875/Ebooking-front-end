@@ -110,106 +110,108 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
       </div>
 
       <PrintTemplateInvoice ref={ref || componentRef}>
-        <p className="text-center my-3 text-uppercase fw-bold "></p>
-        <div className="col">
-          <p className="text-center my-3 text-uppercase fw-bold">
-            Pro forma Invoice N &#176;
-            {request.proformaGenerated}
-          </p>
-          <div className="col d-flex flex-row border border-2 border-dark">
-            <div className="col p-2 my-0">
-              <div className="my-0">
-                <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
-                  {request.clientType} :{' '}
-                  <p className="py-0 my-0">
-                    <input
-                      defaultValue={request.clientName}
-                      style={{
-                        border: 'none',
-                        background: 'transparent',
-                        width: '100%',
-                      }}
-                      {...register('clientDetails.clientName')}
-                      readOnly={readOnly}
-                      type="text"
-                    />
+        <div className="mx-4">
+          <div className="col">
+            <p className="text-center my-3 text-uppercase fw-bold">
+              Pro forma Invoice N &#176;
+              {request.proformaGenerated}
+            </p>
+            <div className="col d-flex flex-row border border-2 border-dark">
+              <div className="col p-2 my-0">
+                <div className="my-0">
+                  <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
+                    {request.clientType} :{' '}
+                    <p className="py-0 my-0">
+                      <input
+                        defaultValue={request.clientName}
+                        style={{
+                          border: 'none',
+                          background: 'transparent',
+                          width: '100%',
+                        }}
+                        {...register('clientDetails.clientName')}
+                        readOnly={readOnly}
+                        type="text"
+                      />
+                    </p>
                   </p>
-                </p>
 
-                <p className="my-0 d-flex gap-2">
-                  Function:{' '}
-                  <p className="py-0 my-0">
-                    <input
-                      defaultValue={request.function}
-                      style={{
-                        border: 'none',
-                        background: 'transparent',
-                        width: '100%',
-                      }}
-                      {...register('clientDetails.function')}
-                      readOnly={readOnly}
-                      type="text"
-                    />
+                  <p className="my-0 d-flex gap-2">
+                    Function:{' '}
+                    <p className="py-0 my-0">
+                      <input
+                        defaultValue={request.function}
+                        style={{
+                          border: 'none',
+                          background: 'transparent',
+                          width: '100%',
+                        }}
+                        {...register('clientDetails.function')}
+                        readOnly={readOnly}
+                        type="text"
+                      />
+                    </p>
                   </p>
+                  <p className="my-0 d-flex gap-2 ">
+                    Number of Pax:
+                    <p className="py-0 my-0">
+                      <input
+                        defaultValue={request.pax}
+                        style={{
+                          border: 'none',
+                          background: 'transparent',
+                          width: '100%',
+                        }}
+                        {...register('clientDetails.pax')}
+                        readOnly={readOnly}
+                        type="number"
+                      />
+                    </p>
+                  </p>
+                </div>
+              </div>
+
+              <div className="my-0 mx-2">
+                <p className="fw-bold my-0 py-0">
+                  Expected Date of Arrival :{' '}
+                  <span className="fw-normal">
+                    {request.dateIn
+                      ? new Date(request.dateIn).toLocaleDateString('fr-FR')
+                      : null}
+                  </span>
                 </p>
-                <p className="my-0 d-flex gap-2 ">
-                  Number of Pax:
-                  <p className="py-0 my-0">
-                    <input
-                      defaultValue={request.pax}
-                      style={{
-                        border: 'none',
-                        background: 'transparent',
-                        width: '100%',
-                      }}
-                      {...register('clientDetails.pax')}
-                      readOnly={readOnly}
-                      type="number"
-                    />
-                  </p>
+                <p className="fw-bold my-0 py-0">
+                  Expected Date of Departure :{' '}
+                  <span className="fw-normal">
+                    {request.dateOut
+                      ? new Date(request.dateOut).toLocaleDateString('fr-FR')
+                      : null}
+                  </span>
                 </p>
               </div>
             </div>
-
-            <div className="my-0 mx-2">
-              <p className="fw-bold my-0 py-0">
-                Expected Date of Arrival :{' '}
-                <span className="fw-normal">
-                  {request.dateIn
-                    ? new Date(request.dateIn).toLocaleDateString('fr-FR')
-                    : null}
-                </span>
-              </p>
-              <p className="fw-bold my-0 py-0">
-                Expected Date of Departure :{' '}
-                <span className="fw-normal">
-                  {request.dateOut
-                    ? new Date(request.dateOut).toLocaleDateString('fr-FR')
-                    : null}
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className="col">
             <div className="col">
-              <EditableTableWithDates
-                data={rows}
-                setData={setRows}
-                readOnly={readOnly}
-              />
+              <div className="col">
+                <EditableTableWithDates
+                  data={rows}
+                  setData={setRows}
+                  readOnly={readOnly}
+                />
+              </div>
+              <p className="text-capitalize">
+                <span className="fw-bold"> Total in words :</span>
+                {finalTotal ? numberToWords.toWords(finalTotal) : null}
+                {request.currency !== 'USD'
+                  ? ' Rwandan Francs '
+                  : ' US Dollars '}
+              </p>
             </div>
-            <p className="text-capitalize">
-              <span className="fw-bold"> Total in words :</span>
-              {finalTotal ? numberToWords.toWords(finalTotal) : null}
-              {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
-            </p>
           </div>
+          <p className="text-center py-1 my-1">
+            Your satisfaction is our concern
+          </p>
+          <InvoiceFooter request={request} />
         </div>
-
-        <p className="text-center py-1 my-1">
-          Your satisfaction is our concern
-        </p>
-        <InvoiceFooter request={request} />
       </PrintTemplateInvoice>
     </div>
   )

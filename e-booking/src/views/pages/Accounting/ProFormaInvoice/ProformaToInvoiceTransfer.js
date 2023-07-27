@@ -98,7 +98,10 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
                   </div>
                   <p className="text-capitalize">
                     <span className="fw-bold"> Total in words : </span>
-                    {total ? numberToWords.toWords(total) : null}{' '}
+                    <span style={{ color: 'black' }}>
+                      {total ? numberToWords.toWords(total) : null}{' '}
+                    </span>
+
                     {proforma.currency !== 'USD'
                       ? ' Rwandan Francs '
                       : ' US Dollars '}

@@ -10,27 +10,27 @@ function InvoiceFooter(props) {
     <div className="my-0 py-0">
       <div className="d-flex justify-content-between mx-2">
         <div className="my-2">
-          <div className="my-2">
-            <p>
+          <div className="my-4">
+            <p className="py-0 my-0">
               <span className="fw-bolder">BANK NAME: </span> Bank of Kigali
             </p>
-            <p>
+            <p className="py-0 my-0">
               <span className="fw-bolder">Account No: </span>
               00040-00435393-07 /RWF
             </p>
-            <p>
+            <p className="py-0 my-0">
               <span className="my-2 fw-bolder">Swift Code </span>: BKIGRWRW
             </p>
           </div>
-          <div className="my-2">
-            <p>
+          <div className="my-4">
+            <p className="py-0 my-0">
               <span className="fw-bolder">BANK NAME:</span> Bank of Kigali
             </p>
-            <p>
+            <p className="py-0 my-0">
               <span className="fw-bolder">Account No:</span> 00040-00681448-41
               /USD
             </p>
-            <p>
+            <p className="py-0 my-0">
               <span className="my-2 fw-bolder">Swift Code</span> : BKIGRWRW
             </p>
           </div>

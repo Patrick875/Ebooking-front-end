@@ -327,12 +327,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                             {clientData.pax}
                           </p>
                         </div>
-                        {request ? (
-                          <p className="col-4 my-0">
-                            <span className="fw-bold">DATE : </span>{' '}
-                            {new Date().toLocaleDateString('fr-FR')}
-                          </p>
-                        ) : null}
                       </div>
                       <div className="my-0 mx-2">
                         <p className="fw-bold my-0 py-0">

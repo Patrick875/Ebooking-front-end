@@ -7,7 +7,7 @@ const InvoiceHeader = (props) => {
   return (
     <React.Fragment>
       <CRow className="mx-0 px-0 col d-flex flex-row">
-        <div className="col-3">
+        <div className="col-4">
           <CImage src={logo} fluid alt="olympic hotel logo" />
         </div>
         <div className="col ">

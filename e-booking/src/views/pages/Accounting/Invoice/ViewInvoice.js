@@ -37,7 +37,10 @@ const ViewInvoice = React.forwardRef((props, ref) => {
   if (request && request.InvoiceDetails) {
     invoiceDetails = request.InvoiceDetails
   }
-  const [rows, setRows] = useState([...request.InvoiceDetails, ...initialRows])
+  const [rows, setRows] = useState([
+    ...request.InvoiceDetails.sort((a, b) => a.id - b.id),
+    ...initialRows,
+  ])
 
   const updateInvoice = async () => {
     const filtereDetails = removeObjectsWithEmptyProperties(rows)
@@ -205,7 +208,9 @@ const ViewInvoice = React.forwardRef((props, ref) => {
               <p className="col my-0 d-flex justify-content-end ">
                 <span className="fw-bold border border-2 border-dark p-1">
                   DATE :
-                  {new Date(request.createdAt).toLocaleDateString('fr-FR')}{' '}
+                  {!request.date
+                    ? new Date(request.createdAt).toLocaleDateString('fr-FR')
+                    : new Date(request.date).toLocaleDateString('fr-FR')}{' '}
                 </span>{' '}
               </p>
             ) : null}

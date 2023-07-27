@@ -167,9 +167,11 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
               </p>
             </div>
             {request ? (
-              <p className="col-4 my-0">
+              <p className="col my-0 d-flex justify-content-end">
                 <span className="fw-bold">DATE : </span>{' '}
-                {new Date(request.createdAt).toLocaleDateString()}
+                {!request.date
+                  ? new Date(request.createdAt).toLocaleDateString()
+                  : new Date(request.date).toLocaleDateString()}
               </p>
             ) : null}
           </div>

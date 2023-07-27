@@ -265,7 +265,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
             ) : (
               <div>
                 <div ref={ref || componentRef} className="accounting">
-                  <div className="mx-2">
+                  <div className="mx-4">
                     <InvoiceHeader />
                     <p className="text-center text-uppercase my-3 fw-bold">
                       Invoice N &#176;{' '}

@@ -308,62 +308,66 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
               </CCard>
             ) : (
               <PrintTemplateInvoice ref={ref || componentRef}>
-                {created ? (
-                  <React.Fragment>
-                    <p className="text-center my-3 text-uppercase fw-bold">
-                      Pro forma Invoice N &#176;
-                      {created ? created.proformaGenerated : null}
-                    </p>
-                    <div className="col d-flex flex-row border border-2 border-dark">
-                      <div className="col p-2 my-0">
-                        <div className="my-0">
-                          <p className="fw-bolder text-capitalize my-0">
-                            {clientData.clientType} : {clientData.clientName}
-                          </p>
+                <div className="mx-4">
+                  {created ? (
+                    <React.Fragment>
+                      <p className="text-center my-3 text-uppercase fw-bold">
+                        Pro forma Invoice N &#176;
+                        {created ? created.proformaGenerated : null}
+                      </p>
+                      <div className="col d-flex flex-row border border-2 border-dark">
+                        <div className="col p-2 my-0">
+                          <div className="my-0">
+                            <p className="fw-bolder text-capitalize my-0">
+                              {clientData.clientType} : {clientData.clientName}
+                            </p>
 
-                          <p className="my-0">Function:{role} </p>
-                          <p className="my-0">
-                            Number of Pax:
-                            {clientData.pax}
+                            <p className="my-0">Function:{role} </p>
+                            <p className="my-0">
+                              Number of Pax:
+                              {clientData.pax}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="my-0 mx-2">
+                          <p className="fw-bold my-0 py-0">
+                            Expected Date of Arrival :{}
+                            <span className="fw-normal">
+                              {new Date(startDate).toLocaleDateString('fr-FR')}
+                            </span>
+                          </p>
+                          <p className="fw-bold my-0 py-0">
+                            Expected Date of Departure :{' '}
+                            <span className="fw-normal">
+                              {new Date(endDate).toLocaleDateString('fr-FR')}
+                            </span>
                           </p>
                         </div>
                       </div>
-                      <div className="my-0 mx-2">
-                        <p className="fw-bold my-0 py-0">
-                          Expected Date of Arrival :{}
-                          <span className="fw-normal">
-                            {new Date(startDate).toLocaleDateString('fr-FR')}
-                          </span>
-                        </p>
-                        <p className="fw-bold my-0 py-0">
-                          Expected Date of Departure :{' '}
-                          <span className="fw-normal">
-                            {new Date(endDate).toLocaleDateString('fr-FR')}
-                          </span>
-                        </p>
+                    </React.Fragment>
+                  ) : null}
+                  <div>
+                    <div className="d-flex justify-content-around my-0 py-0">
+                      <div className="col">
+                        <EditableTableWithDates
+                          data={[...requestItems]}
+                          setData={setRequestItems}
+                          readOnly={false}
+                        />
                       </div>
                     </div>
-                  </React.Fragment>
-                ) : null}
-                <div>
-                  <div className="d-flex justify-content-around my-0 py-0">
-                    <div className="col">
-                      <EditableTableWithDates
-                        data={[...requestItems]}
-                        setData={setRequestItems}
-                        readOnly={false}
-                      />
-                    </div>
+
+                    <p className="text-capitalize">
+                      <span className="fw-bold"> Total in words : </span>
+                      {finalTotal
+                        ? numberToWords.toWords(finalTotal)
+                        : null}{' '}
+                      {currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
+                    </p>
                   </div>
 
-                  <p className="text-capitalize">
-                    <span className="fw-bold"> Total in words : </span>
-                    {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
-                    {currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
-                  </p>
+                  <InvoiceFooter />
                 </div>
-
-                <InvoiceFooter />
               </PrintTemplateInvoice>
             )}
           </div>

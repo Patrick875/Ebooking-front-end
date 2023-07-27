@@ -92,104 +92,104 @@ const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
             </div>
           ) : null}
 
-          {poDetails && poDetails.length !== 0 ? (
-            <ReactToPrint
-              trigger={() => (
-                <button className="btn btn-ghost-primary">Print</button>
-              )}
-              content={() => ref || componentRef.current}
-            />
-          ) : null}
+          <ReactToPrint
+            trigger={() => (
+              <button className="btn btn-ghost-primary">Print</button>
+            )}
+            content={() => ref || componentRef.current}
+          />
         </div>
       </CCardHeader>
 
       <div ref={ref || componentRef} className="accounting">
-        <InvoiceHeader />
-        <p className="text-center text-uppercase my-3 fw-bold">
-          Purchase order N &#176; {request.POGenerated}
-        </p>
-        <div className="col d-flex flex-row border border-2 border-dark">
-          <div className="col p-2 my-0">
-            <div className="my-0">
-              {request ? (
-                <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
-                  {request.clientType} :{' '}
+        <div className="mx-4">
+          <InvoiceHeader />
+          <p className="text-center text-uppercase my-3 fw-bold">
+            Purchase order N &#176; {request.POGenerated}
+          </p>
+          <div className="col d-flex flex-row border border-2 border-dark">
+            <div className="col p-2 my-0">
+              <div className="my-0">
+                {request ? (
+                  <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
+                    {request.clientType} :{' '}
+                    <p className="py-0 my-0">
+                      <input
+                        defaultValue={request.clientName}
+                        style={{
+                          border: 'none',
+                          background: 'transparent',
+                          width: '100%',
+                        }}
+                        {...register('clientDetails.clientName')}
+                        readOnly={readOnly}
+                        type="text"
+                      />
+                    </p>
+                  </p>
+                ) : null}
+
+                <p className="my-0 d-flex gap-2">
+                  Function:{' '}
                   <p className="py-0 my-0">
                     <input
-                      defaultValue={request.clientName}
+                      defaultValue={request.function}
                       style={{
                         border: 'none',
                         background: 'transparent',
                         width: '100%',
                       }}
-                      {...register('clientDetails.clientName')}
+                      {...register('clientDetails.function')}
                       readOnly={readOnly}
                       type="text"
                     />
                   </p>
                 </p>
+                <p className="my-0 d-flex gap-2 ">
+                  Number of Pax:
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.pax}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.pax')}
+                      readOnly={readOnly}
+                      type="number"
+                    />
+                  </p>
+                </p>
+              </div>
+              {request ? (
+                <p className="col my-0 d-flex justify-content-end">
+                  <span className="fw-bold">DATE : </span>{' '}
+                  {!request.date
+                    ? new Date(request.createdAt).toLocaleDateString('fr-FR')
+                    : new Date(request.date).toLocaleDateString('fr-FR')}
+                </p>
               ) : null}
-
-              <p className="my-0 d-flex gap-2">
-                Function:{' '}
-                <p className="py-0 my-0">
-                  <input
-                    defaultValue={request.function}
-                    style={{
-                      border: 'none',
-                      background: 'transparent',
-                      width: '100%',
-                    }}
-                    {...register('clientDetails.function')}
-                    readOnly={readOnly}
-                    type="text"
-                  />
-                </p>
-              </p>
-              <p className="my-0 d-flex gap-2 ">
-                Number of Pax:
-                <p className="py-0 my-0">
-                  <input
-                    defaultValue={request.pax}
-                    style={{
-                      border: 'none',
-                      background: 'transparent',
-                      width: '100%',
-                    }}
-                    {...register('clientDetails.pax')}
-                    readOnly={readOnly}
-                    type="number"
-                  />
-                </p>
-              </p>
-            </div>
-            {request ? (
-              <p className="col my-0 d-flex justify-content-end">
-                <span className="fw-bold">DATE : </span>{' '}
-                {!request.date
-                  ? new Date(request.createdAt).toLocaleDateString('fr-FR')
-                  : new Date(request.date).toLocaleDateString('fr-FR')}
-              </p>
-            ) : null}
-          </div>
-        </div>
-        <div className="my-1 py-1">
-          <div className="d-flex justify-content-around my-0 py-0">
-            <div className="col ">
-              <EditableTableWithDates
-                data={rows}
-                setData={setRows}
-                readOnly={readOnly}
-              />
             </div>
           </div>
-          <p className="text-capitalize">
-            <span className="fw-bold"> Total in words :</span>
-            {finalTotal ? numberToWords.toWords(finalTotal) : null}
-            {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
-          </p>
+          <div className="my-1 py-1">
+            <div className="d-flex justify-content-around my-0 py-0">
+              <div className="col ">
+                <EditableTableWithDates
+                  data={rows}
+                  setData={setRows}
+                  readOnly={readOnly}
+                />
+              </div>
+            </div>
+            <p className="text-capitalize">
+              <span className="fw-bold"> Total in words :</span>
+              {finalTotal ? numberToWords.toWords(finalTotal) : null}
+              {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
+            </p>
+          </div>
+          <InvoiceFooter />
         </div>
-        <InvoiceFooter />
       </div>
     </div>
   )

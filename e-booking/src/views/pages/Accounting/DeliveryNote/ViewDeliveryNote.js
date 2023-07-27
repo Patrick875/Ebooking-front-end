@@ -107,88 +107,90 @@ const ViewDeliveryNote = React.forwardRef((props, ref) => {
         </div>
       </div>
       <div ref={ref || componentRef}>
-        <InvoiceHeader title="Delivery note" />
-        <p className="text-center my-1 text-uppercase fw-bold">
-          Delivery note N &#176; {request.deliveryNoteId}
-        </p>
-        <div className="col d-flex flex-row border border-2 border-dark">
-          <div className="col p-2 my-0">
-            <div className="my-0">
-              {request ? (
-                <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
-                  {request.clientType} :{' '}
+        <div className="mx-4">
+          <InvoiceHeader title="Delivery note" />
+          <p className="text-center my-1 text-uppercase fw-bold">
+            Delivery note N &#176; {request.deliveryNoteId}
+          </p>
+          <div className="col d-flex flex-row border border-2 border-dark">
+            <div className="col p-2 my-0">
+              <div className="my-0">
+                {request ? (
+                  <p className="fw-bolder text-capitalize my-0 d-flex gap-2">
+                    {request.clientType} :{' '}
+                    <p className="py-0 my-0">
+                      <input
+                        defaultValue={request.clientName}
+                        style={{
+                          border: 'none',
+                          background: 'transparent',
+                          width: '100%',
+                        }}
+                        {...register('clientDetails.clientName')}
+                        readOnly={readOnly}
+                        type="text"
+                      />
+                    </p>
+                  </p>
+                ) : null}
+
+                <p className="my-0 d-flex gap-2">
+                  Function:{' '}
                   <p className="py-0 my-0">
                     <input
-                      defaultValue={request.clientName}
+                      defaultValue={request.function}
                       style={{
                         border: 'none',
                         background: 'transparent',
                         width: '100%',
                       }}
-                      {...register('clientDetails.clientName')}
+                      {...register('clientDetails.function')}
                       readOnly={readOnly}
                       type="text"
                     />
                   </p>
                 </p>
+                <p className="my-0 d-flex gap-2 ">
+                  Number of Pax:
+                  <p className="py-0 my-0">
+                    <input
+                      defaultValue={request.pax}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        width: '100%',
+                      }}
+                      {...register('clientDetails.pax')}
+                      readOnly={readOnly}
+                      type="number"
+                    />
+                  </p>
+                </p>
+              </div>
+              {request ? (
+                <p className="col my-0 d-flex justify-content-end">
+                  <span className="fw-bold">DATE : </span>{' '}
+                  {!request.date
+                    ? new Date(request.createdAt).toLocaleDateString()
+                    : new Date(request.date).toLocaleDateString()}
+                </p>
               ) : null}
-
-              <p className="my-0 d-flex gap-2">
-                Function:{' '}
-                <p className="py-0 my-0">
-                  <input
-                    defaultValue={request.function}
-                    style={{
-                      border: 'none',
-                      background: 'transparent',
-                      width: '100%',
-                    }}
-                    {...register('clientDetails.function')}
-                    readOnly={readOnly}
-                    type="text"
-                  />
-                </p>
-              </p>
-              <p className="my-0 d-flex gap-2 ">
-                Number of Pax:
-                <p className="py-0 my-0">
-                  <input
-                    defaultValue={request.pax}
-                    style={{
-                      border: 'none',
-                      background: 'transparent',
-                      width: '100%',
-                    }}
-                    {...register('clientDetails.pax')}
-                    readOnly={readOnly}
-                    type="number"
-                  />
-                </p>
-              </p>
-            </div>
-            {request ? (
-              <p className="col my-0 d-flex justify-content-end">
-                <span className="fw-bold">DATE : </span>{' '}
-                {!request.date
-                  ? new Date(request.createdAt).toLocaleDateString()
-                  : new Date(request.date).toLocaleDateString()}
-              </p>
-            ) : null}
-          </div>
-        </div>
-        <div className="my-3 py-3">
-          <div className="d-flex justify-content-around">
-            <div className="col">
-              <EditableTableWithDates
-                data={rows}
-                setData={setRows}
-                readOnly={readOnly}
-                type="delivery"
-              />
             </div>
           </div>
+          <div className="my-3 py-3">
+            <div className="d-flex justify-content-around">
+              <div className="col">
+                <EditableTableWithDates
+                  data={rows}
+                  setData={setRows}
+                  readOnly={readOnly}
+                  type="delivery"
+                />
+              </div>
+            </div>
+          </div>
+          <DeliveryFooter />
         </div>
-        <DeliveryFooter />
       </div>
     </div>
   )

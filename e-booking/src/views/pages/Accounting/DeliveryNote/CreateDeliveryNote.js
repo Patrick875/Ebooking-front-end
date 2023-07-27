@@ -247,44 +247,49 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                 className="my-0 mx-0 px-0 py-0 accounting"
                 ref={ref || componentRef}
               >
-                <PrintTemplateInvoice>
-                  {created ? (
-                    <h5 className="text-center my-3 text-uppercase">
-                      Delivery note N &#176; {created.deliveryNoteId}
-                    </h5>
-                  ) : null}
+                <div className="mx-4">
+                  <PrintTemplateInvoice>
+                    {created ? (
+                      <h5 className="text-center my-3 text-uppercase">
+                        Delivery note N &#176; {created.deliveryNoteId}
+                      </h5>
+                    ) : null}
 
-                  <div className="col d-flex flex-row border border-2 border-dark">
-                    <div className="col p-2 my-0">
-                      <div className="my-0">
-                        <p className="fw-bolder text-capitalize my-0">
-                          {clientData.clientType} : {clientData.clientName}
-                        </p>
+                    <div className="col d-flex flex-row border border-2 border-dark">
+                      <div className="col p-2 my-0">
+                        <div className="my-0">
+                          <p className="fw-bolder text-capitalize my-0">
+                            {clientData.clientType} : {clientData.clientName}
+                          </p>
 
-                        <p className="my-0">Function:{clientData.function} </p>
-                        <p className="my-0">
-                          Number of Pax:
-                          {clientData.pax}
+                          <p className="my-0">
+                            Function:{clientData.function}{' '}
+                          </p>
+                          <p className="my-0">
+                            Number of Pax:
+                            {clientData.pax}
+                          </p>
+                        </div>
+
+                        <p className="col my-0 d-flex justify-content-end ">
+                          <span className="fw-bold border border-2 border-dark p-1">
+                            DATE :
+                            {date ? date.toLocaleDateString('fr-FR') : null}{' '}
+                          </span>{' '}
                         </p>
                       </div>
-
-                      <p className="col my-0 d-flex justify-content-end ">
-                        <span className="fw-bold border border-2 border-dark p-1">
-                          DATE :{date ? date.toLocaleDateString('fr-FR') : null}{' '}
-                        </span>{' '}
-                      </p>
                     </div>
-                  </div>
-                  <div className="col">
-                    <EditableTableWithDates
-                      data={[...requestItems]}
-                      setData={setRequestItems}
-                      hidePrice={hidePrice}
-                      readOnly={false}
-                    />
-                  </div>
-                  <DeliveryFooter />
-                </PrintTemplateInvoice>
+                    <div className="col">
+                      <EditableTableWithDates
+                        data={[...requestItems]}
+                        setData={setRequestItems}
+                        hidePrice={hidePrice}
+                        readOnly={false}
+                      />
+                    </div>
+                    <DeliveryFooter />
+                  </PrintTemplateInvoice>
+                </div>
               </div>
             )}
           </div>

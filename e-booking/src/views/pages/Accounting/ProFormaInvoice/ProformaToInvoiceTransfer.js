@@ -84,27 +84,29 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
           </div>
           <div className="px-0 mx-0 my-0 mx-0 accounting">
             <PrintTemplateInvoice ref={ref || componentRef}>
-              <p className="text-center text-uppercase my-3 fw-bold">
-                Invoice N &#176; {created ? created.invoiceGenerated : null}
-              </p>
-              <ClientDetails
-                details={proforma.ProformaDetails}
-                request={proforma}
-              />
-              <div>
-                <div xs={12} className="my-0 py-0">
-                  <EditableTableWithDates data={rows} setData={setRows} />
-                </div>
-                <p className="text-capitalize">
-                  <span className="fw-bold"> Total in words : </span>
-                  {total ? numberToWords.toWords(total) : null}{' '}
-                  {proforma.currency !== 'USD'
-                    ? ' Rwandan Francs '
-                    : ' US Dollars '}
+              <div className="mx-4">
+                <p className="text-center text-uppercase my-3 fw-bold">
+                  Invoice N &#176; {created ? created.invoiceGenerated : null}
                 </p>
-              </div>
+                <ClientDetails
+                  details={proforma.ProformaDetails}
+                  request={proforma}
+                />
+                <div>
+                  <div xs={12} className="my-0 py-0">
+                    <EditableTableWithDates data={rows} setData={setRows} />
+                  </div>
+                  <p className="text-capitalize">
+                    <span className="fw-bold"> Total in words : </span>
+                    {total ? numberToWords.toWords(total) : null}{' '}
+                    {proforma.currency !== 'USD'
+                      ? ' Rwandan Francs '
+                      : ' US Dollars '}
+                  </p>
+                </div>
 
-              <InvoiceFooter />
+                <InvoiceFooter />
+              </div>
             </PrintTemplateInvoice>
           </div>
         </div>

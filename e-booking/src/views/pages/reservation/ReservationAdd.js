@@ -48,6 +48,7 @@ const ReservationAdd = (props) => {
     service[0] = roomFromRoomClass
   }
   const [rooms, setRooms] = useState([])
+  const [reservationRooms, setReservationRooms] = useState([])
   const [halls, setHalls] = useState([])
   const [hallServices, setHallServices] = useState([])
   let [RoomClasses, setRoomClasses] = useState([])
@@ -78,6 +79,8 @@ const ReservationAdd = (props) => {
 
   const dontSubmit = payment < 0 ? true : false
 
+  console.log('rro', service)
+
   const additionalTotal =
     Object.keys(additional).length !== 0
       ? Object.keys(additional).map((e) =>
@@ -89,6 +92,7 @@ const ReservationAdd = (props) => {
   if (type === 'hall' && service.length !== 0) {
     priceHall = service && service.length !== 0 ? service[0].price : 0
   } else if (type === 'room' && service.length !== 0 && service[0].RoomClass) {
+    console.log('res', service)
     priceRoom = service[0].RoomClass.price
   }
   const time =
@@ -190,7 +194,6 @@ const ReservationAdd = (props) => {
       await instance
         .get('/customers/all')
         .then((res) => {
-          console.log('rez', res)
           if (res && res.data && res.data.data) {
             setCustomers(res.data.data)
           }
@@ -343,12 +346,8 @@ const ReservationAdd = (props) => {
                       </CFormSelect>
                     </CCol>
 
-                    {type &&
-                    type === 'room' &&
-                    customer &&
-                    customer.length !== 0 &&
-                    customer[0].customerType === 'company' ? null : (
-                      <CCol md={6} disabled={true}>
+                    <CRow className="d-flex justify-content-between">
+                      <CCol md={6}>
                         <CFormLabel htmlFor="service"> Service </CFormLabel>
                         {type && type === 'room' ? (
                           <Typeahead
@@ -372,54 +371,80 @@ const ReservationAdd = (props) => {
                             selected={service}
                           />
                         )}
-                      </CCol>
-                    )}
-
-                    <CCol md={6} className="d-flex">
-                      <div className="col">
-                        <CFormLabel htmlFor="checkIn" className="d-block">
-                          Dates In
-                        </CFormLabel>
-                        <DatePicker
-                          className="form-control"
-                          multiple
-                          highlightDates={datesIn}
-                          minDate={new Date()}
-                          dateFormat="dd/MM/yyyy"
-                          onChange={(date) => {
-                            let newDates = [...datesIn, new Date(date)]
-                            newDates = filterDateDuplicates(newDates)
-                            setDatesIn([...newDates])
-                          }}
-                          inline
-                          excludeDates={[...removeDates]}
-                          placeholderText="Select a date other than  yesterday"
-                        />
-                      </div>
-                      {datesIn.length !== 0 ? (
-                        <div>
-                          <p className=" text-center ">Reservation Dates</p>
-                          {datesIn.map((current, i) => (
-                            <div key={i * 3456}>
-                              <li>
-                                {new Date(current).toLocaleDateString('fr-FR')}{' '}
-                              </li>
-                              <p
-                                className="text-danger"
-                                onClick={() => {
-                                  let newDatesIn = datesIn.filter(
-                                    (el) => el !== current,
+                        <div className="pt-2 mt-1">
+                          <CFormLabel htmlFor="affiliations">
+                            Affiliated to
+                          </CFormLabel>
+                          <CFormSelect
+                            name="affilation"
+                            id="affiliation"
+                            className="mb-3"
+                            {...register('affiliationId')}
+                          >
+                            <option></option>
+                            {customers && customers.length !== 0
+                              ? customers
+                                  .filter(
+                                    (cust) => cust.customerType === 'company',
                                   )
-                                  return setDatesIn(newDatesIn)
-                                }}
-                              >
-                                Remove
-                              </p>
-                            </div>
-                          ))}
+                                  .map((com, i) => (
+                                    <option value={com.id} key={com.names + i}>
+                                      {com.names}
+                                    </option>
+                                  ))
+                              : null}
+                          </CFormSelect>
                         </div>
-                      ) : null}
-                    </CCol>
+                      </CCol>
+
+                      <CCol md={6} className="d-flex">
+                        <div className="col">
+                          <CFormLabel htmlFor="checkIn" className="d-block">
+                            Dates In
+                          </CFormLabel>
+                          <DatePicker
+                            className="form-control"
+                            multiple
+                            highlightDates={datesIn}
+                            minDate={new Date()}
+                            dateFormat="dd/MM/yyyy"
+                            onChange={(date) => {
+                              let newDates = [...datesIn, new Date(date)]
+                              newDates = filterDateDuplicates(newDates)
+                              setDatesIn([...newDates])
+                            }}
+                            inline
+                            excludeDates={[...removeDates]}
+                            placeholderText="Select a date other than  yesterday"
+                          />
+                        </div>
+                        {datesIn.length !== 0 ? (
+                          <div>
+                            <p className=" text-center ">Reservation Dates</p>
+                            {datesIn.map((current, i) => (
+                              <div key={i * 3456}>
+                                <li>
+                                  {new Date(current).toLocaleDateString(
+                                    'fr-FR',
+                                  )}{' '}
+                                </li>
+                                <p
+                                  className="text-danger"
+                                  onClick={() => {
+                                    let newDatesIn = datesIn.filter(
+                                      (el) => el !== current,
+                                    )
+                                    return setDatesIn(newDatesIn)
+                                  }}
+                                >
+                                  Remove
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </CCol>
+                    </CRow>
 
                     {type && type === 'hall' ? (
                       <div className="row my-2 text-center">
@@ -521,29 +546,37 @@ const ReservationAdd = (props) => {
                       </div>
                     ) : null}
 
-                    <CRow>
-                      {customer &&
-                      customer.length !== 0 &&
-                      customer[0].customerType === 'company' &&
-                      type &&
-                      type === 'room'
-                        ? RoomClasses && RoomClasses.length !== 0
-                          ? RoomClasses.map((roomClass) => (
-                              <CCol md={6}>
-                                {roomClass.name}
-                                <CFormInput
-                                  type="number"
-                                  min={0}
-                                  id={`"number of people" for ${roomClass.name}`}
-                                  {...register(
-                                    `details.${roomClass.name}.people`,
-                                  )}
-                                />
-                              </CCol>
-                            ))
-                          : null
-                        : null}
-                    </CRow>
+                    {customer &&
+                    customer.length !== 0 &&
+                    customer[0].customerType === 'company' &&
+                    type &&
+                    type === 'room' ? (
+                      <CCol md={6}>
+                        <CFormLabel>Select Rooms</CFormLabel>
+
+                        <Typeahead
+                          id="basic-typeahead-multiple"
+                          labelKey="name"
+                          multiple
+                          onChange={setReservationRooms}
+                          options={rooms}
+                          selected={reservationRooms}
+                          renderToken={(option, props, index) => (
+                            <div className="typeahead-token" key={index}>
+                              {option.name}
+
+                              <button
+                                className="typeahead-remove-button"
+                                type="button"
+                                onClick={() => props.onRemove(option)}
+                              >
+                                <AiOutlineCloseCircle />
+                              </button>
+                            </div>
+                          )}
+                        />
+                      </CCol>
+                    ) : null}
 
                     <div className="d-flex flex-row my-2 ">
                       <strong> Total </strong>

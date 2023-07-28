@@ -18,7 +18,11 @@ import {
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { getAllDates, isRoomOccupied } from 'src/utils/functions'
+import {
+  filterDateDuplicates,
+  getAllDates,
+  isRoomOccupied,
+} from 'src/utils/functions'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
@@ -344,8 +348,10 @@ const CheckIn = (props) => {
       await instance
         .post('/reservation/checkin', data)
         .then((res) => {
-          toast.success('Client checked-in')
-          setReload(res)
+          if (res && res.data && res.data.data) {
+            setReload(res)
+            toast.success('Client checked-in')
+          }
         })
         .catch((err) => {
           console.log('Client in failed')
@@ -370,7 +376,7 @@ const CheckIn = (props) => {
       await instance
         .get('/customers/all')
         .then((res) => {
-          if (res && res.data & res.data.data) {
+          if (res && res.data && res.data.data) {
             setCustomers(res.data.data)
           }
         })
@@ -523,12 +529,8 @@ const CheckIn = (props) => {
                       </CFormSelect>
                     </CCol>
 
-                    {type &&
-                    type === 'room' &&
-                    customer &&
-                    customer.length !== 0 &&
-                    customer[0].customerType === 'company' ? null : (
-                      <CCol md={6} disabled={true}>
+                    <CRow className="d-flex justify-content-between">
+                      <CCol md={6}>
                         <CFormLabel htmlFor="service"> Service </CFormLabel>
                         {type && type === 'room' ? (
                           <Typeahead
@@ -552,53 +554,80 @@ const CheckIn = (props) => {
                             selected={service}
                           />
                         )}
-                      </CCol>
-                    )}
-
-                    <CCol md={6} className="d-flex">
-                      <div className="col">
-                        <CFormLabel htmlFor="checkIn" className="d-block">
-                          Dates In
-                        </CFormLabel>
-                        <DatePicker
-                          className="form-control"
-                          multiple
-                          highlightDates={datesIn}
-                          minDate={new Date()}
-                          dateFormat="dd/MM/yyyy"
-                          onChange={(date) =>
-                            setDatesIn([...datesIn, new Date(date)])
-                          }
-                          inline
-                          excludeDates={[...removeDates]}
-                          placeholderText="Select a date other than  yesterday"
-                        />
-                      </div>
-                      {datesIn.length !== 0 ? (
-                        <div>
-                          <p className=" text-center ">Reservation Dates</p>
-                          {datesIn.map((current, i) => (
-                            <div key={i * 3456}>
-                              <li>
-                                {new Date(current).toLocaleDateString('fr-FR')}{' '}
-                              </li>
-                              <p
-                                className="text-danger"
-                                onClick={() => {
-                                  let newDatesIn = datesIn.filter(
-                                    (el) => el !== current,
+                        <div className="pt-2 mt-1">
+                          <CFormLabel htmlFor="affiliations">
+                            Affiliated to
+                          </CFormLabel>
+                          <CFormSelect
+                            name="affilation"
+                            id="affiliation"
+                            className="mb-3"
+                            {...register('affiliationId')}
+                          >
+                            <option></option>
+                            {customers && customers.length !== 0
+                              ? customers
+                                  .filter(
+                                    (cust) => cust.customerType === 'company',
                                   )
-                                  return setDatesIn(newDatesIn)
-                                }}
-                              >
-                                Remove
-                              </p>
-                            </div>
-                          ))}
+                                  .map((com, i) => (
+                                    <option value={com.id} key={com.names + i}>
+                                      {com.names}
+                                    </option>
+                                  ))
+                              : null}
+                          </CFormSelect>
                         </div>
-                      ) : null}
-                    </CCol>
+                      </CCol>
 
+                      <CCol md={6} className="d-flex">
+                        <div className="col">
+                          <CFormLabel htmlFor="checkIn" className="d-block">
+                            Dates In
+                          </CFormLabel>
+                          <DatePicker
+                            className="form-control"
+                            multiple
+                            highlightDates={datesIn}
+                            minDate={new Date()}
+                            dateFormat="dd/MM/yyyy"
+                            onChange={(date) => {
+                              let newDates = [...datesIn, new Date(date)]
+                              newDates = filterDateDuplicates(newDates)
+                              setDatesIn([...newDates])
+                            }}
+                            inline
+                            excludeDates={[...removeDates]}
+                            placeholderText="Select a date other than  yesterday"
+                          />
+                        </div>
+                        {datesIn.length !== 0 ? (
+                          <div>
+                            <p className=" text-center ">Reservation Dates</p>
+                            {datesIn.map((current, i) => (
+                              <div key={i * 3456}>
+                                <li>
+                                  {new Date(current).toLocaleDateString(
+                                    'fr-FR',
+                                  )}{' '}
+                                </li>
+                                <p
+                                  className="text-danger"
+                                  onClick={() => {
+                                    let newDatesIn = datesIn.filter(
+                                      (el) => el !== current,
+                                    )
+                                    return setDatesIn(newDatesIn)
+                                  }}
+                                >
+                                  Remove
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </CCol>
+                    </CRow>
                     {type && type === 'hall' ? (
                       <div className="row my-2 text-center">
                         <div>
@@ -663,35 +692,6 @@ const CheckIn = (props) => {
                                 id="adults_number"
                                 label="Children number"
                                 {...register('children_number')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {customer &&
-                    type &&
-                    type !== 'room' &&
-                    customer.length !== 0 &&
-                    customer[0].customerType === 'company' ? (
-                      <div className="row my-2 ">
-                        <div className="my-2">
-                          <CFormLabel
-                            htmlFor="additionalInfo"
-                            className="fw-bolder text-center"
-                          >
-                            Booking for company
-                          </CFormLabel>
-                        </div>
-                        <div>
-                          <div className="d-flex flex-row  my-2">
-                            <div>
-                              <CFormInput
-                                type="text"
-                                id="adults_number"
-                                label="Number of people"
-                                {...register('number_of_people')}
                               />
                             </div>
                           </div>

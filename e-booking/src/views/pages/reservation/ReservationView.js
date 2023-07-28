@@ -38,7 +38,11 @@ const ReservationReceipt = (props) => {
                     name="title"
                     id="title"
                     required
-                    value={reservation.Customer.names}
+                    value={
+                      reservation.affiliation
+                        ? reservation.affiliation.names
+                        : reservation.Customer.names
+                    }
                   />
                   <CFormLabel>Phone</CFormLabel>
                   <CFormInput
@@ -47,7 +51,11 @@ const ReservationReceipt = (props) => {
                     name="title"
                     id="title"
                     required
-                    value={reservation.Customer.phone}
+                    value={
+                      reservation.affiliation
+                        ? reservation.affiliation.phone
+                        : reservation.Customer.phone
+                    }
                   />
                   <CFormLabel>ID/Passport</CFormLabel>
                   <CFormInput
@@ -56,7 +64,11 @@ const ReservationReceipt = (props) => {
                     name="title"
                     id="title"
                     required
-                    value={reservation.Customer.identification}
+                    value={
+                      reservation.affiliation
+                        ? reservation.affiliation.identification
+                        : reservation.Customer.identification
+                    }
                   />
                 </div>
               </CCol>
@@ -67,16 +79,9 @@ const ReservationReceipt = (props) => {
                 <div>
                   {reservation.Customer.customerType === 'company' ? (
                     <div>
-                      {reservation.details
-                        ? Object.keys(reservation.details)?.map((e) => (
-                            <p>
-                              {e} rooms :{' '}
-                              {reservation.details[e].people === ''
-                                ? 0
-                                : reservation.details[e].people}
-                            </p>
-                          ))
-                        : null}
+                      <p>
+                        Reservation to paid by {reservation.Customer.names}{' '}
+                      </p>
                     </div>
                   ) : (
                     <p className="font-weight-bold">
@@ -159,12 +164,14 @@ const ReservationView = React.forwardRef((props, ref) => {
               <h5>
                 <strong>
                   {' '}
-                  Reservation by {' ' + reservation.Customer.names + ' for '}
-                  {reservation.Customer.customerType !== 'company'
-                    ? reservation.Room
-                      ? `R${reservation.Room.name}`
-                      : reservation.Hall.name + 'Hall'
-                    : null}
+                  Reservation by{' '}
+                  {reservation.affiliation
+                    ? reservation.affiliation.names + '/'
+                    : ''}
+                  {' ' + reservation.Customer.names + ' for '}
+                  {reservation.Room
+                    ? `R${reservation.Room.name}`
+                    : reservation.Hall.name + 'Hall'}
                 </strong>
               </h5>
               <div>

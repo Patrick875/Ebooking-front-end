@@ -206,7 +206,7 @@ const Products = () => {
                       return product.Packages.map((pack, i) => {
                         const rowIndex = el + i
                         return (
-                          <CTableRow key={product.name + 1}>
+                          <CTableRow key={product.name + pack.name + (1 + i)}>
                             <CTableDataCell className="text-capitalize">
                               1 {pack.name} of {product.name}
                             </CTableDataCell>
@@ -268,3 +268,5 @@ const Products = () => {
 }
 
 export default Products
+
+// Sample array of objects

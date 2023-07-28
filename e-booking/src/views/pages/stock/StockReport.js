@@ -3,6 +3,8 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CFormInput,
+  CFormLabel,
   CRow,
   CTable,
   CTableBody,
@@ -113,6 +115,7 @@ const StockReport = React.forwardRef((props, ref) => {
   const { register, watch } = useForm()
   const componentRef = useRef()
   const time = watch('time') || 'all-time'
+  const query = watch('query') || ''
   const [startDate, setStartDate] = useState(
     new Date(new Date().getFullYear(), 0, 1),
   )
@@ -134,7 +137,16 @@ const StockReport = React.forwardRef((props, ref) => {
       )
     }
   }
-
+  const searchItems = (items, query) => {
+    console.log('qqq', query)
+    if (!query || query === '') {
+      return items
+    } else {
+      return items.filter((item) =>
+        item.StockItemNew.name.toLowerCase().includes(query.toLowerCase()),
+      )
+    }
+  }
   let [items, setItems] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -160,6 +172,7 @@ const StockReport = React.forwardRef((props, ref) => {
 
     getStockHistory()
   }, [])
+  items = searchItems(items, query)
 
   items = getReportsByDate(items, myDates)
 
@@ -205,7 +218,8 @@ const StockReport = React.forwardRef((props, ref) => {
               </select>
             </div>
             {time && time === 'date' ? (
-              <div className="col d-flex align-items-end ">
+              <div className="col">
+                <CFormLabel>Range</CFormLabel>
                 <DatePicker
                   className="form-control col px-2"
                   onChange={onChange}
@@ -220,6 +234,17 @@ const StockReport = React.forwardRef((props, ref) => {
                 />
               </div>
             ) : null}
+            <div className="col">
+              <CFormLabel>Search</CFormLabel>
+              <CFormInput
+                className="mb-1"
+                type="text"
+                name="stockItemName"
+                id="stockItemName"
+                placeholder="search ..."
+                {...register('query')}
+              />
+            </div>
           </div>
           <CCardBody>
             <div style={{ display: 'none' }}>

@@ -30,7 +30,7 @@ function AllBarItems() {
         toast.success('Petit stock disactivated successfully')
       })
       .catch((err) => {
-        toast.error('error disactivating petit stock')
+        console.log('error disactivating petit stock')
       })
   }
   const navigate = useNavigate()
@@ -42,7 +42,7 @@ function AllBarItems() {
         toast.success('Petit stock ctivated successfully')
       })
       .catch((err) => {
-        toast.error('error activating petit stock')
+        console.log('error activating petit stock')
       })
   }
   return (

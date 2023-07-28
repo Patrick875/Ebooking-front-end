@@ -29,7 +29,7 @@ const FormControl = () => {
         toast.success('Room created')
       })
       .catch((err) => {
-        toast.error('Room  create failed')
+        console.log('Room  create failed')
       })
     reset()
   }
@@ -41,7 +41,7 @@ const FormControl = () => {
           setRoomClasses(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getRoomClasses()

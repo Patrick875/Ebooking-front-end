@@ -29,7 +29,7 @@ const RoomClassEdit = () => {
         toast.success('Room class updated')
       })
       .catch((err) => {
-        toast.error('Room class update failed')
+        console.log('Room class update failed')
       })
 
     reset()

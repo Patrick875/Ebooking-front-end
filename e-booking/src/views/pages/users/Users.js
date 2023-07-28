@@ -32,8 +32,10 @@ const ConfirmDeleteUserModel = (props) => {
     await instance
       .get(`/users/disactivate/${userId}`)
       .then((res) => {
-        setUpdated(res.data.data)
-        toast.success('user disactivated')
+        if (res.data.data) {
+          setUpdated(res.data.data)
+          toast.success('user disactivated')
+        }
       })
       .catch((err) => {
         console.log('err', err)
@@ -95,21 +97,12 @@ const Users = () => {
   useEffect(() => {
     const getUsers = async () => {
       await instance.get(`/users/all`).then((res) => {
-        setUsers(res.data.users)
+        if (res && res.data && res.data.users) {
+          setUsers(res.data.users)
+        }
       })
     }
-    const getAllRoles = async () => {
-      await instance
-        .get('/roles/all')
-        .then((res) => {
-          console.log('cool', res.data.roles)
-          toast.success('all roles available')
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
-    }
-    getAllRoles()
+
     getUsers()
   }, [])
   return (

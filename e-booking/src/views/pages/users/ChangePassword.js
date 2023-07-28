@@ -24,7 +24,7 @@ const ChangePassword = () => {
         toast.success('password changed!')
       })
       .catch((err) => {
-        toast.error('password update failed', err)
+        toast.error('password update failed')
       })
     reset()
   }

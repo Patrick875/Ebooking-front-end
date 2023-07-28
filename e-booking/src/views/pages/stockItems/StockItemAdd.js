@@ -45,12 +45,16 @@ const StockItemAdd = () => {
   useEffect(() => {
     const getAllStores = async () => {
       await instance.get('/stock/store/all').then((res) => {
-        setStores(res.data.data)
+        if (res && res.data && res.data.data) {
+          setStores(res.data.data)
+        }
       })
     }
     const getItems = async () => {
       await instance.get('/stock/item/all').then((res) => {
-        setItems(res.data.data)
+        if (res && res.data && res.data.data) {
+          setItems(res.data.data)
+        }
       })
     }
     getItems()

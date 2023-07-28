@@ -151,7 +151,7 @@ const ProductSell = React.forwardRef((props, ref) => {
       results.length === 0 ||
       results.length < orderItems.length
     ) {
-      return toast.error(
+      return console.log(
         'Order aborted !! Please provide quantities for all items!!!',
       )
     }
@@ -183,7 +183,7 @@ const ProductSell = React.forwardRef((props, ref) => {
         setOrderState(true)
       })
       .catch(() => {
-        toast.error('order creation failed')
+        console.log('order creation failed')
       })
   }
   useEffect(() => {
@@ -196,7 +196,7 @@ const ProductSell = React.forwardRef((props, ref) => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 
@@ -209,7 +209,7 @@ const ProductSell = React.forwardRef((props, ref) => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

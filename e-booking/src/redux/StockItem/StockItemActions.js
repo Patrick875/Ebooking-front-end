@@ -22,8 +22,6 @@ export const getStockItems = () => {
           type: STOCK_ITEM_ACTIONS_TYPES.GET_ITEMS,
           payload: [],
         })
-
-        toast.error(err.message)
       })
   }
 }
@@ -39,7 +37,6 @@ export const addStockItem = (payload) => {
         toast.success('Item added to stock')
       })
       .catch((err) => {
-        toast.error(err.status)
         console.log(err)
       })
   }

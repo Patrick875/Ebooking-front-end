@@ -98,7 +98,7 @@ function HotelEvents() {
           setHalls(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getEvents = async () => {
@@ -108,7 +108,7 @@ function HotelEvents() {
           setEvents(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getEvents()

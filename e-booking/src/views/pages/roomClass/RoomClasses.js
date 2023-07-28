@@ -35,7 +35,7 @@ const RoomClasses = () => {
         toast.success('Room Class deleted')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
   useEffect(() => {
@@ -47,7 +47,7 @@ const RoomClasses = () => {
           console.log('res', res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getRooms = async () => {
@@ -57,7 +57,7 @@ const RoomClasses = () => {
           setRooms(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getRooms()

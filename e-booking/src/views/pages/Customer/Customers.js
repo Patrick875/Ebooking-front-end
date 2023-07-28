@@ -35,7 +35,7 @@ function Customers() {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getCustomers()

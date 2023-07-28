@@ -69,7 +69,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
         setSubmitted(true)
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
   useEffect(() => {
@@ -86,7 +86,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
           setStockItems(items)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

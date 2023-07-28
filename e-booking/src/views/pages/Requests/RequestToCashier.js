@@ -49,7 +49,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
         toast.success('purchase order created')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
 
@@ -94,7 +94,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
           setStockItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getAllStores = async () => {
@@ -104,7 +104,7 @@ const RequestToCashier = React.forwardRef((props, ref) => {
           setStores(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

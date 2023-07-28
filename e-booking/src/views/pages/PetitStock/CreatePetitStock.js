@@ -24,7 +24,7 @@ const CreatePetitStock = () => {
         toast.success('petit stock created')
       })
       .catch(() => {
-        toast.error('petit stock creation failed')
+        console.log('petit stock creation failed')
       })
     reset()
   }

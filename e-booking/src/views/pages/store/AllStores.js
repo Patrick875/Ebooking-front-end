@@ -13,7 +13,9 @@ function AllStores(props) {
   useEffect(() => {
     const getAllStores = async () => {
       await instance.get('/stock/store/all').then((res) => {
-        setStore(res.data.data)
+        if (res && res.data && res.data.data) {
+          setStore(res.data.data)
+        }
       })
     }
     getAllStores()

@@ -45,7 +45,7 @@ const ReservationReport = React.forwardRef((props, ref) => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getReservations()

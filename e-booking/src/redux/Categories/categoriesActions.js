@@ -20,7 +20,7 @@ export const createProductCategory = function (payload) {
           toast.success('product category created')
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log('err', err)
         })
     })
   }
@@ -38,7 +38,7 @@ export const createServiceCategory = function (payload) {
         toast.success('service category created')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log('err', err)
         dispatch({ type: CATEGORY_ACTIONS.GET_PRODUCT_CATEGORIES, payload: [] })
       })
   }
@@ -55,7 +55,7 @@ export const getProductCategories = function () {
         })
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log('err', err)
         dispatch({ type: CATEGORY_ACTIONS.GET_PRODUCT_CATEGORIES, payload: [] })
       })
   }
@@ -71,7 +71,7 @@ export const getServiceCategories = function () {
         })
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log('err', err)
         dispatch({ type: CATEGORY_ACTIONS.GET_SERVICE_CATEGORIES, payload: [] })
       })
   }

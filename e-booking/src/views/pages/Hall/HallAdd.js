@@ -29,7 +29,7 @@ function HallAdd() {
         reset()
       })
       .catch((err) => {
-        toast.error('Hall create failed', err.message)
+        console.log('Hall create failed', err.message)
         reset()
       })
   }

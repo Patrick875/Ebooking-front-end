@@ -29,11 +29,13 @@ const UserEdit = () => {
   const reactivateUser = async (id) => {
     await instance
       .get(`/users/reactivate/${id}`)
-      .then(() => {
-        toast.success('user re-activated !!')
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('user re-activated !!')
+        }
       })
       .catch((err) => {
-        toast.error(err.status)
+        toast.error('User reactivation failed')
       })
   }
 
@@ -44,8 +46,10 @@ const UserEdit = () => {
 
     await instance
       .put('/users/update', data)
-      .then(() => {
-        toast.success('user updated')
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('user updated')
+        }
       })
       .catch(() => {
         toast.error('user updated failed')

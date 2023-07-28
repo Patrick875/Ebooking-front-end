@@ -63,7 +63,7 @@ function StockItems() {
           setItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getStores = async () => {
@@ -73,7 +73,7 @@ function StockItems() {
           setStores(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getStores()

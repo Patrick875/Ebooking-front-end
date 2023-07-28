@@ -38,7 +38,7 @@ const Services = () => {
         toast.success('service deleted successfuly')
       })
       .catch((err) => {
-        toast.error('error deleting service')
+        console.log('error deleting service')
       })
   }
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
@@ -56,7 +56,7 @@ const Services = () => {
           console.log('services', res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

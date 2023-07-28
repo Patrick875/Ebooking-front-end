@@ -23,7 +23,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { BsFiles } from 'react-icons/bs'
 
 function ServiceReceipt(props) {
-  const { client, service, data } = props
+  const { service, data } = props
 
   return (
     <CCard>
@@ -39,23 +39,7 @@ function ServiceReceipt(props) {
                 <CFormLabel className="fw-bolder"> Customer details</CFormLabel>
                 <div>
                   <CFormLabel> Names</CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="client_name"
-                    id="client_name"
-                    required
-                    value={client.names}
-                  />
-                  <CFormLabel>Phone</CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="title"
-                    id="title"
-                    required
-                    value={client.phone}
-                  />
+                  <p> {data.client_name}</p>
                 </div>
               </CCol>
               <CCol md={6}>
@@ -94,9 +78,9 @@ const ServiceSell = React.forwardRef((props, ref) => {
     : ''
   const [singleSelections, setSingleSelections] = useState([])
   let [services, setServices] = useState([])
-  const [customers, setCustomers] = useState([])
+  const [sold, setSold] = useState([])
   let [sells, setSells] = useState([])
-  const [customer, setCustomer] = useState([])
+
   const onServiceSell = async (data) => {
     data.serviceId =
       singleSelections && singleSelections.length !== 0
@@ -106,18 +90,6 @@ const ServiceSell = React.forwardRef((props, ref) => {
       singleSelections && singleSelections.length !== 0
         ? singleSelections[0].service_categoryId
         : null
-    data.client_name =
-      customer && customer.length !== 0
-        ? customers.includes(customer[0])
-          ? customer[0].names
-          : customer[0]
-        : null
-    data.customer =
-      customer && customer.length !== 0
-        ? customers.includes(customer[0])
-          ? customer[0].id
-          : null
-        : null
 
     data = Object.keys(data).reduce((acc, key) => {
       if (data[key] !== null) {
@@ -125,13 +97,17 @@ const ServiceSell = React.forwardRef((props, ref) => {
       }
       return acc
     }, {})
+
     await instance
       .post('/services/sell', data)
-      .then(() => {
-        toast.success('service sold')
+      .then((res) => {
+        if (res && res.data && res.data.data) {
+          setSold(res)
+          toast.success('service sold')
+        }
       })
       .catch(() => {
-        toast.error('service sell failed')
+        console.log('service sell failed')
       })
   }
   if (departmentSearchString !== '') {
@@ -166,23 +142,19 @@ const ServiceSell = React.forwardRef((props, ref) => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
-    }
-    const getAllCustomers = async () => {
-      await instance.get('/customers/all').then((res) => {
-        setCustomers(res.data.data)
-      })
     }
     const getAllSells = async () => {
       await instance.get('/services/sells').then((res) => {
-        setSells(res.data.data)
+        if (res && res.data && res.data.data) {
+          setSells(res.data.data)
+        }
       })
     }
     getAllSells()
-    getAllCustomers()
     getAllServices()
-  }, [])
+  }, [sold])
 
   return (
     <div className="mt-0">
@@ -192,9 +164,7 @@ const ServiceSell = React.forwardRef((props, ref) => {
           <CCard>
             <CCardHeader className="py-0 my-0 d-flex justify-content-between">
               <p className="fs-5 fw-bold">Checkout service</p>
-              {Number(times) < 0 ||
-              customer.length === 0 ||
-              singleSelections.length === 0 ? null : (
+              {Number(times) < 0 || singleSelections.length === 0 ? null : (
                 <ReactToPrint
                   trigger={() => (
                     <button className="btn btn-ghost-primary">Print</button>
@@ -212,13 +182,11 @@ const ServiceSell = React.forwardRef((props, ref) => {
               >
                 <CCol md={6} className="py-0 my-0">
                   <CFormLabel htmlFor="title"> Client name </CFormLabel>
-                  <Typeahead
-                    id="basic-typeahead-single"
-                    labelKey="names"
-                    onChange={setCustomer}
-                    options={customers}
-                    placeholder="search client"
-                    selected={customer}
+                  <CFormInput
+                    type="text"
+                    name="customer"
+                    id="customer"
+                    {...register('client_name')}
                   />
                 </CCol>
 
@@ -276,9 +244,7 @@ const ServiceSell = React.forwardRef((props, ref) => {
                     type="submit"
                     value="Check out"
                     disabled={
-                      Number(times) < 0 ||
-                      customer.length === 0 ||
-                      singleSelections.length === 0
+                      Number(times) < 0 || singleSelections.length === 0
                     }
                   />
                 </CCol>
@@ -299,19 +265,13 @@ const ServiceSell = React.forwardRef((props, ref) => {
             <ServiceSells sells={sells} />
           </CCard>
 
-          {Number(times) < 0 ||
-          customer.length === 0 ||
-          singleSelections.length === 0 ? null : (
+          {Number(times) < 0 || singleSelections.length === 0 ? null : (
             <div style={{ display: 'none' }}>
               <PrintTemplate1
                 ref={ref || componentRef}
                 title={`${department.toLocaleUpperCase()} receipt`}
               >
-                <ServiceReceipt
-                  service={singleSelections[0]}
-                  client={customer[0]}
-                  data={formData}
-                />
+                <ServiceReceipt service={singleSelections[0]} data={formData} />
               </PrintTemplate1>
             </div>
           )}

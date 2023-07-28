@@ -19,11 +19,13 @@ const CreateStore = () => {
   const onSubmit = async (data) => {
     await instance
       .post('/stock/store/add', data)
-      .then(() => {
-        toast.success('Store created')
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('Store created')
+        }
       })
       .catch(() => {
-        toast.error('error creating store')
+        toast.error('Store creation failed')
       })
     reset()
   }

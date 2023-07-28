@@ -29,7 +29,7 @@ function HallServices() {
         toast.success('Hall service delete successfully')
       })
       .catch(() => {
-        toast.error('error deleting service')
+        console.log('error deleting service')
       })
   }
   useEffect(() => {
@@ -40,7 +40,7 @@ function HallServices() {
           setHallServices(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getHallServices()

@@ -30,7 +30,7 @@ function HallServiceEdit() {
         toast.success('hall service updated!!!')
       })
       .catch(() => {
-        toast.error('error updating hall service')
+        console.log('error updating hall service')
       })
     reset()
   }

@@ -27,7 +27,7 @@ const ServiceAdd = () => {
         reset()
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
         reset()
       })
   }
@@ -39,7 +39,7 @@ const ServiceAdd = () => {
           setCategories(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getServiceCategories()

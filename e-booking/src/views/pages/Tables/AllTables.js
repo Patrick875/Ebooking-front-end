@@ -31,7 +31,9 @@ function AllTables() {
       await instance
         .get('/tables/all')
         .then((res) => {
-          setItems(res.data.data)
+          if (res && res.data && res.data.data) {
+            setItems(res.data.data)
+          }
           console.log('res', res)
         })
         .catch((err) => {

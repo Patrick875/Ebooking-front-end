@@ -82,7 +82,7 @@ function AllStockRequests() {
           setItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getAllPetitStock = async () => {

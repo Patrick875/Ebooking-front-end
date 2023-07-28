@@ -31,7 +31,7 @@ export default function InvoicePaymentModal(props) {
         reset()
       })
       .catch((err) => {
-        toast.error('invoice payment failed !!')
+        console.log('invoice payment failed !!')
 
         reset()
       })

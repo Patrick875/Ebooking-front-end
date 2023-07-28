@@ -149,11 +149,12 @@ const StockReport = React.forwardRef((props, ref) => {
           },
         })
         .then((res) => {
-          toast.success('all items details retrieved')
-          setItems(res.data.data)
+          if (res && res.data && res.data.data) {
+            setItems(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error('item details retrieve failed')
+          console.log('item details retrieve failed')
         })
     }
 

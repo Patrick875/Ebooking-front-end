@@ -56,7 +56,7 @@ function ProductEdit() {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getAllPackages = async () => {
@@ -71,7 +71,7 @@ function ProductEdit() {
           setStockItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

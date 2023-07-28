@@ -62,7 +62,7 @@ function WaiterSells() {
           setWaiterSells(res.data.data)
         })
         .catch(() => {
-          toast.error('failed getting waiter sells')
+          console.log('failed getting waiter sells')
         })
     }
     getWaiterSells()

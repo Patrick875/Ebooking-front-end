@@ -61,7 +61,6 @@ const CashTransaction = () => {
       })
       .catch((err) => {
         console.log('err', err)
-        toast.error('transaction failed !!!')
       })
   }
   const debitTransaction = async (data) => {
@@ -78,7 +77,6 @@ const CashTransaction = () => {
       })
       .catch((err) => {
         console.log('err', err)
-        toast.error('transaction failed !!!')
       })
   }
   const onSubmit = async (data) => {

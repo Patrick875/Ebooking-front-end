@@ -19,7 +19,7 @@ const Room = React.forwardRef((props, ref) => {
           setRooms(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getRoomClasses = async () => {
@@ -29,7 +29,7 @@ const Room = React.forwardRef((props, ref) => {
           setRoomClasses(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getRooms()

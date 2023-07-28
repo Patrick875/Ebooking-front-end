@@ -29,7 +29,7 @@ const CreateCashierVaucher = () => {
         reset()
       })
       .catch(() => {
-        toast.error('transaction failed !!!')
+        console.log('transaction failed !!!')
       })
   }
   const debitTransaction = async (data) => {
@@ -40,7 +40,7 @@ const CreateCashierVaucher = () => {
         reset()
       })
       .catch(() => {
-        toast.error('transaction failed !!!')
+        console.log('transaction failed !!!')
       })
   }
   const onSubmit = async (data) => {

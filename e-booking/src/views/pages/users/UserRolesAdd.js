@@ -63,8 +63,10 @@ function UserRolesAdd() {
 
     await instance
       .post('/roles/add', data)
-      .then(() => {
-        toast.success('role created')
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('role created')
+        }
         reset()
       })
       .catch(() => {

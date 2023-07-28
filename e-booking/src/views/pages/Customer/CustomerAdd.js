@@ -29,8 +29,11 @@ function CustomerAdd({ setNewCustomer, setVisible }) {
     await instance
       .post('/customers/add', data)
       .then((res) => {
-        toast.success('customer created')
-        setNewCustomer(res.data.data)
+        if (res && res.data && res.data) {
+          toast.success('customer created')
+          setNewCustomer(res.data.data)
+        }
+
         setVisible(false)
       })
       .catch((err) => {

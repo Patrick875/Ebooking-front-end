@@ -64,8 +64,10 @@ function UserRolesEdit() {
     setLoading(true)
     await instance
       .put('/roles/update', { ...data })
-      .then(() => {
-        toast.success('user role updated')
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('user role updated')
+        }
         reset()
       })
       .catch(() => {

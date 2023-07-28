@@ -50,7 +50,7 @@ function AllVauchers() {
           setItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getAllVauchers()

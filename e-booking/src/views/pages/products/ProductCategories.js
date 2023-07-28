@@ -31,7 +31,7 @@ function ProductCategories() {
         })
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
         dispatch({
           type: CATEGORY_ACTIONS.GET_PRODUCT_CATEGORIES,
           payload: [],

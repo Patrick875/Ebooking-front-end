@@ -25,7 +25,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
         setApproved(!approved)
       })
       .catch(() => {
-        toast.error('purchase order approval failed !!!')
+        console.log('purchase order approval failed !!!')
       })
   }
   const orderTotal =

@@ -19,7 +19,7 @@ export const getRoles = function () {
         }
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log('err', err)
       })
   }
 }

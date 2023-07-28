@@ -35,7 +35,6 @@ const DeleteItemModel = (props) => {
       .then((res) => {
         console.log('res', res)
         setDeleted(res.data.data.id)
-
         toast.success(`${itemType} deleted successfuly`)
       })
       .catch((err) => {

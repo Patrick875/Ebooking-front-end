@@ -38,10 +38,9 @@ export default function RoomSell() {
         .get('/roomclass/all')
         .then((res) => {
           console.log(res.data)
-          setRoom(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getRoomClasses()

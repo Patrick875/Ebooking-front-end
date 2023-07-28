@@ -134,7 +134,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
         toast.success('items added to stock')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
 
@@ -159,7 +159,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
           setPurchaseOrders(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getAllPetitStock = async () => {
@@ -169,7 +169,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
           setPetitStock(res.data.data)
         })
         .catch((err) => {
-          throw Error(err.statusCode)
+          console.log(err.statusCode)
         })
     }
     getAllPetitStock()

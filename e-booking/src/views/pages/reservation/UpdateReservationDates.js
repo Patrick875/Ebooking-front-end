@@ -46,7 +46,7 @@ function UpdateReservationDates(props) {
         setOpenUpdate(false)
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
     reset()
   }

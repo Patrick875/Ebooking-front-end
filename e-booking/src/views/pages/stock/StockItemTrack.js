@@ -159,7 +159,6 @@ const StockItemTrack = React.forwardRef((props, ref) => {
             console.log('res', res.data.data)
           })
           .catch((err) => {
-            toast.error('item details retrieve failed')
             console.log('err', err)
           })
       }

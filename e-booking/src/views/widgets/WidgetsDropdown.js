@@ -27,20 +27,24 @@ const WidgetsDropdown = () => {
       await instance
         .get('/customers/all')
         .then((res) => {
-          setCustomers(res.data.data)
+          if (res && res.data && res.data.data) {
+            setCustomers(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getRooms = async () => {
       await instance
         .get('/room/all')
         .then((res) => {
-          setRooms(res.data.data)
+          if (res && res.data && res.data.data) {
+            setRooms(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 
@@ -48,20 +52,24 @@ const WidgetsDropdown = () => {
       await instance
         .get('/halls/all')
         .then((res) => {
-          setHalls(res.data.data)
+          if (res && res.data && res.data.data) {
+            setHalls(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getUsers = async () => {
       await instance
         .get(`/users/all`)
         .then((res) => {
-          setUsers(res.data.users)
+          if (res && res.data && res.data.data) {
+            setUsers(res.data.users)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

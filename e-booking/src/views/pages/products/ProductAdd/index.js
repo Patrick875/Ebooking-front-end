@@ -29,7 +29,7 @@ function ProductAdd() {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getStockItems = async () => {
@@ -39,7 +39,7 @@ function ProductAdd() {
           setStockItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getCategories()

@@ -23,7 +23,7 @@ function RoomReportTable(props) {
         toast.success('room deleted!!!!')
       })
       .catch((err) => {
-        toast.error('error deleting room ')
+        console.log('error deleting room ')
       })
   }
   return (

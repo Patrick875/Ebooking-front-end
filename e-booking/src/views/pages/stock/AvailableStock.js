@@ -61,7 +61,7 @@ function AvailableStock() {
           setItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getStores = async () => {
@@ -71,7 +71,6 @@ function AvailableStock() {
           setStores(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
           console.log('err', err)
         })
     }

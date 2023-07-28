@@ -42,7 +42,7 @@ function ProductPriceUpdateModal(props) {
         setReload(true)
       })
       .catch((err) => {
-        toast.error('error updating product')
+        console.log('error updating product')
         reset()
       })
   }
@@ -161,7 +161,7 @@ const Products = () => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getAllProducts()

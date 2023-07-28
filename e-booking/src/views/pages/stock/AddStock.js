@@ -65,7 +65,6 @@ const AddStock = React.forwardRef((props, ref) => {
       .post('/receive/voucher/add', { data: submitting })
       .then(toast.success('items added to stock'))
       .catch((err) => {
-        toast.error(err.message)
         console.log(err)
       })
   }
@@ -107,7 +106,7 @@ const AddStock = React.forwardRef((props, ref) => {
           setPurchaseOrders(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getPurchaseOrders()

@@ -31,7 +31,7 @@ const ProductCategoryAdd = () => {
         toast.success('product category created')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
   const onSubmit = (data) => {

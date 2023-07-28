@@ -102,14 +102,19 @@ const Sells = () => {
   useEffect(() => {
     const getItems = async () => {
       await instance.get('/products/package/sells').then((res) => {
-        setSells(res.data.data)
+        if (res.data && res.data.data) {
+          setSells(res.data.data)
+        }
       })
     }
     const getServiceSells = async () => {
       await instance
         .get('/services/sells')
         .then((res) => {
-          setServiceSells(res.data.data)
+          if (res.data && res.data.data) {
+            setServiceSells(res.data.data)
+            console.log('res', res.data.data)
+          }
         })
         .catch((err) => {
           console.log('err', err)
@@ -119,10 +124,12 @@ const Sells = () => {
       await instance
         .get('/petit-stock/all')
         .then((res) => {
-          setPetitStock(res.data.data)
+          if (res.datad && res.data.data) {
+            setPetitStock(res.data.data)
+          }
         })
         .catch((err) => {
-          throw Error(err.statusCode)
+          console.log(err.statusCode)
         })
     }
     getAllPetitStock()

@@ -149,7 +149,7 @@ const Reservation = () => {
         toast.success(`Reservation ${action} success`)
       })
       .catch((err) => {
-        toast.error(`Reservation ${action} failed`)
+        console.log(`Reservation ${action} failed`)
       })
   }
   useEffect(() => {
@@ -162,7 +162,7 @@ const Reservation = () => {
           }
         })
         .catch((err) => {
-          toast.error(err.status)
+          console.log(err.status)
         })
     }
     getReservations()

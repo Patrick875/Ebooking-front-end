@@ -29,7 +29,7 @@ const MultiStepForm = () => {
         toast.success('package created')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
   useEffect(() => {
@@ -43,7 +43,7 @@ const MultiStepForm = () => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 

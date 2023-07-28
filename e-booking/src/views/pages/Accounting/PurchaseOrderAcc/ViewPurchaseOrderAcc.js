@@ -55,7 +55,7 @@ const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
         setReadOnly(!readOnly)
       })
   }
-  console.log('req', request)
+
   const orderTotal =
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)

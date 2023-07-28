@@ -94,7 +94,7 @@ const StorePurchaseOrder = React.forwardRef((props, ref) => {
           setStockItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getAllStores = async () => {

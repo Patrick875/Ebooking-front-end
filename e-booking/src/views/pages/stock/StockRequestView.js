@@ -67,7 +67,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
           toast.success('Approved!!!')
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     } else if (action === 'cancel') {
       await instance
@@ -79,7 +79,7 @@ const StockRequestView = React.forwardRef((props, ref) => {
           setApproved(!approved)
         })
         .catch(() => {
-          toast.error('error approving order')
+          console.log('error approving order')
         })
     }
   }

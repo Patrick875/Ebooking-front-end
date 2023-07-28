@@ -33,10 +33,9 @@ function ServiceCategories() {
         .get('/services/category/all')
         .then((res) => {
           setItems(res.data.data)
-          console.log('all cool', res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getItems()

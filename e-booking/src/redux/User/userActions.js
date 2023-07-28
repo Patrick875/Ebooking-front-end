@@ -20,7 +20,7 @@ export const updateUser = (payloadApi, payloadLocal) =>
         toast.success('user updated')
       })
       .catch((err) => {
-        toast.error('user updated failed')
+        console.log('user updated failed')
       })
   }
 export const deleteUser = (payloadApi, payloadLocal) => {
@@ -37,7 +37,7 @@ export const deleteUser = (payloadApi, payloadLocal) => {
         toast.success('user disactivated')
       })
       .catch((err) => {
-        toast.error('user disactivate failed')
+        console.log('user disactivate failed')
       })
   }
 }

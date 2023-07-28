@@ -27,7 +27,7 @@ function HallServicesAdd() {
         toast.success('hall service created')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
     reset()
   }

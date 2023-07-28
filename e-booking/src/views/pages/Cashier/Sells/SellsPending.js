@@ -27,7 +27,7 @@ function SellsPending() {
           setSells(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
 
@@ -43,7 +43,7 @@ function SellsPending() {
         setSells(updatedData)
       })
       .catch(() => {
-        toast.error('order confirm failed')
+        console.log('order confirm failed')
       })
   }
   const cancelSell = async (data) => {
@@ -55,7 +55,7 @@ function SellsPending() {
         setSells(updatedData)
       })
       .catch(() => {
-        toast.error('order cancel failed')
+        console.log('order cancel failed')
       })
   }
 

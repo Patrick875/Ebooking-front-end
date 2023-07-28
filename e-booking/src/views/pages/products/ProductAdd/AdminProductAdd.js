@@ -41,7 +41,7 @@ function AdminProductAdd(props) {
           toast.success('Product created')
         })
         .catch(() => {
-          toast.error('Product add failed')
+          console.log('Product add failed')
         })
     } else {
       setStep((prev) => prev + 1)
@@ -56,7 +56,7 @@ function AdminProductAdd(props) {
           setPackages(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getPackages()

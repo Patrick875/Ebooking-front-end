@@ -29,7 +29,7 @@ const ProductPackages = () => {
           }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getAllPackages()

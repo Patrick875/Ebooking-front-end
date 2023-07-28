@@ -153,13 +153,12 @@ const ReservationAdd = (props) => {
           if (res.data.data) {
             toast.success('Reservation created')
           } else {
-            toast.error('Rerservation creation failed')
+            console.log('Rerservation creation failed')
           }
           setReload(res)
         })
         .catch((err) => {
           console.log('err', err)
-          toast.error('Rerservation add failed')
         })
 
       setCustomer([])
@@ -173,7 +172,9 @@ const ReservationAdd = (props) => {
 
   const getCurrencyRates = async () => {
     await instance.get('/currency/rate').then((res) => {
-      setApiCurrencies([...res.data.data])
+      if (res && res.data && res.data.data) {
+        setApiCurrencies([...res.data.data])
+      }
       if (apicurrencies.length !== 0) {
         setLocalExchangeRate(
           apicurrencies.filter((el) => el.name === 'RWF')[0].rate,
@@ -189,21 +190,24 @@ const ReservationAdd = (props) => {
       await instance
         .get('/customers/all')
         .then((res) => {
-          setCustomers(res.data.data)
+          console.log('rez', res)
+          if (res && res.data && res.data.data) {
+            setCustomers(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getRooms = async () => {
       await instance
         .get('/room/all')
         .then((res) => {
-          setRooms(res.data.data)
-          console.log('res', res.data.data)
+          if (res && res.data && res.data.data) {
+            setRooms(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
           console.log(err)
         })
     }
@@ -211,15 +215,19 @@ const ReservationAdd = (props) => {
       await instance
         .get('/hall/services/all')
         .then((res) => {
-          setHallServices(res.data.data)
+          if (res && res.data && res.data.data) {
+            setHallServices(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getHalls = async () => {
       await instance.get('/halls/all').then((res) => {
-        setHalls(res.data.data)
+        if (res && res.data && res.data.data) {
+          setHalls(res.data.data)
+        }
       })
     }
 
@@ -227,10 +235,12 @@ const ReservationAdd = (props) => {
       await instance
         .get('/roomclass/all')
         .then((res) => {
-          setRoomClasses(res.data.data)
+          if (res && res.data && res.data.data) {
+            setRoomClasses(res.data.data)
+          }
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getCurrencyRates()

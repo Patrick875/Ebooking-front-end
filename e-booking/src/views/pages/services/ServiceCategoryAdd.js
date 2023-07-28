@@ -24,20 +24,9 @@ const ServiceCategoryAdd = () => {
         toast.success('service category added')
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
-  //   const onManagerSubmit = async (data) => {
-  //     await instance
-  //       .post('/services/add', data)
-  //       .then((res) => {
-  //         console.log(res.data)
-  //         toast.success('service created, price to added by admin')
-  //       })
-  //       .catch((err) => {
-  //         toast.error(err.message)
-  //       })
-  //   }
 
   return (
     <div>

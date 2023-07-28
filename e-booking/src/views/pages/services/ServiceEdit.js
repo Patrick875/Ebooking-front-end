@@ -33,7 +33,7 @@ function ServiceEdit() {
         navigate(-1)
       })
       .catch((err) => {
-        toast.error('error updating service', err)
+        console.log('error updating service', err)
       })
     reset()
   }

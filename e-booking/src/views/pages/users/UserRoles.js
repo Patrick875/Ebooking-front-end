@@ -26,7 +26,7 @@ const UserRoles = () => {
   const deleteUserRole = async (id) => {
     await instance
       .delete(`/roles/delete/${id}`)
-      .then(() => {
+      .then((res) => {
         toast.success('User role deleted')
       })
       .catch((err) => {
@@ -42,7 +42,7 @@ const UserRoles = () => {
           toast.success('all roles available')
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     getAllRoles()

@@ -34,7 +34,7 @@ function CustomerEdit() {
         toast.success('customer updated successfully')
       })
       .catch(() => {
-        toast.error('customer update failed')
+        console.log('customer update failed')
       })
     reset()
   }

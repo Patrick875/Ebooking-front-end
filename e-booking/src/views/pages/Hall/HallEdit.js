@@ -30,7 +30,7 @@ function HallEdit() {
         toast.success('Hall updated')
       })
       .catch(() => {
-        toast.error('error updating hall')
+        console.log('error updating hall')
       })
     reset()
     //roomClass.push(formData);

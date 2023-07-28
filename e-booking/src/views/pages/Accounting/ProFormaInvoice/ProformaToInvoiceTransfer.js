@@ -42,7 +42,7 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
         setCreated(res.data.data)
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
   const VATconstant = useSelector((state) =>

@@ -55,6 +55,7 @@ export const login = function (payload) {
 }
 export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
+  let loading = false
   return async function (dispatch) {
     await instance
       .post(`users/add`, payload)
@@ -70,7 +71,7 @@ export const registerUser = function (payload) {
         }
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
 }
@@ -101,7 +102,6 @@ export const getUsers = function () {
       .catch((err) => {
         console.log('error getting users', { errMessage: err.message })
         dispatch({ type: IS_AUTH.GET_USERS, payload: [] })
-        toast.error(err.message)
       })
   }
 }

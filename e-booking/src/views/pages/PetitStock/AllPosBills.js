@@ -67,7 +67,7 @@ function AllPosBills() {
           setItems(res.data.data)
         })
         .catch((err) => {
-          toast.error(err.message)
+          console.log(err.message)
         })
     }
     const getAllPetitStock = async () => {
@@ -77,7 +77,7 @@ function AllPosBills() {
           setPetitStock(res.data.data)
         })
         .catch((err) => {
-          throw Error(err.statusCode)
+          console.log(err.statusCode)
         })
     }
     getAllPetitStock()

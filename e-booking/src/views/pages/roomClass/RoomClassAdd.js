@@ -26,7 +26,7 @@ const RoomClassAdd = () => {
         reset()
       })
       .catch((err) => {
-        toast.error(err.message, 'Room class creation failed')
+        console.log(err.message, 'Room class creation failed')
         reset()
       })
   }

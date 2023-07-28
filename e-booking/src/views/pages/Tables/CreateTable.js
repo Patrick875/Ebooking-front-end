@@ -19,8 +19,10 @@ const CreateTable = () => {
   const onSubmit = async (data) => {
     await instance
       .post('/tables/add', data)
-      .then(() => {
-        toast.success('table created')
+      .then((res) => {
+        if (res.data.data) {
+          toast.success('table created')
+        }
       })
       .catch(() => {
         toast.error('table creation failed')

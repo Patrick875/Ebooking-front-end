@@ -51,7 +51,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
         setCreated(res.data.data)
       })
       .catch((err) => {
-        toast.error(err.message)
+        console.log(err.message)
       })
   }
 

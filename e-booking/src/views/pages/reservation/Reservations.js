@@ -159,6 +159,7 @@ const Reservation = () => {
         .then((res) => {
           if (res && res.data && res.data.data) {
             setReservations(res.data.data)
+            console.log('reservations', res.data.data)
           }
         })
         .catch((err) => {

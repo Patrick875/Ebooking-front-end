@@ -66,7 +66,12 @@ function RoomReportTable(props) {
                             </CTableHeaderCell>
                             <CTableDataCell>
                               {isOccupied && isOccupied.reservation
-                                ? isOccupied.reservation.Customer.names
+                                ? isOccupied.reservation &&
+                                  isOccupied.reservation.affiliation
+                                  ? isOccupied.reservation.affiliation.names +
+                                    ' /' +
+                                    isOccupied.reservation.Customer.names
+                                  : isOccupied.reservation.Customer.names
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>

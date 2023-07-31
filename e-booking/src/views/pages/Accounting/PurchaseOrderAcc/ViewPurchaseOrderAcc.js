@@ -44,7 +44,11 @@ const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
     await instance
       .put('/accounting/purchase/order/update', {
         id: request.id,
-        clientDetails,
+        clientDetails: {
+          ...clientDetails,
+          vatTotal: orderTotal,
+          total: finalTotal,
+        },
         details: filtereDetails,
       })
       .then(() => {
@@ -60,8 +64,8 @@ const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
       : 0
-  const amountVAT = Number((orderTotal * 18) / 100)
-  const finalTotal = Number(orderTotal + amountVAT)
+  const amountVAT = Number((orderTotal * 18) / 118)
+  const finalTotal = Number(orderTotal - amountVAT)
 
   return (
     <div>
@@ -185,7 +189,7 @@ const ViewPurchaseOrderAcc = React.forwardRef((props, ref) => {
             <p className="text-capitalize">
               <span className="fw-bold"> Total in words :</span>
               <span style={{ color: 'black' }}>
-                {finalTotal ? numberToWords.toWords(finalTotal) : null}
+                {finalTotal ? numberToWords.toWords(orderTotal) : null}
               </span>
               {request.currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}
             </p>

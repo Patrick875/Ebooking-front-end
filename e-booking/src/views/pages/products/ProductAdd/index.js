@@ -1,7 +1,6 @@
-import { CCard, CCardBody, CCardHeader, CForm } from '@coreui/react'
+import { CCard, CCardHeader, CForm } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { instance } from 'src/API/AxiosInstance'
 import { setCurrentStep } from 'src/redux/MultiStepForm/formActions'

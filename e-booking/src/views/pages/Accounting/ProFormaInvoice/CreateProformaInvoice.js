@@ -18,16 +18,14 @@ import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import BackButton from 'src/components/Navigating/BackButton'
 import DatePicker from 'react-datepicker'
 import { v4 as uuidv4 } from 'uuid'
-
 import numberToWords from 'number-to-words'
-import EditableTable from 'src/components/EditableTable'
 import { initialRows } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { register, getValues, watch, reset } = useForm()
+  const { register, watch } = useForm()
 
   const role = watch('outside.function') || ''
   const currency = watch('outside.currency') || ''
@@ -38,7 +36,6 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
   const [endDate, setEndDate] = useState(new Date())
   let [requestItems, setRequestItems] = useState([...initialRows])
   let [view, setView] = useState(false)
-  const [date, setDate] = useState(new Date())
   const [created, setCreated] = useState({})
   let request = {}
 
@@ -69,8 +66,8 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
       dateIn: new Date(startDate.toString()).getTime(),
       dateOut: new Date(endDate.toString()).getTime(),
       pax: outsideData.pax,
-      total: orderTotal,
-      vatTotal: finalTotal,
+      total: finalTotal,
+      vatTotal: orderTotal,
     }
     createInvoice(data)
   }
@@ -86,13 +83,9 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
           0,
         )
       : 0
-  const amountVAT = Number((orderTotal * VATconstant) / 100)
+  const amountVAT = Number((orderTotal * VATconstant) / 118)
   const finalTotal =
-    requestItems.length !== 0
-      ? VAT === 'exclusive'
-        ? Number(orderTotal - amountVAT)
-        : Number(orderTotal + amountVAT)
-      : 0
+    requestItems.length !== 0 ? Number(orderTotal - amountVAT) : 0
 
   return (
     <div>
@@ -360,7 +353,7 @@ const CreateProformaInvoice = React.forwardRef((props, ref) => {
                     <p className="text-capitalize">
                       <span className="fw-bold"> Total in words : </span>
                       <span style={{ color: 'black' }}>
-                        {finalTotal ? numberToWords.toWords(finalTotal) : null}{' '}
+                        {finalTotal ? numberToWords.toWords(orderTotal) : null}{' '}
                       </span>
 
                       {currency !== 'USD' ? ' Rwandan Francs ' : ' US Dollars '}

@@ -56,13 +56,9 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
           0,
         )
       : 0
-  const amountVAT = Number((orderTotal * VATconstant) / 100)
+  const amountVAT = Number((orderTotal * VATconstant) / 118)
   const finalTotal =
-    requestItems.length !== 0
-      ? VAT === 'exclusive'
-        ? Number(orderTotal - amountVAT)
-        : Number(orderTotal + amountVAT)
-      : 0
+    requestItems.length !== 0 ? Number(orderTotal - amountVAT) : 0
 
   const submitRequest = () => {
     let data
@@ -74,8 +70,8 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
     data = {
       ...outsideData,
       details: requestItems,
-      total: orderTotal,
-      vatTotal: finalTotal,
+      total: finalTotal,
+      vatTotal: orderTotal,
       date: date,
     }
     createPurchaseOrder(data)
@@ -308,7 +304,7 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
                         <span className="fw-bold"> Total in words : </span>
                         <span style={{ color: 'black' }}>
                           {finalTotal
-                            ? numberToWords.toWords(finalTotal)
+                            ? numberToWords.toWords(orderTotal)
                             : null}{' '}
                         </span>
 

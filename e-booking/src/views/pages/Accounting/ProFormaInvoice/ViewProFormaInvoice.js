@@ -6,7 +6,6 @@ import InvoiceFooter from '../../Printing/InvoiceFooter'
 import PrintTemplateInvoice from '../../Printing/PrintTemplateInvoice'
 import { useNavigate } from 'react-router-dom'
 import numberToWords from 'number-to-words'
-
 import { initialRows } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import { instance } from 'src/API/AxiosInstance'
@@ -42,15 +41,20 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
       : 0
-  const amountVAT = Number((orderTotal * 18) / 100)
-  const finalTotal = Number(orderTotal + amountVAT)
+  const amountVAT = Number((orderTotal * 18) / 118)
+  const finalTotal = Number(orderTotal - amountVAT)
 
   const updateInvoice = async () => {
     const filtereDetails = removeObjectsWithEmptyProperties(rows)
+    console.log('details', filtereDetails)
     await instance
       .put('/proforma/update', {
         id: request.id,
-        clientDetails,
+        clientDetails: {
+          ...clientDetails,
+          vatTotal: orderTotal,
+          total: finalTotal,
+        },
         details: filtereDetails,
       })
       .then(() => {
@@ -201,7 +205,7 @@ const ViewProFormaInvoice = React.forwardRef((props, ref) => {
               <p className="text-capitalize">
                 <span className="fw-bold"> Total in words :</span>
                 <span style={{ color: 'black' }}>
-                  {finalTotal ? numberToWords.toWords(finalTotal) : null}
+                  {finalTotal ? numberToWords.toWords(orderTotal) : null}
                 </span>
 
                 {request.currency !== 'USD'

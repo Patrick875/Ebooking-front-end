@@ -31,6 +31,7 @@ import {
   sortingWithDates,
 } from 'src/utils/functions'
 import DeleteItemModel from '../DeleteItemModel'
+import InvoicePaymentsTable from './InvoicePaymentsTable'
 
 function Invoice() {
   let stuff = []
@@ -45,12 +46,10 @@ function Invoice() {
     setStartDate(start)
     setEndDate(end)
   }
-
   let [invoices, setInvoices] = useState([])
   const perpage = 10
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
-
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   let [clicked, setClicked] = useState()
@@ -151,7 +150,7 @@ function Invoice() {
       <CCardBody>
         <CRow>
           <CRow>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-between">
               <Link
                 md={4}
                 className="btn btn-primary"
@@ -159,6 +158,15 @@ function Invoice() {
               >
                 <IoCreateOutline className="fs-5" />
                 Create
+              </Link>
+              <Link
+                md={4}
+                className="btn "
+                style={{ backgroundColor: 'black', color: 'white' }}
+                to="/booking/accounting/invoice/payments"
+              >
+                <IoCreateOutline className="fs-5" />
+                Payments
               </Link>
             </div>
             <div className="col">
@@ -238,6 +246,7 @@ function Invoice() {
               </form>
             </div>
           </CRow>
+
           <p className="text-center fs-4">
             <strong> All invoices </strong>
           </p>

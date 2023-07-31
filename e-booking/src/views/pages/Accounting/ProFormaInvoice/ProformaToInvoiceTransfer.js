@@ -9,7 +9,6 @@ import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
 import numberToWords from 'number-to-words'
-import EditableTable from 'src/components/EditableTable'
 import { initialRows } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import EditableTableWithDates from 'src/components/EditableTableWithDates'
@@ -27,6 +26,8 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       clientType: proforma.clientType,
       function: proforma.function,
       currency: proforma.currency,
+      total: total,
+      vatTotal: value,
     }
     let allData = rows.map((el) => ({
       ...el,
@@ -53,9 +54,9 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
       ? rows.reduce((a, b) => a + Number(b.price * b.quantity * b.times), 0)
       : 0
   const VAT = rows && rows.length !== 0 ? data[0].VAT : 'inclusive'
-  const amountVAT = Number((value * VATconstant.value) / 100)
+  const amountVAT = Number((value * VATconstant.value) / 118)
   const total =
-    VAT === 'exclusive' ? Number(value - amountVAT) : Number(value + amountVAT)
+    VAT === 'exclusive' ? Number(value - amountVAT) : Number(value - amountVAT)
 
   return (
     <div>
@@ -99,7 +100,7 @@ const ProformaToInvoiceTransfer = React.forwardRef((props, ref) => {
                   <p className="text-capitalize">
                     <span className="fw-bold"> Total in words : </span>
                     <span style={{ color: 'black' }}>
-                      {total ? numberToWords.toWords(total) : null}{' '}
+                      {total ? numberToWords.toWords(value) : null}{' '}
                     </span>
 
                     {proforma.currency !== 'USD'

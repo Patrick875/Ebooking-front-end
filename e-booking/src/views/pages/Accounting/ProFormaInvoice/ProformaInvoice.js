@@ -215,7 +215,7 @@ function ProformaInvoice() {
                             setStyle({ display: 'none' })
                           }}
                         >
-                          {Number(el.total).toLocaleString()}{' '}
+                          {Number(el.vatTotal).toLocaleString()}{' '}
                           {'  ' + el.currency}
                           {role &&
                           (role === 'admin' ||

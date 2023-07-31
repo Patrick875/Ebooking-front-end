@@ -12,6 +12,7 @@ import ProformaToInvoiceTransfer from './ProFormaInvoice/ProformaToInvoiceTransf
 import PurchaseOrderAcc from './PurchaseOrderAcc/PurchaseOrderAcc'
 import CreatePurchaseOrderAcc from './PurchaseOrderAcc/CreatePurchaseOrderAcc'
 import ViewPurchaseOrderAcc from './PurchaseOrderAcc/ViewPurchaseOrderAcc'
+import InvoicePaymentsTable from './Invoice/InvoicePaymentsTable'
 
 export const accountingRoutes = [
   {
@@ -55,6 +56,12 @@ export const accountingRoutes = [
     exact: true,
     name: 'Create invoice',
     element: ViewInvoice,
+  },
+  {
+    path: '/booking/accounting/invoice/payments',
+    exact: true,
+    name: 'Payments',
+    element: InvoicePaymentsTable,
   },
   {
     path: '/booking/accounting/delivery',

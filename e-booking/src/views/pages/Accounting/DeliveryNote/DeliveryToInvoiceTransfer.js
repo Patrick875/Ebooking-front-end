@@ -9,7 +9,6 @@ import BackButton from 'src/components/Navigating/BackButton'
 import { useSelector } from 'react-redux'
 import ClientDetails from '../../Printing/ClientDetails'
 import numberToWords from 'number-to-words'
-import EditableTable from 'src/components/EditableTable'
 import { initialRowsDelivery } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import EditableTableWithDates from 'src/components/EditableTableWithDates'
@@ -33,8 +32,8 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
       deliveryLink: deliveryNote.id,
       currency: deliveryNote.currency,
       pax: deliveryNote.pax,
-      total: value,
-      vatTotal: total,
+      total: total,
+      vatTotal: value,
     }
     const allData = rows.map((el) => ({
       ...el,
@@ -55,16 +54,12 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
         console.log('err', err)
       })
   }
-  const VATconstant = useSelector((state) =>
-    state.constants.constants.filter((constant) => constant.name === 'VAT'),
-  )[0] || { value: 0, name: 'VAT' }
-
   const value =
     rows && rows.length !== 0
       ? rows.reduce((a, b) => a + Number(b.unitPrice * b.quantity * b.times), 0)
       : 0
-  const amountVAT = Number((value * 18) / 100)
-  const total = Number(value + amountVAT)
+  const amountVAT = Number((value * 18) / 118)
+  const total = Number(value - amountVAT)
   return (
     <div>
       <BackButton />
@@ -113,7 +108,7 @@ const DeliveryToInvoiceTransfer = React.forwardRef((props, ref) => {
                     <p className="text-capitalize">
                       <span className="fw-bold"> Total in words : </span>
                       <span style={{ color: 'black' }}>
-                        {total ? numberToWords.toWords(total) : null}
+                        {total ? numberToWords.toWords(value) : null}
                       </span>{' '}
                       {deliveryNote.currency !== 'USD'
                         ? ' Rwandan Francs '

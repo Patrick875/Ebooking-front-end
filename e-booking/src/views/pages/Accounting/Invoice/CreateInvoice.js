@@ -38,6 +38,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
   }
   let [requestItems, setRequestItems] = useState([...initialRows])
   const createInvoice = async (data) => {
+    console.log('data', data)
     await instance
       .post('/invoices/add', data)
       .then((res) => {
@@ -57,12 +58,12 @@ const CreateInvoice = React.forwardRef((props, ref) => {
           0,
         )
       : 0
-  const amountVAT = Number((orderTotal * VATconstant) / 100)
+  const amountVAT = Number((orderTotal * VATconstant) / 118)
   const finalTotal =
     requestItems.length !== 0
       ? VAT === 'exclusive'
         ? Number(orderTotal - amountVAT)
-        : Number(orderTotal + amountVAT)
+        : Number(orderTotal - amountVAT)
       : 0
 
   const submitRequest = () => {
@@ -75,8 +76,8 @@ const CreateInvoice = React.forwardRef((props, ref) => {
     data = {
       ...outsideData,
       details: requestItems,
-      total: orderTotal,
-      vatTotal: finalTotal,
+      total: finalTotal,
+      vatTotal: orderTotal,
       date,
     }
     createInvoice(data)
@@ -309,7 +310,7 @@ const CreateInvoice = React.forwardRef((props, ref) => {
                         <span className="fw-bold"> Total in words : </span>
                         <span style={{ color: 'black' }}>
                           {finalTotal
-                            ? numberToWords.toWords(finalTotal)
+                            ? numberToWords.toWords(orderTotal)
                             : null}{' '}
                         </span>
 

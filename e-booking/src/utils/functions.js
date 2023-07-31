@@ -337,3 +337,33 @@ export function availableRooms(rooms) {
 
   return availableRooms.filter((value) => value !== null)
 }
+
+export const removeDuplicatesByName = (arr) => {
+  const seenNames = {}
+  const uniqueObjects = arr.filter(({ name }) => {
+    const lowerCaseName = name.toLowerCase()
+    if (!seenNames[lowerCaseName]) {
+      seenNames[lowerCaseName] = true
+      return true
+    }
+    return false
+  })
+
+  return uniqueObjects.map(({ name }) => ({ name: name.toLowerCase() }))
+}
+export function groupByClientName(objects) {
+  const groupedObjects = {}
+
+  objects.forEach((object) => {
+    const clientName = object.clientName
+    if (!groupedObjects[clientName]) {
+      groupedObjects[clientName] = {
+        clientName: clientName,
+        invoices: [],
+      }
+    }
+    groupedObjects[clientName].invoices.push(object)
+  })
+
+  return Object.values(groupedObjects)
+}

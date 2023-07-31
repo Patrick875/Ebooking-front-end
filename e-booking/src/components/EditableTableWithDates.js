@@ -33,14 +33,24 @@ const EditableTableWithDates = (props) => {
       : 0
   const amountVAT =
     type !== 'delivery'
-      ? Number((orderTotal * 18) / 100)
-      : Number((orderTotalDelivery * 18) / 100)
+      ? Number((orderTotal * 18) / 118)
+      : Number((orderTotalDelivery * 18) / 118)
   const finalTotal =
     type !== 'delivery'
-      ? Number(orderTotal + amountVAT)
+      ? Number(orderTotal - amountVAT)
       : Number(orderTotalDelivery - amountVAT)
 
   const totalRows = [
+    {
+      id: 2000,
+      name: 'VALUE',
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
+      requestQuantity: '',
+      unitPrice: '',
+      total: Math.round(finalTotal),
+    },
     {
       id: 2000,
       name: 'VAT',
@@ -49,17 +59,20 @@ const EditableTableWithDates = (props) => {
       maxWidth: 300,
       requestQuantity: '',
       unitPrice: '',
-      total: amountVAT,
+      total: Math.round(amountVAT),
     },
     {
       id: 3000,
-      name: 'VALUE',
+      name: 'TOTAL',
       flex: 1,
       minWidth: 200,
       maxWidth: 300,
       requestQuantity: '',
       unitPrice: '',
-      total: type !== 'delivery' ? orderTotal : orderTotalDelivery,
+      total:
+        type !== 'delivery'
+          ? Math.round(orderTotal)
+          : Math.round(orderTotalDelivery),
     },
   ]
   return (

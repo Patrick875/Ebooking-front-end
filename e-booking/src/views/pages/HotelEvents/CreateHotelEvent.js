@@ -33,7 +33,7 @@ const CreateHotelEvent = (props) => {
     await instance
       .post('/events/add', data)
       .then((res) => {
-        if (res.data.data) {
+        if (res && res.data && res.data.data) {
           toast.success('Event created')
           setCreated(res.data.data)
         }
@@ -45,11 +45,15 @@ const CreateHotelEvent = (props) => {
 
   const submitRequest = () => {
     let data
-    const outsideData = clientData
+    let outsideData = clientData
     requestItems = removeObjectsWithEmptyProperties(requestItems)
     requestItems = requestItems.map((el) => ({
       ...el,
     }))
+    if (outsideData.eventName) {
+      outsideData.location = 'Other'
+      outsideData.function = outsideData.eventName
+    }
     data = {
       ...outsideData,
       details: requestItems,
@@ -58,6 +62,8 @@ const CreateHotelEvent = (props) => {
       pax: outsideData.pax,
       total: orderTotal,
     }
+
+    console.log('data', data)
     createEvent(data)
   }
 
@@ -139,22 +145,36 @@ const CreateHotelEvent = (props) => {
               <CForm name="roomClassAddFrm" encType="multipart/form">
                 <CRow>
                   <CCol md={6}>
-                    <div>
-                      <CFormLabel htmlFor="clientName"> Room </CFormLabel>
-                      <CFormSelect
-                        name="location"
-                        id="location"
-                        className="mb-3"
-                        aria-label="Room"
-                        {...register('outside.location', { required: true })}
-                      >
-                        {halls.map((el, i) => (
-                          <option key={i * 13039} selected={el.name === name}>
-                            {el.name}
-                          </option>
-                        ))}
-                      </CFormSelect>
-                    </div>
+                    {name === 'Other' ? (
+                      <div>
+                        <CFormLabel htmlFor="title"> Event Title</CFormLabel>
+                        <CFormInput
+                          name="title"
+                          id="title"
+                          className="mb-3"
+                          aria-label="Title"
+                          type="text"
+                          {...register('outside.eventName')}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <CFormLabel htmlFor="location"> Location </CFormLabel>
+                        <CFormSelect
+                          name="location"
+                          id="location"
+                          className="mb-3"
+                          aria-label="Room"
+                          {...register('outside.location', { required: true })}
+                        >
+                          {halls.map((el, i) => (
+                            <option key={i * 13039} selected={el.name === name}>
+                              {el.name}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      </div>
+                    )}
                   </CCol>
                   <CCol md={6}>
                     <CFormLabel htmlFor=" start date">

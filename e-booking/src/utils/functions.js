@@ -276,26 +276,34 @@ export function isRoomOccupied(room) {
   const initialArray = []
 
   for (const reservation of room.Reservations) {
-    for (const date of reservation.DatesIns) {
-      for (const el of date.datesIn) {
+    if (!reservation.roomStatus !== 'checked-out') {
+      for (const el of reservation.DatesIns[reservation.DatesIns.length - 1]
+        .datesIn) {
         initialArray.push(new Date(el).toLocaleDateString('fr-FR'))
       }
+    } else {
+      return {}
     }
   }
 
   const uniqueDates = [...new Set(initialArray)]
+  const today = new Date().toLocaleDateString('fr-FR')
+  const yesterday = new Date(
+    new Date().getTime() - 24 * 60 * 60 * 1000,
+  ).toLocaleDateString('fr-FR')
 
-  if (uniqueDates.includes(new Date().toLocaleDateString('fr-FR'))) {
+  if (uniqueDates.includes(today) || uniqueDates.includes(yesterday)) {
     const occupiedReservation = room.Reservations.find((reservation) => {
       const datesInArray = reservation.DatesIns.flatMap((date) =>
         date.datesIn.map((el) => new Date(el).toLocaleDateString('fr-FR')),
       )
 
-      return datesInArray.includes(new Date().toLocaleDateString('fr-FR'))
+      return datesInArray.includes(today) || datesInArray.includes(yesterday)
     })
 
     return {
       reservation: occupiedReservation,
+      room: room,
     }
   } else {
     return {}
@@ -366,4 +374,17 @@ export function groupByClientName(objects) {
   })
 
   return Object.values(groupedObjects)
+}
+
+export function removeDatesAfterToday(dates) {
+  // Get the current date
+  const today = new Date()
+
+  // Filter out dates that are greater than or equal to today
+  const filteredDates = dates.filter((dateString) => {
+    const date = new Date(dateString)
+    return date < today
+  })
+
+  return filteredDates
 }

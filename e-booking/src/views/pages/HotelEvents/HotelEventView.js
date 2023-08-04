@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import BackButton from 'src/components/Navigating/BackButton'
-import numberToWords from 'number-to-words'
-import EditableTable from 'src/components/EditableTable'
-import { initialRows, initialRowsEvents } from 'src/utils/constants'
+import { initialRowsEvents } from 'src/utils/constants'
 import { removeObjectsWithEmptyProperties } from 'src/utils/functions'
 import { instance } from 'src/API/AxiosInstance'
 import { useForm } from 'react-hook-form'
@@ -15,13 +13,15 @@ import { useNavigate } from 'react-router'
 const HotelEventView = (props) => {
   const selectedEvent = useSelector((state) => state.selection.selected)
   const role = useSelector((state) => state.auth.user.Role.name)
-  const [data, setData] = useState([
-    ...selectedEvent.HotelEventDetails,
-    ...initialRowsEvents,
-  ])
+  const eventData =
+    selectedEvent.HotelEventDetails &&
+    selectedEvent.HotelEventDetails.length !== 0
+      ? selectedEvent.HotelEventDetails
+      : []
+  const [data, setData] = useState([...eventData, ...initialRowsEvents])
   const [startDate, setStartDate] = useState(new Date(selectedEvent.startDate))
   const [endDate, setEndDate] = useState(new Date(selectedEvent.endDate))
-  const { register, watch } = useForm({
+  const { watch } = useForm({
     defaultValues: {
       clientDetails: {
         customerName: selectedEvent.customerName,

@@ -16,9 +16,10 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
+import { removeDatesAfterToday } from 'src/utils/functions'
 
 function AddPaymentModal(props) {
-  let { reservation, open, setOpen, setReservation } = props
+  let { reservation, open, setOpen, setReservation, payAndCheckout } = props
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     data.reservationId = reservation.id
@@ -27,12 +28,38 @@ function AddPaymentModal(props) {
       .then((res) => {
         toast.success(res.data.message)
         setReservation(res.data.data)
+
         setOpen(false)
       })
       .catch((err) => {
         console.log(err)
       })
-    reset()
+
+    if (payAndCheckout) {
+      let newDatesIn = removeDatesAfterToday(
+        reservation.DatesIns[reservation.DatesIns.length - 1].datesIn,
+      )
+      await instance
+        .post('/reservation/checkout', {
+          id: reservation.id,
+          datesIn: newDatesIn,
+          amount: reservation.Room
+            ? Number(reservation.Room.RoomClass.price * newDatesIn.length)
+            : Number(reservation.Hall.price * newDatesIn.length),
+          currency: 'USD',
+          process: 'checking-out',
+        })
+        .then((res) => {
+          if (res.data.data) {
+            toast.success('client checked out')
+          }
+        })
+        .catch((er) => {
+          console.log('err', er)
+        })
+
+      reset()
+    }
   }
 
   return (
@@ -58,7 +85,10 @@ function AddPaymentModal(props) {
                   {Number(
                     Math.round(
                       Number(
-                        reservation.amount['RWF'] - reservation.payment['RWF'],
+                        reservation.grandTotal
+                          ? reservation.grandTotal - reservation.payment['RWF']
+                          : reservation.amount['RWF'] -
+                              reservation.payment['RWF'],
                       ),
                     ),
                   ).toLocaleString()}{' '}

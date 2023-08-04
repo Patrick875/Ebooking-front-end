@@ -104,6 +104,7 @@ const Sells = () => {
       await instance.get('/products/package/sells').then((res) => {
         if (res.data && res.data.data) {
           setSells(res.data.data)
+          console.log('res', res.data.data)
         }
       })
     }
@@ -113,7 +114,6 @@ const Sells = () => {
         .then((res) => {
           if (res.data && res.data.data) {
             setServiceSells(res.data.data)
-            console.log('res', res.data.data)
           }
         })
         .catch((err) => {

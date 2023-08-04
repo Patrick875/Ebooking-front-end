@@ -1,6 +1,5 @@
 import { CCard, CCardBody, CCardText, CCardTitle } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import CreateHotelEvent from './CreateHotelEvent'
 import { caterings } from 'src/utils/constants'
@@ -41,8 +40,6 @@ function HotelEvents() {
   const daysEvents = allEventDates.filter((evnt) =>
     evnt.dates.includes(date.toLocaleDateString('fr-FR')),
   )
-
-  const [todayEvents, setTodayEvents] = useState(daysEvents)
 
   const locationEvent = (el) => {
     return (
@@ -106,6 +103,7 @@ function HotelEvents() {
         .get('/events/all')
         .then((res) => {
           setEvents(res.data.data)
+          console.log('events', res.data.data)
         })
         .catch((err) => {
           console.log(err.message)
@@ -144,6 +142,51 @@ function HotelEvents() {
             </div>
           </div>
           <div className="locations">
+            {events && events.length !== 0
+              ? events
+                  .filter((ev) => ev.location === 'Other')
+                  .map((el, i) => (
+                    <CCard>
+                      <CCardBody>
+                        <CCardTitle className="text-center fw-bold">
+                          {el.function}
+                        </CCardTitle>
+                        <CCardText className="text-center my-1 ">
+                          <CCardText
+                            className="text-center my-1 "
+                            onClick={() => {
+                              navigate('/booking/events/view')
+                              let events =
+                                daysEvents.filter(
+                                  (ev) =>
+                                    ev.location.trim().toLowerCase() ===
+                                    'Other',
+                                ).length !== 0
+
+                              console.log('events2020', events)
+                              if (events) {
+                                dispatch(
+                                  selectItem(
+                                    daysEvents.filter(
+                                      (ev) =>
+                                        ev.location.trim().toLowerCase() ===
+                                        'Other',
+                                    )[0],
+                                  ),
+                                )
+                              } else {
+                                dispatch(selectItem({}))
+                              }
+                            }}
+                          >
+                            {locationEvent({ name: 'Other' })}
+                          </CCardText>
+                        </CCardText>
+                      </CCardBody>
+                    </CCard>
+                  ))
+              : null}
+
             {halls.map((el) => (
               <CCard key={el.id}>
                 <CCardBody>
@@ -247,6 +290,16 @@ function HotelEvents() {
                 </CCardBody>
               </CCard>
             ))}
+
+            <CCard>
+              <CCardBody>
+                <CCardTitle className="text-center">Other events</CCardTitle>
+
+                <div className=" col d-flex justify-content-center">
+                  {addButton({ name: 'Other' })}
+                </div>
+              </CCardBody>
+            </CCard>
           </div>
         </div>
       )}

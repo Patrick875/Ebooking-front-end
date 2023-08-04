@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCardHeader, CCol, CRow } from '@coreui/react'
 import { instance } from 'src/API/AxiosInstance'
-import { toast } from 'react-hot-toast'
 import InvoiceHeader from '../Printing/InvoiceHeader'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import RoomReportTable from './RoomReportTable'
@@ -39,7 +38,7 @@ const Room = React.forwardRef((props, ref) => {
   return (
     <CRow>
       <CCol xs={12}>
-        <CCard className="mb-4">
+        <div className="mb-4" style={{ backgroundColor: 'none' }}>
           <CCardHeader className="d-flex justify-content-between">
             <h4>
               <strong className="text-uppercase">
@@ -58,7 +57,7 @@ const Room = React.forwardRef((props, ref) => {
               />
             </div>
           </CCardHeader>
-          <CCardBody>
+          <div style={{ backgroundColor: 'none' }}>
             <div style={{ display: 'none' }}>
               <div ref={ref || componentRef}>
                 <InvoiceHeader />
@@ -83,8 +82,8 @@ const Room = React.forwardRef((props, ref) => {
               roomClasses={roomClasses}
               setRooms={setRooms}
             />
-          </CCardBody>
-        </CCard>
+          </div>
+        </div>
       </CCol>
     </CRow>
   )

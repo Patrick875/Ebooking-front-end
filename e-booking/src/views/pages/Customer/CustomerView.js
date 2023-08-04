@@ -24,7 +24,6 @@ const CustomerView = React.forwardRef((props, ref) => {
   const selectedCustomer =
     useSelector((state) => state.selection.selected) || {}
 
-  console.log('customer', selectedCustomer)
   const reservations = selectedCustomer.Reservations
     ? selectedCustomer.Reservations
     : []

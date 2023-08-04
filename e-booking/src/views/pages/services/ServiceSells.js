@@ -10,7 +10,6 @@ import {
 
 function ServiceSells(props) {
   const { sells } = props
-  console.log('service category sells', sells)
   return (
     <div>
       <CCardBody>
@@ -36,7 +35,12 @@ function ServiceSells(props) {
                         {Number(item.total / item.Service.price)}
                       </CTableDataCell>
 
-                      <CTableDataCell>{item.client_name}</CTableDataCell>
+                      <CTableDataCell>
+                        {item.client_name}{' '}
+                        {item.Reservation && item.Reservation !== null
+                          ? '/ R#' + item.Reservation.Room.name
+                          : ''}
+                      </CTableDataCell>
                       <CTableDataCell>
                         {item.User.firstName + ' ' + item.User.lastName}
                       </CTableDataCell>

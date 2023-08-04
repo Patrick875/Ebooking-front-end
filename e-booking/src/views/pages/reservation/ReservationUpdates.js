@@ -44,26 +44,28 @@ function ReservationUpdates(props) {
               Object.keys(reservation).length !== 0 &&
               reservation.DatesIns.length !== 0 ? (
                 <div>
-                  {reservation.DatesIns.map((el, i) => (
-                    <div key={i * 3456} className="d-flex gap-2">
-                      <p>
-                        As of{' '}
-                        <span className="fw-bold">
-                          {new Date(el.date).toLocaleDateString('fr-FR')}
-                        </span>{' '}
-                        :{' '}
-                      </p>
-                      {el.datesIn.length !== 0 ? (
-                        el.datesIn.map((curr, i) => (
-                          <li key={i * 234}>
-                            {new Date(curr).toLocaleDateString('fr-FR')}{' '}
-                          </li>
-                        ))
-                      ) : (
-                        <p>No dates</p>
-                      )}
-                    </div>
-                  ))}
+                  {reservation.DatesIns.sort((a, b) => b.id - a.id).map(
+                    (el, i) => (
+                      <div key={i * 3456} className="d-flex gap-2">
+                        <p>
+                          As of{' '}
+                          <span className="fw-bold">
+                            {new Date(el.date).toLocaleDateString('fr-FR')}
+                          </span>{' '}
+                          :{' '}
+                        </p>
+                        {el.datesIn.length !== 0 ? (
+                          el.datesIn.map((curr, i) => (
+                            <li key={i * 234}>
+                              {new Date(curr).toLocaleDateString('fr-FR')}{' '}
+                            </li>
+                          ))
+                        ) : (
+                          <p>No dates</p>
+                        )}
+                      </div>
+                    ),
+                  )}
                 </div>
               ) : null}
             </CCol>

@@ -10,7 +10,7 @@ export const ReceptionNav = {
   items: [
     {
       component: CNavItem,
-      name: 'Check In/Out',
+      name: 'Check In',
       to: '/booking/reservations/check-in',
     },
     {
@@ -20,8 +20,13 @@ export const ReceptionNav = {
     },
     {
       component: CNavItem,
-      name: 'All Reservations',
-      to: '/booking/reservations/all',
+      name: 'Room Reservations',
+      to: '/booking/reservations/rooms',
+    },
+    {
+      component: CNavItem,
+      name: 'Hall Reservations',
+      to: '/booking/reservations/halls',
     },
     {
       component: CNavItem,

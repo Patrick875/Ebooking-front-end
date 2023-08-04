@@ -8,14 +8,18 @@ import {
 } from '@coreui/react'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
+import { selectItem } from 'src/redux/Select/selectionActions'
+import { selectRoom } from 'src/redux/reservation/reservationActions'
 import { isRoomOccupied } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const role = useSelector((state) => state.auth.role)
   const [style, setStyle] = useState({ display: 'none' })
-  console.log('rooms', rooms)
   const deleteRoom = async (id) => {
     await instance
       .delete(`/room/${id}`)
@@ -60,8 +64,41 @@ function RoomReportTable(props) {
                         const isOccupied = isRoomOccupied(room)
 
                         return (
-                          <CTableRow key={room.id}>
-                            <CTableHeaderCell className="d-flex  gap-2">
+                          <CTableRow
+                            key={room.id}
+                            style={{
+                              backgroundColor:
+                                Object.keys(isOccupied).length !== 0 &&
+                                isOccupied.reservation.roomStatus !==
+                                  'checked-out'
+                                  ? 'green'
+                                  : Object.keys(isOccupied).length !== 0 &&
+                                    isOccupied.reservation.roomStatus ===
+                                      'checked-out'
+                                  ? 'orange'
+                                  : 'white',
+                            }}
+                          >
+                            <CTableHeaderCell
+                              className="d-flex  gap-2"
+                              onClick={() => {
+                                if (
+                                  isOccupied &&
+                                  Object.keys(isOccupied).length !== 0
+                                ) {
+                                  dispatch(
+                                    selectItem({
+                                      ...isOccupied.reservation,
+                                      Room: room,
+                                    }),
+                                  )
+                                  navigate('/booking/reservations/info')
+                                } else {
+                                  dispatch(selectRoom(room))
+                                  navigate('/booking/room/checkin')
+                                }
+                              }}
+                            >
                               {`#${room.name}`}
                             </CTableHeaderCell>
                             <CTableDataCell>

@@ -31,7 +31,8 @@ import DatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import ReservationUpdates from './ReservationUpdates'
 
-const Reservation = () => {
+const Reservation = (props) => {
+  const { type } = props
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [clicked, setClicked] = useState({})
@@ -42,7 +43,7 @@ const Reservation = () => {
   const [updateReservation, setUpdateReservation] = useState()
   const { register, watch } = useForm()
   const filter_condition = watch('filter_condition') || 'All'
-  const filter_condition2 = watch('filter_condition2') || 'All'
+  const filter_condition2 = type
   const time = watch('time') || 'all-time'
   const query = watch('query') || ''
   const [startDate, setStartDate] = useState(new Date())
@@ -182,8 +183,8 @@ const Reservation = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <h2 className="text-center">
-              <strong> All Reservations </strong>
+            <h2>
+              <strong className="text-capitalize"> {type} Reservations </strong>
             </h2>
             <div className="col row py-2 ">
               <div className="form-control d-flex flex-row py-2 my-2 align align-content-center">
@@ -214,21 +215,8 @@ const Reservation = () => {
                       <option value="canceled">Canceled</option>
                     </select>
                   </div>
-                  <div className="col-3">
-                    <label className="text-center py-1">Service </label>
-                    <select
-                      className="form-select form-select-sm col"
-                      aria-label="Default select example"
-                      defaultValue={'All'}
-                      {...register('filter_condition2')}
-                    >
-                      <option value="All">All</option>
-                      <option value="room">Room</option>
-                      <option value="hall">Hall</option>
-                    </select>
-                  </div>
                   <div className="col d-flex gap-2 flex-wrap">
-                    <div className="col">
+                    <div className="col-3">
                       <label className="text-center py-1">Time</label>
                       <select
                         className="form-select form-select-sm col"
@@ -241,9 +229,9 @@ const Reservation = () => {
                       </select>
                     </div>
                     {time && time === 'date' ? (
-                      <div className="col d-flex align-items-end ">
+                      <div className="col-4 d-flex align-items-center ">
                         <DatePicker
-                          className="form-control col px-2"
+                          className="form-control col px-2 mt-4 "
                           onChange={onChange}
                           startDate={startDate}
                           endDate={endDate}

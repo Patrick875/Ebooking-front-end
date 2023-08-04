@@ -173,9 +173,31 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   
 }
 
+.view-bill{
+  table{
+    thead,td,tr,th{
+        border:2px solid black;
+      }
+  }
+  .title{
+    margin: 0 .5em;
+  }
+  p{
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+ 
+}
 
-
-
+.bills-grid{
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-columns: 1fr 1fr ;
+  grid-template-rows: auto ;
+}
 
 
 /* CSS */

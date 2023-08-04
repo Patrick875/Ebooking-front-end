@@ -66,6 +66,7 @@ function ServiceReceipt(props) {
 
 const ServiceSell = React.forwardRef((props, ref) => {
   const { handleSubmit, register, watch, getValues } = useForm()
+  const [rooms, setRooms] = useState()
   const componentRef = useRef()
   const formData = getValues()
   const times = watch('times') || 1
@@ -97,7 +98,6 @@ const ServiceSell = React.forwardRef((props, ref) => {
       }
       return acc
     }, {})
-
     await instance
       .post('/services/sell', data)
       .then((res) => {
@@ -152,6 +152,18 @@ const ServiceSell = React.forwardRef((props, ref) => {
         }
       })
     }
+    const getOccupiedRooms = async () => {
+      await instance
+        .get('/room/occupied')
+        .then((res) => {
+          setRooms(res.data.data)
+          console.log('stuff', res.data.data)
+        })
+        .catch((er) => {
+          console.log('error !!!!', er)
+        })
+    }
+    getOccupiedRooms()
     getAllSells()
     getAllServices()
   }, [sold])
@@ -213,6 +225,17 @@ const ServiceSell = React.forwardRef((props, ref) => {
                   />
                 </CCol>
                 <CCol md={6} className="py-0 my-0">
+                  <CFormLabel htmlFor="payment"> Payment </CFormLabel>
+                  <CFormInput
+                    type="number"
+                    name="payment"
+                    id="payment"
+                    defaultValue={1}
+                    min={0}
+                    {...register('payment')}
+                  />
+                </CCol>
+                <CCol md={6} className="py-0 my-0">
                   <CFormLabel htmlFor="paymentMethod">
                     {' '}
                     Payment method{' '}
@@ -225,6 +248,25 @@ const ServiceSell = React.forwardRef((props, ref) => {
                     <option value="Cash">Cash</option>
                     <option value="Mobile Money">Mobile Money</option>
                     <option value="Credit card">Credit card</option>
+                  </CFormSelect>
+                </CCol>
+                <CCol md={6} className="py-0 my-0">
+                  <CFormLabel htmlFor="addTo"> Add to </CFormLabel>
+                  <CFormSelect
+                    name="addTo"
+                    id="addTo"
+                    {...register('reservationId')}
+                  >
+                    <option value=""></option>
+                    {rooms && rooms.length !== 0 ? (
+                      rooms.map((el, i) => (
+                        <option key={el.id} value={el.reservation.id}>
+                          {el.room.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option>Not available</option>
+                    )}
                   </CFormSelect>
                 </CCol>
                 <CFormLabel className="d-flex my-3 flex-col">

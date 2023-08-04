@@ -23,9 +23,11 @@ import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import { RiCheckLine } from 'react-icons/ri'
 import AllPetitStock from '../PetitStock/AllPetitStock'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomerBill from '../Printing/CustomerBill'
 import PetitStockBaudDeCommande from '../Printing/PetitStockBaudDeCommande'
+import { FcKey } from 'react-icons/fc'
+import { logout } from 'src/redux/Auth/authActions'
 
 const ProductSell = React.forwardRef((props, ref) => {
   const { register, setValue, getValues, watch } = useForm()
@@ -33,11 +35,16 @@ const ProductSell = React.forwardRef((props, ref) => {
   const user = useSelector(
     (state) => state.auth.user.firstName + ' ' + state.auth.user.lastName,
   )
+  const dispatch = useDispatch()
   const componentRef = useRef()
   const componentRef2 = useRef()
   const [selectedInput, setSelectedInput] = useState(1)
   let [results, setResults] = useState(Array(10).fill(''))
   let [products, setProducts] = useState([])
+  const [rooms, setRooms] = useState([])
+  const [room, setRoom] = useState()
+  const [viewRooms, setViewRooms] = useState(false)
+  const [viewTables, setViewTables] = useState(true)
   let [orderItems, setOrderItems] = useState([])
   const [selectedProduct, setSelectedProduct] = useState()
   const [disabled, setDisabled] = useState(true)
@@ -162,7 +169,7 @@ const ProductSell = React.forwardRef((props, ref) => {
           })
         : orderItems
 
-    const cool = getValues()
+    const values = getValues()
 
     let packages = orderItems.map((order) => {
       let { productId, packageId, quantity } = order
@@ -171,20 +178,37 @@ const ProductSell = React.forwardRef((props, ref) => {
         packageId,
         quantity,
         petitStock,
-        paymentMethod: cool.paymentMethod,
+        paymentMethod: values.paymentMethod,
       }
     })
 
-    await instance
-      .post('/products/package/sell', { packages: packages, table: table })
-      .then(() => {
-        toast.success('Order created')
-        setTable([])
-        setOrderState(true)
-      })
-      .catch(() => {
-        console.log('order creation failed')
-      })
+    if (table) {
+      await instance
+        .post('/products/package/sell', { packages: packages, table: table })
+        .then(() => {
+          toast.success('Order created')
+          setTable([])
+          setOrderState(true)
+        })
+        .catch(() => {
+          console.log('order creation failed')
+        })
+    } else if (room) {
+      console.log(' reservationId : ', room)
+      await instance
+        .post('/products/package/sell', {
+          packages: packages,
+          reservationId: room.reservation.id,
+        })
+        .then(() => {
+          toast.success('Order created')
+          setTable([])
+          setOrderState(true)
+        })
+        .catch(() => {
+          console.log('order creation failed')
+        })
+    }
   }
   useEffect(() => {
     const getTables = async () => {
@@ -212,9 +236,20 @@ const ProductSell = React.forwardRef((props, ref) => {
           console.log(err.message)
         })
     }
+    const getOccupiedRooms = async () => {
+      await instance
+        .get('/room/occupied')
+        .then((res) => {
+          setRooms(res.data.data)
+        })
+        .catch((er) => {
+          console.log('error !!!!', er)
+        })
+    }
 
     getTables()
     getAllProducts()
+    getOccupiedRooms()
   }, [])
 
   return (
@@ -291,8 +326,12 @@ const ProductSell = React.forwardRef((props, ref) => {
             ) : null}
             {table ? (
               <p className="text-center fst-italic m-0">
-                {' '}
                 Order for table {table}
+              </p>
+            ) : null}
+            {room ? (
+              <p className="text-center fst-italic m-0">
+                Order for Room {room.room.name}
               </p>
             ) : null}
           </CCardHeader>
@@ -323,7 +362,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                       {selectedProduct.Packages.map((pack) => (
                         <CButton
                           key={pack.id}
-                          disabled={table ? false : true}
+                          disabled={table || room ? false : true}
                           className="btn btn-light rounded-0 shadow"
                           onClick={() => handleProductClick(pack)}
                         >
@@ -337,7 +376,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                 products.map((product) => {
                   return (
                     <CButton
-                      disabled={table ? false : true}
+                      disabled={table || room ? false : true}
                       className="btn btn-light rounded-0 shadow"
                       onClick={() => handleProductClick(product)}
                     >
@@ -370,25 +409,22 @@ const ProductSell = React.forwardRef((props, ref) => {
                   >
                     🖊️ +
                   </button>
-                  <div>
-                    <CFormSelect
-                      {...register('paymentMethod')}
-                      className="dropdown"
-                    >
-                      <option value={'cash'}>Cash</option>
-                      <option value={'MoMo'}>MoMo</option>
-                      <option value={'POS'}>Card</option>
-                    </CFormSelect>
-                  </div>
-
                   <button
                     className="btn btn-light rounded-1 shadow-sm"
-                    disabled={!table || table.length === 0}
+                    disabled={!table && !room}
                     onClick={() => {
                       createOrder()
                     }}
                   >
                     <RiCheckLine className=" text-success ri-lg" />
+                  </button>
+                  <button
+                    className="btn btn-light rounded-1 shadow-sm"
+                    onClick={() => {
+                      dispatch(logout())
+                    }}
+                  >
+                    <FcKey className=" text-success ri-lg" />
                   </button>
                 </div>
                 <div className="col-2 numpad-action">
@@ -505,43 +541,104 @@ const ProductSell = React.forwardRef((props, ref) => {
                 )}
               </CTable>
             </CCol>
-            <CCol md={5} className="bg-white product-sell-tables">
-              <CTable bordered={true} striped={true} small hover={!disabled}>
-                <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col"> Number </CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tables && tables.length !== 0 ? (
-                    tables
-                      .filter((table) => table.status === 'ACTIVE')
-                      .map((item, index) => (
-                        <CTableRow
-                          key={index * 10000}
-                          onClick={() => {
-                            setTable(item.name)
-                            toast.success(
-                              `${item.name.toLowerCase()} selected`,
-                              {
-                                duration: 5600,
-                                position: 'bottom-right',
-                              },
-                            )
-                          }}
-                        >
-                          <CTableHeaderCell scope="row">
-                            {index + 1}
-                          </CTableHeaderCell>
-                          <CTableDataCell>{item.name}</CTableDataCell>
-                        </CTableRow>
-                      ))
-                  ) : (
-                    <CTableRow>No tables in db</CTableRow>
-                  )}
-                </CTableBody>
-              </CTable>
+            <CCol md={5} className="bg-white ">
+              <div className="col ">
+                <div className="d-flex justify-content-between">
+                  <button
+                    className="px-4 py-0"
+                    onClick={() => {
+                      setViewRooms(false)
+                      setViewTables(true)
+                    }}
+                  >
+                    Tables
+                  </button>
+                  <p className="py-0">Tables/Rooms</p>
+                  <button
+                    onClick={() => {
+                      setViewRooms(true)
+                      setViewTables(false)
+                    }}
+                    className="px-4 py-0"
+                  >
+                    Rooms
+                  </button>
+                </div>
+                <div className="product-sell-tables">
+                  <CTable
+                    bordered={true}
+                    striped={true}
+                    small
+                    hover={!disabled}
+                  >
+                    <CTableHead>
+                      <CTableRow>
+                        <CTableHeaderCell scope="col">
+                          {' '}
+                          {viewTables ? 'Tables' : 'Occupied Rooms'}{' '}
+                        </CTableHeaderCell>
+                      </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                      {viewTables && !viewRooms ? (
+                        tables && tables.length !== 0 ? (
+                          tables
+                            .filter((table) => table.status === 'ACTIVE')
+                            .sort((a, b) => a.name - b.name)
+                            .map((item, index) => (
+                              <CTableRow
+                                key={index * 10000}
+                                onClick={() => {
+                                  setTable(item.name)
+                                  setRoom(null)
+                                  toast.success(
+                                    `${item.name.toLowerCase()} selected`,
+                                    {
+                                      duration: 5600,
+                                      position: 'bottom-right',
+                                    },
+                                  )
+                                }}
+                              >
+                                <CTableDataCell>{item.name}</CTableDataCell>
+                              </CTableRow>
+                            ))
+                        ) : (
+                          <CTableRow>No tables in db</CTableRow>
+                        )
+                      ) : null}
+                      {viewRooms && !viewTables ? (
+                        rooms && rooms.length !== 0 ? (
+                          rooms
+                            .sort((a, b) => a.room.name - b.room.name)
+                            .map((item, index) => (
+                              <CTableRow
+                                key={index * 10000}
+                                onClick={() => {
+                                  setRoom(item)
+                                  setTable(null)
+                                  toast.success(
+                                    `${item.room.name.toLowerCase()} selected`,
+                                    {
+                                      duration: 5600,
+                                      position: 'bottom-right',
+                                    },
+                                  )
+                                }}
+                              >
+                                <CTableDataCell>
+                                  {item.room.name}
+                                </CTableDataCell>
+                              </CTableRow>
+                            ))
+                        ) : (
+                          <CTableRow>No rooms are currently occupied</CTableRow>
+                        )
+                      ) : null}
+                    </CTableBody>
+                  </CTable>
+                </div>
+              </div>
             </CCol>
           </CRow>
         </CRow>

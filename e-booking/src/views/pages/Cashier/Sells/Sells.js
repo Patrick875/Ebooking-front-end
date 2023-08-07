@@ -12,6 +12,7 @@ import {
 } from 'src/utils/functions'
 import SellsTable from './SellsTable'
 import PrintTemplate1 from '../../Printing/PrintTemplate1'
+import dayjs from 'dayjs'
 
 const Sells = () => {
   const componentRef = useRef()
@@ -62,7 +63,6 @@ const Sells = () => {
     () => filterByPos(confirmedSells, pos),
     [confirmedSells, pos],
   )
-
   if (
     confirmedSells &&
     confirmedSells.length !== 0 &&
@@ -70,11 +70,10 @@ const Sells = () => {
     myDates.length !== 0 &&
     time !== 'all-time'
   ) {
-    confirmedSells = confirmedSells.filter((sell) =>
-      myDates.includes(getUTCDateWithoutHours(sell.date || sell.updatedAt))
-        ? sell
-        : '',
-    )
+    confirmedSells = confirmedSells.filter((sell) => {
+      const sellDate = dayjs(sell.date || sell.updatedAt).format('DD/MM/YYYY')
+      return myDates.includes(sellDate) ? sell : false
+    })
   } else {
     stuff =
       confirmedSells && confirmedSells.length !== 0
@@ -98,6 +97,27 @@ const Sells = () => {
           0,
         )
       : 0
+  const cashTotal =
+    confirmedSells && confirmedSells.length !== 0
+      ? confirmedSells.reduce(
+          (acc, curr) => acc + Number(curr.paymentMethod.CASH),
+          0,
+        )
+      : 0
+  const momoTotal =
+    confirmedSells && confirmedSells.length !== 0
+      ? confirmedSells.reduce(
+          (acc, curr) => acc + Number(curr.paymentMethod.MOMO),
+          0,
+        )
+      : 0
+  const posTotal =
+    confirmedSells && confirmedSells.length !== 0
+      ? confirmedSells.reduce(
+          (acc, curr) => acc + Number(curr.paymentMethod.POS),
+          0,
+        )
+      : 0
 
   useEffect(() => {
     const getItems = async () => {
@@ -114,6 +134,7 @@ const Sells = () => {
         .then((res) => {
           if (res.data && res.data.data) {
             setServiceSells(res.data.data)
+            console.log(res.data.data)
           }
         })
         .catch((err) => {
@@ -230,7 +251,11 @@ const Sells = () => {
             <PrintTemplate1>
               <p className="text-center fw-bold">Sells Report</p>
               <SellsTable
-                confirmedSells={stuff}
+                confirmedSells={
+                  myDates.length !== 0 && time !== 'all-time'
+                    ? confirmedSells
+                    : stuff
+                }
                 perpage={perpage}
                 currentPage={currentPage}
                 total={total}
@@ -239,10 +264,15 @@ const Sells = () => {
           </div>
         </div>
         <SellsTable
-          confirmedSells={stuff}
+          confirmedSells={
+            myDates.length !== 0 && time !== 'all-time' ? confirmedSells : stuff
+          }
           perpage={perpage}
           currentPage={currentPage}
           total={total}
+          cashTotal={cashTotal}
+          momoTotal={momoTotal}
+          posTotal={posTotal}
         />
 
         {confirmedSells ? (
@@ -258,168 +288,3 @@ const Sells = () => {
 }
 
 export default Sells
-
-// <div>
-//       {loading || loading1 ? (
-//         <div className="text-center">Loading ...</div>
-//       ) : error || error1 ? (
-//         <NetworkError />
-//       ) : (
-//         <React.Fragment>
-//           <CCardHeader>
-//             <div className="my-2">
-//               <h2 className="row">
-//                 <strong> All sells </strong>
-//               </h2>
-//               <div className="d-flex justify-content-between  ">
-//                 <div className="col-6 d-flex gap-2 flex-wrap">
-//                   <div className="col">
-//                     <label className="text-center py-1">Time</label>
-//                     <select
-//                       className="form-select form-select-sm col"
-//                       aria-label="Default select example"
-//                       defaultValue={'all-time'}
-//                       {...register('time')}
-//                     >
-//                       <option value="all-time">All-time</option>
-//                       <option value="date">Date</option>
-//                     </select>
-//                   </div>
-//                   {time && time === 'date' ? (
-//                     <div className="col d-flex align-items-end ">
-//                       <ReactDatePicker
-//                         className="form-control col px-2"
-//                         onChange={onChange}
-//                         startDate={startDate}
-//                         endDate={endDate}
-//                         dateFormat="dd/MM/yy"
-//                         selectsRange
-//                         portalId="root-portal"
-//                         popperPlacement="bottom-end"
-//                         popperContainer={CalendarContainer}
-//                         placeholderText="Select date range"
-//                       />
-//                     </div>
-//                   ) : null}
-//                 </div>
-//                 <div className="col-4">
-//                   <div className="col">
-//                     <label className="text-center py-1">Type</label>
-//                     <select
-//                       className="form-select form-select-sm col"
-//                       aria-label=" sell type select"
-//                       defaultValue={'all'}
-//                       {...register('type')}
-//                     >
-//                       <option value="all">All</option>
-//                       <option value="product">Product</option>
-//                       <option value="service">Service</option>
-//                     </select>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </CCardHeader>
-//           <CCardBody>
-//             <CTable bordered>
-//               <CTableHead>
-//                 <CTableRow>
-//                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
-//                   <CTableHeaderCell scope="col">Account</CTableHeaderCell>
-//                   <CTableHeaderCell scope="col">By</CTableHeaderCell>
-//                   <CTableHeaderCell scope="col">Confirmed By</CTableHeaderCell>
-//                   <CTableHeaderCell scope="col">
-//                     Product/Service
-//                   </CTableHeaderCell>
-//                   <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
-//                   <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-//                 </CTableRow>
-//               </CTableHead>
-//               <CTableBody>
-//                 {confirmedSells && confirmedSells.length !== 0
-//                   ? confirmedSells.map((item, i) => {
-//                       return (
-//                         <CTableRow key={item.id}>
-//                           <CTableHeaderCell scope="row">
-//                             {(currentPage - 1) * perpage + 1 + i}
-//                           </CTableHeaderCell>
-//                           <CTableDataCell>
-//                             {item.petitStock
-//                               ? item.petitStock.name
-//                               : item.Service.name}
-//                           </CTableDataCell>
-//                           <CTableDataCell>
-//                             {item.Service
-//                               ? item.User.firstName + ' ' + item.User.lastName
-//                               : item.user.firstName + ' ' + item.user.lastName}
-//                           </CTableDataCell>
-//                           <CTableDataCell>
-//                             {item.Service
-//                               ? item.User.firstName + ' ' + item.User.lastName
-//                               : !item.status.split(' ')[2]
-//                               ? ' '
-//                               : item.status.split(' ')[2] +
-//                                 ' ' +
-//                                 !item.status.split(' ')[3]
-//                               ? ' '
-//                               : item.status.split(' ')[3]}
-//                           </CTableDataCell>
-//                           <CTableDataCell>
-//                             <div>
-//                               {item.Service ? (
-//                                 <p key={item.id * 100}>
-//                                   {item.Service.name}
-//                                   {' ' +
-//                                     item.total / item.Service.price +
-//                                     ' times'}
-//                                 </p>
-//                               ) : (
-//                                 item.petitStockSaleDetails.map((el, i) => (
-//                                   <p key={el + i}>
-//                                     {el.quantity}{' '}
-//                                     {el.quantity > 1
-//                                       ? `${el.Package.name}s`
-//                                       : el.Package.name}{' '}
-//                                     of {el.Package.Products.name}{' '}
-//                                   </p>
-//                                 ))
-//                               )}
-//                             </div>
-//                           </CTableDataCell>
-//                           <CTableDataCell>
-//                             <div>
-//                               {item.Service
-//                                 ? item.Service.price
-//                                 : item.petitStockSaleDetails.map((el, i) => (
-//                                     <p key={el + i}>
-//                                       {el.Package.Products.ProductPackage.price}
-//                                     </p>
-//                                   ))}
-//                             </div>
-//                           </CTableDataCell>
-//                           <CTableDataCell>
-//                             {item.Service ? item.total : item.amount}
-//                           </CTableDataCell>
-//                         </CTableRow>
-//                       )
-//                     })
-//                   : null}
-
-//                 <CTableRow>
-//                   <CTableDataCell />
-//                   <CTableDataCell colSpan={5}>Total</CTableDataCell>
-//                   <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
-//                 </CTableRow>
-//               </CTableBody>
-//             </CTable>
-//             {confirmedSells ? (
-//               <Pagination
-//                 postsPerPage={perpage}
-//                 totalPosts={confirmedSells.length}
-//                 paginate={paginate}
-//               />
-//             ) : null}
-//           </CCardBody>
-//         </React.Fragment>
-//       )}
-//     </div>

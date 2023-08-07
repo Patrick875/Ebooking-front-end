@@ -53,5 +53,10 @@ export const StockNav = {
       name: 'Stock report',
       to: '/booking/stock/report',
     },
+    {
+      component: CNavItem,
+      name: 'Suppliers',
+      to: '/booking/stock/suppliers',
+    },
   ],
 }

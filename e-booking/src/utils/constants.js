@@ -562,7 +562,6 @@ export const initialRowsStockOrder = [
 export const initialRowsReturning = [
   {
     id: uuidv4(),
-
     item_id: '',
     quantity: 0,
     storeId: '',
@@ -570,7 +569,6 @@ export const initialRowsReturning = [
   },
   {
     id: uuidv4(),
-
     item_id: '',
     quantity: 0,
     storeId: '',
@@ -578,7 +576,6 @@ export const initialRowsReturning = [
   },
   {
     id: uuidv4(),
-
     item_id: '',
     quantity: 0,
     storeId: '',
@@ -586,7 +583,6 @@ export const initialRowsReturning = [
   },
   {
     id: uuidv4(),
-
     item_id: '',
     quantity: 0,
     storeId: '',

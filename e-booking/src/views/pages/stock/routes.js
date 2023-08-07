@@ -8,6 +8,9 @@ import StockReport from './StockReport'
 import StockItemTrack from './StockItemTrack'
 import AllPurchaseOrders from './AllPurchaseOrders'
 import PurchaseOrderView from './PurchaseOrderView'
+import Suppliers from './Suppliers/Suppliers'
+import CreateSupplier from './Suppliers/CreateSupplier'
+import ViewSupplier from './Suppliers/ViewSupplier'
 
 export const stockRoutes = [
   {
@@ -69,5 +72,23 @@ export const stockRoutes = [
     exact: true,
     name: 'View Purchase order',
     element: PurchaseOrderView,
+  },
+  {
+    path: '/booking/stock/suppliers/',
+    exact: true,
+    name: 'Suppliers',
+    element: Suppliers,
+  },
+  {
+    path: '/booking/stock/suppliers/create',
+    exact: true,
+    name: 'Create Supplier',
+    element: CreateSupplier,
+  },
+  {
+    path: '/booking/stock/suppliers/view',
+    exact: true,
+    name: 'View Supplier',
+    element: ViewSupplier,
   },
 ]

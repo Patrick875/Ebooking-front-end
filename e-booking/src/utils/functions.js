@@ -34,10 +34,11 @@ export const datesInRangeWithUnix = function (startDate, endDate, steps = 1) {
     // dateArray.push(utcDateWithoutTime)
     // // Use UTC date to prevent problems with time zones and DST
     // currentDate.setUTCDate(currentDate.getUTCDate() + steps)
-    dateArray.push(dayjs(currentDate).format('YYYY-MM-DD'))
+    dateArray.push(dayjs(currentDate).format('DD/MM/YYYY'))
     currentDate = dayjs(currentDate).add(1, 'day')
   }
 
+  console.log('dates array', dateArray)
   return dateArray
 }
 

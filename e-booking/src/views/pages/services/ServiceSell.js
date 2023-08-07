@@ -224,32 +224,48 @@ const ServiceSell = React.forwardRef((props, ref) => {
                     {...register('times')}
                   />
                 </CCol>
-                <CCol md={6} className="py-0 my-0">
-                  <CFormLabel htmlFor="payment"> Payment </CFormLabel>
-                  <CFormInput
-                    type="number"
-                    name="payment"
-                    id="payment"
-                    defaultValue={1}
-                    min={0}
-                    {...register('payment')}
-                  />
-                </CCol>
-                <CCol md={6} className="py-0 my-0">
-                  <CFormLabel htmlFor="paymentMethod">
+                <CCol md={6} className="py-0 my-0 d-flex gap-2">
+                  <CCol>
                     {' '}
-                    Payment method{' '}
-                  </CFormLabel>
-                  <CFormSelect
-                    name="paymentMethod"
-                    id="paymentMethod"
-                    {...register('paymentMethod')}
-                  >
-                    <option value="Cash">Cash</option>
-                    <option value="Mobile Money">Mobile Money</option>
-                    <option value="Credit card">Credit card</option>
-                  </CFormSelect>
+                    <CFormLabel htmlFor="paymentCASH"> CASH </CFormLabel>
+                    <CFormInput
+                      type="number"
+                      name="paymentCASH"
+                      id="paymentCASH"
+                      defaultValue={0}
+                      placeholder="CASH"
+                      min={0}
+                      {...register('paymentMethod.CASH')}
+                    />
+                  </CCol>
+                  <CCol>
+                    {' '}
+                    <CFormLabel htmlFor="paymentCASH"> MOMO </CFormLabel>
+                    <CFormInput
+                      type="number"
+                      name="paymentMOMO"
+                      id="paymentMOMO"
+                      defaultValue={0}
+                      placeholder="MOMO"
+                      min={0}
+                      {...register('paymentMethod.MOMO')}
+                    />
+                  </CCol>
+                  <CCol>
+                    {' '}
+                    <CFormLabel htmlFor="paymentPOS"> POS </CFormLabel>
+                    <CFormInput
+                      type="number"
+                      name="paymentPOS"
+                      id="paymentPOS"
+                      defaultValue={0}
+                      placeholder="POS"
+                      min={0}
+                      {...register('paymentMethod.POS')}
+                    />
+                  </CCol>
                 </CCol>
+
                 <CCol md={6} className="py-0 my-0">
                   <CFormLabel htmlFor="addTo"> Add to </CFormLabel>
                   <CFormSelect

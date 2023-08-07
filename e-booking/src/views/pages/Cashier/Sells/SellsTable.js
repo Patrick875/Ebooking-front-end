@@ -9,7 +9,15 @@ import {
 import React from 'react'
 
 function SellsTable(props) {
-  const { confirmedSells, perpage, currentPage, total } = props
+  const {
+    confirmedSells,
+    perpage,
+    currentPage,
+    total,
+    cashTotal,
+    momoTotal,
+    posTotal,
+  } = props
   return (
     <CTable bordered>
       <CTableHead>
@@ -19,6 +27,9 @@ function SellsTable(props) {
           <CTableHeaderCell scope="col">By</CTableHeaderCell>
           <CTableHeaderCell scope="col">Product/Service</CTableHeaderCell>
           <CTableHeaderCell scope="col">Price/unit</CTableHeaderCell>
+          <CTableHeaderCell scope="col">CASH</CTableHeaderCell>
+          <CTableHeaderCell scope="col">MOMO</CTableHeaderCell>
+          <CTableHeaderCell scope="col">POS</CTableHeaderCell>
           <CTableHeaderCell scope="col">Total</CTableHeaderCell>
         </CTableRow>
       </CTableHead>
@@ -50,11 +61,9 @@ function SellsTable(props) {
                       ) : (
                         item.petitStockSaleDetails.map((el, i) => (
                           <p key={el + i}>
-                            {el.quantity}{' '}
-                            {el.quantity > 1
-                              ? `${el.Package.name}s`
-                              : el.Package.name}{' '}
-                            of {el.Package.Products.name}{' '}
+                            {' '}
+                            {el.Package.name} of {el.Package.Products.name}{' '}
+                            {`[ ${el.quantity} ]`}{' '}
                           </p>
                         ))
                       )}
@@ -72,7 +81,18 @@ function SellsTable(props) {
                     </div>
                   </CTableDataCell>
                   <CTableDataCell>
-                    {item.Service ? item.total : item.amount}
+                    {Number(item.paymentMethod.CASH).toLocaleString()}
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {Number(item.paymentMethod.MOMO).toLocaleString()}
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {Number(item.paymentMethod.POS).toLocaleString()}
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {Number(
+                      item.Service ? item.total : item.amount,
+                    ).toLocaleString()}
                   </CTableDataCell>
                 </CTableRow>
               )
@@ -82,6 +102,9 @@ function SellsTable(props) {
         <CTableRow>
           <CTableDataCell />
           <CTableDataCell colSpan={4}>Total</CTableDataCell>
+          <CTableDataCell>{Number(cashTotal).toLocaleString()}</CTableDataCell>
+          <CTableDataCell>{Number(momoTotal).toLocaleString()}</CTableDataCell>
+          <CTableDataCell>{Number(posTotal).toLocaleString()}</CTableDataCell>
           <CTableHeaderCell>{total.toLocaleString()}</CTableHeaderCell>
         </CTableRow>
       </CTableBody>

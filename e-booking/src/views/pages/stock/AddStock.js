@@ -23,6 +23,8 @@ import BackButton from 'src/components/Navigating/BackButton'
 import { useForm } from 'react-hook-form'
 import ReturnItemsTable from 'src/components/ReturnItemsTable'
 import { initialRowsReturning } from 'src/utils/constants'
+import SupplyItemsTable from 'src/components/SupplyItemsTable'
+import { v4 as uuidv4 } from 'uuid'
 
 const AddStock = React.forwardRef((props, ref) => {
   let [item2] = useState([])
@@ -33,7 +35,10 @@ const AddStock = React.forwardRef((props, ref) => {
   let [purchaseOrders, setPurchaseOrders] = useState([])
   let [order, setOrder] = useState([])
   const [data, setData] = useState([])
+  const [suppliers, setSuppliers] = useState([])
+  const [selectedSupplier, setSelectedSupplier] = useState([])
   let [returnings, setReturnings] = useState([...initialRowsReturning])
+  let [supply, setSupply] = useState([...initialRowsReturning])
   const selectOrder = (newOrder) => {
     dispatch(selectItem(newOrder))
     return setOrder(newOrder)
@@ -109,6 +114,19 @@ const AddStock = React.forwardRef((props, ref) => {
           console.log(err.message)
         })
     }
+    const getAllSuppliers = async () => {
+      await instance
+        .get('supply/all-suppliers')
+        .then((res) => {
+          if (res && res.data && res.data.data) {
+            setSuppliers(res.data.data)
+          }
+        })
+        .catch((er) => {
+          console.log('err', er)
+        })
+    }
+    getAllSuppliers()
     getPurchaseOrders()
   }, [])
 
@@ -118,6 +136,39 @@ const AddStock = React.forwardRef((props, ref) => {
         <div className="d-flex justify-content-between my-0 py-0">
           <BackButton />
           <div className="d-flex gap-2">
+            {itemsFrom === 'returned' || itemsFrom === 'supplier' ? (
+              <p
+                className="text-black"
+                type="button"
+                onClick={() => {
+                  if (itemsFrom === 'returned') {
+                    setReturnings([
+                      ...returnings,
+                      {
+                        id: uuidv4(),
+                        item_id: '',
+                        quantity: 0,
+                        storeId: '',
+                        price: 0,
+                      },
+                    ])
+                  } else {
+                    setSupply([
+                      ...supply,
+                      {
+                        id: uuidv4(),
+                        item_id: '',
+                        quantity: 0,
+                        storeId: '',
+                        price: 0,
+                      },
+                    ])
+                  }
+                }}
+              >
+                Add row
+              </p>
+            ) : null}
             {itemsFrom === 'returned' ? (
               <CButton
                 component="input"
@@ -135,6 +186,40 @@ const AddStock = React.forwardRef((props, ref) => {
                 value="Submit voucher"
                 onClick={() => {
                   return onAddItemToStock(receivedItems)
+                }}
+              />
+            ) : null}
+            {itemsFrom === 'supplier' &&
+            selectedSupplier &&
+            selectedSupplier.length !== 0 ? (
+              <CButton
+                component="input"
+                value="Submit"
+                onClick={async () => {
+                  console.log('supply', supply)
+                  const total = supply
+                    .filter((el) => el.quantity !== '')
+                    .reduce((a, b) => a + Number(b.quantity * b.price), 0)
+                  const supplierId = selectedSupplier[0].id
+                  const date = new Date().getTime()
+                  const details = supply.filter(
+                    (el) => el.quantity !== '' && el.quantity !== 0,
+                  )
+                  await instance
+                    .post('/supply/receive', {
+                      details,
+                      supplierId,
+                      date,
+                      total,
+                    })
+                    .then((res) => {
+                      if (res && res.data && res.data.data) {
+                        toast.success('cool')
+                      }
+                    })
+                    .catch((err) => {
+                      console.log('err', err)
+                    })
                 }}
               />
             ) : null}
@@ -160,6 +245,7 @@ const AddStock = React.forwardRef((props, ref) => {
                       <CFormSelect {...register('purchased')}>
                         <option value="purchased">Purchase order</option>
                         <option value="returned">Returned</option>
+                        <option value="supplier">Supplier</option>
                       </CFormSelect>
                     </div>
                     {itemsFrom === 'purchased' ? (
@@ -186,6 +272,34 @@ const AddStock = React.forwardRef((props, ref) => {
                         />
                       </div>
                     ) : null}
+
+                    {itemsFrom === 'supplier' && suppliers.length !== 0 ? (
+                      <div>
+                        <CFormLabel htmlFor="name">
+                          {' '}
+                          Choose supplier{' '}
+                        </CFormLabel>
+
+                        <Typeahead
+                          id="basic-typeahead-single"
+                          filterBy={['name']}
+                          labelKey="name"
+                          onChange={setSelectedSupplier}
+                          options={suppliers}
+                          placeholder="supplier name ..."
+                          selected={selectedSupplier}
+                        />
+                        {selectedSupplier && selectedSupplier.length !== 0 ? (
+                          <p
+                            className="text text-danger"
+                            onClick={() => setSelectedSupplier([])}
+                          >
+                            {' '}
+                            Clear{' '}
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
                 </CCol>
               </CRow>
@@ -210,6 +324,11 @@ const AddStock = React.forwardRef((props, ref) => {
 
           {itemsFrom === 'returned' ? (
             <ReturnItemsTable data={returnings} setData={setReturnings} />
+          ) : null}
+          {itemsFrom === 'supplier' &&
+          selectedSupplier &&
+          selectedSupplier.length !== 0 ? (
+            <SupplyItemsTable data={supply} setData={setSupply} />
           ) : null}
         </CCol>
       </CRow>

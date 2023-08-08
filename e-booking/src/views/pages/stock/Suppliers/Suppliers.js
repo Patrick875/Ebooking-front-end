@@ -1,15 +1,6 @@
 import { useDispatch } from 'react-redux'
-import { useForm } from 'react-hook-form'
 import {
   CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,

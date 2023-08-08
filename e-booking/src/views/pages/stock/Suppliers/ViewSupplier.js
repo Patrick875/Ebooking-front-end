@@ -153,6 +153,7 @@ function ViewSupplier() {
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Item name </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Quantity </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Price </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -169,6 +170,9 @@ function ViewSupplier() {
                           {el.StockItemValue.StockItemNew.n}
                         </CTableDataCell>
                         <CTableDataCell>{el.quantity}</CTableDataCell>
+                        <CTableDataCell>
+                          {Number(el.price).toLocaleString()}
+                        </CTableDataCell>
                       </CTableRow>
                     ))
                   : null}

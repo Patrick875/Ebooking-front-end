@@ -402,7 +402,7 @@ const RoomCheckin = (props) => {
                         ? 'disabled'
                         : ''
                     } `}
-                    value="Book now"
+                    value="Check In "
                   />
                 </CCol>
 

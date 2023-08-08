@@ -6,10 +6,7 @@ import ReactToPrint from 'react-to-print'
 import { instance } from 'src/API/AxiosInstance'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
-import {
-  datesInRangeWithUnix,
-  getUTCDateWithoutHours,
-} from 'src/utils/functions'
+import { datesInRangeWithUnix } from 'src/utils/functions'
 import SellsTable from './SellsTable'
 import PrintTemplate1 from '../../Printing/PrintTemplate1'
 import dayjs from 'dayjs'

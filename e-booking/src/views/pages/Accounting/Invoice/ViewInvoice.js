@@ -212,10 +212,7 @@ const ViewInvoice = React.forwardRef((props, ref) => {
               {request ? (
                 <p className="col my-0 d-flex justify-content-end ">
                   <span className="fw-bold border border-2 border-dark p-1">
-                    DATE :
-                    {!request.date
-                      ? new Date(request.createdAt).toLocaleDateString('fr-FR')
-                      : new Date(request.date).toLocaleDateString('fr-FR')}{' '}
+                    DATE :{!request.date ? '' : request.date}
                   </span>{' '}
                 </p>
               ) : null}

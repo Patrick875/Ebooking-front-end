@@ -18,6 +18,7 @@ const InvoiceHeader = (props) => {
           <p className="my-0 fw-bolder">TIN/VAT: 102556009</p>
         </div>
       </CRow>
+      <div className="pt-1 mb-5 mx-0 header-line " />
       {documentTitle ? (
         <div className="col d-flex justify-content-center my-2">
           <p className="border border-2 border-dark text-center col-6">

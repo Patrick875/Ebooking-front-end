@@ -4,6 +4,9 @@
 .accounting{
   color:black !important
 }
+.header-line{
+  border-bottom: 1px solid black;
+}
 
 .printing-header{
    flex-direction: column !important;
@@ -201,6 +204,18 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
 
 
 /* CSS */
+
+//new add-product-stuff
+
+
+.add-product-grid{
+  display: grid;
+  row-gap:.015em;
+  column-gap:0.15em;
+  grid-template-columns: repeat(4,1fr);
+  grid-template-rows: repeat(auto,1fr);
+}
+
 
 
 // Define base button styles

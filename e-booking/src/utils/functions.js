@@ -38,7 +38,6 @@ export const datesInRangeWithUnix = function (startDate, endDate, steps = 1) {
     currentDate = dayjs(currentDate).add(1, 'day')
   }
 
-  console.log('dates array', dateArray)
   return dateArray
 }
 
@@ -189,11 +188,13 @@ export function removeObjectsWithEmptyProperties(array) {
   return array.filter((obj) => {
     for (const key in obj) {
       if (
-        key !== 'date' &&
-        key !== 'comment' &&
-        obj.hasOwnProperty(key) &&
-        obj[key] === ''
+        (key !== 'date' &&
+          key !== 'comment' &&
+          obj.hasOwnProperty(key) &&
+          obj[key] === '') ||
+        obj[key] === undefined
       ) {
+        console.log('key', key)
         return false
       }
     }

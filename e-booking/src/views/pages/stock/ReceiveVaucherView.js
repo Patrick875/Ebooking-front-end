@@ -5,23 +5,40 @@ import PrintHeader from '../Printing/PrintHeader'
 import PrintFooterSignatures from '../Printing/PrintFooterSignatures'
 import PrintFooterNoSignatures from '../Printing/PrintFooterNoSignature'
 import BackButton from 'src/components/Navigating/BackButton'
+import { v4 as uuidv4 } from 'uuid'
+import { instance } from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const ReceiveVaucherView = React.forwardRef((props, ref) => {
   const vaucher = useSelector((state) => state.selection.selected)
   const componentRef = useRef()
+  const [update, setUpdate] = useState(false)
   let [rowsPurchase] = useState(
     vaucher.StockPurchaseOrder.StockPurchaseOrderDetails,
   )
-  let [rowsReceive, setRowsReceive] = useState(
-    vaucher.StockReceiveVoucherDetails,
-  )
-  const receiveTotal =
-    vaucher && vaucher.StockReceiveVoucherDetails !== 0
-      ? vaucher.StockReceiveVoucherDetails.reduce(
-          (acc, b) => acc + Number(b.receivedQuantity) * Number(b.unitPrice),
-          0,
-        )
-      : 0
+  let details =
+    vaucher.StockReceiveVoucherDetails &&
+    vaucher.StockReceiveVoucherDetails.length !== 0
+      ? vaucher.StockReceiveVoucherDetails.map((el) => ({
+          ...el,
+          vid: uuidv4(),
+        }))
+      : vaucher.StockReceiveVoucherDetails
+  let [rowsReceive, setRowsReceive] = useState(details)
+  console.log('vaucher', vaucher)
+  console.log('rows,received', rowsReceive)
+
+  const receiveTotal = update
+    ? rowsReceive.reduce(
+        (acc, b) => acc + Number(b.receivedQuantity) * Number(b.unitPrice),
+        0,
+      )
+    : vaucher && vaucher.StockReceiveVoucherDetails !== 0
+    ? vaucher.StockReceiveVoucherDetails.reduce(
+        (acc, b) => acc + Number(b.receivedQuantity) * Number(b.unitPrice),
+        0,
+      )
+    : 0
 
   const purchaseTotal =
     vaucher &&
@@ -37,7 +54,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
   const onChangeInput = (e, id) => {
     const { name, value } = e.target
     const editData = rowsReceive.map((item) =>
-      item.id === id && name
+      item.vid === id && name
         ? name === 'name'
           ? {
               ...item,
@@ -53,16 +70,59 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
     setRowsReceive(editData)
   }
 
+  const updateVaucher = async () => {
+    await instance
+      .put('/receive/voucher/update', {
+        details: rowsReceive,
+        vaucherId: vaucher.id,
+        total: rowsReceive.reduce(
+          (acc, b) => acc + Number(b.receivedQuantity) * Number(b.unitPrice),
+          0,
+        ),
+      })
+      .then((res) => {
+        if (res && res.data && Object.keys(res.data.data).length !== 0) {
+          toast.success('updated successfull !!!')
+          setUpdate(false)
+        } else {
+          toast.error(res.data.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
   return (
     <div>
       <div className="d-flex justify-content-between">
         <BackButton />
-        <ReactToPrint
-          trigger={() => (
-            <button className="btn btn-ghost-primary">Print</button>
-          )}
-          content={() => ref || componentRef.current}
-        />
+        {update ? <p>...Updating</p> : null}
+        <div className="col-9 d-flex justify-content-end gap-2">
+          <button
+            className="btn btn-success"
+            onClick={() => {
+              setUpdate(!update)
+            }}
+          >
+            Update
+          </button>
+          {update ? (
+            <button
+              className="btn btn-success"
+              onClick={() => {
+                updateVaucher()
+              }}
+            >
+              Submit pdate
+            </button>
+          ) : null}
+          <ReactToPrint
+            trigger={() => (
+              <button className="btn btn-ghost-primary">Print</button>
+            )}
+            content={() => ref || componentRef.current}
+          />
+        </div>
       </div>
 
       <div ref={ref || componentRef}>
@@ -183,7 +243,14 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                 <tbody>
                   {[...rowsReceive].map(
                     (
-                      { id, unit, unitPrice, StockItemNew, receivedQuantity },
+                      {
+                        vid,
+                        id,
+                        unit,
+                        unitPrice,
+                        StockItemNew,
+                        receivedQuantity,
+                      },
                       index,
                     ) => (
                       <tr key={id}>
@@ -191,9 +258,9 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                           <input
                             name="name"
                             value={StockItemNew.name}
-                            readOnly={true}
+                            readOnly={!update}
                             type="text"
-                            onChange={(e) => onChangeInput(e, id)}
+                            onChange={(e) => onChangeInput(e, vid)}
                             placeholder=""
                           />
                         </td>
@@ -201,19 +268,19 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                           <input
                             name="unit"
                             value={unit}
-                            readOnly={true}
+                            readOnly={!update}
                             type="text"
-                            onChange={(e) => onChangeInput(e, id)}
+                            onChange={(e) => onChangeInput(e, vid)}
                             placeholder=""
                           />
                         </td>
                         <td>
                           <input
-                            name="requestQuantity"
+                            name="receivedQuantity"
                             defaultValue={receivedQuantity}
-                            readOnly={true}
+                            readOnly={!update}
                             type="text"
-                            onChange={(e) => onChangeInput(e, id)}
+                            onChange={(e) => onChangeInput(e, vid)}
                             placeholder=""
                           />
                         </td>
@@ -226,8 +293,8 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                                 ? ' '
                                 : rowsPurchase[index].unitPrice
                             }
-                            readOnly={true}
-                            onChange={(e) => onChangeInput(e, id)}
+                            readOnly={!update}
+                            onChange={(e) => onChangeInput(e, vid)}
                             placeholder=""
                           />
                         </td>
@@ -240,7 +307,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                                 ? ''
                                 : Number(unitPrice * receivedQuantity)
                             }
-                            onChange={(e) => onChangeInput(e, id)}
+                            onChange={(e) => onChangeInput(e, vid)}
                             readOnly={true}
                             placeholder=""
                           />

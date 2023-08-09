@@ -24,13 +24,23 @@ const EditableTableWithDates = (props) => {
   }
   const orderTotal =
     data && data.length !== 0
-      ? data.reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
+      ? data
+          .filter((el) => el.quantity !== '' && el.quantity !== 0)
+          .reduce((a, b) => a + Number(b.quantity * b.times * b.price), 0)
       : 0
 
   const orderTotalDelivery =
     data && data.length !== 0
-      ? data.reduce((a, b) => a + Number(b.quantity * b.times * b.unitPrice), 0)
+      ? data
+          .filter((el) => el.quantity !== '' && el.quantity !== 0)
+          .reduce(
+            (a, b) =>
+              a +
+              Number(b.quantity * b.times * (b.price ? b.price : b.unitPrice)),
+            0,
+          )
       : 0
+
   const amountVAT =
     type !== 'delivery'
       ? Number((orderTotal * 18) / 118)
@@ -133,7 +143,7 @@ const EditableTableWithDates = (props) => {
               </td>
               <td style={{ borderBottom: 'none' }}>
                 <input
-                  name={type !== 'delivery' ? 'price' : 'unitPrice'}
+                  name={'price'}
                   type="text"
                   value={
                     priceHiden && (el.price || el.unitPrice)

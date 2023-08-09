@@ -18,7 +18,7 @@ import BackButton from 'src/components/Navigating/BackButton'
 import DeliveryFooter from '../../Printing/DeliveryFooter'
 import ReactDatePicker from 'react-datepicker'
 import EditableTable from 'src/components/EditableTable'
-import { initialRows } from 'src/utils/constants'
+import { initialRowsDelivery } from 'src/utils/constants'
 import {
   processObjects,
   removeObjectsWithEmptyProperties,
@@ -31,8 +31,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
   const clientData = watch('outside')
   const [hidePrice, setHidePrice] = useState(false)
   let [view, setView] = useState(false)
-  const [date, setDate] = useState(new Date())
-  let [requestItems, setRequestItems] = useState([...initialRows])
+  const date = watch('outside.date')
+  let [requestItems, setRequestItems] = useState([...initialRowsDelivery])
   const [created, setCreated] = useState({})
 
   const createDeliveryNote = async (data) => {
@@ -54,9 +54,9 @@ const DeliveryNote = React.forwardRef((props, ref) => {
     outsideData.total = orderTotal
     requestItems = processObjects(requestItems)
     requestItems = removeObjectsWithEmptyProperties(requestItems)
-    requestItems = requestItems.map((el) => ({ date: new Date(), ...el }))
-    data = { ...outsideData, details: requestItems, date }
-
+    requestItems = requestItems.map((el) => ({ ...el }))
+    data = { ...outsideData, details: requestItems }
+    console.log('data-delivery', data)
     createDeliveryNote({ ...data })
   }
 
@@ -228,15 +228,13 @@ const DeliveryNote = React.forwardRef((props, ref) => {
 
                     <CCol md={6}>
                       <CFormLabel htmlFor="date"> Date</CFormLabel>
-                      <ReactDatePicker
-                        className="form-control"
-                        timeFormat="p"
-                        selected={date}
-                        minDate={new Date()}
-                        dateFormat="dd/MM/yyyy"
-                        popperPlacement="bottom-end"
-                        onChange={(date) => setDate(date)}
-                        placeholderText="Select a date other than  yesterday"
+                      <CFormInput
+                        type="text"
+                        name="date"
+                        id="date"
+                        placeholder="...Date"
+                        required
+                        {...register('outside.date')}
                       />
                     </CCol>
                   </CRow>
@@ -273,8 +271,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
 
                         <p className="col my-0 d-flex justify-content-end ">
                           <span className="fw-bold border border-2 border-dark p-1">
-                            DATE :
-                            {date ? date.toLocaleDateString('fr-FR') : null}{' '}
+                            DATE :{date ? date : null}{' '}
                           </span>{' '}
                         </p>
                       </div>

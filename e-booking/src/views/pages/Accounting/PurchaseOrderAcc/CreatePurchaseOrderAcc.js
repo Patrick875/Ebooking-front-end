@@ -31,7 +31,7 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
   const VATconstant = 18
   const [view, setView] = useState(false)
   const [dates, setDates] = useState([])
-  const [date, setDate] = useState(new Date())
+  const date = watch('outside.date')
   const [created, setCreated] = useState({})
   const clearPurchaseOrder = () => {
     setRequestItems([])
@@ -72,7 +72,6 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
       details: requestItems,
       total: finalTotal,
       vatTotal: orderTotal,
-      date: date,
     }
     createPurchaseOrder(data)
   }
@@ -244,14 +243,13 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
                     </CCol>
                     <CCol md={6}>
                       <CFormLabel htmlFor="date"> Date </CFormLabel>
-                      <ReactDatePicker
-                        className="form-control"
-                        timeFormat="p"
-                        selected={date}
-                        dateFormat="dd/MM/yyyy"
-                        popperPlacement="bottom-end"
-                        onChange={(date) => setDate(date)}
-                        placeholderText="Select a date "
+                      <CFormInput
+                        type="text"
+                        name="Date"
+                        id="Date"
+                        placeholder="...Date"
+                        required
+                        {...register('outside.date')}
                       />
                     </CCol>
                   </CRow>
@@ -282,8 +280,7 @@ const CreatePurchaseOrderAcc = React.forwardRef((props, ref) => {
 
                         <p className="col my-0 d-flex justify-content-end ">
                           <span className="fw-bold border border-2 border-dark p-1">
-                            DATE :
-                            {date ? date.toLocaleDateString('fr-FR') : null}{' '}
+                            DATE :{date ? date : null}{' '}
                           </span>{' '}
                         </p>
                       </div>

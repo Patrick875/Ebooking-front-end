@@ -37,7 +37,7 @@ function InvoiceFooter(props) {
         </div>
         <div className="my-4">
           <p>
-            Done at GASABO-KICUKIRO,{' '}
+            Done at GASABO-KIMIRONKO,{' '}
             {request
               ? new Date(request.createdAt).toLocaleDateString('fr-FR')
               : new Date().toLocaleDateString('fr-FR')}

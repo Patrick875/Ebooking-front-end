@@ -202,29 +202,55 @@ const RoomCheckin = (props) => {
                 <div className="mb-4">
                   <CCardBody className="row">
                     <CCol md={6}>
-                      <div className=" col d-flex flex-row justify-content-between">
-                        <CFormLabel htmlFor="customer" className="d-block">
-                          {' '}
-                          Customer{' '}
-                        </CFormLabel>
-                        {customer && customer.length === 0 ? (
-                          <Link
-                            className="d-block text-decoration-none"
-                            onClick={() => setVisible(!visible)}
-                          >
-                            Create customer
-                          </Link>
-                        ) : null}
+                      <div>
+                        <div className=" col d-flex flex-row justify-content-between">
+                          <CFormLabel htmlFor="customer" className="d-block">
+                            {' '}
+                            Customer{' '}
+                          </CFormLabel>
+                          {customer && customer.length === 0 ? (
+                            <Link
+                              className="d-block text-decoration-none"
+                              onClick={() => setVisible(!visible)}
+                            >
+                              Create customer
+                            </Link>
+                          ) : null}
+                        </div>
+                        <Typeahead
+                          id="basic-typeahead-single"
+                          filterBy={['names']}
+                          labelKey="names"
+                          onChange={setCustomer}
+                          options={customers}
+                          placeholder="customer name ..."
+                          selected={customer}
+                        />
                       </div>
-                      <Typeahead
-                        id="basic-typeahead-single"
-                        filterBy={['names']}
-                        labelKey="names"
-                        onChange={setCustomer}
-                        options={customers}
-                        placeholder="customer name ..."
-                        selected={customer}
-                      />
+                      <div className="pt-2 mt-1">
+                        <CFormLabel htmlFor="affiliations">
+                          Affiliated to
+                        </CFormLabel>
+                        <CFormSelect
+                          name="affilation"
+                          id="affiliation"
+                          className="mb-3"
+                          {...register('affiliationId')}
+                        >
+                          <option></option>
+                          {customers && customers.length !== 0
+                            ? customers
+                                .filter(
+                                  (cust) => cust.customerType === 'company',
+                                )
+                                .map((com, i) => (
+                                  <option value={com.id} key={com.names + i}>
+                                    {com.names}
+                                  </option>
+                                ))
+                            : null}
+                        </CFormSelect>
+                      </div>
                     </CCol>
                     <CCol md={6} className="d-flex">
                       <div className="col">

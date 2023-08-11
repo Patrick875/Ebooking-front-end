@@ -17,7 +17,6 @@ import EditableTableWithDates from 'src/components/EditableTableWithDates'
 
 const ViewInvoice = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-
   const request = useSelector((state) => state.selection.selected)
   const role = useSelector((state) => state.auth.user.Role.name)
   const [open, setOpen] = useState(false)

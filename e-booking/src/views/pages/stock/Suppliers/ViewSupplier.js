@@ -12,17 +12,19 @@ import {
 } from '@coreui/react'
 import dayjs from 'dayjs'
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useState, useRef } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import { instance } from 'src/API/AxiosInstance'
+import ReactToPrint from 'react-to-print'
 import BackButton from 'src/components/Navigating/BackButton'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import Pagination from 'src/utils/Pagination'
 import { datesInRangeWithUnix } from 'src/utils/functions'
+import InvoiceHeader from '../../Printing/InvoiceHeader'
 
-function ViewSupplier() {
+const ViewSupplier = React.forwardRef((props, ref) => {
+  const componentRef = useRef()
   const { register, watch } = useForm()
   const time = watch('time')
   let stuff = []
@@ -80,16 +82,24 @@ function ViewSupplier() {
     <div>
       <div className="d-flex justify-content-between">
         <BackButton />
-        {selectedList ? (
-          <CButton
-            style={{ backgroundColor: 'black' }}
-            onClick={() => {
-              setSelectedList(false)
-            }}
-          >
-            Return to supply lists
-          </CButton>
-        ) : null}
+        <div className="d-flex gap-2">
+          <ReactToPrint
+            trigger={() => (
+              <button className="btn btn-ghost-primary">Print</button>
+            )}
+            content={() => ref || componentRef.current}
+          />
+          {selectedList ? (
+            <CButton
+              style={{ backgroundColor: 'black' }}
+              onClick={() => {
+                setSelectedList(false)
+              }}
+            >
+              Return to supply lists
+            </CButton>
+          ) : null}
+        </div>
       </div>
 
       <CCardBody>
@@ -125,75 +135,42 @@ function ViewSupplier() {
             ) : null}
           </div>
         </div>
-
-        <div className="my-3 p-3" style={{ border: '2px solid black' }}>
-          <div>
-            <div className="col my-0 py-0">
-              <p className="my-0 py-0">
-                {' '}
-                Name :
-                <span className="fw-bold "> {selectedSupplier.name} </span>
-              </p>
-              <p className="my-0 py-0">
-                {' '}
-                Tel :<span className="fw-bold ">{selectedSupplier.Tel}</span>
-              </p>
+        <div ref={ref || componentRef}>
+          <InvoiceHeader />
+          <div className="my-3 p-3" style={{ border: '2px solid black' }}>
+            <div>
+              <div className="col my-0 py-0">
+                <p className="my-0 py-0">
+                  {' '}
+                  Name :
+                  <span className="fw-bold "> {selectedSupplier.name} </span>
+                </p>
+                <p className="my-0 py-0">
+                  {' '}
+                  Tel :<span className="fw-bold ">{selectedSupplier.Tel}</span>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        {selectedList && Object.keys(selectedList).length !== 0 ? (
-          <CRow>
-            <p className="text-center fw-bold">
-              Supply list of{' '}
-              {new Date(selectedList.date).toLocaleDateString('fr-FR')}
-            </p>
-            <CTable>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Item name </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Quantity </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Price </CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {selectedList.SupplierListDetails &&
-                selectedList.SupplierListDetails.length !== 0
-                  ? selectedList.SupplierListDetails.map((el, i) => (
-                      <CTableRow
-                        onClick={() => {
-                          handleOnRowClick(el)
-                        }}
-                      >
-                        <CTableDataCell>{i + 1}</CTableDataCell>
-                        <CTableDataCell>
-                          {el.StockItemValue.StockItemNew.n}
-                        </CTableDataCell>
-                        <CTableDataCell>{el.quantity}</CTableDataCell>
-                        <CTableDataCell>
-                          {Number(el.price).toLocaleString()}
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))
-                  : null}
-              </CTableBody>
-            </CTable>
-          </CRow>
-        ) : null}
-        {!selectedList ? (
-          <CRow>
-            <div>
-              <CTable bordered>
+          {selectedList && Object.keys(selectedList).length !== 0 ? (
+            <CRow>
+              <p className="text-center fw-bold">
+                Items supplied on{' '}
+                {new Date(selectedList.date).toLocaleDateString('fr-FR')}
+              </p>
+              <CTable>
                 <CTableHead>
                   <CTableRow>
                     <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col"> Date </CTableHeaderCell>
-                    <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Item name </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Quantity </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Price </CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {availableLists && availableLists.length !== 0
-                    ? availableLists.map((el, i) => (
+                  {selectedList.SupplierListDetails &&
+                  selectedList.SupplierListDetails.length !== 0
+                    ? selectedList.SupplierListDetails.map((el, i) => (
                         <CTableRow
                           onClick={() => {
                             handleOnRowClick(el)
@@ -201,44 +178,78 @@ function ViewSupplier() {
                         >
                           <CTableDataCell>{i + 1}</CTableDataCell>
                           <CTableDataCell>
-                            {new Date(el.date).toLocaleDateString('fr-FR')}
+                            {el.StockItemValue.StockItemNew.n}
                           </CTableDataCell>
+                          <CTableDataCell>{el.quantity}</CTableDataCell>
                           <CTableDataCell>
-                            {Number(el.total).toLocaleString()}
+                            {Number(el.price).toLocaleString()}
                           </CTableDataCell>
                         </CTableRow>
                       ))
-                    : stuff.map((el, i) => (
-                        <CTableRow
-                          onClick={() => {
-                            handleOnRowClick(el)
-                          }}
-                        >
-                          <CTableDataCell>{i + 1}</CTableDataCell>
-                          <CTableDataCell>
-                            {new Date(el.date).toLocaleDateString('fr-FR')}
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {Number(el.total).toLocaleString()}
-                          </CTableDataCell>
-                        </CTableRow>
-                      ))}
+                    : null}
                 </CTableBody>
               </CTable>
-            </div>
-
-            {availableLists ? (
-              <Pagination
-                postsPerPage={perpage}
-                totalPosts={availableLists.length}
-                paginate={paginate}
-              />
-            ) : null}
-          </CRow>
+            </CRow>
+          ) : null}
+          {!selectedList ? (
+            <CRow>
+              <div>
+                <CTable bordered>
+                  <CTableHead>
+                    <CTableRow>
+                      <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                      <CTableHeaderCell scope="col"> Date </CTableHeaderCell>
+                      <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {availableLists && availableLists.length !== 0
+                      ? availableLists.map((el, i) => (
+                          <CTableRow
+                            onClick={() => {
+                              handleOnRowClick(el)
+                            }}
+                          >
+                            <CTableDataCell>{i + 1}</CTableDataCell>
+                            <CTableDataCell>
+                              {new Date(el.date).toLocaleDateString('fr-FR')}
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              {Number(el.total).toLocaleString()}
+                            </CTableDataCell>
+                          </CTableRow>
+                        ))
+                      : stuff.map((el, i) => (
+                          <CTableRow
+                            onClick={() => {
+                              handleOnRowClick(el)
+                            }}
+                          >
+                            <CTableDataCell>{i + 1}</CTableDataCell>
+                            <CTableDataCell>
+                              {new Date(el.date).toLocaleDateString('fr-FR')}
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              {Number(el.total).toLocaleString()}
+                            </CTableDataCell>
+                          </CTableRow>
+                        ))}
+                  </CTableBody>
+                </CTable>
+              </div>
+            </CRow>
+          ) : null}
+        </div>
+        {availableLists ? (
+          <Pagination
+            postsPerPage={perpage}
+            totalPosts={availableLists.length}
+            paginate={paginate}
+          />
         ) : null}
       </CCardBody>
     </div>
   )
-}
+})
 
 export default ViewSupplier

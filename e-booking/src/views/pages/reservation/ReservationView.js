@@ -12,6 +12,7 @@ import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import AddPaymentModal from './AddPaymentModal'
 import { MdDelete } from 'react-icons/md'
+import { MakeAvailable, PutOutOfOrder } from '../rooms/Buttons'
 
 const ReservationReceipt = (props) => {
   const reservation = props.reservation
@@ -33,6 +34,7 @@ const ReservationReceipt = (props) => {
         console.log('err', err)
       })
   }
+
   const removeVaucher = async (reservationId, billId) => {
     await instance
       .post('/services/vaucher/remove-from-reservation', {
@@ -234,17 +236,19 @@ const ReservationReceipt = (props) => {
                     reservation.CustomerBills.length !== 0
                       ? reservation.CustomerBills.map((el, i) => (
                           <div className="editableTable py-1" key={el.id}>
-                            <div
-                              type="button"
-                              className="d-flex justify-content-end my-0 py-0 align-items-center"
-                              onClick={() => {
-                                console.log('data', { reservation, el })
-                                return removeBill(reservation.id, el.id)
-                              }}
-                            >
-                              Remove
-                              <MdDelete className="text-danger py-0 my-0" />
-                            </div>
+                            {reservation.roomStatus !== 'occupied' ? null : (
+                              <div
+                                type="button"
+                                className="d-flex justify-content-end my-0 py-0 align-items-center"
+                                onClick={() => {
+                                  return removeBill(reservation.id, el.id)
+                                }}
+                              >
+                                Remove
+                                <MdDelete className="text-danger py-0 my-0" />
+                              </div>
+                            )}
+
                             <table>
                               <thead>
                                 <tr>
@@ -503,17 +507,14 @@ const ReservationReceipt = (props) => {
 const ReservationView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let reservation = useSelector((state) => state.selection.selected)
-  console.log('reservation', reservation)
   const [openModal, setOpenModal] = useState(false)
   const [result, setResult] = useState()
   const debt = reservation
     ? Number(reservation.grandTotal - reservation.payment['RWF'])
     : false
   const [openUpdate, setOpenUpdate] = useState(false)
-  const [updated, setUpdated] = useState(false)
-  // if (updated) {
-  //   reservation = { ...reservation, ...updated }
-  // }
+  const [setUpdated] = useState(false)
+
   const checkout = async () => {
     let newDatesIn = removeDatesAfterToday(
       reservation.DatesIns[reservation.DatesIns.length - 1].datesIn,
@@ -546,11 +547,22 @@ const ReservationView = React.forwardRef((props, ref) => {
   return (
     <CRow>
       <CCol xs={12}>
-        <div className="d-flex justify-content-between">
-          <BackButton />
-          <Link className="btn" to="/booking/room/addbill">
-            Add Bill
-          </Link>
+        <BackButton />
+        <div className="d-flex justify-content-end gap-2 bg-white">
+          {reservation.roomStatus !== 'occupied' ? null : (
+            <Link
+              className="nav-link button-new shadow-increase"
+              to="/booking/room/addbill"
+            >
+              Add Bill
+            </Link>
+          )}
+          {reservation.roomStatus !== 'occupied' &&
+          reservation.Room.status !== 'out of order' ? (
+            <PutOutOfOrder roomId={reservation.Room.id} />
+          ) : reservation.roomStatus === 'out of order' ? (
+            <MakeAvailable roomId={reservation.Room.id} />
+          ) : null}
         </div>
         <CCard className="mb-4">
           <CCardHeader>

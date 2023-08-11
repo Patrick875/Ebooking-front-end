@@ -22,7 +22,7 @@ function UpdateReservationDates(props) {
 
   let dates = []
   if (reservation.DatesIns.length !== 0) {
-    dates = reservation.DatesIns[reservation.DatesIns.length - 1].datesIn
+    dates = reservation.DatesIns.sort((a, b) => b.id - a.id)[0].datesIn
   }
 
   const [datesIn, setDatesIn] = useState([...dates])
@@ -42,6 +42,7 @@ function UpdateReservationDates(props) {
       .post('/reservation/updatedates', { ...submission })
       .then((res) => {
         toast.success(res.data.message)
+        console.log('res', res.data)
         setUpdated(res.data.data)
         setOpenUpdate(false)
       })

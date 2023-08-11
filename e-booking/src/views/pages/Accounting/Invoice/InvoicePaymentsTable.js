@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   CCol,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -28,8 +27,11 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import ReactDatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
+import InvoiceHeader from '../../Printing/InvoiceHeader'
+import ReactToPrint from 'react-to-print'
 
-function InvoicePaymentsTable() {
+const InvoicePaymentsTable = React.forwardRef((props, ref) => {
+  const componentRef = useRef()
   let [invoices, setInvoices] = useState([])
   const { register, watch } = useForm()
   let query = watch('query') || ''
@@ -108,7 +110,15 @@ function InvoicePaymentsTable() {
   }, [])
   return (
     <div>
-      <BackButton />
+      <div className="d-flex justify-content-between">
+        <BackButton />
+        <ReactToPrint
+          trigger={() => (
+            <button className="btn btn-ghost-primary">Print</button>
+          )}
+          content={() => ref || componentRef.current}
+        />
+      </div>
       <div className="col">
         <form>
           <CCol className="d-flex gap-2">
@@ -160,7 +170,8 @@ function InvoicePaymentsTable() {
           </CCol>
         </form>
       </div>
-      <div>
+      <div ref={ref || componentRef}>
+        <InvoiceHeader />
         <p className="text-center fw-bold text-uppercase">Invoice payments</p>
         <div>
           <CTable bordered>
@@ -248,17 +259,16 @@ function InvoicePaymentsTable() {
             </CTableBody>
           </CTable>
         </div>
-
-        {allInvoices.length !== 0 ? (
-          <Pagination
-            postsPerPage={perpage}
-            totalPosts={allInvoices.length}
-            paginate={paginate}
-          />
-        ) : null}
       </div>
+      {allInvoices.length !== 0 ? (
+        <Pagination
+          postsPerPage={perpage}
+          totalPosts={allInvoices.length}
+          paginate={paginate}
+        />
+      ) : null}
     </div>
   )
-}
+})
 
 export default InvoicePaymentsTable

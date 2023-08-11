@@ -13,13 +13,72 @@ import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { selectRoom } from 'src/redux/reservation/reservationActions'
-import { isRoomOccupied } from 'src/utils/functions'
+import { getRoomStatus, isRoomOccupied } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const role = useSelector((state) => state.auth.role)
   const [style, setStyle] = useState({ display: 'none' })
+
+  const getReservationStatus = (room, isOccupied) => {
+    if (Object.keys(isOccupied).length !== 0) {
+      const reservation = isOccupied.reservation
+
+      if (
+        reservation.status === 'confirmed' &&
+        reservation.roomStatus !== 'checked-out'
+      ) {
+        return 'OCCUPIED'
+      } else if (reservation.status !== 'confirmed') {
+        return 'Reserved'
+      } else if (
+        reservation.roomStatus === 'checked-out' &&
+        room.status !== 'out of order' &&
+        reservation.DatesIns.sort((a, b) => b.id - a.id)[0].datesIn.some(
+          (el) =>
+            new Date(el).toLocaleDateString('fr-FR') ===
+            new Date().toLocaleDateString('fr-FR'),
+        )
+      ) {
+        return 'Checked out'
+      }
+    }
+
+    return room.status === 'active' ? 'Available' : room.status
+  }
+
+  const getBackgroundColor = (room, isOccupied) => {
+    if (room.status === 'out of order') {
+      return 'red'
+    }
+
+    if (
+      Object.keys(isOccupied).length === 0 ||
+      !isOccupied.reservation.DatesIns.sort((a, b) => b.id - a.id)[0]
+        .datesIn.map((el) => new Date(el).toLocaleDateString('fr-FR'))
+        .includes(new Date().toLocaleDateString('fr-FR'))
+    ) {
+      return 'white'
+    }
+
+    if (
+      isOccupied.reservation &&
+      isOccupied.reservation.status !== 'confirmed'
+    ) {
+      return '#9400D3' // Dark violet
+    }
+
+    if (
+      isOccupied.reservation &&
+      isOccupied.reservation.roomStatus === 'checked-out'
+    ) {
+      return 'orange'
+    }
+
+    return 'green'
+  }
+
   const deleteRoom = async (id) => {
     await instance
       .delete(`/room/${id}`)
@@ -62,21 +121,19 @@ function RoomReportTable(props) {
                       .filter((room) => room.RoomClass.id === roomClass.id)
                       .map((room) => {
                         const isOccupied = isRoomOccupied(room)
+                        const reservationStatus = getReservationStatus(
+                          room,
+                          isOccupied,
+                        )
 
                         return (
                           <CTableRow
                             key={room.id}
                             style={{
-                              backgroundColor:
-                                Object.keys(isOccupied).length !== 0 &&
-                                isOccupied.reservation.roomStatus !==
-                                  'checked-out'
-                                  ? 'green'
-                                  : Object.keys(isOccupied).length !== 0 &&
-                                    isOccupied.reservation.roomStatus ===
-                                      'checked-out'
-                                  ? 'orange'
-                                  : 'white',
+                              backgroundColor: getBackgroundColor(
+                                room,
+                                isOccupied,
+                              ),
                             }}
                           >
                             <CTableHeaderCell
@@ -84,7 +141,16 @@ function RoomReportTable(props) {
                               onClick={() => {
                                 if (
                                   isOccupied &&
-                                  Object.keys(isOccupied).length !== 0
+                                  Object.keys(isOccupied).length !== 0 &&
+                                  isOccupied.reservation.DatesIns.sort(
+                                    (a, b) => b.id - a.id,
+                                  )[0]
+                                    .datesIn.map((el) =>
+                                      new Date(el).toLocaleDateString('fr-FR'),
+                                    )
+                                    .includes(
+                                      new Date().toLocaleDateString('fr-FR'),
+                                    )
                                 ) {
                                   dispatch(
                                     selectItem({
@@ -102,7 +168,17 @@ function RoomReportTable(props) {
                               {`#${room.name}`}
                             </CTableHeaderCell>
                             <CTableDataCell>
-                              {isOccupied && isOccupied.reservation
+                              {isOccupied &&
+                              isOccupied.reservation &&
+                              isOccupied.reservation.DatesIns.sort(
+                                (a, b) => b.id - a.id,
+                              )[0]
+                                .datesIn.map((el) =>
+                                  new Date(el).toLocaleDateString('fr-FR'),
+                                )
+                                .includes(
+                                  new Date().toLocaleDateString('fr-FR'),
+                                )
                                 ? isOccupied.reservation &&
                                   isOccupied.reservation.affiliation
                                   ? isOccupied.reservation.affiliation.names +
@@ -112,7 +188,17 @@ function RoomReportTable(props) {
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>
-                              {isOccupied && isOccupied.reservation
+                              {isOccupied &&
+                              isOccupied.reservation &&
+                              isOccupied.reservation.DatesIns.sort(
+                                (a, b) => b.id - a.id,
+                              )[0]
+                                .datesIn.map((el) =>
+                                  new Date(el).toLocaleDateString('fr-FR'),
+                                )
+                                .includes(
+                                  new Date().toLocaleDateString('fr-FR'),
+                                )
                                 ? new Date(
                                     isOccupied.reservation.DatesIns[
                                       isOccupied.reservation.DatesIns.length - 1
@@ -123,59 +209,30 @@ function RoomReportTable(props) {
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>
-                              {isOccupied && isOccupied.reservation
+                              {isOccupied &&
+                              isOccupied.reservation &&
+                              isOccupied.reservation.DatesIns.sort(
+                                (a, b) => b.id - a.id,
+                              )[0]
+                                .datesIn.map((el) =>
+                                  new Date(el).toLocaleDateString('fr-FR'),
+                                )
+                                .includes(
+                                  new Date().toLocaleDateString('fr-FR'),
+                                )
                                 ? new Date(
-                                    isOccupied.reservation.DatesIns[
-                                      isOccupied.reservation.DatesIns.length - 1
-                                    ].datesIn.sort(
-                                      (a, b) => new Date(a) - new Date(b),
-                                    )[
-                                      isOccupied.reservation.DatesIns[
-                                        isOccupied.reservation.DatesIns.length -
-                                          1
-                                      ].datesIn.length - 1
-                                    ],
+                                    isOccupied.reservation.DatesIns.sort(
+                                      (a, b) => b.id - a.id,
+                                    )[0].datesIn.sort(
+                                      (a, b) => new Date(b) - new Date(a),
+                                    )[0],
                                   ).toLocaleDateString('fr-FR')
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>
                             <CTableDataCell></CTableDataCell>
-                            <CTableDataCell
-                              className="d-flex gap-2"
-                              onMouseEnter={(e) => {
-                                setStyle({ display: 'block' })
-                              }}
-                              onMouseLeave={(e) => {
-                                setStyle({ display: 'none' })
-                              }}
-                            >
-                              {Object.keys(isOccupied).length !== 0 &&
-                              isOccupied.reservation.roomStatus !==
-                                'checked-out'
-                                ? 'OCCUPIED'
-                                : Object.keys(isOccupied).length !== 0 &&
-                                  isOccupied.reservation.roomStatus ===
-                                    'checked-out'
-                                ? 'Checkout today'
-                                : 'VACANT'}
-
-                              {role === 'admin' ? (
-                                <div style={style}>
-                                  <div
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => {
-                                      setRooms(
-                                        rooms.filter((el) =>
-                                          el !== room ? el : null,
-                                        ),
-                                      )
-                                      deleteRoom(room.id)
-                                    }}
-                                  >
-                                    Delete room
-                                  </div>
-                                </div>
-                              ) : null}
+                            <CTableDataCell className="d-flex gap-2">
+                              {reservationStatus}
                             </CTableDataCell>
                           </CTableRow>
                         )
@@ -190,3 +247,12 @@ function RoomReportTable(props) {
 }
 
 export default RoomReportTable
+
+// onClick={() => {
+//                                   setRooms(
+//                                     rooms.filter((el) =>
+//                                       el !== room ? el : null,
+//                                     ),
+//                                   )
+//                                   deleteRoom(room.id)
+//                                 }}

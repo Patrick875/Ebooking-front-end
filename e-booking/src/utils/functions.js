@@ -154,8 +154,6 @@ export function getRoomStatus(room) {
   }
 }
 
-// Output: [sequelizeDate1, sequelizeDate2, sequelizeDate3, ...]
-
 export function getAllDates(service) {
   return service.Reservations.map((reservation) => {
     const lastDateIns = reservation.DatesIns[reservation.DatesIns.length - 1]
@@ -278,13 +276,9 @@ export function isRoomOccupied(room) {
   const initialArray = []
 
   for (const reservation of room.Reservations) {
-    if (!reservation.roomStatus !== 'checked-out') {
-      for (const el of reservation.DatesIns[reservation.DatesIns.length - 1]
-        .datesIn) {
-        initialArray.push(new Date(el).toLocaleDateString('fr-FR'))
-      }
-    } else {
-      return {}
+    for (const el of reservation.DatesIns.sort((a, b) => b.id - a.id)[0]
+      .datesIn) {
+      initialArray.push(new Date(el).toLocaleDateString('fr-FR'))
     }
   }
 

@@ -8,7 +8,7 @@ const PrintFooterNoSignatures = (props) => {
       <p>
         Printed by {firstName} {lastName}
       </p>
-      <p>Printed on {new Date().toLocaleString()}</p>
+      <p>Printed on {new Date().toLocaleString('fr-FR')}</p>
     </div>
   )
 }

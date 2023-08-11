@@ -2,7 +2,10 @@
 
 
 .accounting{
-  color:black !important
+  color:black !important;
+  td{
+    border: solid black
+  }
 }
 .header-line{
   border-bottom: 1px solid black;
@@ -12,7 +15,29 @@
    flex-direction: column !important;
 }
 
+.event-sheet{
+  font-size: large;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.event-text{
+  font-size: large;
 
+  min-height: 8em;
+  background-color: transparent;
+  
+}
+
+.event-text-print{
+  @extend .event-text;
+  resize:none;
+  font-weight: bold;
+  border:none;
+  border-width: 0px;
+  outline: none;
+  min-height: 10em;
+
+}
 
 @media screen and (min-width : 1440px) {
   .App{

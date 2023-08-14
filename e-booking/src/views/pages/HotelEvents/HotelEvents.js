@@ -8,6 +8,7 @@ import { getEventDates } from 'src/utils/functions'
 import { useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { Link } from 'react-router-dom'
 
 function HotelEvents() {
   const [halls, setHalls] = useState([])
@@ -43,8 +44,8 @@ function HotelEvents() {
 
   const locationEvent = (el) => {
     return (
-      <div>
-        <p className="py-2 my-2 ">
+      <div className="py-0 my-0">
+        <p className="py-0 my-1 ">
           {daysEvents.filter(
             (ev) =>
               ev.location.trim().toLowerCase() === el.name.trim().toLowerCase(),
@@ -62,7 +63,7 @@ function HotelEvents() {
               )[0].function
             : ''}
         </p>
-        <p>
+        <p className="py-0">
           {daysEvents.filter(
             (ev) =>
               ev.location.trim().toLowerCase() === el.name.trim().toLowerCase(),
@@ -148,7 +149,7 @@ function HotelEvents() {
                   .map((el, i) => (
                     <CCard>
                       <CCardBody>
-                        <CCardTitle className="text-center fw-bold">
+                        <CCardTitle className="text-center fw-bold py">
                           {el.function}
                         </CCardTitle>
                         <CCardText className="text-center my-1 ">
@@ -163,7 +164,6 @@ function HotelEvents() {
                                     'Other',
                                 ).length !== 0
 
-                              console.log('events2020', events)
                               if (events) {
                                 dispatch(
                                   selectItem(
@@ -219,7 +219,7 @@ function HotelEvents() {
                     {el.name}
                   </CCardTitle>
                   <CCardText
-                    className="text-center my-1 "
+                    className="text-center my-0 py-0 "
                     onClick={() => {
                       navigate('/booking/events/view')
                       let events =
@@ -246,6 +246,31 @@ function HotelEvents() {
                   >
                     {locationEvent(el)}
                   </CCardText>
+                  <p className="py-0 my-0">
+                    {daysEvents.filter(
+                      (ev) =>
+                        ev.location.trim().toLowerCase() ===
+                        el.name.trim().toLowerCase(),
+                    ).length !== 0 ? (
+                      <Link
+                        to="/booking/events/event-sheet"
+                        className="nav-link text-center"
+                        onClick={() => {
+                          dispatch(
+                            selectItem(
+                              daysEvents.filter(
+                                (ev) =>
+                                  ev.location.trim().toLowerCase() ===
+                                  el.name.trim().toLowerCase(),
+                              )[0],
+                            ),
+                          )
+                        }}
+                      >
+                        Event Sheets
+                      </Link>
+                    ) : null}
+                  </p>
                   <div className=" col d-flex justify-content-center">
                     {addButton(el)}
                   </div>

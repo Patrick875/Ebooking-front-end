@@ -1,24 +1,22 @@
 import React, { useState } from 'react'
-import InvoiceHeader from '../Printing/InvoiceHeader'
 import { useSelector } from 'react-redux'
 import ReactToPrint from 'react-to-print'
 import { useRef } from 'react'
-import { useForm } from 'react-hook-form'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import ReactDatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
+import EventSheet from './EventSheet'
 
 const HotelEventSheet = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { register, watch } = useForm()
   const [startDate, setStartDate] = useState(new Date())
-  const details = watch('details') || ''
+  const [details, setDetails] = useState()
+  const getDetails = (details) => {
+    setDetails(details)
+  }
   const selectedEvent = useSelector((state) => state.selection.selected)
-  const user = useSelector(
-    (state) => state.auth.user.firstName + '  ' + state.auth.user.firstName,
-  )
-  const role = useSelector((state) => state.auth.role)
+
   const saveEventSheet = async () => {
     await instance
       .post('/events/event-sheet-add', {
@@ -37,7 +35,7 @@ const HotelEventSheet = React.forwardRef((props, ref) => {
   }
 
   return (
-    <div>
+    <div className="my-0 py-0">
       <div className="d-flex justify-content-between">
         <div className="d-flex gap-2 align-content-center my-2">
           <label className="text-center pt-2 fw-bold">Date</label>
@@ -73,52 +71,23 @@ const HotelEventSheet = React.forwardRef((props, ref) => {
 
       <div style={{ display: 'none' }}>
         <div ref={componentRef || ref}>
-          <InvoiceHeader />
-          <p className="text-center fs-5 fw-bold text-decoration-underline">
-            EVENT SHEET
-          </p>
-          <div className="event-sheet ms-2">
-            <p>company : {selectedEvent.customerName}</p>
-            <p>Date : {new Date().toLocaleDateString('fr-FR')}</p>
-            <p>function : {selectedEvent.function}</p>
-            <p>venue : {selectedEvent.location}</p>
-            <p>number of pax : {selectedEvent.pax}</p>
-          </div>
-          <div className="ms-2">
-            <p className="event-sheet text-decoration-underline">reservation</p>
-            <textarea className=" event-text-print col-8" value={details} />
-          </div>
-          <div className="event-sheet">
-            <p>Prepared by {user}</p>
-            <p> {role}</p>
-          </div>
-          Printed on: {new Date().toLocaleDateString('fr-FR')}
+          <EventSheet
+            selectedEvent={selectedEvent}
+            getDetails={getDetails}
+            printing={true}
+            update={{}}
+            edit={true}
+          />
         </div>
       </div>
       <div>
-        <InvoiceHeader />
-        <p className="text-center fs-5 fw-bold text-decoration-underline">
-          EVENT SHEET
-        </p>
-        <div className="event-sheet ms-2">
-          <p>company : {selectedEvent.customerName}</p>
-          <p>Date : {new Date().toLocaleDateString('fr-FR')}</p>
-          <p>function : {selectedEvent.function}</p>
-          <p>venue : {selectedEvent.location}</p>
-          <p>number of pax : {selectedEvent.pax}</p>
-        </div>
-        <div className="ms-2">
-          <p className="event-sheet text-decoration-underline">reservation</p>
-          <textarea
-            placeholder="Add details "
-            className=" event-text col-8"
-            {...register('details')}
-          />
-        </div>
-        <div className="event-sheet">
-          <p>Prepared by {user}</p>
-          <p> {role}</p>
-        </div>
+        <EventSheet
+          selectedEvent={selectedEvent}
+          getDetails={getDetails}
+          printing={false}
+          update={{}}
+          edit={true}
+        />
       </div>
     </div>
   )

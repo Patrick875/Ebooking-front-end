@@ -6,3 +6,9 @@ export const selectItem = (payload) => {
     payload,
   }
 }
+export const selectEventSheet = (payload) => {
+  return {
+    type: selectActionTypes.SELECT_EVENT_SHEET,
+    payload,
+  }
+}

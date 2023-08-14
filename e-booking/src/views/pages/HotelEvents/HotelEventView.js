@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 import EditableTableEvents from 'src/components/EditableTableEvents'
 import ReactDatePicker from 'react-datepicker'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const HotelEventView = (props) => {
   const selectedEvent = useSelector((state) => state.selection.selected)
@@ -84,6 +85,12 @@ const HotelEventView = (props) => {
             <div className="d-flex justify-content-end">
               {role === 'admin' || role === 'General Accountant' ? (
                 <div className="d-flex gap-2">
+                  <Link
+                    className="btn button-primary"
+                    to="/booking/events/event-sheet"
+                  >
+                    Event sheet{' '}
+                  </Link>
                   {!readOnly ? (
                     <button
                       className="btn btn-success"

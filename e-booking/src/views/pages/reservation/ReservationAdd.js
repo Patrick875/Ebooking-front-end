@@ -64,12 +64,8 @@ const ReservationAdd = (props) => {
   let priceHall = 0
   let priceRoom = 0
 
-  const type =
-    watch('booking_type') ||
-    'room' ||
-    (roomFromRoomClass && Object.keys(roomFromRoomClass).length !== 0)
-      ? 'room'
-      : null
+  const type = watch('booking_type') || 'room'
+  console.log('type', type)
   const additional = watch('additionalServices') || {}
   const roomK = watch('roomClass') || null
   const details = watch('details') || null

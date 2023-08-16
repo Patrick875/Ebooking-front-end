@@ -212,7 +212,12 @@ const ReservationReceipt = (props) => {
                                   ).toLocaleString() +
                                   'RWF'
                                 : reservation.Hall && reservation.Hall !== null
-                                ? Number(reservation.grandTotal)
+                                ? Number(
+                                    reservation.Hall.price *
+                                      reservation.DatesIns.sort(
+                                        (a, b) => b.id - a.id,
+                                      )[0].datesIn.length,
+                                  ).toLocaleString()
                                 : null
                             }
                           />
@@ -238,12 +243,18 @@ const ReservationReceipt = (props) => {
                             readOnly
                             placeholder=""
                             value={
-                              Number(reservation.amount.USD).toLocaleString() +
-                              'USD/' +
-                              Number(
-                                Math.round(reservation.amount.RWF),
-                              ).toLocaleString() +
-                              'RWF'
+                              reservation.Room
+                                ? Number(
+                                    reservation.amount.USD,
+                                  ).toLocaleString() +
+                                  'USD/' +
+                                  Number(
+                                    Math.round(reservation.amount.RWF),
+                                  ).toLocaleString() +
+                                  'RWF'
+                                : Number(
+                                    reservation.grandTotal,
+                                  ).toLocaleString() + ' RWF'
                             }
                           />
                         </td>

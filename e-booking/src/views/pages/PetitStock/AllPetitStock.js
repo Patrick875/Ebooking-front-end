@@ -8,7 +8,6 @@ import { selectPetitStock } from 'src/redux/Select/selectPetitStockActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { GrRestaurant } from 'react-icons/gr'
 import Lounge from './../../../assets/images/Lounge.png'
-import SwimmingPool from './../../../assets/images/Swimming-pool.png'
 import PoolBarIcon from './../../../assets/images/pool-bar-icon.png'
 function AllPetitStock(props) {
   const { selling, setStock } = props

@@ -12,10 +12,10 @@ import Pagination from 'src/utils/Pagination'
 import { useState } from 'react'
 
 function Transactions(props) {
-  const { setTransaction, setViewTransaction, myDates } = props
+  const { setTransaction, setViewTransaction, myDates, time } = props
   let { transactions } = props
   transactions =
-    myDates && myDates.length !== 0
+    time && time !== 'all-time' && myDates && myDates.length !== 0
       ? transactions.filter((el) =>
           myDates.includes(new Date(el.date).toLocaleDateString('fr-FR')),
         )

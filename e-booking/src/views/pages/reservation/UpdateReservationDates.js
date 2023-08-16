@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 
 import { instance } from 'src/API/AxiosInstance'
+import { filterDateDuplicates } from 'src/utils/functions'
 
 function UpdateReservationDates(props) {
   let { openUpdate, setOpenUpdate, setUpdated, reservation } = props
@@ -83,7 +84,11 @@ function UpdateReservationDates(props) {
                   highlightDates={datesIn}
                   minDate={new Date()}
                   dateFormat="dd/MM/yyyy"
-                  onChange={(date) => setDatesIn([...datesIn, new Date(date)])}
+                  onChange={(date) => {
+                    let newDates = [...datesIn, new Date(date)]
+                    newDates = filterDateDuplicates(newDates)
+                    setDatesIn([...newDates])
+                  }}
                   inline
                   placeholderText="Select a date other than  yesterday"
                 />

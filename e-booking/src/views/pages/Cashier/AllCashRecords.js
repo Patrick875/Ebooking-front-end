@@ -9,7 +9,6 @@ import {
   CTableRow,
 } from '@coreui/react'
 import InvoiceHeader from '../Printing/InvoiceHeader'
-import { getUTCDateWithoutHours } from 'src/utils/functions'
 
 const AllCashRecords = (props) => {
   let { transactions, time, myDates, startDate, endDate } = props
@@ -26,7 +25,9 @@ const AllCashRecords = (props) => {
     balance = debitTotal - creditTotal
   } else if (myDates && myDates.length !== 0) {
     transactions = transactions.filter((trans) => {
-      return myDates.includes(getUTCDateWithoutHours(trans.date)) ? trans : null
+      return myDates.includes(new Date(trans.date).toLocaleDateString('fr-FR'))
+        ? trans
+        : null
     })
 
     debitTotal = transactions

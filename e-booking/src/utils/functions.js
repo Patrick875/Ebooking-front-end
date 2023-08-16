@@ -156,7 +156,7 @@ export function getRoomStatus(room) {
 
 export function getAllDates(service) {
   return service.Reservations.map((reservation) => {
-    const lastDateIns = reservation.DatesIns[reservation.DatesIns.length - 1]
+    const lastDateIns = reservation.DatesIns.sort((a, b) => b.id - a.id)[0]
     return lastDateIns
       ? lastDateIns.datesIn.map((dateString) => parseISO(dateString))
       : []
@@ -259,7 +259,8 @@ export function processObjects(array) {
 
 export function filterDateDuplicates(dates) {
   // Get the date part of each date object.
-  const dateOnly = dates.map((date) => date.toDateString())
+  console.log(dates)
+  const dateOnly = dates.map((date) => new Date(date).toDateString())
 
   // Create a set of unique date strings.
   const uniqueDateStrings = new Set(dateOnly)

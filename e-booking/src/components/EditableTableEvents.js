@@ -7,11 +7,7 @@ const EditableTableEvents = (props) => {
   const onChangeInput = (e, id) => {
     const { name, value } = e.target
     const editData = data.map((item) =>
-      item.id === id && name
-        ? name === 'date'
-          ? { ...item, [name]: new Date(value).toLocaleDateString('fr-FR') }
-          : { ...item, [name]: value }
-        : item,
+      item.id === id && name ? { ...item, [name]: value } : item,
     )
 
     setData(editData)
@@ -45,17 +41,13 @@ const EditableTableEvents = (props) => {
           {[...data].map((el, i) => (
             <tr key={el.id}>
               <td style={{ borderBottom: 'none' }}>
-                <ReactDatePicker
-                  selected={
-                    el.date &&
-                    new Date(el.date).toLocaleDateString('fr-FR') !==
-                      'Invalid date'
-                      ? new Date(el.date)
-                      : ''
-                  }
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText=""
-                  onChange={(date) => onChangeInputDate(date, el.id)}
+                <input
+                  name="date"
+                  value={el.date}
+                  readOnly={readOnly}
+                  type="text"
+                  onChange={(e) => onChangeInput(e, el.id)}
+                  placeholder=""
                 />
               </td>
               <td style={{ borderBottom: 'none' }}>

@@ -6,7 +6,10 @@ import { Link, useLocation } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectPetitStock } from 'src/redux/Select/selectPetitStockActions'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { GrRestaurant } from 'react-icons/gr'
+import Lounge from './../../../assets/images/Lounge.png'
+import SwimmingPool from './../../../assets/images/Swimming-pool.png'
+import PoolBarIcon from './../../../assets/images/pool-bar-icon.png'
 function AllPetitStock(props) {
   const { selling, setStock } = props
   const [petitStock, setPetitStock] = useState([])
@@ -19,6 +22,7 @@ function AllPetitStock(props) {
         .get('/petit-stock/all')
         .then((res) => {
           setPetitStock(res.data.data)
+          console.log('petit-stocks', res.data.data)
         })
         .catch((err) => {
           console.log(err)
@@ -89,7 +93,25 @@ function AllPetitStock(props) {
                 }`}
               >
                 <div className="m-2">
-                  <FcIcons8Cup size="sm" />
+                  {item.name === 'Kitchen' ? (
+                    <GrRestaurant size="sm" />
+                  ) : item.name.trim().toLowerCase() === 'lounge bar' ? (
+                    <img
+                      alt="lounge bar icon"
+                      src={Lounge}
+                      width={102}
+                      height={124}
+                    />
+                  ) : item.name === 'Pool bar' ? (
+                    <img
+                      alt="swimming pool icon"
+                      src={PoolBarIcon}
+                      width={102}
+                      height={124}
+                    />
+                  ) : (
+                    <FcIcons8Cup size="sm" />
+                  )}
                 </div>
                 <p className="mt-2 text-capitalize ">{item.name}</p>
                 {selling ? (

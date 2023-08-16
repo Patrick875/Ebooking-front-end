@@ -18,6 +18,8 @@ const ReservationReceipt = (props) => {
   const reservation = props.reservation
   const navigate = useNavigate()
 
+  console.log('reservation', reservation)
+
   const removeBill = async (reservationId, billId) => {
     await instance
       .post('/customerbill/remove-from-reservation', {
@@ -145,7 +147,14 @@ const ReservationReceipt = (props) => {
                             readOnly
                             type="text"
                             placeholder=""
-                            value={'Room R#' + reservation.Room.name}
+                            value={
+                              'Room R#' + reservation.Room &&
+                              reservation.Room !== null
+                                ? reservation.Room.name
+                                : 'Hall' + reservation.Hall
+                                ? reservation.Hall.name
+                                : ''
+                            }
                           />
                         </td>
                         <td style={{ borderBottom: 'none' }}>
@@ -168,15 +177,21 @@ const ReservationReceipt = (props) => {
                             readOnly
                             placeholder=""
                             value={
-                              reservation.Room.RoomClass.price +
-                              'USD / ' +
-                              Number(
-                                reservation.amount.RWF /
-                                  reservation.DatesIns.sort(
-                                    (a, b) => b.id - a.id,
-                                  )[0].datesIn.length,
-                              ).toLocaleString() +
-                              'RWF'
+                              reservation.Room && reservation.Room.RoomClass
+                                ? reservation.Room.RoomClass.price +
+                                  'USD / ' +
+                                  Number(
+                                    reservation.amount.RWF /
+                                      reservation.DatesIns.sort(
+                                        (a, b) => b.id - a.id,
+                                      )[0].datesIn.length,
+                                  ).toLocaleString() +
+                                  'RWF'
+                                : reservation.Hall && reservation.Hall != null
+                                ? Number(
+                                    reservation.Hall.price,
+                                  ).toLocaleString()
+                                : null
                             }
                           />
                         </td>
@@ -187,10 +202,18 @@ const ReservationReceipt = (props) => {
                             readOnly
                             placeholder=""
                             value={
-                              Number(reservation.amount.USD).toLocaleString() +
-                              'USD/' +
-                              Number(reservation.amount.RWF).toLocaleString() +
-                              'RWF'
+                              reservation.Room && reservation.Room !== null
+                                ? Number(
+                                    reservation.amount.USD,
+                                  ).toLocaleString() +
+                                  'USD/' +
+                                  Number(
+                                    reservation.amount.RWF,
+                                  ).toLocaleString() +
+                                  'RWF'
+                                : reservation.Hall && reservation.Hall !== null
+                                ? Number(reservation.grandTotal)
+                                : null
                             }
                           />
                         </td>
@@ -549,7 +572,8 @@ const ReservationView = React.forwardRef((props, ref) => {
       <CCol xs={12}>
         <BackButton />
         <div className="d-flex justify-content-end gap-2 bg-white">
-          {reservation.roomStatus !== 'occupied' ? null : (
+          {reservation.roomStatus &&
+          reservation.roomStatus !== 'occupied' ? null : (
             <Link
               className="nav-link button-new shadow-increase"
               to="/booking/room/addbill"
@@ -557,10 +581,12 @@ const ReservationView = React.forwardRef((props, ref) => {
               Add Bill
             </Link>
           )}
-          {reservation.roomStatus !== 'occupied' &&
+          {reservation.roomStatus &&
+          reservation.roomStatus !== 'occupied' &&
           reservation.Room.status !== 'out of order' ? (
             <PutOutOfOrder roomId={reservation.Room.id} />
-          ) : reservation.roomStatus === 'out of order' ? (
+          ) : reservation.roomStatus &&
+            reservation.roomStatus === 'out of order' ? (
             <MakeAvailable roomId={reservation.Room.id} />
           ) : null}
         </div>

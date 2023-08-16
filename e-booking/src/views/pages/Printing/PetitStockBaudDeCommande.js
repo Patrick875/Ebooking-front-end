@@ -12,7 +12,7 @@ function PetitStockBaudDeCommande(props) {
         <span style={{ fontSize: '10px' }}>BON DE COMMANDE/</span>
         {petitStock}
       </p>
-      <table bordered>
+      <table bordered className="c-bill-table">
         <thead>
           <th> Item </th>
           <th> P.U </th>

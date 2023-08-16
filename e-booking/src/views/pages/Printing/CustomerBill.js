@@ -1,7 +1,7 @@
 import React from 'react'
 
 function CustomerBill(props) {
-  const { user, orderItems, table, results, total } = props
+  const { user, orderItems, table, results, total, cbId } = props
   return (
     <div
       className="cool"
@@ -17,17 +17,21 @@ function CustomerBill(props) {
       <p className="my-0 py-0 ">KIMIRONKO-KIGALI</p>
       <p className="my-0 py-0 ">TEL:+250783103500</p>
       <p className="my-0 py-0 ">TIN:102556009</p>
+
       <p>{new Date().toLocaleString()}</p>
-      <p className="text-center my-1" style={{ fontSize: '10px' }}>
+      <p
+        className="text-center my-1"
+        style={{ fontSize: '14px', color: 'black' }}
+      >
         {' '}
         CUSTOMER BILL{' '}
       </p>
-      <table bordered>
+      <table bordered className="c-bill-table">
         <thead>
-          <th> Item </th>
-          <th> P.U </th>
-          <th> Qty </th>
-          <th> Amount </th>
+          <th className="px-1"> Item </th>
+          <th className="px-1"> P.U </th>
+          <th className="px-1"> Qty </th>
+          <th className="px-1"> Amount </th>
         </thead>
         <tbody>
           {orderItems && orderItems.length !== 0 ? (
@@ -50,7 +54,7 @@ function CustomerBill(props) {
           )}
           <tr>
             <td />
-            <td className="px-1" colSpan={3}>
+            <td className="px-1" colSpan={2}>
               TOTAL
             </td>
             <td className="px-1">{total}</td>

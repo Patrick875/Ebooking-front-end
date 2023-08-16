@@ -3,7 +3,6 @@ import {
   CCardHeader,
   CCol,
   CFormInput,
-  CFormSelect,
   CRow,
   CTable,
   CTableBody,
@@ -30,7 +29,7 @@ import { FcKey } from 'react-icons/fc'
 import { logout } from 'src/redux/Auth/authActions'
 
 const ProductSell = React.forwardRef((props, ref) => {
-  const { register, setValue, getValues, watch } = useForm()
+  const { register, setValue, getValues, reset, watch } = useForm()
   let query = watch('query')
   const user = useSelector(
     (state) => state.auth.user.firstName + ' ' + state.auth.user.lastName,
@@ -70,14 +69,24 @@ const ProductSell = React.forwardRef((props, ref) => {
     setValue(`result${selectedInput}`, parseInt(newValue))
   }
 
+  // const clearItems = () => {
+  //   setOrderItems([])
+  //   setResults([])
+  //   if (results.length !== 0) {
+  //     for (let y = 1; y <= results.length; y++) {
+  //       setValue(`result${y}`, '', false)
+  //       setResults(Array(10).fill(''))
+  //       setOrderItems([])
+  //     }
+  //   }
+  // }
+
   const clearItems = () => {
-    if (results.length !== 0) {
-      for (let y = 1; y <= results.length; y++) {
-        setValue(`result${y}`, '', false)
-        setResults(Array(10).fill(''))
-        setOrderItems([])
-      }
-    }
+    reset()
+    const data = getValues()
+    console.log('data-values', data)
+    setResults(Array(10).fill(''))
+    setOrderItems([])
   }
 
   const backspace = () => {
@@ -185,7 +194,8 @@ const ProductSell = React.forwardRef((props, ref) => {
     if (table) {
       await instance
         .post('/products/package/sell', { packages: packages, table: table })
-        .then(() => {
+        .then((res) => {
+          console.log('res', res.data)
           toast.success('Order created')
           setTable([])
           setOrderState(true)
@@ -317,7 +327,7 @@ const ProductSell = React.forwardRef((props, ref) => {
                 <button
                   className="btn btn-ghost-danger"
                   onClick={() => {
-                    return setOrderItems([])
+                    return clearItems()
                   }}
                 >
                   Clear

@@ -442,43 +442,6 @@ const ReservationAdd = (props) => {
                       </CCol>
                     </CRow>
 
-                    {type && type === 'hall' ? (
-                      <div className="row my-2 text-center">
-                        <div>
-                          <CFormLabel htmlFor="additionalServices">
-                            Additional products and services
-                          </CFormLabel>
-                        </div>
-                        <div>
-                          <div className="d-flex flex-row justify-content-around my-2">
-                            <div>
-                              {hallServices && hallServices.length !== 0
-                                ? hallServices.map((hallService, i) => (
-                                    <div className="d-flex flex-row">
-                                      <CFormCheck
-                                        id={`service ${i + 1}`}
-                                        value={hallService.price}
-                                        label={
-                                          hallService.name.split(',')[0] +
-                                          ' ' +
-                                          hallService.price +
-                                          ' RWF'
-                                        }
-                                        {...register(
-                                          `additionalServices.${
-                                            hallService.name.split(',')[0]
-                                          }`,
-                                        )}
-                                      />
-                                    </div>
-                                  ))
-                                : null}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-
                     {type &&
                     type === 'room' &&
                     customer &&

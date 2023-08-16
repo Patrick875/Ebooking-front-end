@@ -2,6 +2,7 @@ import CreateHotelEvent from './CreateHotelEvent'
 import HotelEventSheet from './HotelEventSheet'
 import HotelEventView from './HotelEventView'
 import HotelEvents from './HotelEvents'
+import ViewEventSheets from './ViewEventSheets'
 
 export const hotelEventRoutes = [
   {
@@ -27,6 +28,6 @@ export const hotelEventRoutes = [
     path: 'booking/events/event-sheet',
     exact: true,
     name: 'View Event Sheet',
-    element: HotelEventSheet,
+    element: ViewEventSheets,
   },
 ]

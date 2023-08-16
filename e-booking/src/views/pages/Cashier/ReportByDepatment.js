@@ -1,5 +1,4 @@
 import React from 'react'
-import { getUTCDateWithoutHours } from 'src/utils/functions'
 import InvoiceHeader from '../Printing/InvoiceHeader'
 
 const {
@@ -35,7 +34,10 @@ const ReportByDepatment = (props) => {
     balance = debitTotal - creditTotal
   } else if (myDates && myDates.length !== 0) {
     transactions = transactions.filter((trans) => {
-      return myDates.includes(getUTCDateWithoutHours(trans.date)) ? trans : null
+      console.log('my-dates', myDates)
+      return myDates.includes(new Date(trans.date).toLocaleDateString('fr-FR'))
+        ? trans
+        : null
     })
 
     debitTotal = transactions

@@ -189,6 +189,14 @@ src: url("./../fonts/customFont/castorotitling-regular1-webfont.woff") format("w
   grid-row-gap: 1.45em;
   grid-column-gap: 1.45em;
 }
+.event-sheets{
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap:1.25em;
+  margin-bottom:1em;
+  padding:0
+}
 .event-view{
   .dates{
     input{

@@ -287,7 +287,9 @@ const Reservation = (props) => {
                                 return handleOnRowClick(reserv)
                               }}
                             >
-                              {reserv.Customer.names}{' '}
+                              {reserv.Customer?.givenname +
+                                ' ' +
+                                reserv.Customer?.surname}{' '}
                             </p>{' '}
                             {Number(reserv.amount['RWF']) >
                             Number(reserv.payment['RWF']) ? (

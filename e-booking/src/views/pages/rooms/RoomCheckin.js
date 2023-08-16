@@ -12,7 +12,6 @@ import {
   CFormLabel,
   CFormSelect,
   CRow,
-  CFormCheck,
   CModal,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
@@ -23,7 +22,6 @@ import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import CustomerAdd from '../Customer/CustomerAdd'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { MakeAvailable, PutOutOfOrder } from './Buttons'
 
 const CreateCustomerModal = (props) => {

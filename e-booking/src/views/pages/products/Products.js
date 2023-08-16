@@ -121,6 +121,7 @@ const Products = () => {
           return 0
         })
       : products
+  console.log('all products', products)
   const deleteProduct = async (id) => {
     await instance.delete(`/products/delete/${id}`).then(() => {
       toast.success('product deleted!!!!')

@@ -12,10 +12,19 @@ import Pagination from 'src/utils/Pagination'
 import { useState } from 'react'
 
 function Transactions(props) {
-  const { transactions, setTransaction, setViewTransaction } = props
+  const { setTransaction, setViewTransaction, myDates } = props
+  let { transactions } = props
+  transactions =
+    myDates && myDates.length !== 0
+      ? transactions.filter((el) =>
+          myDates.includes(new Date(el.date).toLocaleDateString('fr-FR')),
+        )
+      : transactions
+
   const perpage = 30
   const [currentPage, setCurrentPage] = useState(1)
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
+
   return (
     <div>
       {' '}

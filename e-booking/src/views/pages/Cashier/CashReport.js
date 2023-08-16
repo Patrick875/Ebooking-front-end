@@ -54,7 +54,6 @@ const CashReport = React.forwardRef((props, ref) => {
       await instance.get('/cashflow/all').then((res) => {
         if (res && res.data && res.data.data) {
           setTransactions(res.data.data)
-          console.log('transactions', res.data.data)
         }
       })
     }
@@ -202,6 +201,10 @@ const CashReport = React.forwardRef((props, ref) => {
               transactions={transactions}
               setViewTransaction={setViewTransaction}
               setTransaction={setTransaction}
+              startDate={startDate}
+              endDate={endDate}
+              time={time}
+              myDates={myDates}
             />
           )
         ) : (

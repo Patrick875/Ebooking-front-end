@@ -25,9 +25,7 @@ function PetitStockBaudDeCommande(props) {
             orderItems.map((item, index) => (
               <tr>
                 <td scope="row">{index + 1}</td>
-                <td className="px-1">
-                  {item.name + ' of ' + item.productName}
-                </td>
+                <td className="px-1">{item.productName}</td>
                 <td className="px-1">
                   {Number(item.ProductPackage.price).toLocaleString()}
                 </td>

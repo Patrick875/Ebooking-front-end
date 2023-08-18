@@ -74,9 +74,9 @@ const HotelEventSheet = React.forwardRef((props, ref) => {
           <EventSheet
             selectedEvent={selectedEvent}
             getDetails={getDetails}
+            detailsPrint={details}
             printing={true}
-            update={{}}
-            edit={true}
+            edit={false}
           />
         </div>
       </div>

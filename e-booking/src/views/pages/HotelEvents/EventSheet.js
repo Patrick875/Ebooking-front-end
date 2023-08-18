@@ -3,8 +3,14 @@ import InvoiceHeader from '../Printing/InvoiceHeader'
 import { useSelector } from 'react-redux'
 
 function EventSheet(props) {
-  const { selectedEvent, getDetails, printing, eventSheet, edit, update } =
-    props
+  const {
+    selectedEvent,
+    getDetails,
+    printing,
+    eventSheet,
+    edit,
+    detailsPrint,
+  } = props
   const user = useSelector(
     (state) => state.auth.user.firstName + '  ' + state.auth.user.firstName,
   )
@@ -15,12 +21,26 @@ function EventSheet(props) {
     const { value } = e.target
     setDetails(value)
   }
-  if (eventSheet) {
-    console.log('event sheet', eventSheet)
+  const allowTabsInTextField = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault() // Prevent the default tab behavior
+
+      const target = e.target
+      const start = target.selectionStart
+      const end = target.selectionEnd
+
+      // Insert a tab character at the cursor position
+      target.value =
+        target.value.substring(0, start) + '\t' + target.value.substring(end)
+
+      // Move the cursor position to after the inserted tab
+      target.selectionStart = target.selectionEnd = start + 1
+    }
   }
+
   useEffect(() => {
     getDetails(details)
-  }, [details, getDetails, eventSheet])
+  }, [details, getDetails])
   return (
     <div>
       <InvoiceHeader />
@@ -47,8 +67,19 @@ function EventSheet(props) {
           onChange={(e) => {
             onDetailsChange(e)
           }}
+          onKeyDown={(e) => {
+            return allowTabsInTextField(e)
+          }}
           readOnly={!edit}
-          value={edit ? details : eventSheet ? eventSheet.details : details}
+          value={
+            edit
+              ? details
+              : eventSheet
+              ? eventSheet.details
+              : !edit && detailsPrint
+              ? detailsPrint
+              : details
+          }
         />
       </div>
       <div className="event-sheet">

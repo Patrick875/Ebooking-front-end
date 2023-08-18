@@ -7,10 +7,18 @@ const Reservation = (props) => {
     <CTableRow key={reserv.id}>
       <CTableHeaderCell scope="row">{reserv.Customer.names}</CTableHeaderCell>
       <CTableDataCell>
-        {new Date(reserv.checkIn).toLocaleDateString('fr-FR')}
+        {new Date(
+          reserv.DatesIns.sort((a, b) => a.id - b.id)[0].datesIn.sort(
+            (a, b) => new Date(a) - new Date(b),
+          )[0],
+        ).toLocaleDateString('fr-FR')}
       </CTableDataCell>
       <CTableDataCell>
-        {new Date(reserv.checkOut).toLocaleDateString('fr-FR')}
+        {new Date(
+          reserv.DatesIns.sort((a, b) => b.id - a.id)[0].datesIn.sort(
+            (a, b) => new Date(b) - new Date(a),
+          )[0],
+        ).toLocaleDateString('fr-FR')}
       </CTableDataCell>
       <CTableDataCell>
         {reserv.details ? (

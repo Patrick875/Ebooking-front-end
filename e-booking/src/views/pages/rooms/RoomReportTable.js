@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { selectRoom } from 'src/redux/reservation/reservationActions'
-import { getRoomStatus, isRoomOccupied } from 'src/utils/functions'
+import { isRoomOccupied } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
   const navigate = useNavigate()
@@ -98,7 +98,6 @@ function RoomReportTable(props) {
           <CTableHeaderCell scope="col">Date in</CTableHeaderCell>
           <CTableHeaderCell scope="col">Date out</CTableHeaderCell>
           <CTableHeaderCell scope="col">Room rate</CTableHeaderCell>
-          <CTableHeaderCell scope="col">Company</CTableHeaderCell>
           <CTableHeaderCell scope="col">Status</CTableHeaderCell>
         </CTableRow>
       </CTableHead>
@@ -140,6 +139,7 @@ function RoomReportTable(props) {
                               className="d-flex  gap-2"
                               onClick={() => {
                                 if (
+                                  reservationStatus !== 'Checked out' &&
                                   isOccupied &&
                                   Object.keys(isOccupied).length !== 0 &&
                                   isOccupied.reservation.DatesIns.sort(
@@ -170,6 +170,7 @@ function RoomReportTable(props) {
                             <CTableDataCell>
                               {isOccupied &&
                               isOccupied.reservation &&
+                              reservationStatus !== 'Checked out' &&
                               isOccupied.reservation.DatesIns.sort(
                                 (a, b) => b.id - a.id,
                               )[0]
@@ -190,6 +191,7 @@ function RoomReportTable(props) {
                             <CTableDataCell>
                               {isOccupied &&
                               isOccupied.reservation &&
+                              reservationStatus !== 'Checked out' &&
                               isOccupied.reservation.DatesIns.sort(
                                 (a, b) => b.id - a.id,
                               )[0]
@@ -211,6 +213,7 @@ function RoomReportTable(props) {
                             <CTableDataCell>
                               {isOccupied &&
                               isOccupied.reservation &&
+                              reservationStatus !== 'Checked out' &&
                               isOccupied.reservation.DatesIns.sort(
                                 (a, b) => b.id - a.id,
                               )[0]
@@ -230,7 +233,6 @@ function RoomReportTable(props) {
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>{`${roomClass.price} USD`}</CTableDataCell>
-                            <CTableDataCell></CTableDataCell>
                             <CTableDataCell className="d-flex gap-2">
                               {reservationStatus}
                             </CTableDataCell>

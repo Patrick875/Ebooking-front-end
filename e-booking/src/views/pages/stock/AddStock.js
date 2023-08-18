@@ -94,7 +94,7 @@ const AddStock = React.forwardRef((props, ref) => {
         console.log('err', err)
       })
   }
-
+  console.log('order', order)
   purchaseOrders = sortingWithDates(purchaseOrders)
   props = { ...props }
   props.renderMenuItemChildren = (option, { text }) => (
@@ -181,13 +181,17 @@ const AddStock = React.forwardRef((props, ref) => {
             ) : null}
 
             {itemsFrom === 'purchased' && order && order.length !== 0 ? (
-              <CButton
-                component="input"
-                value="Submit voucher"
-                onClick={() => {
-                  return onAddItemToStock(receivedItems)
-                }}
-              />
+              order[0].added === 'added' ? (
+                <p className="text-uppercase fw-bold text-danger">Added </p>
+              ) : (
+                <CButton
+                  component="input"
+                  value="Submit voucher"
+                  onClick={() => {
+                    return onAddItemToStock(receivedItems)
+                  }}
+                />
+              )
             ) : null}
             {itemsFrom === 'supplier' &&
             selectedSupplier &&
@@ -196,7 +200,6 @@ const AddStock = React.forwardRef((props, ref) => {
                 component="input"
                 value="Submit"
                 onClick={async () => {
-                  console.log('supply', supply)
                   const total = supply
                     .filter((el) => el.quantity !== '')
                     .reduce((a, b) => a + Number(b.quantity * b.price), 0)

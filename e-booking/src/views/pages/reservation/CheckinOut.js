@@ -88,7 +88,7 @@ const CheckinOut = (props) => {
   const days = Math.ceil(time / (1000 * 3600 * 24)) || 1
 
   let totalPrice = []
-
+  const [localExchangeRate, setLocalExchangeRate] = useState(0)
   const removeDates =
     service && service.length !== 0 ? getAllDates(service[0]) : []
   const [reload, setReload] = useState()
@@ -156,14 +156,22 @@ const CheckinOut = (props) => {
     reset()
     setDatesIn([])
   }
+  const getCurrencyRates = async () => {
+    await instance.get('/currency/rate').then((res) => {
+      if (res && res.data && res.data.data) {
+        setApiCurrencies([...res.data.data])
+      }
+      if (apicurrencies.length !== 0) {
+        setLocalExchangeRate(
+          apicurrencies.filter((el) => el.name === 'RWF')[0].rate,
+        )
+      }
+    })
+  }
+  if (apicurrencies.length === 0) {
+    getCurrencyRates()
+  }
   useEffect(() => {
-    const getCurrencyRates = async () => {
-      await instance.get('/currency/rate').then((res) => {
-        if (res && res.data && res.data.data) {
-          setApiCurrencies([...apicurrencies, res.data.data])
-        }
-      })
-    }
     const getCustomers = async () => {
       await instance
         .get('/customers/all')
@@ -346,30 +354,39 @@ const CheckinOut = (props) => {
                             selected={service}
                           />
                         )}
-                        <div className="pt-2 mt-1">
-                          <CFormLabel htmlFor="affiliations">
-                            Affiliated to
-                          </CFormLabel>
-                          <CFormSelect
-                            name="affilation"
-                            id="affiliation"
-                            className="mb-3"
-                            {...register('affiliationId')}
-                          >
-                            <option></option>
-                            {customers && customers.length !== 0
-                              ? customers
-                                  .filter(
-                                    (cust) => cust.customerType === 'company',
-                                  )
-                                  .map((com, i) => (
-                                    <option value={com.id} key={com.names + i}>
-                                      {com.names}
-                                    </option>
-                                  ))
-                              : null}
-                          </CFormSelect>
-                        </div>
+                        {type &&
+                        type === 'room' &&
+                        customer &&
+                        customer.length !== 0 &&
+                        customer[0].customerType !== 'company' ? (
+                          <div className="pt-2 mt-1">
+                            <CFormLabel htmlFor="affiliations">
+                              Affiliated to
+                            </CFormLabel>
+                            <CFormSelect
+                              name="affilation"
+                              id="affiliation"
+                              className="mb-3"
+                              {...register('affiliationId')}
+                            >
+                              <option></option>
+                              {customers && customers.length !== 0
+                                ? customers
+                                    .filter(
+                                      (cust) => cust.customerType === 'company',
+                                    )
+                                    .map((com, i) => (
+                                      <option
+                                        value={com.id}
+                                        key={com.names + i}
+                                      >
+                                        {com.names}
+                                      </option>
+                                    ))
+                                : null}
+                            </CFormSelect>
+                          </div>
+                        ) : null}
                       </CCol>
 
                       <CCol md={6} className="d-flex">
@@ -420,135 +437,32 @@ const CheckinOut = (props) => {
                         ) : null}
                       </CCol>
                     </CRow>
-                    {type && type === 'hall' ? (
-                      <div className="row my-2 text-center">
-                        <div>
-                          <CFormLabel htmlFor="additionalServices">
-                            Additional products and services
-                          </CFormLabel>
-                        </div>
-                        <div>
-                          <div className="d-flex flex-row justify-content-around my-2">
-                            <div>
-                              {hallServices && hallServices.length !== 0
-                                ? hallServices.map((hallService, i) => (
-                                    <div className="d-flex flex-row">
-                                      <CFormCheck
-                                        id={`service ${i + 1}`}
-                                        value={hallService.price}
-                                        label={
-                                          hallService.name.split(',')[0] +
-                                          ' ' +
-                                          hallService.price +
-                                          ' RWF'
-                                        }
-                                        {...register(
-                                          `additionalServices.${
-                                            hallService.name.split(',')[0]
-                                          }`,
-                                        )}
-                                      />
-                                    </div>
-                                  ))
-                                : null}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {type &&
-                    type === 'room' &&
-                    customer &&
-                    customer.length !== 0 &&
-                    customer[0].customerType !== 'company' ? (
-                      <div className="row my-2 text-center">
-                        <div>
-                          <CFormLabel htmlFor="additionalInfo">
-                            Additional Info
-                          </CFormLabel>
-                        </div>
-                        <div>
-                          <div className="d-flex flex-row justify-content-around my-2">
-                            <div>
-                              <CFormInput
-                                type="text"
-                                id="adults_number"
-                                label="Adults number"
-                                {...register('adults_number')}
-                              />
-                            </div>
-                            <div>
-                              <CFormInput
-                                type="text"
-                                id="adults_number"
-                                label="Children number"
-                                {...register('children_number')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-
-                    <CRow>
-                      {customer &&
-                      customer.length !== 0 &&
-                      customer[0].customerType === 'company' &&
-                      type &&
-                      type === 'room'
-                        ? RoomClasses && RoomClasses.length !== 0
-                          ? RoomClasses.map((roomClass) => (
-                              <CCol md={6}>
-                                {roomClass.name}
-                                <CFormInput
-                                  type="number"
-                                  min={0}
-                                  id={`"number of people" for ${roomClass.name}`}
-                                  {...register(
-                                    `details.${roomClass.name}.people`,
-                                  )}
-                                />
-                              </CCol>
-                            ))
-                          : null
-                        : null}
-                    </CRow>
 
                     <div className="d-flex flex-row my-2 ">
                       <strong> Total </strong>
                       <p className="mx-2">
-                        {type === 'room' && !details
-                          ? type === 'room' && service.length !== 0
-                            ? Number(priceRoom) * datesIn.length +
-                              '  USD  /  ' +
-                              Number(
-                                apicurrencies[0].filter(
-                                  (el) => el.name === 'RWF',
-                                )[0].rate *
-                                  Number(priceRoom) *
-                                  datesIn.length,
-                              ).toLocaleString() +
-                              ' RWF'
-                            : Number(priceRoom) + '  USD'
-                          : ''}
-                        {type === 'hall'
-                          ? type === 'hall' && service.length !== 0
-                            ? Number(priceHall) * datesIn.length +
-                              additionalServicesTotal +
-                              '  RWF'
-                            : additionalServicesTotal + '  RWF'
-                          : ''}
+                        {datesIn.length !== 0
+                          ? Number(priceRoom) * datesIn.length +
+                            '  USD  /  ' +
+                            Number(
+                              localExchangeRate *
+                                Number(priceRoom) *
+                                datesIn.length,
+                            ).toLocaleString() +
+                            ' RWF'
+                          : Number(priceRoom) + '  USD'}
                       </p>
                       {details && type === 'room' ? (
                         <p>
                           {' '}
-                          {totalPrice.toLocaleString()} USD RWF /{'  '}
+                          {Number(
+                            datesIn.length * totalPrice,
+                          ).toLocaleString()}{' '}
+                          USD RWF /{'  '}
                           {apicurrencies && apicurrencies.length !== 0
                             ? Number(
-                                apicurrencies[0].filter(
-                                  (el) => el.name === 'RWF',
-                                )[0].rate * totalPrice,
+                                localExchangeRate *
+                                  Number(datesIn.length * totalPrice),
                               ).toLocaleString()
                             : null}{' '}
                           RWF

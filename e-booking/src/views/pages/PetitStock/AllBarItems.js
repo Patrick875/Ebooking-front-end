@@ -42,7 +42,7 @@ function AllBarItems() {
         toast.success('Petit stock ctivated successfully')
       })
       .catch((err) => {
-        console.log('error activating petit stock')
+        console.log('error activating petit stock', err)
       })
   }
   return (
@@ -114,7 +114,9 @@ function AllBarItems() {
               {petitStock &&
               petitStock.PetitStockItems &&
               petitStock.PetitStockItems.length !== 0
-                ? petitStock.PetitStockItems.map((item, i) => {
+                ? petitStock.PetitStockItems.sort((a, b) =>
+                    a.StockItemNew.name.localeCompare(b.StockItemNew.name),
+                  ).map((item, i) => {
                     return (
                       <CTableRow key={item.id}>
                         <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>

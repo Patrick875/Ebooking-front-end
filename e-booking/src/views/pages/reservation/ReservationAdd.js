@@ -365,30 +365,39 @@ const ReservationAdd = (props) => {
                             selected={service}
                           />
                         )}
-                        <div className="pt-2 mt-1">
-                          <CFormLabel htmlFor="affiliations">
-                            Affiliated to
-                          </CFormLabel>
-                          <CFormSelect
-                            name="affilation"
-                            id="affiliation"
-                            className="mb-3"
-                            {...register('affiliationId')}
-                          >
-                            <option></option>
-                            {customers && customers.length !== 0
-                              ? customers
-                                  .filter(
-                                    (cust) => cust.customerType === 'company',
-                                  )
-                                  .map((com, i) => (
-                                    <option value={com.id} key={com.names + i}>
-                                      {com.names}
-                                    </option>
-                                  ))
-                              : null}
-                          </CFormSelect>
-                        </div>
+                        {type &&
+                        type === 'room' &&
+                        customer &&
+                        customer.length !== 0 &&
+                        customer[0].customerType !== 'company' ? (
+                          <div className="pt-2 mt-1">
+                            <CFormLabel htmlFor="affiliations">
+                              Affiliated to
+                            </CFormLabel>
+                            <CFormSelect
+                              name="affilation"
+                              id="affiliation"
+                              className="mb-3"
+                              {...register('affiliationId')}
+                            >
+                              <option></option>
+                              {customers && customers.length !== 0
+                                ? customers
+                                    .filter(
+                                      (cust) => cust.customerType === 'company',
+                                    )
+                                    .map((com, i) => (
+                                      <option
+                                        value={com.id}
+                                        key={com.names + i}
+                                      >
+                                        {com.names}
+                                      </option>
+                                    ))
+                                : null}
+                            </CFormSelect>
+                          </div>
+                        ) : null}
                       </CCol>
 
                       <CCol md={6} className="d-flex">
@@ -467,35 +476,6 @@ const ReservationAdd = (props) => {
                                 id="adults_number"
                                 label="Children number"
                                 {...register('children_number')}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {customer &&
-                    type &&
-                    type !== 'room' &&
-                    customer.length !== 0 &&
-                    customer[0].customerType === 'company' ? (
-                      <div className="row my-2 ">
-                        <div className="my-2">
-                          <CFormLabel
-                            htmlFor="additionalInfo"
-                            className="fw-bolder text-center"
-                          >
-                            Booking for company
-                          </CFormLabel>
-                        </div>
-                        <div>
-                          <div className="d-flex flex-row  my-2">
-                            <div>
-                              <CFormInput
-                                type="text"
-                                id="adults_number"
-                                label="Number of people"
-                                {...register('number_of_people')}
                               />
                             </div>
                           </div>

@@ -23,7 +23,6 @@ import { toast } from 'react-hot-toast'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 import CustomerAdd from '../Customer/CustomerAdd'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
 
 const CreateCustomerModal = (props) => {
   const { visible, setVisible, setNewCustomer } = props
@@ -48,9 +47,8 @@ const ReservationAdd = (props) => {
     service[0] = roomFromRoomClass
   }
   const [rooms, setRooms] = useState([])
-  const [reservationRooms, setReservationRooms] = useState([])
   const [halls, setHalls] = useState([])
-  const [hallServices, setHallServices] = useState([])
+  const [setHallServices] = useState([])
   let [RoomClasses, setRoomClasses] = useState([])
   let [customers, setCustomers] = useState([])
   let [apicurrencies, setApiCurrencies] = useState([])
@@ -503,38 +501,6 @@ const ReservationAdd = (props) => {
                           </div>
                         </div>
                       </div>
-                    ) : null}
-
-                    {customer &&
-                    customer.length !== 0 &&
-                    customer[0].customerType === 'company' &&
-                    type &&
-                    type === 'room' ? (
-                      <CCol md={6}>
-                        <CFormLabel>Select Rooms</CFormLabel>
-
-                        <Typeahead
-                          id="basic-typeahead-multiple"
-                          labelKey="name"
-                          multiple
-                          onChange={setReservationRooms}
-                          options={rooms}
-                          selected={reservationRooms}
-                          renderToken={(option, props, index) => (
-                            <div className="typeahead-token" key={index}>
-                              {option.name}
-
-                              <button
-                                className="typeahead-remove-button"
-                                type="button"
-                                onClick={() => props.onRemove(option)}
-                              >
-                                <AiOutlineCloseCircle />
-                              </button>
-                            </div>
-                          )}
-                        />
-                      </CCol>
                     ) : null}
 
                     <div className="d-flex flex-row my-2 ">

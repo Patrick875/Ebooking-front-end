@@ -95,6 +95,17 @@
     font-size:10px
    }
   }
+  .c-bill-table{
+    th,td,tr{
+      border-top: 2px dashed black !important;
+      border-bottom: 2px dashed black !important;
+    }
+    thead{
+      th{
+        border-right: 2px dashed black !important;
+      }
+    }
+  }
 }
 
 @font-face {

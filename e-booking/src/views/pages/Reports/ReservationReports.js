@@ -15,7 +15,6 @@ import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import ReservationsTable from './ReservationsTable'
 import { instance } from 'src/API/AxiosInstance'
-import { toast } from 'react-hot-toast'
 
 const ReservationReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()

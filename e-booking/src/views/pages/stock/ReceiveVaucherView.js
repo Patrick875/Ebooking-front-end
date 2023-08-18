@@ -22,7 +22,7 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
       ? vaucher.StockReceiveVoucherDetails.map((el) => ({
           ...el,
           vid: uuidv4(),
-        }))
+        })).sort((a, b) => b.id - a.id)
       : vaucher.StockReceiveVoucherDetails
   let [rowsReceive, setRowsReceive] = useState(details)
   console.log('vaucher', vaucher)
@@ -252,68 +252,74 @@ const ReceiveVaucherView = React.forwardRef((props, ref) => {
                         receivedQuantity,
                       },
                       index,
-                    ) => (
-                      <tr key={id}>
-                        <td style={{ minWidth: '214px' }}>
-                          <input
-                            name="name"
-                            value={StockItemNew.name}
-                            readOnly={!update}
-                            type="text"
-                            onChange={(e) => onChangeInput(e, vid)}
-                            placeholder=""
-                          />
-                        </td>
-                        <td>
-                          <input
-                            name="unit"
-                            value={unit}
-                            readOnly={!update}
-                            type="text"
-                            onChange={(e) => onChangeInput(e, vid)}
-                            placeholder=""
-                          />
-                        </td>
-                        <td>
-                          <input
-                            name="receivedQuantity"
-                            defaultValue={receivedQuantity}
-                            readOnly={!update}
-                            type="text"
-                            onChange={(e) => onChangeInput(e, vid)}
-                            placeholder=""
-                          />
-                        </td>
-                        <td>
-                          <input
-                            name={'unitPrice'}
-                            type="text"
-                            defaultValue={
-                              rowsPurchase[index].unitPrice === 0
-                                ? ' '
-                                : rowsPurchase[index].unitPrice
-                            }
-                            readOnly={!update}
-                            onChange={(e) => onChangeInput(e, vid)}
-                            placeholder=""
-                          />
-                        </td>
-                        <td>
-                          <input
-                            name="total"
-                            type="text"
-                            value={
-                              Number(unitPrice * receivedQuantity) === 0
-                                ? ''
-                                : Number(unitPrice * receivedQuantity)
-                            }
-                            onChange={(e) => onChangeInput(e, vid)}
-                            readOnly={true}
-                            placeholder=""
-                          />
-                        </td>
-                      </tr>
-                    ),
+                    ) => {
+                      console.log({
+                        vid,
+                        id,
+                        unit,
+                        unitPrice,
+                        StockItemNew,
+                        receivedQuantity,
+                      })
+                      return (
+                        <tr key={id}>
+                          <td style={{ minWidth: '214px' }}>
+                            <input
+                              name="name"
+                              value={StockItemNew.name}
+                              readOnly={!update}
+                              type="text"
+                              onChange={(e) => onChangeInput(e, vid)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name="unit"
+                              value={unit}
+                              readOnly={!update}
+                              type="text"
+                              onChange={(e) => onChangeInput(e, vid)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name="receivedQuantity"
+                              defaultValue={receivedQuantity}
+                              readOnly={!update}
+                              type="text"
+                              onChange={(e) => onChangeInput(e, vid)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name={'unitPrice'}
+                              type="text"
+                              defaultValue={unitPrice}
+                              readOnly={!update}
+                              onChange={(e) => onChangeInput(e, vid)}
+                              placeholder=""
+                            />
+                          </td>
+                          <td>
+                            <input
+                              name="total"
+                              type="text"
+                              value={
+                                Number(unitPrice * receivedQuantity) === 0
+                                  ? ''
+                                  : Number(unitPrice * receivedQuantity)
+                              }
+                              onChange={(e) => onChangeInput(e, vid)}
+                              readOnly={true}
+                              placeholder=""
+                            />
+                          </td>
+                        </tr>
+                      )
+                    },
                   )}
                   <tr key={1000} className="lastRows">
                     <td className="px-2 fw-bold">Total</td>

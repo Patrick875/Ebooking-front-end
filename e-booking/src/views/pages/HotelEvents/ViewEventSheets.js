@@ -11,6 +11,7 @@ import { useRef } from 'react'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import BackButton from 'src/components/Navigating/BackButton'
 
 const ViewEventSheets = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -63,7 +64,8 @@ const ViewEventSheets = React.forwardRef((props, ref) => {
   useEffect(() => {}, [selectedEventSheet])
   return (
     <div>
-      <div className="event-sheets">
+      <BackButton />
+      <div className="event-sheets my-2">
         <div className="d-flex gap-2">
           <div
             className="px-3 my-0 py-0 border rounded-2 shadow d-flex justify-content-center align-items-center"

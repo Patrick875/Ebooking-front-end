@@ -151,6 +151,7 @@ const StockItemTrack = React.forwardRef((props, ref) => {
               item: item.StockItemNew.id,
               date_from: startDate,
               date_to: endDate,
+              itemValue: item.id,
             },
           })
           .then((res) => {
@@ -183,8 +184,7 @@ const StockItemTrack = React.forwardRef((props, ref) => {
                 </strong>
               ) : (
                 <strong>
-                  {' '}
-                  Stock report of {item ? item.StockItemNew.name : ''} from{' '}
+                  Stock report from +
                   {startDate ? startDate.toLocaleDateString('fr-FR') : ''} to{' '}
                   {endDate ? endDate.toLocaleDateString('fr-FR') : ''}{' '}
                 </strong>

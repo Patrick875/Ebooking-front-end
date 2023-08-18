@@ -12,7 +12,6 @@ import {
 } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
@@ -165,7 +164,6 @@ function AvailableStock() {
                         </CTableDataCell>
                         <CTableDataCell className="d-flex  gap-2">
                           <div
-                            style={{ display: 'none' }}
                             className="btn btn-primary btn-sm"
                             onClick={() => {
                               navigate('/booking/stock/item/history')

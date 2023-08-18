@@ -24,7 +24,6 @@ const UpdateStockQuantity = () => {
     await instance
       .put('/petitstock/order/updatequantity', data)
       .then((res) => {
-        console.log('res', res)
         if (res.data.data) {
           toast.success('item update successfully')
           if (res.data.data) {

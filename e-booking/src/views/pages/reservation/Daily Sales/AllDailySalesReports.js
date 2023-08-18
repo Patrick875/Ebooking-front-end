@@ -14,7 +14,6 @@ import {
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
@@ -130,6 +129,7 @@ function AllDailySalesReports() {
                           : null
                       }
                     })
+                    .sort((a, b) => b.id - a.id)
                     .map((report, i) => (
                       <CTableRow key={i}>
                         <CTableDataCell>

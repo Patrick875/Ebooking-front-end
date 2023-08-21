@@ -67,6 +67,8 @@ function RoomEntry(props) {
     return inputValue.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
   }
   const [cvv, setCVV] = useState('')
+  const [viewFreight, setViewFreight] = useState(false)
+  const [viewCC, setViewCC] = useState(false)
   const validYears = ebookingCreditCardValidYears()
   let [service, setService] = useState([])
   let [apicurrencies, setApiCurrencies] = useState([])
@@ -523,13 +525,23 @@ function RoomEntry(props) {
       <div className="d-flex justify-content-between">
         <div className="d-flex gap-2">
           <li className="text-decoration-none list-group">
-            <Link className="text-decoration-none" to="#">
-              Credit card
+            <Link
+              className={`text-decoration-none ${viewCC ? 'text-danger' : ''}`}
+              to="#"
+              onClick={() => setViewCC(!viewCC)}
+            >
+              {!viewCC ? 'Credit card' : 'Hide Credit card details'}
             </Link>
           </li>
           <li className="text-decoration-none list-group ">
-            <Link className="text-decoration-none" to="#">
-              Freight Details
+            <Link
+              className={` text-decoration-none ${
+                viewFreight ? 'text-danger' : ''
+              }`}
+              to="#"
+              onClick={() => setViewFreight(!viewFreight)}
+            >
+              {!viewFreight ? 'Freight Details' : 'Hide Freight Details'}
             </Link>
           </li>
         </div>
@@ -553,136 +565,139 @@ function RoomEntry(props) {
           </p>
         </div>
       </div>
+      {viewCC ? (
+        <div className="d-flex  border border-primary rounded rounded-1  px-3 py-2 mb-2">
+          <div className="col d-flex gap-2">
+            <label htmlFor="card-number"> Card No: </label>
+            <input
+              id="card-number"
+              type="text"
+              {...register('creditCardDetails.creditCardNumber', {
+                required: true,
+                pattern: /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/,
+              })}
+              maxLength={19}
+              value={creditCardNumber}
+              onChange={(e) => {
+                const formattedValue = formatCreditCardNumber(e.target.value)
+                setCreditCardNumber(formattedValue)
+              }}
+            />
+            {errors.creditCardNumber && (
+              <p className="error-message">Invalid credit card number</p>
+            )}
+          </div>
+          <div className="col d-flex gap-2">
+            <label htmlFor="cvc"> CVC: </label>
+            <input
+              type="text"
+              name="cvc"
+              id="cvc"
+              maxLength={3}
+              value={cvv}
+              onChange={(e) => {
+                const cleanedValue = e.target.value.replace(/\s/g, '')
+                setCVV(cleanedValue)
+              }}
+            />
+          </div>
+          <div className="col d-flex gap-2">
+            <label htmlFor="expiration"> Expiration: </label>
+            <div className="col- d-flex gap-2 ">
+              <select
+                className="col-5"
+                name="expiration-month"
+                id="expiration-month"
+                {...register('creditCardDetails.expiration-month')}
+              >
+                <option value=""></option>
+                {ebookingMonths.map((el, i) => (
+                  <option key={i} value={el.name}>
+                    {el.name}
+                  </option>
+                ))}
+              </select>
 
-      <div className="d-flex  border border-primary rounded rounded-1  px-3 py-2 mb-2">
-        <div className="col d-flex gap-2">
-          <label htmlFor="card-number"> Card No: </label>
-          <input
-            id="card-number"
-            type="text"
-            {...register('creditCardDetails.creditCardNumber', {
-              required: true,
-              pattern: /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/,
-            })}
-            maxLength={19}
-            value={creditCardNumber}
-            onChange={(e) => {
-              const formattedValue = formatCreditCardNumber(e.target.value)
-              setCreditCardNumber(formattedValue)
-            }}
-          />
-          {errors.creditCardNumber && (
-            <p className="error-message">Invalid credit card number</p>
-          )}
-        </div>
-        <div className="col d-flex gap-2">
-          <label htmlFor="cvc"> CVC: </label>
-          <input
-            type="text"
-            name="cvc"
-            id="cvc"
-            maxLength={3}
-            value={cvv}
-            onChange={(e) => {
-              const cleanedValue = e.target.value.replace(/\s/g, '')
-              setCVV(cleanedValue)
-            }}
-          />
-        </div>
-        <div className="col d-flex gap-2">
-          <label htmlFor="expiration"> Expiration: </label>
-          <div className="col- d-flex gap-2 ">
-            <select
-              className="col-5"
-              name="expiration-month"
-              id="expiration-month"
-              {...register('creditCardDetails.expiration-month')}
-            >
-              <option value=""></option>
-              {ebookingMonths.map((el, i) => (
-                <option key={i} value={el.name}>
-                  {el.name}
-                </option>
-              ))}
-            </select>
+              {'/ '}
 
-            {'/ '}
-
-            <select
-              className="col-5"
-              name="expiration-year"
-              id="expiration-year"
-              {...register('creditCardDetails.expiration-year')}
-            >
-              <option value=""></option>
-              {validYears.map((el, i) => (
-                <option key={i} value={el}>
-                  {el}
-                </option>
-              ))}
-            </select>
+              <select
+                className="col-5"
+                name="expiration-year"
+                id="expiration-year"
+                {...register('creditCardDetails.expiration-year')}
+              >
+                <option value=""></option>
+                {validYears.map((el, i) => (
+                  <option key={i} value={el}>
+                    {el}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="d-flex  border border-primary rounded rounded-1  px-3 py-2 my-2">
-        <div className="col d-flex gap-2">
-          <label htmlFor="freight-No">Freight No: </label>
-          <input
-            type="text"
-            name="freight-No"
-            id="freight-No"
-            {...register('freightDetails.freightNo')}
-          />
-        </div>
-        <div className="col d-flex gap-2">
-          <label htmlFor="freight-date"> Date: </label>
-          <input
-            type="text"
-            name="freight-date"
-            id="freight-date"
-            {...register('freightDetails.date')}
-          />
-        </div>
-        <div className="col d-flex">
-          <label htmlFor="freight-time" className="col-6">
-            {' '}
-            Time (Hour/Min):
-          </label>
-          <div className="col-6 d-flex gap-2">
-            <select
-              {...register('freightDetails.freight-time-hour')}
-              className="col-5"
+      ) : null}
+      {viewFreight ? (
+        <div className="d-flex  border border-primary rounded rounded-1  px-3 py-2 my-2">
+          <div className="col d-flex gap-2">
+            <label htmlFor="freight-No">Freight No: </label>
+            <input
               type="text"
-              nname="freight-time-hour"
-              id="freight-time-hour"
-            >
-              <option value=""></option>
-              {ebookingHours.map((el, i) => (
-                <option key={el + i} value={el}>
-                  {el}
-                </option>
-              ))}
-            </select>
-
-            {': '}
-
-            <select
-              {...register('freightDetails.freight-time-minute')}
-              className="col-5"
+              name="freight-No"
+              id="freight-No"
+              {...register('freightDetails.freightNo')}
+            />
+          </div>
+          <div className="col d-flex gap-2">
+            <label htmlFor="freight-date"> Date: </label>
+            <input
               type="text"
-              nname="freight-time-minute"
-              id="freight-time-minute"
-            >
-              <option value=""></option>
-              {ebookingMinutes.map((el, i) => (
-                <option key={el + i + 1} value={el}>
-                  {el}
-                </option>
-              ))}
-            </select>
+              name="freight-date"
+              id="freight-date"
+              {...register('freightDetails.date')}
+            />
+          </div>
+          <div className="col d-flex">
+            <label htmlFor="freight-time" className="col-6">
+              {' '}
+              Time (Hour/Min):
+            </label>
+            <div className="col-6 d-flex gap-2">
+              <select
+                {...register('freightDetails.freight-time-hour')}
+                className="col-5"
+                type="text"
+                nname="freight-time-hour"
+                id="freight-time-hour"
+              >
+                <option value=""></option>
+                {ebookingHours.map((el, i) => (
+                  <option key={el + i} value={el}>
+                    {el}
+                  </option>
+                ))}
+              </select>
+
+              {': '}
+
+              <select
+                {...register('freightDetails.freight-time-minute')}
+                className="col-5"
+                type="text"
+                nname="freight-time-minute"
+                id="freight-time-minute"
+              >
+                <option value=""></option>
+                {ebookingMinutes.map((el, i) => (
+                  <option key={el + i + 1} value={el}>
+                    {el}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="border border-bottom-1 border-dark col mt-1" />
       <CRow className="py-2">

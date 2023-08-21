@@ -62,6 +62,7 @@ function UserRolesEdit() {
     data = { id: userRole.id, name: data.name, access: data.access }
 
     setLoading(true)
+    console.log('user role edit', data)
     await instance
       .put('/roles/update', { ...data })
       .then((res) => {

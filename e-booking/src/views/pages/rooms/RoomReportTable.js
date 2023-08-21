@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { selectRoom } from 'src/redux/reservation/reservationActions'
-import { isRoomOccupied } from 'src/utils/functions'
+import { displayCustomerName, isRoomOccupied } from 'src/utils/functions'
 function RoomReportTable(props) {
   const { rooms, roomClasses, setRooms } = props
   const navigate = useNavigate()
@@ -192,12 +192,11 @@ function RoomReportTable(props) {
                                 .includes(
                                   new Date().toLocaleDateString('fr-FR'),
                                 )
-                                ? isOccupied.reservation &&
-                                  isOccupied.reservation.affiliation
-                                  ? isOccupied.reservation.affiliation.names +
-                                    ' /' +
-                                    isOccupied.reservation.Customer.names
-                                  : isOccupied.reservation.Customer.names
+                                ? isOccupied.reservation
+                                  ? displayCustomerName(
+                                      isOccupied.reservation.Customer,
+                                    )
+                                  : ''
                                 : ''}
                             </CTableDataCell>
                             <CTableDataCell>

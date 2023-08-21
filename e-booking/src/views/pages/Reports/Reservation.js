@@ -1,3 +1,5 @@
+import { displayCustomerName } from 'src/utils/functions'
+
 const { CTableRow, CTableHeaderCell, CTableDataCell } = require('@coreui/react')
 
 const Reservation = (props) => {
@@ -5,7 +7,9 @@ const Reservation = (props) => {
 
   return (
     <CTableRow key={reserv.id}>
-      <CTableHeaderCell scope="row">{reserv.Customer.names}</CTableHeaderCell>
+      <CTableHeaderCell scope="row">
+        {displayCustomerName(reserv.Customer)}
+      </CTableHeaderCell>
       <CTableDataCell>
         {new Date(
           reserv.DatesIns.sort((a, b) => a.id - b.id)[0].datesIn.sort(

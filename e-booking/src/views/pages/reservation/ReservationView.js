@@ -7,7 +7,11 @@ import PrintTemplate1 from '../Printing/PrintTemplate1'
 import BackButton from 'src/components/Navigating/BackButton'
 import UpdateReservationDates from './UpdateReservationDates'
 import { Link, useNavigate } from 'react-router-dom'
-import { isRoomOccupied, removeDatesAfterToday } from 'src/utils/functions'
+import {
+  displayCustomerName,
+  isRoomOccupied,
+  removeDatesAfterToday,
+} from 'src/utils/functions'
 import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import AddPaymentModal from './AddPaymentModal'
@@ -17,9 +21,6 @@ import { MakeAvailable, PutOutOfOrder } from '../rooms/Buttons'
 const ReservationReceipt = (props) => {
   const reservation = props.reservation
   const navigate = useNavigate()
-
-  console.log('reservation', reservation)
-
   const removeBill = async (reservationId, billId) => {
     await instance
       .post('/customerbill/remove-from-reservation', {
@@ -68,10 +69,8 @@ const ReservationReceipt = (props) => {
                 <div>
                   <p className="py-0 my-0">
                     Names:{' '}
-                    <span className="fw-bold">
-                      {reservation.affiliation
-                        ? reservation.affiliation.names
-                        : reservation.Customer.names}
+                    <span className="fw-bold text-uppercase">
+                      {displayCustomerName(reservation.Customer)}
                     </span>{' '}
                   </p>
                   <p className="py-0 my-0">
@@ -608,10 +607,7 @@ const ReservationView = React.forwardRef((props, ref) => {
                 <strong>
                   {' '}
                   Reservation by{' '}
-                  {reservation.affiliation
-                    ? reservation.affiliation.names + '/'
-                    : ''}
-                  {' ' + reservation.Customer.names + ' for '}
+                  {' ' + displayCustomerName(reservation.Customer) + ' for '}
                   {reservation.Room
                     ? `R${reservation.Room.name}`
                     : reservation.Hall.name + 'Hall'}

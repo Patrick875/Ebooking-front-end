@@ -5,7 +5,12 @@ import { useSelector } from 'react-redux'
 import DatePicker from 'react-datepicker'
 import { Highlighter } from 'react-bootstrap-typeahead'
 import { filterDateDuplicates, getAllDates } from 'src/utils/functions'
-import { countries } from 'src/utils/constants'
+import {
+  ebookingCreditCardValidYears,
+  ebookingHours,
+  ebookingMinutes,
+  ebookingMonths,
+} from 'src/utils/constants'
 import { Link } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
@@ -14,7 +19,15 @@ import { toast } from 'react-hot-toast'
 function RoomEntry(props) {
   const [datesIn, setDatesIn] = useState([])
   const selectedRoom = useSelector((state) => state.reservation.selectedRoom)
-  const { register, control, setValue, watch, reset, getValues } = useForm()
+  const {
+    register,
+    control,
+    setValue,
+    watch,
+    reset,
+    getValues,
+    formState: { errors },
+  } = useForm()
   const [customers, setCustomers] = useState([])
   let [selectedClient] = useState(null)
   const [revisiting, setRevisiting] = useState(false)
@@ -25,7 +38,6 @@ function RoomEntry(props) {
     selectedClient = customers.find(
       (customer) => customer.id === Number(selectedClientId),
     )
-    console.log('selected-client', selectedClient)
     if (selectedClient) {
       setValue('surname', selectedClient.surname)
       setValue('givenname', selectedClient.givenname)
@@ -51,9 +63,14 @@ function RoomEntry(props) {
     }
   }
 
+  const formatCreditCardNumber = (inputValue) => {
+    return inputValue.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
+  }
+  const [cvv, setCVV] = useState('')
+  const validYears = ebookingCreditCardValidYears()
   let [service, setService] = useState([])
   let [apicurrencies, setApiCurrencies] = useState([])
-
+  const [creditCardNumber, setCreditCardNumber] = useState('')
   const [localExchangeRate, setLocalExchangeRate] = useState()
   const amount = selectedRoom.RoomClass.price * datesIn.length
   const removeDates =
@@ -87,6 +104,7 @@ function RoomEntry(props) {
       .catch((err) => {
         console.log('err', err)
       })
+    console.log('submission', { ...submission, status: 'in progress' })
   }
   const reserve = async () => {
     await instance
@@ -266,6 +284,54 @@ function RoomEntry(props) {
         </CCol>
       </CRow>
 
+      <div className="d-flex gap-3">
+        <div>
+          <label htmlFor="modeOfPayment">Mode of Payment</label>
+        </div>
+        <div className="col d-flex justify-content-between">
+          <div className="d-flex gap-1">
+            <input
+              name="mode-cash"
+              id="mode-cash"
+              type="radio"
+              {...register('paymentMode')}
+              value="CASH"
+            />
+            <label htmlFor="mode-cash">CASH</label>
+          </div>
+          <div className="d-flex gap-1">
+            <input
+              name="mode-momo"
+              id="mode-momo"
+              type="radio"
+              {...register('paymentMode')}
+              value="MOMO"
+            />
+            <label htmlFor="mode-momo">MOMO</label>
+          </div>
+          <div className="d-flex gap-1">
+            <input
+              name="mode-cheque"
+              id="mode-cheque"
+              type="radio"
+              {...register('paymentMode')}
+              value="CHEQUE"
+            />
+            <label htmlFor="mode-cheque">CHEQUE</label>
+          </div>
+          <div className="d-flex gap-1">
+            <input
+              name="mode-credit"
+              id="mode-credit"
+              type="radio"
+              {...register('paymentMode')}
+              value="CREDIT"
+            />
+            <label htmlFor="mode-credit">CREDIT</label>
+          </div>
+        </div>
+      </div>
+
       <div className="d-flex justify-content-between my-1 py-1">
         <li className="text-decoration-none list-group">
           <Link
@@ -358,22 +424,12 @@ function RoomEntry(props) {
             id="place_of_birth"
             control={control}
             render={({ field }) => (
-              <select
+              <input
                 className="col-9"
                 name="place_of_birth"
                 id="place_of_birth"
                 {...field}
-              >
-                <option value="">Select a country</option>
-
-                {countries && countries.length !== 0
-                  ? countries.map((country, i) => (
-                      <option key={country + i} value={country}>
-                        {country}
-                      </option>
-                    ))
-                  : null}
-              </select>
+              />
             )}
           />
         </CCol>
@@ -388,16 +444,7 @@ function RoomEntry(props) {
             id="nationality"
             control={control}
             render={({ field }) => (
-              <select className="col-9" required {...field}>
-                <option value="">Select a country</option>
-                {countries && countries.length !== 0
-                  ? countries.map((country, i) => (
-                      <option key={country + i} value={country}>
-                        {country}
-                      </option>
-                    ))
-                  : null}
-              </select>
+              <input className="col-9" required {...field} />
             )}
           />
         </CCol>
@@ -411,16 +458,7 @@ function RoomEntry(props) {
             id="residence"
             control={control}
             render={({ field }) => (
-              <select className="mb-1 col-9" required {...field}>
-                <option value="">Select a country</option>
-                {countries && countries.length !== 0
-                  ? countries.map((country, i) => (
-                      <option key={country + i} value={country}>
-                        {country}
-                      </option>
-                    ))
-                  : null}
-              </select>
+              <input className="mb-1 col-9" required {...field} />
             )}
           />
         </CCol>
@@ -437,7 +475,13 @@ function RoomEntry(props) {
             required
             {...register('bookedFrom', { required: true })}
           >
+            <option value=""></option>
             <option value="Booking.com">Booking.com</option>
+            <option value="Corporate">Corporate</option>
+            <option value="NGO">NGO</option>
+            <option value="Embassy">Embassy</option>
+            <option value="Direct">Direct</option>
+            <option value="Tours">Tours</option>
           </select>
         </CCol>
         <CCol md={6} className="d-flex gap-2 pb-2">
@@ -507,6 +551,136 @@ function RoomEntry(props) {
             ).toLocaleString()}{' '}
             RWF
           </p>
+        </div>
+      </div>
+
+      <div className="d-flex  border border-primary rounded rounded-1  px-3 py-2 mb-2">
+        <div className="col d-flex gap-2">
+          <label htmlFor="card-number"> Card No: </label>
+          <input
+            id="card-number"
+            type="text"
+            {...register('creditCardDetails.creditCardNumber', {
+              required: true,
+              pattern: /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/,
+            })}
+            maxLength={19}
+            value={creditCardNumber}
+            onChange={(e) => {
+              const formattedValue = formatCreditCardNumber(e.target.value)
+              setCreditCardNumber(formattedValue)
+            }}
+          />
+          {errors.creditCardNumber && (
+            <p className="error-message">Invalid credit card number</p>
+          )}
+        </div>
+        <div className="col d-flex gap-2">
+          <label htmlFor="cvc"> CVC: </label>
+          <input
+            type="text"
+            name="cvc"
+            id="cvc"
+            maxLength={3}
+            value={cvv}
+            onChange={(e) => {
+              const cleanedValue = e.target.value.replace(/\s/g, '')
+              setCVV(cleanedValue)
+            }}
+          />
+        </div>
+        <div className="col d-flex gap-2">
+          <label htmlFor="expiration"> Expiration: </label>
+          <div className="col- d-flex gap-2 ">
+            <select
+              className="col-5"
+              name="expiration-month"
+              id="expiration-month"
+              {...register('creditCardDetails.expiration-month')}
+            >
+              <option value=""></option>
+              {ebookingMonths.map((el, i) => (
+                <option key={i} value={el.name}>
+                  {el.name}
+                </option>
+              ))}
+            </select>
+
+            {'/ '}
+
+            <select
+              className="col-5"
+              name="expiration-year"
+              id="expiration-year"
+              {...register('creditCardDetails.expiration-year')}
+            >
+              <option value=""></option>
+              {validYears.map((el, i) => (
+                <option key={i} value={el}>
+                  {el}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div className="d-flex  border border-primary rounded rounded-1  px-3 py-2 my-2">
+        <div className="col d-flex gap-2">
+          <label htmlFor="freight-No">Freight No: </label>
+          <input
+            type="text"
+            name="freight-No"
+            id="freight-No"
+            {...register('freightDetails.freightNo')}
+          />
+        </div>
+        <div className="col d-flex gap-2">
+          <label htmlFor="freight-date"> Date: </label>
+          <input
+            type="text"
+            name="freight-date"
+            id="freight-date"
+            {...register('freightDetails.date')}
+          />
+        </div>
+        <div className="col d-flex">
+          <label htmlFor="freight-time" className="col-6">
+            {' '}
+            Time (Hour/Min):
+          </label>
+          <div className="col-6 d-flex gap-2">
+            <select
+              {...register('freightDetails.freight-time-hour')}
+              className="col-5"
+              type="text"
+              nname="freight-time-hour"
+              id="freight-time-hour"
+            >
+              <option value=""></option>
+              {ebookingHours.map((el, i) => (
+                <option key={el + i} value={el}>
+                  {el}
+                </option>
+              ))}
+            </select>
+
+            {': '}
+
+            <select
+              {...register('freightDetails.freight-time-minute')}
+              className="col-5"
+              type="text"
+              nname="freight-time-minute"
+              id="freight-time-minute"
+            >
+              <option value=""></option>
+              {ebookingMinutes.map((el, i) => (
+                <option key={el + i + 1} value={el}>
+                  {el}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -595,7 +769,9 @@ function RoomEntry(props) {
             name="other_note"
             control={control}
             defaultValue=""
-            render={({ field }) => <input {...field} className="col-9" />}
+            render={({ field }) => (
+              <input {...field} {...register('other_note')} className="col-9" />
+            )}
           />
         </CCol>
       </CRow>

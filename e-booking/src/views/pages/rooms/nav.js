@@ -17,5 +17,10 @@ export const RoomNav = {
       name: 'All Rooms',
       to: '/booking/rooms/available',
     },
+    {
+      component: CNavItem,
+      name: 'Room Reservations',
+      to: '/booking/reservations/rooms',
+    },
   ],
 }

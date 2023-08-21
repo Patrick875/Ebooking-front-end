@@ -156,7 +156,10 @@ export function getRoomStatus(room) {
 
 export function getAllDates(service) {
   return service.Reservations.map((reservation) => {
-    const lastDateIns = reservation.DatesIns.sort((a, b) => b.id - a.id)[0]
+    const lastDateIns =
+      reservation.status == !'canceled' && reservation.status !== 'checked out'
+        ? reservation.DatesIns.sort((a, b) => b.id - a.id)[0]
+        : null
     return lastDateIns
       ? lastDateIns.datesIn.map((dateString) => parseISO(dateString))
       : []
@@ -259,7 +262,6 @@ export function processObjects(array) {
 
 export function filterDateDuplicates(dates) {
   // Get the date part of each date object.
-  console.log(dates)
   const dateOnly = dates.map((date) => new Date(date).toDateString())
 
   // Create a set of unique date strings.
@@ -384,4 +386,22 @@ export function removeDatesAfterToday(dates) {
   })
 
   return filteredDates
+}
+
+export const displayCustomerName = (customer) => {
+  const givenname = customer.givenname ? customer.givenname : ''
+  const surname = customer.surname ? customer.surname : ''
+  return surname + ' ' + givenname
+}
+
+export const searchReservByCustomerName = (reservations, query) => {
+  if (reservations.length !== 0 && query) {
+    return reservations.filter((reserv) =>
+      reserv.Customer.givenname.toLowerCase().includes(query.toLowerCase()) ||
+      reserv.Customer.surname.toLowerCase().includes(query.toLowerCase())
+        ? reserv
+        : null,
+    )
+  }
+  return []
 }

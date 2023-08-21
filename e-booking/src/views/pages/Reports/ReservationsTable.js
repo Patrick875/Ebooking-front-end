@@ -6,7 +6,10 @@ const {
   CTableHeaderCell,
   CTableBody,
 } = require('@coreui/react')
-const { getUTCDateWithoutHours } = require('src/utils/functions')
+const {
+  getUTCDateWithoutHours,
+  searchReservByCustomerName,
+} = require('src/utils/functions')
 const { default: Reservation } = require('./Reservation')
 
 const ReservationsTable = (props) => {
@@ -15,17 +18,6 @@ const ReservationsTable = (props) => {
   reservations = reservations && reservations.length !== 0 ? reservations : []
   let totalPayments = 0
   let totalAmount = 0
-
-  const searchReservByCustomerName = (reservations, query) => {
-    if (reservations.length !== 0 && query) {
-      return reservations.filter((reserv) =>
-        reserv.Customer.names.toLowerCase().includes(query.toLowerCase())
-          ? reserv
-          : null,
-      )
-    }
-    return []
-  }
 
   if (reservations.length !== 0) {
     if (filter_condition === 'All' && filter_condition2 === 'All') {

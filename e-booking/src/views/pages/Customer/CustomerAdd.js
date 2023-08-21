@@ -59,48 +59,39 @@ function CustomerAdd({ setNewCustomer, setVisible }) {
               encType="multipart/form"
             >
               <CCol md={6}>
-                <CFormLabel htmlFor="firstName"> Names </CFormLabel>
+                <CFormLabel htmlFor="givenname"> Given name</CFormLabel>
                 <CFormInput
                   className="mb-1"
                   type="text"
-                  name="names"
-                  id="names"
-                  placeholder="...firstname & lastname"
+                  name="givenname"
+                  id="givenname"
+                  placeholder="...givenname"
                   required
-                  {...register('names', { required: true })}
+                  {...register('givenname', { required: true })}
                 />
               </CCol>
               <CCol md={6}>
-                <CFormLabel htmlFor="firstName"> Country </CFormLabel>
-                <CFormSelect
+                <CFormLabel htmlFor="surname"> Surname</CFormLabel>
+                <CFormInput
+                  className="mb-1"
+                  type="text"
+                  name="surname"
+                  id="surname"
+                  placeholder="...surname"
+                  required
+                  {...register('surname', { required: true })}
+                />
+              </CCol>
+              <CCol md={6}>
+                <CFormLabel htmlFor="firstName"> Nationality </CFormLabel>
+                <CFormInput
                   className="mb-1"
                   type="text"
                   name="nationality"
                   id="nationality"
                   required
                   {...register('nationality', { required: true })}
-                >
-                  {countries && countries.length !== 0
-                    ? countries.map((country, i) => (
-                        <option key={country + i} value={country}>
-                          {country}
-                        </option>
-                      ))
-                    : null}
-                </CFormSelect>
-              </CCol>
-              <CCol md={6}>
-                <CFormLabel htmlFor="customer_type"> Type </CFormLabel>
-                <CFormSelect
-                  name="type"
-                  id="type"
-                  className="mb-3"
-                  aria-label="customer type"
-                  {...register('customerType', { required: true })}
-                >
-                  <option value="individual"> Individual </option>
-                  <option value="company"> Company </option>
-                </CFormSelect>
+                />
               </CCol>
 
               <CCol md={6}>
@@ -124,39 +115,6 @@ function CustomerAdd({ setNewCustomer, setVisible }) {
                   {...register('email')}
                 />
               </CCol>
-
-              <CCol title="use TIN for customer companies" md={6}>
-                <CFormLabel htmlFor=" id">
-                  {customerType && customerType === 'company'
-                    ? 'TIN'
-                    : 'ID / Passport'}
-                </CFormLabel>
-
-                <CFormInput
-                  className="mb-1"
-                  type="text"
-                  name="id"
-                  id="id"
-                  required
-                  {...register('identification', { required: true })}
-                />
-              </CCol>
-              {customerType && customerType === 'individual' ? (
-                <CCol md={6}>
-                  <CFormLabel htmlFor="gender"> Gender</CFormLabel>
-                  <CFormSelect
-                    name="gender"
-                    id="gender"
-                    className="mb-3"
-                    aria-label="gender"
-                    {...register('gender')}
-                  >
-                    <option value="female"> Female</option>
-                    <option value="male">Male </option>
-                    <option value="other">Other </option>
-                  </CFormSelect>
-                </CCol>
-              ) : null}
 
               <CCol xs={12} className="mt-2">
                 <CButton

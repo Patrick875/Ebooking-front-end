@@ -424,6 +424,34 @@ export const countries = [
   'Zimbabwe',
 ]
 
+export const ebookingMonths = [
+  { name: 'January', number: '01' },
+  { name: 'February', number: '02' },
+  { name: 'March', number: '03' },
+  { name: 'April', number: '04' },
+  { name: 'May', number: '05' },
+  { name: 'June', number: '06' },
+  { name: 'July', number: '07' },
+  { name: 'August', number: '08' },
+  { name: 'September', number: '09' },
+  { name: 'October', number: '10' },
+  { name: 'November', number: '11' },
+  { name: 'December', number: '12' },
+]
+export const ebookingHours = Array.from({ length: 24 }, (_, index) =>
+  (index + 1).toString().padStart(2, '0'),
+)
+export const ebookingMinutes = Array.from({ length: 60 }, (_, index) =>
+  index.toString().padStart(2, '0'),
+)
+
+export const ebookingCreditCardValidYears = () => {
+  let years = []
+  for (let i = 0; i < 6; i++) {
+    years.push(new Date().getFullYear() + i)
+  }
+  return years
+}
 export const numpadItems = [
   '7',
   '8',

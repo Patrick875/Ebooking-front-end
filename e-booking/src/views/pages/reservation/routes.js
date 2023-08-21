@@ -35,12 +35,6 @@ export const reservationRoutes = [
     element: ReservationView,
   },
   {
-    path: '/booking/reservations/rooms',
-    exact: true,
-    name: 'Room Reservation',
-    element: RoomReservations,
-  },
-  {
     path: '/booking/reservations/halls',
     exact: true,
     name: 'Hall Reservation',

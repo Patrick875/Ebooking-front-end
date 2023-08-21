@@ -2,6 +2,8 @@ import RoomAdd from './roomAdd'
 import Rooms from './Room'
 import RoomCheckin from './RoomCheckin'
 import AddBill from '../reservation/AddBill'
+import RoomEntry from './RoomEntry'
+import RoomReservations from '../reservation/RoomReservations'
 
 export const roomRoutes = [
   {
@@ -23,7 +25,7 @@ export const roomRoutes = [
     exact: true,
     name: 'Room checkin',
     keyword: 'Room checkin',
-    element: RoomCheckin,
+    element: RoomEntry,
   },
   {
     path: '/booking/room/addbill',
@@ -31,5 +33,11 @@ export const roomRoutes = [
     name: 'Room AddBill',
     keyword: 'Room AddBill',
     element: AddBill,
+  },
+  {
+    path: '/booking/reservations/rooms',
+    exact: true,
+    name: 'Room Reservation',
+    element: RoomReservations,
   },
 ]

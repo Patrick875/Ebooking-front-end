@@ -25,7 +25,9 @@ import Pagination from 'src/utils/Pagination'
 import { useForm } from 'react-hook-form'
 import {
   datesInRangeWithUnix,
+  displayCustomerName,
   getUTCDateWithoutHours,
+  searchReservByCustomerName,
 } from 'src/utils/functions'
 import DatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
@@ -55,17 +57,6 @@ const Reservation = (props) => {
     setEndDate(end)
   }
   let myDates = datesInRangeWithUnix(startDate, endDate)
-
-  const searchReservByCustomerName = (reservations, query) => {
-    if (reservations.length !== 0 && query) {
-      return reservations.filter((reserv) =>
-        reserv.Customer.names.toLowerCase().includes(query.toLowerCase())
-          ? reserv
-          : null,
-      )
-    }
-    return []
-  }
 
   if (reservations.length !== 0) {
     if (filter_condition === 'All' && filter_condition2 === 'All') {
@@ -287,7 +278,7 @@ const Reservation = (props) => {
                                 return handleOnRowClick(reserv)
                               }}
                             >
-                              {reserv.Customer.names}{' '}
+                              {displayCustomerName(reserv.Customer)}{' '}
                             </p>{' '}
                             {Number(reserv.amount['RWF']) >
                             Number(reserv.payment['RWF']) ? (

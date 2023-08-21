@@ -30,7 +30,15 @@ function RoomReportTable(props) {
         reservation.roomStatus !== 'checked-out'
       ) {
         return 'OCCUPIED'
-      } else if (reservation.status !== 'confirmed') {
+      } else if (
+        reservation.status !== 'confirmed' &&
+        reservation.status !== 'canceled' &&
+        reservation.DatesIns.sort((a, b) => b.id - a.id)[0].datesIn.some(
+          (el) =>
+            new Date(el).toLocaleDateString('fr-FR') ===
+            new Date().toLocaleDateString('fr-FR'),
+        )
+      ) {
         return 'Reserved'
       } else if (
         reservation.roomStatus === 'checked-out' &&
@@ -57,14 +65,16 @@ function RoomReportTable(props) {
       Object.keys(isOccupied).length === 0 ||
       !isOccupied.reservation.DatesIns.sort((a, b) => b.id - a.id)[0]
         .datesIn.map((el) => new Date(el).toLocaleDateString('fr-FR'))
-        .includes(new Date().toLocaleDateString('fr-FR'))
+        .includes(new Date().toLocaleDateString('fr-FR')) ||
+      isOccupied.reservation.status === 'canceled'
     ) {
       return 'white'
     }
 
     if (
       isOccupied.reservation &&
-      isOccupied.reservation.status !== 'confirmed'
+      isOccupied.reservation.status !== 'confirmed' &&
+      isOccupied.reservation.status !== 'canceled'
     ) {
       return '#9400D3' // Dark violet
     }
@@ -124,7 +134,6 @@ function RoomReportTable(props) {
                           room,
                           isOccupied,
                         )
-
                         return (
                           <CTableRow
                             key={room.id}
@@ -142,6 +151,8 @@ function RoomReportTable(props) {
                                   reservationStatus !== 'Checked out' &&
                                   isOccupied &&
                                   Object.keys(isOccupied).length !== 0 &&
+                                  isOccupied.reservation.status !==
+                                    'canceled' &&
                                   isOccupied.reservation.DatesIns.sort(
                                     (a, b) => b.id - a.id,
                                   )[0]
@@ -171,6 +182,7 @@ function RoomReportTable(props) {
                               {isOccupied &&
                               isOccupied.reservation &&
                               reservationStatus !== 'Checked out' &&
+                              isOccupied.reservation.status !== 'canceled' &&
                               isOccupied.reservation.DatesIns.sort(
                                 (a, b) => b.id - a.id,
                               )[0]
@@ -191,6 +203,7 @@ function RoomReportTable(props) {
                             <CTableDataCell>
                               {isOccupied &&
                               isOccupied.reservation &&
+                              isOccupied.reservation.status !== 'canceled' &&
                               reservationStatus !== 'Checked out' &&
                               isOccupied.reservation.DatesIns.sort(
                                 (a, b) => b.id - a.id,
@@ -214,6 +227,7 @@ function RoomReportTable(props) {
                               {isOccupied &&
                               isOccupied.reservation &&
                               reservationStatus !== 'Checked out' &&
+                              isOccupied.reservation.status !== 'canceled' &&
                               isOccupied.reservation.DatesIns.sort(
                                 (a, b) => b.id - a.id,
                               )[0]

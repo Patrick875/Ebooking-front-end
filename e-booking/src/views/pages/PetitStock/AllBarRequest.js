@@ -9,20 +9,36 @@ import {
   CTableRow,
 } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
 import { RiCheckLine } from 'react-icons/ri'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { instance } from 'src/API/AxiosInstance'
 import BackButton from 'src/components/Navigating/BackButton'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import Pagination from 'src/utils/Pagination'
 
 function AllBarRequest() {
   let [items, setItems] = useState([])
+  const perpage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
   const petitStock = useSelector((state) => state.selection.selectedPetitStock)
   items =
     items && items.length !== 0 && petitStock
       ? items.filter((item) => item.petitStockId === petitStock.id)
+      : []
+  items =
+    items.length !== 0
+      ? items.filter((el, i) => {
+          if (currentPage === 1) {
+            return i >= 0 && i < perpage ? el : null
+          } else {
+            return i >= (currentPage - 1) * perpage &&
+              i <= perpage * currentPage - 1
+              ? el
+              : null
+          }
+        })
       : []
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -30,6 +46,7 @@ function AllBarRequest() {
     dispatch(selectItem(item))
     navigate('/booking/stock/request/out/view')
   }
+
   useEffect(() => {
     const getPetitStockOrders = async () => {
       await instance
@@ -44,8 +61,6 @@ function AllBarRequest() {
     }
     getPetitStockOrders()
   }, [])
-
-  console.log('requests', items)
 
   return (
     <div>
@@ -72,36 +87,45 @@ function AllBarRequest() {
           </CTableHead>
           <CTableBody>
             {items && items.length !== 0
-              ? items.map((item, i) => {
-                  return (
-                    <CTableRow
-                      key={item.id}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => {
-                        return handleOnRowClick(item)
-                      }}
-                    >
-                      <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                      <CTableDataCell>
-                        {new Date(item.date).toLocaleDateString('fr-FR')}
-                      </CTableDataCell>
-                      <CTableDataCell className="d-flex">
-                        {item && item.status === 'APPROVED' ? (
-                          <p className="ms-2">
-                            Approved
-                            <RiCheckLine className="ms-3 text-success" />
-                          </p>
-                        ) : null}
-                      </CTableDataCell>
-                      <CTableHeaderCell>
-                        {item.total.toLocaleString()}
-                      </CTableHeaderCell>
-                    </CTableRow>
-                  )
-                })
+              ? items
+                  .sort((a, b) => b.id - a.id)
+                  .map((item, i) => {
+                    return (
+                      <CTableRow
+                        key={item.id}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          return handleOnRowClick(item)
+                        }}
+                      >
+                        <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+                        <CTableDataCell>
+                          {new Date(item.date).toLocaleDateString('fr-FR')}
+                        </CTableDataCell>
+                        <CTableDataCell className="d-flex">
+                          {item && item.status === 'APPROVED' ? (
+                            <p className="ms-2">
+                              Approved
+                              <RiCheckLine className="ms-3 text-success" />
+                            </p>
+                          ) : null}
+                        </CTableDataCell>
+                        <CTableHeaderCell>
+                          {item.total.toLocaleString()}
+                        </CTableHeaderCell>
+                      </CTableRow>
+                    )
+                  })
               : null}
           </CTableBody>
         </CTable>
+        {items.length !== 0 ? (
+          <Pagination
+            postsPerPage={perpage}
+            totalPosts={items.length}
+            paginate={paginate}
+          />
+        ) : null}
       </CCardBody>
     </div>
   )

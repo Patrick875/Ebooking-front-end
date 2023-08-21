@@ -134,9 +134,6 @@ function RoomReportTable(props) {
                           room,
                           isOccupied,
                         )
-                        if (room.name === '207') {
-                          console.log('room-207', room)
-                        }
                         return (
                           <CTableRow
                             key={room.id}
@@ -154,6 +151,8 @@ function RoomReportTable(props) {
                                   reservationStatus !== 'Checked out' &&
                                   isOccupied &&
                                   Object.keys(isOccupied).length !== 0 &&
+                                  isOccupied.reservation.status !==
+                                    'canceled' &&
                                   isOccupied.reservation.DatesIns.sort(
                                     (a, b) => b.id - a.id,
                                   )[0]

@@ -42,8 +42,10 @@ function Customers() {
   }, [])
 
   if (query && query !== '') {
-    customers = customers.filter((customer) =>
-      customer.names.toLowerCase().includes(query.toLowerCase()),
+    customers = customers.filter(
+      (customer) =>
+        customer.givenname.toLowerCase().includes(query.toLowerCase()) ||
+        customer.surname.toLowerCase().includes(query.toLowerCase()),
     )
   }
 

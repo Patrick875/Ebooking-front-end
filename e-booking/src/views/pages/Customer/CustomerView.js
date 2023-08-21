@@ -18,6 +18,7 @@ import { useRef } from 'react'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import BackButton from 'src/components/Navigating/BackButton'
+import { displayCustomerName } from 'src/utils/functions'
 
 const CustomerView = React.forwardRef((props, ref) => {
   const componentRef = useRef()
@@ -68,7 +69,10 @@ const CustomerView = React.forwardRef((props, ref) => {
                   <div className="d-flex gap-2 ">
                     <div className="col">
                       <p className="fw-bold"> Name </p>
-                      <p className="mb-1"> {selectedCustomer.names}</p>
+                      <p className="mb-1">
+                        {' '}
+                        {displayCustomerName(selectedCustomer)}
+                      </p>
                     </div>
                     <div className="col">
                       <p className="fw-bold"> ID/Passport </p>
@@ -82,7 +86,10 @@ const CustomerView = React.forwardRef((props, ref) => {
                 </CCol>
                 <CRow>
                   <h2 className="text-center">
-                    <strong> {selectedCustomer.name} Reservations</strong>
+                    <strong>
+                      {' '}
+                      {displayCustomerName(selectedCustomer)} Reservations
+                    </strong>
                   </h2>
                   <div>
                     <CTable bordered>
@@ -228,7 +235,10 @@ const CustomerView = React.forwardRef((props, ref) => {
               <div className="d-flex gap-2 ">
                 <div className="col">
                   <p className="fw-bold"> Name </p>
-                  <p className="mb-1"> {selectedCustomer.names}</p>
+                  <p className="mb-1">
+                    {' '}
+                    {displayCustomerName(selectedCustomer)}
+                  </p>
                 </div>
                 <div className="col">
                   <p className="fw-bold"> ID/Passport </p>

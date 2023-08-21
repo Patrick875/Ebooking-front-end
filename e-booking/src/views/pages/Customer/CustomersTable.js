@@ -3,6 +3,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { displayCustomerName } from 'src/utils/functions'
 
 function CustomersTable(props) {
   const { customers, currentPage, perpage } = props
@@ -16,7 +17,7 @@ function CustomersTable(props) {
           {' '}
           {(currentPage - 1) * perpage + 1 + i}
         </CTableHeaderCell>
-        <CTableDataCell>{`${customer.names}`}</CTableDataCell>
+        <CTableDataCell>{displayCustomerName(customer)}</CTableDataCell>
         <CTableDataCell>{`${customer.identification}`}</CTableDataCell>
 
         <CTableDataCell className="d-flex gap-2">
